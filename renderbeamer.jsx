@@ -1,6 +1,8 @@
 ﻿var PLUGIN_VERSION = "2";
 doc = "";
 logfile = "";
+filesToReplace= {}
+basepath2 = ""
 
 // NewFile and New Folder- fix for OSX path
 function NewFileCreator(in_path)
@@ -185,11 +187,11 @@ function getUserDir()
 {
     if (system.osName == "MacOS")
     {
-        home = '/Users/'+system.userName;
+        home = '/Users/'+$.getenv("USER") ;
      }
     else
     {
-        home = 'C:\\Users\\'+system.userName;
+        home = 'C:\\Users\\'+$.getenv("USERNAME");
     };
     return home
 };
@@ -334,6 +336,12 @@ function printlog (text){
     
     };
 
+function zeroPad(num, places) {
+  var zero = places - num.toString().length + 1;
+  return Array(+(zero > 0 && zero)).join("0") + num;
+}
+
+
 
 
 function get_project_dir(path){
@@ -420,6 +428,7 @@ function getRenderQueueItems(){
     
 }
 
+
 function Asset( number) {
   this.number = number;
 }
@@ -431,8 +440,17 @@ Asset.prototype.readPath =  function(){
     name = name.split("/"); 
     last = (name.length) -1; 
     this.fileName  = (name[last]); 
+    this.seq = false
     
     this.originalPath = NewFileCreator(app.project.item(this.number).mainSource.file); 
+    
+    if (app.project.item(this.number).typeName == "Footage"){
+        if (app.project.item(this.number).mainSource.isStill == false){
+            
+            this.seq = true
+
+            }
+        }
     
     }
 
@@ -447,9 +465,49 @@ Asset.prototype.exists= function(){
  }
 
 Asset.prototype.copyToSubmit= function(submitDir){
+    
+    if (this.seq == true){
+        
+        seqFileName = this.originalPath.fsName.split('\\').reverse()[0];
+        orginarDirPath = this.originalPath.fsName.split('\\').slice(0,-1).join("\\");
+        newDirPath = NewFolderCreator(submitDir).fsName
+        
+        filesToReplace[orginarDirPath ] = newDirPath
+        
+        seqName = seqFileName.split(".")[0]
+        n = seqName.search(/\d+$/);
+        firstString = seqName.substring(n, seqName.length);
+        first = parseInt( firstString )
+        pathToCopy = NewFileCreator( this.originalPath.fsName.replace(seqName, seqName.replace(/\d+$/,zeroPad(first, firstString.length ))));
+
+        while(pathToCopy.exists==true){ 
+            
+            name = pathToCopy;
+            name = name.toString(); 
+            name = name.split("/"); 
+            last = (name.length) -1; 
+            fileNameSeq  = (name[last]); 
+            
+                newFileSeq = NewFileCreator(submitDir + "/" +fileNameSeq)
+                printlog("copying " + (decodeURI( pathToCopy)) +" to " + (decodeURI( newFileSeq)));
+                if (newFileSeq.exists == false){
+                    pathToCopy.copy (newFileSeq);
+                }
+            
+        first += 1;
+        pathToCopy = NewFileCreator( this.originalPath.fsName.replace(seqName, seqName.replace(/\d+$/,zeroPad(first, firstString.length ))));
+
+            }
+        this.newFile = NewFileCreator(submitDir + "/" +this.fileName)
+        
+        return true;
+
+        }
 
 
     this.newFile = NewFileCreator(submitDir + "/" +this.fileName)
+    
+    filesToReplace[this.originalPath.fsName] = this.newFile.fsName
     printlog("copying " + (decodeURI( this.originalPath)) +" to " + (decodeURI( this.newFile)));
     if (this.newFile.exists == false){
         this.originalPath.copy (this.newFile);
@@ -460,7 +518,16 @@ Asset.prototype.copyToSubmit= function(submitDir){
 
 Asset.prototype.relink= function(){
     printlog("Relink " + (decodeURI( this.originalPath)) +" to " + (decodeURI( this.newFile)));
-    name = app.project.item(this.number).replace(this.newFile);
+    
+    if (this.seq == false){
+    
+        name = app.project.item(this.number).replace(this.newFile);
+    }
+    else
+    {
+        
+        name = app.project.item(this.number).replaceWithSequence(this.newFile,false);
+    };
         
  }
 
@@ -536,18 +603,19 @@ AssetHandler.prototype.readAssets = function() {
 }
 
 
+
+
 AssetHandler.prototype.checkAssets = function() {  
     
     for (i = 0; i <(this.assetReadList.length) ; i++) {
         if (this.assetReadList[i].exists()) {
-            printlog("found asset path: " + decodeURI(this.assetReadList[i].originalPath))
+            printlog("found asset "+ this.assetReadList[i].number+" path: " + decodeURI(this.assetReadList[i].originalPath))
             this.assetList.push(this.assetReadList[i]);
             }
         else
         {
             this.missingAssets.push(this.assetReadList[i]);
          }
-
 
       }
     
@@ -564,9 +632,19 @@ AssetHandler.prototype.copyAssets = function(submitDir) {
 
 AssetHandler.prototype.relinkAssets = function() {  
     
-    for (i = 0; i <(this.assetList.length) ; i++) {
-        this.assetList[i].relink();
-      }
+    tempScene = NewFileCreator(basepath2.concat("/", "temp.aepx"))
+    printlog (tempScene.fsName)
+    app.project.save(tempScene);
+    f = File(tempScene);
+    xmlString = f.read();  
+    f.close()
+    myXML = new XML(xmlString);  
+    
+    //app.project.save()
+    
+   // for (i = 0; i <(this.assetList.length) ; i++) {
+        //this.assetList[i].relink();
+      //}
       
 }
 
@@ -589,11 +667,10 @@ AssetHandler.prototype.copyFonts = function(dirFonts) {
       
 }
 
-
-
-
-
 function main(){
+
+
+    
     
     if (app.project.file == null){
         alert("Save project first.");
@@ -619,7 +696,7 @@ var orginal1 = orginalPath.concat("/",nameProject)
 
 var nameProjectOryginal = decodeURI(app.project.file.name);
 
-var nameProject = replace(nameProjectOryginal.slice(0,-4))+".aep";
+var nameProject = replace(nameProjectOryginal.slice(0,-4))+".aepx";
 
 var name_folder = myPath.split("/") ;
 var name_folder = name_folder[(name_folder.length) -1];
@@ -636,7 +713,7 @@ var second = leadingZero(date.getSeconds());//wyodrebnianie z "data" sekundy
 
 var basepath = "".concat(scenePath, "/beamer_temp_", date.getFullYear(), leadingZero(date.getMonth()+1), leadingZero(date.getDate()), "-", leadingZero(date.getHours()), leadingZero(date.getMinutes()), leadingZero(date.getSeconds()), "/",get_project_dir(scenePath) );
 var beamer = newFolder;
-var basepath2 = basepath.concat ("/data");
+basepath2 = basepath.concat ("/data");
 var newFolder = NewFolderCreator (basepath2);
 
 
@@ -654,6 +731,8 @@ logfile = NewFileCreator(logFolderPath + '/pluginLog_afterEffects_'+nameProject 
 
 
 printlog("PLUGIN_VERSION: " + PLUGIN_VERSION);
+printlog("User:" + customerName);
+printlog("After Effects version: "+app.version);
 printlog("oryginal name: " + nameProjectOryginal);
 printlog("replace name: " + nameProject);
 
@@ -705,10 +784,43 @@ if (assetHandler.readAssets() == false){
 newFolderC.create(); //tworzenie folderu
 dirFontsC.create(); //tworzenie folderu
 
+var myPath2 =basepath2.concat("/", scene);//skladanie nazwy scierzki do nowego pliku
+app.project.save(NewFileCreator(myPath2));
 
-assetHandler.copyAssets(newFolder);
-assetHandler.relinkAssets();
+//-------------open original scene
+var project = NewFileCreator(orginal1);
+try{
+app.open(project);
+
+}
+catch(err) {
+    printlog("error reload scene")
+    writeLn("error reload scene")
+}
+
+            beamerDir = getBeamerDir();
+            copyAssetsExe = beamerDir + "/" + "AfterEffects/renderbeamer AfterEffects.exe";
+            
+            if (system.osName == "MacOS")
+            {
+                copyAssetsExe = beamerDir + "/" + "AfterEffects/renderbeamer AfterEffects.py";
+             }
+
+            appExe= NewFileCreator(copyAssetsExe).fsName
+            beamerjar= NewFileCreator(beamerjar).fsName
+            cmda = ['"'+appExe+'"','"'+NewFileCreator(myPath2).fsName+'"'];
+            cmda = cmda.join(" ")
+            
+            printlog(cmda)
+
+
+    runScript(cmda)
+     //alert("Czekaj.");
+
+//assetHandler.copyAssets(newFolder);
+///assetHandler.relinkAssets();
 assetHandler.copyFonts(dirFonts);
+
 
 //---------create gfs
 function printgfs (text){
@@ -723,8 +835,8 @@ function printgfs (text){
  };
 renderQueueItems = getRenderQueueItems()
 var AffterVersion = app.version;
-var sceneName = scene.slice(0,-4)
-doc= NewFileCreator(basepath2+"/"+scene.slice(0,-4)+".gfs");
+var sceneName = scene.slice(0,-5)
+doc= NewFileCreator(basepath2+"/"+scene.slice(0,-5)+".gfs");
 //alert(beamer+"/log.gfs");
 printgfs('<?xml version="1.0" encoding="utf-8"?>');
 printgfs('<Scene App="AfterEffects" version="'+AffterVersion+'">');
@@ -765,8 +877,8 @@ nowyPlik.copy (NewFileCreator(logPath+ '/pluginLog_afterEffects_'+nameProject +'
 
 
 //--------------save scene
-var myPath2 =basepath2.concat("/", scene);//skladanie nazwy scierzki do nowego pliku
-app.project.save(NewFileCreator(myPath2));
+//var myPath2 =basepath2.concat("/", scene);//skladanie nazwy scierzki do nowego pliku
+//app.project.save(NewFileCreator(myPath2));
 
 
 
@@ -777,16 +889,7 @@ writeLn(basepathfile.fsName)
 addScene(basepathfile.fsName, sceneSubmit);
 
 
-//-------------open original scene
-var project = NewFileCreator(orginal1);
-try{
-app.open(project);
 
-}
-catch(err) {
-    printlog("error reload scene")
-    writeLn("error reload scene")
-}
 
  }
 

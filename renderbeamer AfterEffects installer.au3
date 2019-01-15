@@ -324,6 +324,9 @@ For $i = 1 To 100
 
 Next
 
+DirCreate(@UserProfileDir&"\renderbeamer\AfterEffects")
+FileInstall ( ".\dist\renderbeamer AfterEffects.exe", @UserProfileDir&"\renderbeamer\AfterEffects\renderbeamer AfterEffects.exe", 1 )
+
 
 
 
