@@ -1,4 +1,4 @@
-﻿var PLUGIN_VERSION = "2";
+﻿var PLUGIN_VERSION = "4";
 doc = "";
 logfile = "";
 filesToReplace= {}
@@ -11,8 +11,6 @@ function NewFileCreator(in_path)
 
 
   var file;
-
- 
 
   try
 
@@ -207,6 +205,11 @@ function runScript (_PATH) {
     writeLn(cmd);
     return system.callSystem(cmd);
  }
+
+function getTempdir()
+{
+    return runBeamer(["-tempdir"]);
+}
 
 function getUser()
 {
@@ -711,7 +714,15 @@ var second = leadingZero(date.getSeconds());//wyodrebnianie z "data" sekundy
 //------------------------------------------------------------------------------------------------------
 //------------------------cearte folder beamer_temp_data
 
-var basepath = "".concat(scenePath, "/beamer_temp_", date.getFullYear(), leadingZero(date.getMonth()+1), leadingZero(date.getDate()), "-", leadingZero(date.getHours()), leadingZero(date.getMinutes()), leadingZero(date.getSeconds()), "/",get_project_dir(scenePath) );
+var userProject = scenePath;
+var response = getTempdir();
+
+var response = NewFolderCreator (response);
+if (response.exists && response != '[NULL]')
+{
+                userProject = response
+ }
+var basepath = "".concat(userProject , "/beamer_temp_", date.getFullYear(), leadingZero(date.getMonth()+1), leadingZero(date.getDate()), "-", leadingZero(date.getHours()), leadingZero(date.getMinutes()), leadingZero(date.getSeconds()), "/",get_project_dir(scenePath) );
 var beamer = newFolder;
 basepath2 = basepath.concat ("/data");
 var newFolder = NewFolderCreator (basepath2);
@@ -736,6 +747,31 @@ printlog("After Effects version: "+app.version);
 printlog("oryginal name: " + nameProjectOryginal);
 printlog("replace name: " + nameProject);
 
+if (app.project.renderQueue.numItems == 0)
+{
+     alert("No composition has not been added to Render Queue. To submit a scene, please add the composition and set the parameters for the render.");
+    return true;
+    
+}
+
+templength = basepath2+"/"+scene.slice(0,-5)+".gfs"
+printlog("length path: " + templength.length)
+if (templength.length >248)
+{
+    alert("Due to the Win OS file system limitations, the file path to your project is too long to operate on. Please move your project (including all the textures and assets) to a directory with a shorter path (less than 200 characters in total).\nAlso, we highly recommend not using long camera names in a scene as our plugin automatically adds it to the output path.");
+    return true;
+}
+
+k = get_project_dir(scenePath).length
+b = (nameProject.length )
+
+lengthPath = 11+k +1 +5+ b*2+8+30
+printlog ("Path length2 :"+ lengthPath )
+if (lengthPath >248) 
+{
+    alert ("Due to the Win OS file system limitations, the file path to your output is too long for us to operate on. Please follow the guidelines below :\n- make your project and the scene name shorter." );
+    return true;
+ }
 
 //---------create folder footage
 var newFolder = "";
@@ -787,35 +823,34 @@ dirFontsC.create(); //tworzenie folderu
 var myPath2 =basepath2.concat("/", scene);//skladanie nazwy scierzki do nowego pliku
 app.project.save(NewFileCreator(myPath2));
 
-//-------------open original scene
-var project = NewFileCreator(orginal1);
-try{
-app.open(project);
-
-}
-catch(err) {
-    printlog("error reload scene")
-    writeLn("error reload scene")
-}
-
-            beamerDir = getBeamerDir();
-            copyAssetsExe = beamerDir + "/" + "AfterEffects/renderbeamer AfterEffects.exe";
-            
-            if (system.osName == "MacOS")
-            {
-                copyAssetsExe = beamerDir + "/" + "AfterEffects/renderbeamer AfterEffects.py";
-             }
-
-            appExe= NewFileCreator(copyAssetsExe).fsName
-            beamerjar= NewFileCreator(beamerjar).fsName
-            cmda = ['"'+appExe+'"','"'+NewFileCreator(myPath2).fsName+'"'];
-            cmda = cmda.join(" ")
-            
-            printlog(cmda)
 
 
-    runScript(cmda)
-     //alert("Czekaj.");
+beamerDir = getBeamerDir();
+copyAssetsExe = beamerDir + "/" + "AfterEffects/renderbeamer AfterEffects.exe";
+
+if (system.osName == "MacOS")
+{
+    copyAssetsExe = beamerDir + "/" + "AfterEffects/renderbeamer AfterEffects.py";
+ }
+
+appExe= NewFileCreator(copyAssetsExe).fsName
+beamerjar= NewFileCreator(beamerjar).fsName
+cmda = ['"'+appExe+'"','"'+NewFileCreator(myPath2).fsName+'"'];
+
+
+if (system.osName == "MacOS")
+{
+    cmda = ['python '+'"'+appExe+'"','"'+NewFileCreator(myPath2).fsName+'"'];
+ }
+
+
+cmda = cmda.join(" ")
+
+printlog(cmda)
+
+
+runScript(cmda)
+
 
 //assetHandler.copyAssets(newFolder);
 ///assetHandler.relinkAssets();
@@ -888,14 +923,19 @@ basepathfile= NewFileCreator(basepath);
 writeLn(basepathfile.fsName)
 addScene(basepathfile.fsName, sceneSubmit);
 
-
+//-------------open original scene
+var project = NewFileCreator(orginal1);
+printlog(orginal1);
+try{
+    app.project.close(CloseOptions.DO_NOT_SAVE_CHANGES);
+    app.open(project);
+}
+catch(err) {
+    printlog("error reload scene")
+    writeLn("error reload scene")
+}
 
 
  }
 
 main()
-
-
-
-
-

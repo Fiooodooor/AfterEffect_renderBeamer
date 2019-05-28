@@ -24,6 +24,8 @@ For $i = 1 To 100
    if $var <> "" Then
 	  $path = $var&"Scripts\renderbeamer.jsxbin"
 	  FileInstall("renderbeamer.jsxbin", $path,1)
+	  $path = $var&"Scripts\renderbeamer Cost Calculator.jsxbin"
+	  FileInstall("renderbeamer Cost Calculator.jsxbin", $path,1)
    EndIf
 
 
@@ -35,7 +37,7 @@ FileInstall ( ".\dist\renderbeamer AfterEffects.exe", @UserProfileDir&"\renderbe
 
 DirCreate(@UserProfileDir&"\renderbeamer\plugins")
 $file = FileOpen(@UserProfileDir&"\renderbeamer\plugins\AfterEffects", 2)
-FileWrite($file, "2" & @CRLF) ; The CRLF at the end is a line break
+FileWrite($file, "4" & @CRLF) ; The CRLF at the end is a line break
 FileClose($file)
 
 

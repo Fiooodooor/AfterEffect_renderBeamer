@@ -23,7 +23,7 @@
 #include <Process.au3>
 
 Global $status, $statusvideo
-Global $VERSION = "2"
+Global $VERSION = "4"
 
 Func installdone()
    $hui = GUICreate("GarageFarm.NET Installer", 300, 130)
@@ -318,6 +318,8 @@ For $i = 1 To 100
    if $var <> "" Then
 	  $path = $var&"Scripts\renderbeamer.jsxbin"
 	  FileInstall("renderbeamer.jsxbin", $path,1)
+	  $path = $var&"Scripts\renderbeamer Cost Calculator.jsxbin"
+	  FileInstall("renderbeamer Cost Calculator.jsxbin", $path,1)
    EndIf
 
 

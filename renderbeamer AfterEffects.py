@@ -3,17 +3,13 @@ from shutil import copy2, copytree, copy, rmtree
 from time import gmtime, strftime
 import tempfile
 import subprocess
-import glob
 import hashlib
-
 import re
 import sys
 import traceback
 from os.path import expanduser
 import threading
 import platform
-import locale
-import fileinput
 import shutil
 
 try:
@@ -21,7 +17,7 @@ try:
 except ImportError:
     import xml.etree.ElementTree as ET
 
-VERSION_PLUGIN = '2'
+VERSION_PLUGIN = '4'
 
 '''
 import Tkinter
@@ -188,22 +184,26 @@ class BeamerHandler:
     # returns the user logged into beamer    
     def getUser(self):
         return self.__run(["-getusr"])
+    
+    # returns Tempdir
+    def getTempdir(self):
+        return self.__run(["-tempdir"])
         
     # check scene name on REST server
     def checkSceneName(self, scene, user):
-        return self.__run(['-checkName',str(scene), str(user), "-app", "Modo"])
+        return self.__run(['-checkName',str(scene), str(user), "-app", "aftereffects"])
     
     # submit project to beamer
     def addScene(self, localPath, farmPath):
         os = platform.system()
         if os == "Windows":
-            return self.__run(["-app", "Modo", "-a" , localPath, "-sn" , str(farmPath) ])
+            return self.__run(["-app", "aftereffects", "-a" , localPath, "-sn" , str(farmPath) ])
         else:
-            return self.__run(["-app", "Modo", "-a" , localPath , "-sn" , str(farmPath) ])
+            return self.__run(["-app", "aftereffects", "-a" , localPath , "-sn" , str(farmPath) ])
 
     # submit log to beamer
     def sendLog(self, logfile, user):
-        return self.__run(["-log", logfile, "-logSubject", " " + str(user) + " Modo "])
+        return self.__run(["-log", logfile, "-logSubject", " " + str(user) + " AfterEffects "])
         
      
     # runs beamer with parameters and returns the results
@@ -301,7 +301,7 @@ def createlog():
 def printlog(log):
     global logfile    
     file_ = open(logfile, 'a')
-    file_.write(strftime('%Y%m%d-%H%M%S', gmtime())+' Info: '+log +'\n')
+    file_.write(strftime('%Y%m%d-%H%M%S', gmtime())+' Info: '+log.encode('utf-8') +'\n')
     file_.close()
     
 def printlogEx(log, ex):    
@@ -372,6 +372,7 @@ class Asset(object):
         
         try:
             self.submitPath = os.path.join('U:\\', user, os.path.basename(os.path.dirname(os.path.dirname(os.path.dirname(self.submitPath)))), 'data', self.assetDir, os.path.basename(self.submitPath))
+            self.submitPath = self.submitPath.replace('/','\\').replace('\\\\','\\')
             self._asset.attrib['fullpath'] = self.submitPath
             printlog("relinked: " + self.originalPath + " to: " + self.submitPath)
             return True
@@ -384,8 +385,8 @@ class Asset(object):
         # copy asset file to submit directory
         try:  
             assetDir = os.path.join(submitDir, self.assetDir)
-            if not os.path.exists(assetDir):
-                os.makedirs(assetDir)
+            if not os.path.exists(fixWinLongPath(assetDir)):
+                os.makedirs(fixWinLongPath(assetDir))
                 
             if self.seq:
                 md5 = hashlib.md5()
@@ -393,8 +394,8 @@ class Asset(object):
                 newName = md5.hexdigest()
                 assetDir = os.path.join(assetDir, newName)
                 self.submitPath = assetDir
-                if not os.path.exists(assetDir):
-                    os.makedirs(assetDir)
+                if not os.path.exists(fixWinLongPath(assetDir)):
+                    os.makedirs(fixWinLongPath(assetDir))
 
                 for f in self.seqFiles:
                     seqSubmitPath = os.path.join(assetDir, f)
@@ -463,7 +464,7 @@ class AssetHandler(object):
     def readAssets(self):
         ET.register_namespace('', "http://www.adobe.com/products/aftereffects")
         
-        self.sceneXml = ET.parse(self.scene)
+        self.sceneXml = ET.parse(fixWinLongPath(self.scene))
         
         items =  self.sceneXml.findall('.//{http://www.adobe.com/products/aftereffects}Pin')
    
@@ -498,21 +499,13 @@ class AssetHandler(object):
             
     def saveScene(self):
         try:
-            os.remove(self.scene)
-            self.sceneXml.write(self.scene, encoding='utf-8', xml_declaration=True)
+            os.remove(fixWinLongPath(self.scene))
+            self.sceneXml.write(fixWinLongPath(self.scene), encoding='utf-8', xml_declaration=True)
             
-            # copy log
-            logDir = os.path.join(os.path.dirname(self.scene),'log')
-            if not os.path.exists(logDir):
-                os.makedirs(logDir)
-    
-            shutil.copy2(logfile,fixWinLongPath(os.path.join(logDir, os.path.basename(logfile))) )
         except Exception as e:
             printlogEx("save scene" ,e)
 
 
-
- 
 def main():
     
     global user
@@ -531,14 +524,30 @@ def main():
     
     assetHandler.readAssets()
 
-    sumbitDir = os.path.dirname(scene)
+    submitDir = os.path.dirname(scene)
+    
+    sceneName = os.path.splitext(os.path.basename(scene))[0]
 
     # copying assets
-    assetHandler.copyAssets(sumbitDir)
+    assetHandler.copyAssets(submitDir)
     # relink
     assetHandler.relinkAssets(user )
     
     assetHandler.saveScene()
+    
+    # copylog
+    if not os.path.exists(os.path.join(submitDir, 'log')):
+        os.makedirs(os.path.join(submitDir, 'log'))
+    copy(logfile, fixWinLongPath(os.path.join(submitDir, 'log', os.path.splitext(os.path.basename(logfile))[0]+'_'+sceneName+'.txt') ))
+    
          
 if __name__ == "__main__":
-   main()
+    try:
+        main()
+    except:
+        traceback.print_exc()
+        file_ = open(logfile, 'a')
+        traceback.print_exc(file = file_)
+        file_.close()
+        __beamerHandler = BeamerHandler()              
+        __beamerHandler.sendLog(logfile, user)
