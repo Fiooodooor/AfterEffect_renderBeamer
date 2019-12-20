@@ -17,7 +17,7 @@ try:
 except ImportError:
     import xml.etree.ElementTree as ET
 
-VERSION_PLUGIN = '4'
+VERSION_PLUGIN = '5'
 
 '''
 import Tkinter
@@ -191,15 +191,15 @@ class BeamerHandler:
         
     # check scene name on REST server
     def checkSceneName(self, scene, user):
-        return self.__run(['-checkName',str(scene), str(user), "-app", "aftereffects"])
+        return self.__run(['-checkName',str(scene), str(user), "-app", "Aftereffects"])
     
     # submit project to beamer
     def addScene(self, localPath, farmPath):
         os = platform.system()
         if os == "Windows":
-            return self.__run(["-app", "aftereffects", "-a" , localPath, "-sn" , str(farmPath) ])
+            return self.__run(["-app", "Aftereffects", "-a" , localPath, "-sn" , str(farmPath) ])
         else:
-            return self.__run(["-app", "aftereffects", "-a" , localPath , "-sn" , str(farmPath) ])
+            return self.__run(["-app", "Aftereffects", "-a" , localPath , "-sn" , str(farmPath) ])
 
     # submit log to beamer
     def sendLog(self, logfile, user):
@@ -212,7 +212,7 @@ class BeamerHandler:
         try:
             cmd = self.__createCommand(params)
             printlog("running cmd: " + " ".join(cmd))
-            self.proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+            self.proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE, shell = True)
             self.response = str(self.proc.communicate()[0].decode("utf-8").strip())
         except Exception as e:
             printlog("running command: "+str(e))
@@ -242,24 +242,21 @@ class BeamerHandler:
         printlog("creating cmd")
         try:
             beamerDir = self.__getBeamerDir()
-            jreexe = os.path.join(beamerDir , self.__getJre())
-            beamerjar = os.path.join(beamerDir, "uploader.jar")
-            cmda = [jreexe,"-jar",beamerjar]
+            beamerScript = os.path.join(beamerDir , self.__getBeamerScript())
+            cmda = [beamerScript]
             cmda.extend(params)
             return cmda
         except Exception as e:
             printlog("creating command error: "+str(e))
             
     
-    # returns the path to beamer bundled java exe        
-    def __getJre(self):
+    # returns the path to beamer shell script        
+    def __getBeamerScript(self):
         o = platform.system()
         if o == "Windows":
-            return "jre8\\bin\\renderbeamer.exe"
-        elif o == "Darwin":
-            return "jre8/Contents/Home/bin/renderbeamer"
+            return "renderbeamer.bat"
         else:
-            return "jre8/bin/renderbeamer"
+            return "renderbeamer.sh"
         
     
     # returns beamer home, its (user directory)/renderbeamer but can be overwritten in mb.cfg config   

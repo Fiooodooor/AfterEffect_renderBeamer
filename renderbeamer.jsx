@@ -1,4 +1,4 @@
-﻿var PLUGIN_VERSION = "4";
+﻿var PLUGIN_VERSION = "5";
 doc = "";
 logfile = "";
 filesToReplace= {}
@@ -200,7 +200,7 @@ function runScript (_PATH) {
         cmd = _PATH
     }else{
         
-        cmd = "cmd.exe /c \"" + _PATH+"\"" ;
+        cmd = "cmd /c \"" + _PATH+"\"" ;
     }
     writeLn(cmd);
     return system.callSystem(cmd);
@@ -237,26 +237,24 @@ function runBeamer( params)
 function createCommand(params)
 {
             beamerDir = getBeamerDir();
-            jreexe = beamerDir + "/" + getJre();
-            beamerjar = beamerDir + "/"+ "uploader.jar"
-            jreexe= NewFileCreator(jreexe).fsName
-            beamerjar= NewFileCreator(beamerjar).fsName
-            cmda = ['"'+jreexe+'"',"-jar",'"'+beamerjar+'"'];
+            beamerScript = beamerDir + "/"+ getBeamerScript()
+            beamerScript = NewFileCreator(beamerScript ).fsName
+            cmda = ['"'+beamerScript+'"'];
             cmda  = cmda.concat(params);
             return cmda;
 };
 
 
-function getJre()
+function getBeamerScript()
 {
     if (system.osName == "MacOS")
     {
-        return "jre8/Contents/Home/bin/renderbeamer";
+        return "renderbeamer.sh";
        
     }
     else
     {
-        return "jre8\\bin\\renderbeamer.exe";
+        return "renderbeamer.bat";
     };
     
 };
@@ -834,7 +832,7 @@ if (system.osName == "MacOS")
  }
 
 appExe= NewFileCreator(copyAssetsExe).fsName
-beamerjar= NewFileCreator(beamerjar).fsName
+
 cmda = ['"'+appExe+'"','"'+NewFileCreator(myPath2).fsName+'"'];
 
 
