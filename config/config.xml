@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+    <Name>renderBeamer After Effects</Name>
+    <Version>6.0.0.0</Version>
+    <Title>renderBeamer AfterEffects</Title>
+    <Publisher></Publisher>
+	<ProductUrl></ProductUrl>
+    <StartMenuDir>renderBeamer</StartMenuDir>
+    <TargetDir>@HomeDir@/renderbeamer/uninstall/AfterEffects</TargetDir>
+	<RunProgramArguments>
+        <Argument>--no-check</Argument>
+    </RunProgramArguments>	
+	<WizardStyle>Modern</WizardStyle>
+	<InstallerApplicationIcon>ico</InstallerApplicationIcon>
+	<ControlScript>controller.qs</ControlScript>
+</Installer>
