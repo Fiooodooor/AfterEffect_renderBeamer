@@ -1,0 +1,268 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{2C8DED3E-111D-4272-A54A-F1865F02A90E}</ProjectGuid>
+    <AdobeAE_SDK>d:\Program Files\AfterEffectsSDK\Examples</AdobeAE_SDK>
+    <AE_PLUGIN_BUILD_DIR>c:\Program Files\Adobe\Common\Plug-ins\7.0\MediaCore</AE_PLUGIN_BUILD_DIR>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>AfterEffects_plugin</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IgnoreImportLibrary>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</IgnoreImportLibrary>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.aex</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.aex</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+    <TargetName>GF_AEGP_Renderbeamer</TargetName>
+    <LinkIncremental>
+    </LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(VC_IncludePath);d:\Program Files\boost_1_72_0\;$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);D:\Program Files\boost_1_72_0\stage\lib;$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+    <TargetName>GF_AEGP_Renderbeamer</TargetName>
+    <LinkIncremental>
+    </LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>X64</TargetEnvironment>
+      <TypeLibraryName>.\Debug/Skeleton.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(AdobeAE_SDK)\Headers;$(AdobeAE_SDK)\Headers\SP;$(AdobeAE_SDK)\Headers\Win;$(AdobeAE_SDK)\Resources;$(AdobeAE_SDK)\Util;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>MSWindows;WIN32;PROJECT_VERSION=$(ProjectName);_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <StructMemberAlignment>4Bytes</StructMemberAlignment>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeaderFile>AE_Effect.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerOutput>NoListing</AssemblerOutput>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <ShowProgress>NotSet</ShowProgress>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <SubSystem>
+      </SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(IntDir)/$(TargetName).lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Bscmake>
+      <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>X64</TargetEnvironment>
+      <TypeLibraryName>.\Debug/Skeleton.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>$(AdobeAE_SDK)\Headers;$(AdobeAE_SDK)\Headers\SP;$(AdobeAE_SDK)\Headers\Win;$(AdobeAE_SDK)\Resources;$(AdobeAE_SDK)\Util;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <StructMemberAlignment>4Bytes</StructMemberAlignment>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeaderFile>AE_Effect.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerOutput>NoListing</AssemblerOutput>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+      <PreprocessorDefinitions>MSWindows;WIN32;PROJECT_VERSION=$(ProjectName);_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <ShowProgress>NotSet</ShowProgress>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>
+      </GenerateDebugInformation>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <SubSystem>
+      </SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(IntDir)/$(TargetName).lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <Bscmake>
+      <OutputFile>$(IntDir)$(TargetName).bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\GF_AEGP_MainPiPL.r">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling the PiPL</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compiling the PiPL</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">cl /I "$(AdobeAE_SDK)\Headers" /EP ".."\\"%(Filename).r" &gt; "$(IntDir)"\\"%(Filename).rr"
+"$(AdobeAE_SDK)\Resources\PiPLTool" "$(IntDir)%(Filename).rr" "$(IntDir)%(Filename).rrc"
+cl /D "MSWindows" /EP $(IntDir)%(Filename).rrc &gt;               "$(ProjectDir)"\\"%(Filename)".rc
+</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">cl /I "$(AdobeAE_SDK)\Headers" /EP ".."\\"%(Filename).r" &gt; "$(IntDir)"\\"%(Filename).rr"
+"$(AdobeAE_SDK)\Resources\PiPLTool" "$(IntDir)%(Filename).rr" "$(IntDir)%(Filename).rrc"
+cl /D "MSWindows" /EP $(IntDir)%(Filename).rrc &gt;               "$(ProjectDir)"\\"%(Filename)".rc
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)%(Filename).rc;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)%(Filename).rc;%(Outputs)</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GF_AEGP_MainPiPL.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(AdobeAE_SDK)\Headers\AE_PluginData.h" />
+    <ClInclude Include="..\AeGfsFileBuilder.h" />
+    <ClInclude Include="..\base64.h" />
+    <ClInclude Include="..\BatchRelinker\AeBatchRelinker.h" />
+    <ClInclude Include="..\BatchRelinker\AeFileNode.h" />
+    <ClInclude Include="..\BatchRelinker\AeFileReferenceInterface.h" />
+    <ClInclude Include="..\BatchRelinker\AeFileReferenceInterfaceHelper.h" />
+    <ClInclude Include="..\BatchRelinker\tinyXml2.h" />
+    <ClInclude Include="..\GF_AEGP_Dumper.h" />
+    <ClInclude Include="..\GF_AEGP_ErrorsHandling.h" />
+    <ClInclude Include="..\GF_AEGP_LibraryLoader.h" />
+    <ClInclude Include="..\GF_AEGP_Main.h" />
+    <ClInclude Include="..\GF_AEGP_MainUI.h" />
+    <ClInclude Include="..\GF_AEGP_Relinker.h" />
+    <ClInclude Include="..\GF_AEGP_Strings.h" />
+    <ClInclude Include="$(AdobeAE_SDK)\Headers\A.h" />
+    <ClInclude Include="$(AdobeAE_SDK)\Headers\AE_Effect.h" />
+    <ClInclude Include="$(AdobeAE_SDK)\Headers\AE_EffectCB.h" />
+    <ClInclude Include="$(AdobeAE_SDK)\Headers\AE_EffectCBSuites.h" />
+    <ClInclude Include="$(AdobeAE_SDK)\Headers\AE_EffectSuites.h" />
+    <ClInclude Include="$(AdobeAE_SDK)\Util\AE_EffectSuitesHelper.h" />
+    <ClInclude Include="$(AdobeAE_SDK)\Headers\AE_EffectUI.h" />
+    <ClInclude Include="$(AdobeAE_SDK)\Headers\AE_GeneralPlug.h" />
+    <ClInclude Include="$(AdobeAE_SDK)\Headers\AE_GeneralPlugOld.h" />
+    <ClInclude Include="$(AdobeAE_SDK)\Headers\AE_IO.h" />
+    <ClInclude Include="$(AdobeAE_SDK)\Headers\AE_Macros.h" />
+    <ClInclude Include="$(AdobeAE_SDK)\Util\AEFX_ChannelDepthTpl.h" />
+    <ClInclude Include="$(AdobeAE_SDK)\Util\AEGP_SuiteHandler.h" />
+    <ClInclude Include="$(AdobeAE_SDK)\Util\entry.h" />
+    <ClInclude Include="$(AdobeAE_SDK)\Headers\FIEL_Public.h" />
+    <ClInclude Include="$(AdobeAE_SDK)\Util\Param_Utils.h" />
+    <ClInclude Include="$(AdobeAE_SDK)\Headers\PF_Masks.h" />
+    <ClInclude Include="..\GF_GlobalClasses.h" />
+    <ClInclude Include="..\GF_GlobalTypes.h" />
+    <ClInclude Include="..\GF_LIBS_C4D_Relinker.h" />
+    <ClInclude Include="..\GF_LIBS_FontConverter.h" />
+    <ClInclude Include="..\NodeObjects\AeCompNode.h" />
+    <ClInclude Include="..\NodeObjects\AeConteiner.h" />
+    <ClInclude Include="..\NodeObjects\AeFooNode.h" />
+    <ClInclude Include="..\NodeObjects\AeObjectNode.h" />
+    <ClInclude Include="..\NodeObjects\AeSceneCollector.h" />
+    <ClInclude Include="AeNodesConteiner.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(AdobeAE_SDK)\Util\AEGP_SuiteHandler.cpp" />
+    <ClCompile Include="$(AdobeAE_SDK)\Util\MissingSuiteError.cpp" />
+    <ClCompile Include="..\AeGfsFileBuilder.cpp" />
+    <ClCompile Include="..\base64.cpp" />
+    <ClCompile Include="..\BatchRelinker\AeBatchRelinker.cpp" />
+    <ClCompile Include="..\BatchRelinker\AeFileNode.cpp" />
+    <ClCompile Include="..\BatchRelinker\AeFileReferenceInterface.cpp" />
+    <ClCompile Include="..\BatchRelinker\AeFileReferenceInterfaceHelper.cpp" />
+    <ClCompile Include="..\BatchRelinker\tinyXml2.cpp" />
+    <ClCompile Include="..\GF_AEGP_ErrorsHandling.cpp" />
+    <ClCompile Include="..\GF_AEGP_LibraryLoader.cpp" />
+    <ClCompile Include="..\GF_AEGP_Main.cpp" />
+    <ClCompile Include="..\GF_AEGP_MainUI.cpp" />
+    <ClCompile Include="..\GF_AEGP_Relinker.cpp" />
+    <ClCompile Include="..\GF_AEGP_Strings.cpp" />
+    <ClCompile Include="..\GF_AEGP_Dumper.cpp" />
+    <ClCompile Include="..\GF_GlobalClasses.cpp" />
+    <ClCompile Include="..\NodeObjects\AeCompNode.cpp" />
+    <ClCompile Include="..\NodeObjects\AeConteiner.cpp" />
+    <ClCompile Include="..\NodeObjects\AeFooNode.cpp" />
+    <ClCompile Include="..\NodeObjects\AeObjectNode.cpp" />
+    <ClCompile Include="..\NodeObjects\AeSceneCollector.cpp" />
+    <ClCompile Include="AeNodesConteiner.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

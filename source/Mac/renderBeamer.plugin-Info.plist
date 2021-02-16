@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleExecutable</key>
+	<string>renderBeamer</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>renderBeamer for After Effects v.17</string>
+	<key>CFBundlePackageType</key>
+	<string>AEgx</string>
+	<key>CFBundleSignature</key>
+	<string>FXTC</string>
+	<key>LSRequiresCarbon</key>
+	<true/>
+	<key>NSAppleScriptEnabled</key>
+	<string>No</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>© 2010 - 2021 GarageFarm.NET All rights reserved.</string>
+</dict>
+</plist>

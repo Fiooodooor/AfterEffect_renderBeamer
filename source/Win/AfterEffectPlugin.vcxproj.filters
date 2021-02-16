@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\GF_AEGP_Main.cpp" />
+    <ClCompile Include="..\GF_AEGP_Relinker.cpp" />
+    <ClCompile Include="..\GF_AEGP_Strings.cpp" />
+    <ClCompile Include="..\GF_AEGP_Dumper.cpp" />
+    <ClCompile Include="..\GF_GlobalClasses.cpp" />
+    <ClCompile Include="$(AdobeAE_SDK)\Util\AEGP_SuiteHandler.cpp">
+      <Filter>AE_Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(AdobeAE_SDK)\Util\MissingSuiteError.cpp">
+      <Filter>AE_Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GF_AEGP_ErrorsHandling.cpp" />
+    <ClCompile Include="..\GF_AEGP_LibraryLoader.cpp" />
+    <ClCompile Include="..\NodeObjects\AeCompNode.cpp">
+      <Filter>NodeObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NodeObjects\AeConteiner.cpp">
+      <Filter>NodeObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NodeObjects\AeFooNode.cpp">
+      <Filter>NodeObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NodeObjects\AeObjectNode.cpp">
+      <Filter>NodeObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NodeObjects\AeSceneCollector.cpp" />
+    <ClCompile Include="AeNodesConteiner.cpp">
+      <Filter>NodeObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\AeGfsFileBuilder.cpp" />
+    <ClCompile Include="..\base64.cpp">
+      <Filter>AE_Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GF_AEGP_MainUI.cpp" />
+    <ClCompile Include="..\BatchRelinker\AeBatchRelinker.cpp">
+      <Filter>BatchRelinker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BatchRelinker\AeFileReferenceInterface.cpp">
+      <Filter>BatchRelinker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BatchRelinker\AeFileReferenceInterfaceHelper.cpp">
+      <Filter>BatchRelinker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BatchRelinker\tinyXml2.cpp">
+      <Filter>BatchRelinker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BatchRelinker\AeFileNode.cpp">
+      <Filter>BatchRelinker</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(AdobeAE_SDK)\Headers\AE_GeneralPlugOld.h">
+      <Filter>AE_Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(AdobeAE_SDK)\Headers\AE_Effect.h">
+      <Filter>AE_Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(AdobeAE_SDK)\Headers\AE_EffectCB.h">
+      <Filter>AE_Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(AdobeAE_SDK)\Headers\AE_EffectCBSuites.h">
+      <Filter>AE_Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(AdobeAE_SDK)\Headers\AE_EffectSuites.h">
+      <Filter>AE_Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(AdobeAE_SDK)\Util\AE_EffectSuitesHelper.h">
+      <Filter>AE_Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(AdobeAE_SDK)\Headers\AE_EffectUI.h">
+      <Filter>AE_Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(AdobeAE_SDK)\Headers\AE_GeneralPlug.h">
+      <Filter>AE_Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(AdobeAE_SDK)\Headers\AE_Macros.h">
+      <Filter>AE_Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(AdobeAE_SDK)\Headers\AE_PluginData.h">
+      <Filter>AE_Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(AdobeAE_SDK)\Util\AEGP_SuiteHandler.h">
+      <Filter>AE_Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(AdobeAE_SDK)\Util\AEFX_ChannelDepthTpl.h">
+      <Filter>AE_Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(AdobeAE_SDK)\Headers\PF_Masks.h">
+      <Filter>AE_Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(AdobeAE_SDK)\Util\Param_Utils.h">
+      <Filter>AE_Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(AdobeAE_SDK)\Headers\A.h">
+      <Filter>AE_Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GF_GlobalTypes.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GF_GlobalClasses.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GF_AEGP_Strings.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GF_AEGP_Relinker.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GF_AEGP_Main.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GF_AEGP_Dumper.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(AdobeAE_SDK)\Headers\AE_IO.h">
+      <Filter>AE_Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(AdobeAE_SDK)\Util\entry.h">
+      <Filter>AE_Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(AdobeAE_SDK)\Headers\FIEL_Public.h">
+      <Filter>AE_Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GF_AEGP_ErrorsHandling.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GF_AEGP_LibraryLoader.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GF_LIBS_FontConverter.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GF_LIBS_C4D_Relinker.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NodeObjects\AeCompNode.h">
+      <Filter>NodeObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NodeObjects\AeConteiner.h">
+      <Filter>NodeObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NodeObjects\AeFooNode.h">
+      <Filter>NodeObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NodeObjects\AeObjectNode.h">
+      <Filter>NodeObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NodeObjects\AeSceneCollector.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="AeNodesConteiner.h">
+      <Filter>NodeObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\AeGfsFileBuilder.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\base64.h">
+      <Filter>AE_Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GF_AEGP_MainUI.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BatchRelinker\AeBatchRelinker.h">
+      <Filter>BatchRelinker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BatchRelinker\AeFileReferenceInterface.h">
+      <Filter>BatchRelinker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BatchRelinker\AeFileReferenceInterfaceHelper.h">
+      <Filter>BatchRelinker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BatchRelinker\tinyXml2.h">
+      <Filter>BatchRelinker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BatchRelinker\AeFileNode.h">
+      <Filter>BatchRelinker</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{0ac91f0d-9218-42ab-8805-071f4f08a927}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AE_Helpers">
+      <UniqueIdentifier>{f6be686b-4b15-4e56-a948-d892efe1ac9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NodeObjects">
+      <UniqueIdentifier>{c4913664-5f02-4cbf-85de-233abe1129fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BatchRelinker">
+      <UniqueIdentifier>{3345e0e9-b984-4ef2-a770-5d19e0765076}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\GF_AEGP_MainPiPL.r">
+      <Filter>Headers</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GF_AEGP_MainPiPL.rc">
+      <Filter>Headers</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
