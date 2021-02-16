@@ -48,6 +48,7 @@ Component.prototype.createOperationsForArchive = function(archive)
 		
 		lastPath = ""
 		fromPath = QDesktopServices.storageLocation(QDesktopServices.HomeLocation)+ "/renderbeamer/uninstall/AfterEffects/data/GF_AEGP_Renderbeamer.aex"
+		fromPath2 = QDesktopServices.storageLocation(QDesktopServices.HomeLocation)+ "/renderbeamer/uninstall/AfterEffects/data/C4dRelinkerLibrary.dll"
 		
 		var regPath = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Adobe\\After Effects\\14.0";
 		var keyName = "CommonPluginInstallPath";
@@ -62,6 +63,7 @@ Component.prototype.createOperationsForArchive = function(archive)
 			{
 				lastPath = afterPath;
 				component.addOperation("Copy", fromPath, afterPath+"//GF_AEGP_Renderbeamer.aex");
+				component.addOperation("Copy", fromPath2, afterPath+"//C4dRelinkerLibrary.dll");
 			}
 		}
 	
@@ -78,6 +80,7 @@ Component.prototype.createOperationsForArchive = function(archive)
 			{
 				lastPath = afterPath;
 				component.addOperation("Copy", fromPath, afterPath+"//GF_AEGP_Renderbeamer.aex");
+				component.addOperation("Copy", fromPath2, afterPath+"//C4dRelinkerLibrary.dll");
 			}
 		}
 		
@@ -93,6 +96,7 @@ Component.prototype.createOperationsForArchive = function(archive)
 			{
 				lastPath = afterPath;
 				component.addOperation("Copy", fromPath, afterPath+"//GF_AEGP_Renderbeamer.aex");
+				component.addOperation("Copy", fromPath2, afterPath+"//C4dRelinkerLibrary.dll");
 			}
 
 		}
@@ -109,6 +113,7 @@ Component.prototype.createOperationsForArchive = function(archive)
 			{
 				lastPath = afterPath;
 				component.addOperation("Copy", fromPath, afterPath+"//GF_AEGP_Renderbeamer.aex");
+				component.addOperation("Copy", fromPath2, afterPath+"//C4dRelinkerLibrary.dll");
 			}
 		}
 	
