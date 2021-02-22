@@ -2,7 +2,7 @@
 
 TableString    g_strs[StrID_NUMTYPES] = {
     StrID_NONE,                     "",
-    StrID_Name,                     GF_PLUGIN_VERSION("renderBeamer for After Effects v.", GF_PLUGIN_VERSION_MAJOR),
+    StrID_Name,                     (GF_PLUGIN_VERSION("renderBeamer for After Effects v.", GF_PLUGIN_VERSION_MAJOR)),
     StrID_MenuEdit,                 "renderBeamer Collect All",
     StrID_MenuEditSmart,            "renderBeamer Collect Smart",
 	StrID_MenuBatch,				"renderBeamer Batch Relinker",
@@ -12,7 +12,7 @@ TableString    g_strs[StrID_NUMTYPES] = {
     StrID_AboutMenu,                "renderBeamer about",
     StrID_Description,              "renderBeamer, Copyright 2020 GarageFarm.NET. Render farm uploader plug-in.",
     StrID_LoadPluginError,          "There was an error in renderBeamer plugin load function. Contact support.",
-    StrID_AboutDialogText,          "renderBeamer plugin from GarageFARM.net\n Build version: ",
+    StrID_AboutDialogText,          (GF_PLUGIN_VERSION("renderBeamer plugin from GarageFARM.net\n Build version: ", GF_PLUGIN_VERSION_MAJOR)),
 	StrID_CollectSmartWarning,      "Warning!\n Use \"Collect Smart\" carefully. It does not include compositions or footages dependencies inside scripts or expressions.",
 	StrID_OutputFormatPNGWarning,   "Warning!\n Your project will be rendered to PNG frames and converted to video after complete rendering."
 };

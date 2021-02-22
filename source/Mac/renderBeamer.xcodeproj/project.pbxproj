@@ -18,6 +18,7 @@
 		4A6512A2243F331800C32C49 /* AeFooNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A65129D243F331500C32C49 /* AeFooNode.cpp */; };
 		4A6512A3243F331800C32C49 /* AeSceneCollector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A65129E243F331600C32C49 /* AeSceneCollector.cpp */; };
 		4A6512A4243F331800C32C49 /* AeConteiner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A65129F243F331700C32C49 /* AeConteiner.cpp */; };
+		4A69B21325DBABAA002D94B9 /* AeFileNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A69B21125DBABA9002D94B9 /* AeFileNode.cpp */; };
 		4A6DD6232425B587001AB42D /* GF_AEGP_ErrorsHandling.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A6DD6222425B587001AB42D /* GF_AEGP_ErrorsHandling.cpp */; };
 		4A6DD6292428E024001AB42D /* GF_AEGP_LibraryLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A6DD6282428E024001AB42D /* GF_AEGP_LibraryLoader.cpp */; };
 		4A6DD649242942D1001AB42D /* libbz2.1.0.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DD63C242942CD001AB42D /* libbz2.1.0.dylib */; };
@@ -72,6 +73,8 @@
 		4A65129D243F331500C32C49 /* AeFooNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AeFooNode.cpp; path = ../NodeObjects/AeFooNode.cpp; sourceTree = "<group>"; };
 		4A65129E243F331600C32C49 /* AeSceneCollector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AeSceneCollector.cpp; path = ../NodeObjects/AeSceneCollector.cpp; sourceTree = "<group>"; };
 		4A65129F243F331700C32C49 /* AeConteiner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AeConteiner.cpp; path = ../NodeObjects/AeConteiner.cpp; sourceTree = "<group>"; };
+		4A69B21125DBABA9002D94B9 /* AeFileNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AeFileNode.cpp; path = ../BatchRelinker/AeFileNode.cpp; sourceTree = "<group>"; };
+		4A69B21225DBABA9002D94B9 /* AeFileNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeFileNode.h; path = ../BatchRelinker/AeFileNode.h; sourceTree = "<group>"; };
 		4A6DD6222425B587001AB42D /* GF_AEGP_ErrorsHandling.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GF_AEGP_ErrorsHandling.cpp; path = ../GF_AEGP_ErrorsHandling.cpp; sourceTree = "<group>"; };
 		4A6DD6242425B5AF001AB42D /* GF_AEGP_ErrorsHandling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GF_AEGP_ErrorsHandling.h; path = ../GF_AEGP_ErrorsHandling.h; sourceTree = "<group>"; };
 		4A6DD6252425D852001AB42D /* GF_LIBS_C4D_Relinker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GF_LIBS_C4D_Relinker.h; path = ../GF_LIBS_C4D_Relinker.h; sourceTree = "<group>"; };
@@ -152,6 +155,8 @@
 		4A7F218B25D2C637003CD8DD /* BatchRelinker */ = {
 			isa = PBXGroup;
 			children = (
+				4A69B21125DBABA9002D94B9 /* AeFileNode.cpp */,
+				4A69B21225DBABA9002D94B9 /* AeFileNode.h */,
 				4A7F219C25D2C833003CD8DD /* AeBatchRelinker.cpp */,
 				4A7F219E25D2C834003CD8DD /* AeBatchRelinker.h */,
 				4A7F219925D2C833003CD8DD /* AeFileReferenceInterface.cpp */,
@@ -360,6 +365,7 @@
 				4A3D131D23F4B49E00517E24 /* GF_AEGP_Dumper.cpp in Sources */,
 				4A36D2AF24AD779B0044DC28 /* AeGfsFileBuilder.cpp in Sources */,
 				4A50F6F5244DDCFC002E0A7D /* MissingSuiteError.cpp in Sources */,
+				4A69B21325DBABAA002D94B9 /* AeFileNode.cpp in Sources */,
 				4A6512A3243F331800C32C49 /* AeSceneCollector.cpp in Sources */,
 				4A6512A1243F331800C32C49 /* AeCompNode.cpp in Sources */,
 				4A3D131C23F4B49E00517E24 /* GF_AEGP_Relinker.cpp in Sources */,

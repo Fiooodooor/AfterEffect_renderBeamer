@@ -7,8 +7,8 @@ GF_Dumper::GF_Dumper(SPBasicSuite *basicSuite, AEGP_PluginID pI, beamerParamsStr
     , suites(sP)
     , pluginId(pI)
     , relinkerProg(NULL)
+	, rootProjH(NULL)
 	, relinker(basicSuite, pI)
-    , rootProjH(NULL)
     , bps(*GF_params)
 {
     projectName[0] = '\0';
@@ -54,13 +54,16 @@ ErrorCodesAE GF_Dumper::PreCheckProject(SPBasicSuite *pb, AEGP_PluginID pluginId
 		ERROR_THROW_AE_MOD(suites.ProjSuite6()->AEGP_GetProjectPath(rootProjH, &memoryH));
 		ERROR_THROW_AE_MOD(rbUtilities::copyMemhUTF16ToString(pb, memoryH, GF_params->projectPath));
 
-		if (projectDirty == TRUE || GF_params->projectPath.empty()) { throw PluginError(_ErrorCaller, ErrorCodesAE::ProjectNotSaved); }
-		GF_params->bp.originalProject = GF_params->projectPath;
+		if (projectDirty == TRUE || GF_params->projectPath.empty())
+		{
+			throw PluginError(_ErrorCaller, ErrorCodesAE::ProjectNotSaved);
+		}
+        GF_params->bp.originalProject = fs::path(GF_params->projectPath).lexically_normal();
 		GF_params->bp.projectFilenameCorrect = GF_params->bp.originalProject.filename();
 		rbUtilities::pathStringFixIllegal(GF_params->bp.projectFilenameCorrect, false, false);
-		rbUtilities::getTimeString(GF_params->timeString, 20, true);
-
-	#ifdef AE_OS_WIN
+        rbUtilities::getTimeString(GF_params->timeString, 20, true);
+    
+	#ifdef AE_OS_WIN        
 		rbUtilities::getEnvVariable("USERPROFILE", GF_params->userPath, AEGP_MAX_PATH_SIZE);		
 	#elif defined AE_OS_MAC
 		strcpy(GF_params->userPath, getenv("HOME"));
@@ -70,14 +73,14 @@ ErrorCodesAE GF_Dumper::PreCheckProject(SPBasicSuite *pb, AEGP_PluginID pluginId
 		if (GF_params->userPath[0] == '\0' || !fs::exists(GF_params->beamerScript)) {
 			throw PluginError(_ErrorCaller, ErrorCodesAE::GetLocalBeamerPath);
 		}
-		GF_params->bp.tempLogPath = GF_params->userPath;
-		GF_params->bp.tempLogPath += L"\\.renderbeamer\\log\\aftereffects\\";		
+		GF_params->bp.tempLogPath = fs::path(GF_params->userPath) / fs::path(".renderbeamer") / fs::path("log") / fs::path("aftereffects");
+
 		fs::create_directories(GF_params->bp.tempLogPath, LogCreateError);
-		GF_params->bp.tempLogFile = L"pluginLog_afterEffects_";
-		GF_params->bp.tempLogFile += GF_params->bp.projectFilenameCorrect.filename().replace_extension(L"_");
-		GF_params->bp.tempLogFile += GF_params->timeString;
-		GF_params->bp.tempLogFile += L".txt";
-		GF_params->bp.tempLogPath += GF_params->bp.tempLogFile.c_str();
+		GF_params->bp.tempLogFile = "Log_AE_renderBeamer_";
+        GF_params->bp.tempLogFile += fs::path(GF_params->bp.projectFilenameCorrect.filename()).replace_extension();
+		GF_params->bp.tempLogFile += std::wstring(GF_params->timeString) + L".txt";
+		GF_params->bp.tempLogPath /= GF_params->bp.tempLogFile.c_str();
+        GF_params->bp.tempLogPath = GF_params->bp.tempLogPath.lexically_normal();
 		
 		GF_Dumper::rbProj()->createLogger(GF_params->bp.tempLogPath.wstring().c_str(), std::fstream::out | std::fstream::trunc);
 		GF_Dumper::rbProj()->logg(L"PreChecker", L"Info", L"Pre check phase I success. Looking for active rq items");
@@ -107,7 +110,7 @@ ErrorCodesAE GF_Dumper::PreCheckProject(SPBasicSuite *pb, AEGP_PluginID pluginId
 ErrorCodesAE GF_Dumper::PrepareProject()
 {
 	ERROR_CATCH_START_MOD(CallerModuleName::PrePreparationModule)
-		GF_Dumper::rbProj()->logg(L"PrepareProject", L"Info", L"Prepare project method start. ");
+		GF_Dumper::rbProj()->logg("PrepareProject", "Info", "Prepare project method start. ");
 		AEGP_MemHandle memoryH = NULL;
 		FS_ERROR_CODE(fsError);
 
@@ -116,7 +119,7 @@ ErrorCodesAE GF_Dumper::PrepareProject()
 		GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, 1, 100));
 
 		bps.beamerTmpFile = fs::temp_directory_path(fsError);
-		bps.beamerTmpFile += L"beamerDataExchange.dat";
+		bps.beamerTmpFile /= "beamerDataExchange.dat";
 		if (fsError.value() != 0)
 		{
 			throw PluginError(_ErrorCaller, GetLocalTempDirectory);
@@ -129,7 +132,7 @@ ErrorCodesAE GF_Dumper::PrepareProject()
 		{
 			throw PluginError(_ErrorCaller, GetLocalUsersPlugin);
 		}
-		bps.fontLibPath = bps.pluginPath + std::wstring(FONT_LIB_NAME);
+        bps.fontLibPath = bps.pluginPath + std::wstring(FONT_LIB_NAME);
 		bps.c4d_LibPath = bps.pluginPath + std::wstring(C4D_LIB_NAME);
 		rbProj()->logg(L"renderBreamer", L"Library_C4D_Relinker", (std::wstring(fs::exists(bps.c4d_LibPath) ? L"OK : " : L"ERR : ") + bps.c4d_LibPath).c_str());
 		rbProj()->logg(L"renderBreamer", L"Library_Font_Relinker", (std::wstring(fs::exists(bps.fontLibPath) ? L"OK : " : L"ERR : ") + bps.fontLibPath).c_str());
@@ -138,7 +141,7 @@ ErrorCodesAE GF_Dumper::PrepareProject()
 		ERROR_THROW_AE_MOD(suites.ProjSuite6()->AEGP_GetProjectName(rootProjH, &projectName[0]));
 		ERROR_THROW_AE_MOD(rbUtilities::execScript(sP, pluginId, "app.version", bps.versionStr, 32));
 
-		bps.bp.projectRootCorrect = fs::path(bps.bp.originalProject.filename()).replace_extension().c_str();
+		bps.bp.projectRootCorrect = bps.bp.originalProject.filename().c_str();
 		rbUtilities::pathStringFixIllegal(bps.bp.projectRootCorrect, false, true);
 
 		if (rbUtilities::execBeamerCmd(sP, BeamerMask_GetUser, bps.rmtUser, 14, bps) != NoError) {			
@@ -148,96 +151,82 @@ ErrorCodesAE GF_Dumper::PrepareProject()
 		rbProj()->logg(L"PrepareProject", L"User", bps.rmtUser);
 	
 		if (rbUtilities::execBeamerCmd(sP, BeamerMask_GetTemp, bps.beamerTmpPath, AEGP_MAX_PATH_SIZE, bps) != NoError) {
-			bps.bp.tempPrefix = bps.bp.originalProject.parent_path().c_str();
+            bps.bp.tempPrefix = bps.bp.originalProject.parent_path().lexically_normal().c_str();
 		}
 		else {
-			bps.bp.tempPrefix = bps.beamerTmpPath;
+            bps.bp.tempPrefix = bps.beamerTmpPath;
 		}
 	
 		rbProj()->logg(L"PrepareProject", L"TmpPathPrefix", bps.bp.tempPrefix.wstring().c_str());
 			
 		bps.bp.tempSufix = MAIN_BEAMER_TEMP;
-		bps.bp.tempSufix += fs::path(bps.timeString).c_str();
-		bps.bp.relinkedSceneRoot = bps.bp.tempPrefix;
-		bps.bp.relinkedSceneRoot += bps.bp.tempSufix;
-		bps.bp.relinkedSceneRoot /= bps.bp.projectRootCorrect.c_str();
-
-		bps.bp.relProjPath = bps.bp.relinkedSceneRoot.generic_wstring().c_str();
-		bps.bp.relProjPath += MAIN_PROJECT_DIR;
+        bps.bp.tempSufix += bps.timeString;
+		bps.bp.relinkedSceneRoot = bps.bp.tempPrefix / bps.bp.tempSufix / bps.bp.projectRootCorrect.c_str();
+    
+		bps.bp.relProjPath = bps.bp.relinkedSceneRoot.lexically_normal().c_str();
+		bps.bp.relProjPath /= MAIN_PROJECT_DIR1;
 
 		bps.bp.projectCheckVersion = bps.bp.projectRootCorrect.c_str();
-		bps.bp.projectCheckVersion += MAIN_PROJECT_DIR;
+		bps.bp.projectCheckVersion /= MAIN_PROJECT_DIR1;
 		bps.bp.projectCheckVersion /= bps.bp.projectFilenameCorrect.c_str();
 
 		if (rbUtilities::execBeamerCmd(sP, BeamerMask_CheckScene, bps.beamerVersionFilename, AEGP_MAX_PATH_SIZE, bps) == NoError) {
 			bps.bp.projectFilenameCorrect = bps.beamerVersionFilename;
 		}
 
-		bps.bp.remotePath = L"U:\\";
-		bps.bp.remotePath += bps.rmtUser;
-		bps.bp.remotePath += '\\';
-		bps.bp.remotePath += bps.bp.projectRootCorrect.c_str();
-		bps.bp.remoteFootagePath = bps.bp.remotePath.c_str();
-		bps.bp.remoteFootagePath /= MAIN_PROJECT_DIR1;		
+		bps.bp.remotePath = bps.bp.projectRootCorrect.c_str();
+		bps.bp.remotePath /= bps.bp.projectRootCorrect.c_str();
+		bps.bp.remotePath += "-renders";
+		bps.bp.remoteFootagePath = "U:";
+		bps.bp.remoteFootagePath /= bps.rmtUser;
+		bps.bp.remoteFootagePath /= bps.bp.projectRootCorrect.c_str();
+		bps.bp.remoteFootagePath /= MAIN_PROJECT_DIR1;	
 		bps.bp.remoteFootagePath /= MAIN_FOOTAGE_DIR1;
-		bps.bp.remoteFootagePath += '\\';
-		bps.bp.remoteFontsPath = L"\\";
-		bps.bp.remoteFontsPath += bps.bp.projectRootCorrect.c_str();
-		bps.bp.remoteFontsPath += '\\';
-		bps.bp.remoteFontsPath += MAIN_PROJECT_DIR1;
-		bps.bp.remoteFontsPath += MAIN_FOONT_DIR;
+		bps.bp.remoteFontsPath = bps.bp.projectRootCorrect.c_str();
+		bps.bp.remoteFontsPath /= MAIN_PROJECT_DIR1;
+		bps.bp.remoteFontsPath /= MAIN_FOONT_DIR1;
 
-		bps.bp.remoteProjectPath = L"\\";
-		bps.bp.remoteProjectPath += bps.bp.projectRootCorrect.c_str();
-		bps.bp.remoteProjectPath += MAIN_PROJECT_DIR;
+		bps.bp.remoteProjectPath = bps.bp.projectRootCorrect.c_str();
+		bps.bp.remoteProjectPath /= MAIN_PROJECT_DIR1;
 		bps.bp.remoteProjectPath /= bps.bp.projectFilenameCorrect;
 
-		bps.bp.rqMainOutput = bps.bp.relinkedSceneRoot.generic_wstring().c_str();
+		bps.bp.rqMainOutput = bps.bp.relinkedSceneRoot.lexically_normal().c_str();
 
-		bps.bp.footageMainOutput = bps.bp.relProjPath;
-		bps.bp.footageMainOutput += MAIN_FOOTAGE_DIR;
-		bps.bp.footageMainOutput = bps.bp.footageMainOutput.generic_wstring();
-		bps.bp.fontsMainOutput = bps.bp.relProjPath;
-		bps.bp.fontsMainOutput += MAIN_FOONT_DIR;
-		bps.bp.logsMainOutput = bps.bp.relProjPath;
-		bps.bp.logsMainOutput += MAIN_LOGS_DIR;
-		bps.bp.relGfsFile = bps.bp.relProjPath.c_str();
-		bps.bp.relGfsFile /= bps.bp.remoteProjectPath.filename().replace_extension(L".gfs").c_str();
+        bps.bp.footageMainOutput = bps.bp.relProjPath.lexically_normal();
+		bps.bp.footageMainOutput /= MAIN_FOOTAGE_DIR1;
+		bps.bp.fontsMainOutput = bps.bp.relProjPath.lexically_normal();
+		bps.bp.fontsMainOutput /= MAIN_FOONT_DIR1;
+        bps.bp.logsMainOutput = bps.bp.relProjPath.lexically_normal();
+		bps.bp.logsMainOutput /= MAIN_LOGS_DIR1;
+        bps.bp.relGfsFile = bps.bp.relProjPath.lexically_normal().c_str();
+		bps.bp.relGfsFile /= fs::path(bps.bp.projectFilenameCorrect.filename()).replace_extension(".gfs");
 
-		bps.bp.relinkedSavePath = bps.bp.relProjPath;
-		bps.bp.relinkedSavePath /= bps.bp.remoteProjectPath.filename();
+        bps.bp.relinkedSavePath = bps.bp.relProjPath.lexically_normal();
+		bps.bp.relinkedSavePath /= bps.bp.projectFilenameCorrect.filename();
+        bps.bp.relinkedSavePath.replace_extension(bps.bp.originalProject.extension());
 
-		if (bps.bp.relinkedSavePath.has_extension())
-			bps.bp.relinkedSavePath.replace_extension(bps.bp.originalProject.extension());
-		else
-			bps.bp.relinkedSavePath += bps.bp.originalProject.extension().wstring().c_str();
-
-		rbProj()->logg(L"PrepareProject", L"CreateDir", bps.bp.relProjPath.wstring().c_str());
-		fs::create_directories(bps.bp.relProjPath);
-		rbProj()->logg(L"PrepareProject", L"CreateDir", bps.bp.footageMainOutput.wstring().c_str());
-		fs::create_directories(bps.bp.footageMainOutput);
-		rbProj()->logg(L"PrepareProject", L"CreateDir", bps.bp.fontsMainOutput.wstring().c_str());
-		fs::create_directories(bps.bp.fontsMainOutput);
-		rbProj()->logg(L"PrepareProject", L"CreateDir", bps.bp.logsMainOutput.wstring().c_str());
-		fs::create_directories(bps.bp.logsMainOutput);
-		rbProj()->logg(L"PrepareProject", L"CreateDir", bps.bp.rqMainOutput.wstring().c_str());
-		fs::create_directories(bps.bp.rqMainOutput);
-		bps.bp.logsMainOutput += bps.bp.tempLogFile.c_str();
+		rbProj()->logg(L"PrepareProject", L"CreateDir", bps.bp.relProjPath.lexically_normal().wstring().c_str());
+		fs::create_directories(bps.bp.relProjPath.lexically_normal());
+		rbProj()->logg(L"PrepareProject", L"CreateDir", bps.bp.footageMainOutput.lexically_normal().wstring().c_str());
+		fs::create_directories(bps.bp.footageMainOutput.lexically_normal());
+		rbProj()->logg(L"PrepareProject", L"CreateDir", bps.bp.fontsMainOutput.lexically_normal().wstring().c_str());
+		fs::create_directories(bps.bp.fontsMainOutput.lexically_normal());
+		rbProj()->logg(L"PrepareProject", L"CreateDir", bps.bp.logsMainOutput.lexically_normal().wstring().c_str());
+		fs::create_directories(bps.bp.logsMainOutput.lexically_normal());
+		rbProj()->logg(L"PrepareProject", L"CreateDir", bps.bp.rqMainOutput.lexically_normal().wstring().c_str());
+		fs::create_directories(bps.bp.rqMainOutput.lexically_normal());
+		bps.bp.logsMainOutput /= bps.bp.tempLogFile.c_str();
 
 		rbProj()->logg(L"PrepareProject", L"Info", L"Project paths prepared success.");
 		rbUtilities::getVersionString(tmp_message, 512);
 		rbProj()->logg("PrepareProject", "VersionString", tmp_message);
 
-		ERROR_THROW_AE_MOD(AeGfsFileBuilder::getInstance()->initGfsFileBuilder(bps));
+		ERROR_THROW_AE_MOD(AeGfsFileCreator::getInstance()->InitGfsFileBuilder(bps));
 			
-		//tmpOutPath.parent_path().generic_wstring();
-		//if (rbUtilities::getCpuInfoString(sP, cpuInfo, 512, bps.beamerTmpFile.generic_wstring().c_str()) == ErrorCodesAE::NoError)
-		//	rbProj()->logg(L"System", L"CPU", cpuInfo);
-
-		rbProj()->logg("Project", "Name", projectName);
-		rbProj()->logg(L"PrepareProject", L"SourcePath", bps.bp.originalProject.wstring().c_str());
-		rbProj()->logg(L"PrepareProject", L"RelinkedPath", bps.bp.relProjPath.wstring().c_str());
-		rbProj()->logg(L"PrepareProject", L"RelinkedSavePath", bps.bp.relinkedSavePath.wstring().c_str());		
+		rbProj()->logg("PrepareProject", "ProjectName", projectName);
+		rbProj()->logg(L"PrepareProject", L"SourcePath", bps.bp.originalProject.lexically_normal().wstring().c_str());
+		rbProj()->logg(L"PrepareProject", L"RelinkedPath", bps.bp.relProjPath.lexically_normal().wstring().c_str());
+		rbProj()->logg(L"PrepareProject", L"RelinkedSavePath", bps.bp.relinkedSavePath.lexically_normal().wstring().c_str());
 		rbProj()->logg(L"PrepareProject", L"TmpPath", bps.beamerTmpPath);
 
 		suites.AppSuite6()->PF_DisposeAppProgressDialog(relinkerProg);
@@ -249,7 +238,6 @@ ErrorCodesAE GF_Dumper::PrepareProject()
 
 ErrorCodesAE GF_Dumper::newBatchDumpProject()
 {
-
 	ERROR_CATCH_START_MOD(CallerModuleName::ProjectDumperModule)
 
 	relinker.RelinkerInitialize(bps, *rbProj(), TRUE);
@@ -261,14 +249,13 @@ ErrorCodesAE GF_Dumper::newBatchDumpProject()
 	GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, 3, 4));
 	ERROR_RETURN(newCollectEffectsInfo());
 	
-	AeGfsFileBuilder::getInstance()->generateFullGfs();
+	AeGfsFileCreator::getInstance()->GenerateAndSaveDocument();
 	relinker.RelinkProject(rootProjH);
 
 	while(!sc->renderFootageSortedList.empty())
 	{
-		AeFootageNode* pt = sc->renderFootageSortedList.back();
+		delete sc->renderFootageSortedList.back();
 		sc->renderFootageSortedList.pop_back();
-		delete pt;
 	}
 
 	AeBatchRelinker batchRelinker(sP, relinker.GetC4dLibloader(), *rbProj(), relinkerProg, bps.bp.relinkedSavePath, bps.bp.remoteFootagePath.parent_path());
@@ -312,7 +299,7 @@ ErrorCodesAE GF_Dumper::newDumpProject()
 	rbProj()->logg(L"MainDumper", L"Collector", L"Collecting effects list.");
 	ERROR_RETURN(newCollectEffectsInfo());
 
-	AeGfsFileBuilder::getInstance()->generateFullGfs();
+	AeGfsFileCreator::getInstance()->GenerateAndSaveDocument();
 
 	rbProj()->logg(L"MainDumper", L"Collector", L"Saving project changes.");
 	relinker.RelinkProject(rootProjH);
@@ -387,8 +374,8 @@ ErrorCodesAE GF_Dumper::newCopyCollectFonts()
 			for (int iter = 0; iter < fontsContainer.size(); iter++) 
 			{
                 gfsNode = new gfsFontNode({ iter, std::string(node->getFont()), fontsContainer.at(iter) });
-				AeGfsFileBuilder::getInstance()->pushFontNode(gfsNode);
-                rbProj()->loggA(6, "Collected font=", std::to_string(iter).c_str(), node->getFont(), node->getFamily(), node->getLocation(), FS_U8STRING(gfsNode->fontFile.filename()).c_str());
+				if(AeGfsFileCreator::getInstance()->PushFontNode(gfsNode) == NoError)
+					rbProj()->loggA(6, "Collected font=", std::to_string(iter).c_str(), node->getFont(), node->getFamily(), node->getLocation(), FS_U8STRING(gfsNode->fontFile.filename()).c_str());
 			}
 		}
 		else {
@@ -404,10 +391,12 @@ ErrorCodesAE GF_Dumper::newCollectEffectsInfo()
 	gfsEffectNode *gfsEffect;
 	for (auto node : sc->effectsList)
 	{
-		gfsEffect = new gfsEffectNode({ node->getKey(), node->getEffectNameSafe(), node->getEffectMatchN(), node->getEffectCategory() });
-		AeGfsFileBuilder::getInstance()->pushEffectsNode(gfsEffect);
-		rbProj()->logg(L"Collector", L"EffectsCollector", L"Effect name: ", false);
-		rbProj()->logger << node->getEffectName() << L", match name: " << node->getEffectMatchN() << L", catgegory: " << node->getEffectCategory() << L", install key: " << node->getKey() << std::endl;
+		gfsEffect = new gfsEffectNode({ node->getKey(), node->getEffectName(), node->getEffectMatchN(), node->getEffectCategory() });
+		if(AeGfsFileCreator::getInstance()->PushEffectNode(gfsEffect) == NoError)
+        {
+            rbProj()->logg(L"Collector", L"Effect", L"Name:", false);
+            rbProj()->logger << node->getEffectName() << L",  MatchName:" << node->getEffectMatchN() << L",  Catgegory:" << node->getEffectCategory() << L",  InstallKey:" << node->getKey() << std::endl;
+        }
 	}
 	ERROR_CATCH_END_LOGGER_RETURN("EffectsCollecting")
 }
@@ -420,8 +409,7 @@ ErrorCodesAE GF_Dumper::DumpQueeItems(fs::path outputPath)
         while (rq_Index < rq_ItemsN)
         {
 			ERROR_THROW_MOD(DumpQueeItem(rq_Index++, fs::path(outputPath)));
-        }
-		AeGfsFileBuilder::getInstance()->generateRqItems();
+        }		
 	ERROR_CATCH_END_RETURN(suites)
 }
 
@@ -462,9 +450,9 @@ ErrorCodesAE GF_Dumper::DumpQueeItem(A_long itemIndex, fs::path outputPath)
 		rbUtilities::leaveAllowedOnly(gfsItem->compositioName);
 		//ERROR_THROW_AE_MOD(suites.ItemSuite7()->AEGP_SetItemName(rq_ItemH, gfsItem->compositioName));
 
-		rbProj()->logg(L"QueeItemDumper", L"Parsed Render quee item nr:", std::to_wstring(itemIndex + 1).c_str());
+		rbProj()->logg(L"QueueItemDumper", L"Parsed Render quee item nr:", std::to_wstring(itemIndex + 1).c_str());
 		ERROR_THROW_AE_MOD(DumpOutputModules(rq_ItemRef, rq_OutModulessN, gfsItem, outputPath));
-		AeGfsFileBuilder::getInstance()->pushRqItem(gfsItem);
+		AeGfsFileCreator::getInstance()->PushRenderQueueItem(gfsItem);
 ;
     }
 	ERROR_CATCH_END_LOGGER_RETURN("QueueItem")
@@ -475,7 +463,6 @@ ErrorCodesAE GF_Dumper::DumpOutputModules(AEGP_RQItemRefH &rq_ItemRef, A_long ou
 	ERROR_CATCH_START_MOD(CallerModuleName::OutputCollectModule)
 		if (!parentItem) throw NullPointerResult;
 
-		char16_t* tempPtr = nullptr;
 		std::string memBuff1, memBuff2;	
 		AEGP_MemHandle memH1 = NULL, memH2 = NULL;
 		AEGP_OutputModuleRefH rq_ItemOutModuleRef = NULL;
@@ -488,6 +475,7 @@ ErrorCodesAE GF_Dumper::DumpOutputModules(AEGP_RQItemRefH &rq_ItemRef, A_long ou
 			ERROR_AEER(suites.OutputModuleSuite4()->AEGP_GetOutputModuleByIndex(rq_ItemRef, --outModulesNumber, &rq_ItemOutModuleRef));
 			ERROR_AEER(suites.OutputModuleSuite4()->AEGP_GetOutputFilePath(rq_ItemRef, rq_ItemOutModuleRef, &memH1));
 #ifndef USE_BOOST
+            char16_t* tempPtr = nullptr;
 			ERROR_AEER(suites.MemorySuite1()->AEGP_LockMemHandle(memH1, reinterpret_cast<void**>(&tempPtr)));
 			if (_ErrorCode == NoError) outNode->outputFile = tempPtr;
 			ERROR_AEER(suites.MemorySuite1()->AEGP_UnlockMemHandle(memH1));

@@ -13,17 +13,19 @@
 #define GF_PLUGIN_LANGUAGE UserLanguage::UserEnglish
 #define GF_PLUGIN_BUILD_GARAGEFARM 1    // If not, the copernicus build will be compiled
 
-#define ALLOWED_CHARACTERSA "_-0123456789ABCDEFGHIJKLMNOPQRSTUWVXYZabcdefghijklmnopqrstuwvxyz/\\[]:!"
+#define ALLOWED_CHARACTERSA  "_-0123456789ABCDEFGHIJKLMNOPQRSTUWVXYZabcdefghijklmnopqrstuwvxyz/\\[]:!"
 #define ALLOWED_CHARACTERSW L"_-0123456789ABCDEFGHIJKLMNOPQRSTUWVXYZabcdefghijklmnopqrstuwvxyz/\\[]:!"
-#define DISALLOWED_CHARACTERSA " ~`!@#$%^&*()+=[]{};:'\"\\|,<>/?."
+#define DISALLOWED_CHARACTERSA  " ~`!@#$%^&*()+=[]{};:'\"\\|,<>/?."
 #define DISALLOWED_CHARACTERSW L" ~`!@#$%^&*()+=[]{};:'\"\\|,<>/?."
-#define MAIN_BEAMER_TEMP L"\\beamer_temp_"
+#define MAIN_BEAMER_TEMP L"beamer_temp_"
 #define MAIN_PROJECT_DIR L"\\data"
 #define MAIN_PROJECT_DIR1 L"data"
 #define MAIN_FOOTAGE_DIR L"\\footage\\"
 #define MAIN_FOOTAGE_DIR1 L"footage"
 #define MAIN_FOONT_DIR L"\\fonts\\"
+#define MAIN_FOONT_DIR1 L"fonts"
 #define MAIN_LOGS_DIR L"\\logs\\"
+#define MAIN_LOGS_DIR1 L"logs"
 #define MAIN_OUTPUT_DIR1 L"\\.."
 #define BEAMER_TEMP_FILE L"\\beamer_tmp.txt"
 
@@ -170,24 +172,46 @@ typedef struct {
     fs::path tempPrefix;
     fs::path tempSufix;
 } beamerPaths;
-
-typedef struct {
-    A_char              versionStr[32];
-    A_char              userPath[AEGP_MAX_PATH_SIZE];
-    fs::path            beamerTmpFile;
-    std::wstring        projectPath;
-    std::wstring        pluginPath;
-    std::wstring        fontLibPath;
-    std::wstring        c4d_LibPath;
-    wchar_t             beamerTmpPath[AEGP_MAX_PATH_SIZE];
-    wchar_t             beamerScript[AEGP_MAX_PATH_SIZE];
-    wchar_t             beamerExecScript[2048];
-    wchar_t             rmtUser[16];
-    wchar_t             timeString[20];
-    wchar_t             beamerVersionFilename[AEGP_MAX_PATH_SIZE];
-    A_long              colectedItems;
-    A_long              currentItem;
-    beamerPaths         bp;
-} beamerParamsStruct;
-
+/*
+#ifdef AE_OS_MAC
+    typedef struct {
+        A_char              versionStr[32];
+        A_char              userPath[AEGP_MAX_PATH_SIZE];
+        fs::path            beamerTmpFile;
+        std::string         projectPath;
+        std::string         pluginPath;
+        std::string         fontLibPath;
+        std::string         c4d_LibPath;
+        A_char              beamerTmpPath[AEGP_MAX_PATH_SIZE];
+        A_char              beamerScript[AEGP_MAX_PATH_SIZE];
+        A_char              beamerExecScript[2048];
+        A_char              rmtUser[16];
+        A_char              timeString[20];
+        A_char              beamerVersionFilename[AEGP_MAX_PATH_SIZE];
+        A_long              colectedItems;
+        A_long              currentItem;
+        beamerPaths         bp;
+    } beamerParamsStruct;
+#else
+ */
+    typedef struct {
+        A_char              versionStr[32];
+        A_char              userPath[AEGP_MAX_PATH_SIZE];
+        fs::path            beamerTmpFile;
+        std::wstring        projectPath;
+        std::wstring        pluginPath;
+        std::wstring        fontLibPath;
+        std::wstring        c4d_LibPath;
+        wchar_t             beamerTmpPath[AEGP_MAX_PATH_SIZE];
+        wchar_t             beamerScript[AEGP_MAX_PATH_SIZE];
+        wchar_t             beamerExecScript[2048];
+        wchar_t             rmtUser[16];
+        wchar_t             timeString[20];
+        A_char              timeStringA[20];
+        wchar_t             beamerVersionFilename[AEGP_MAX_PATH_SIZE];
+        A_long              colectedItems;
+        A_long              currentItem;
+        beamerPaths         bp;
+    } beamerParamsStruct;
+//#endif
 #endif

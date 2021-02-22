@@ -8,7 +8,7 @@
 #include "GF_AEGP_Main.h"
 #include "GF_AEGP_Strings.h"
 #include "NodeObjects/AeConteiner.h"
-#include "AeGfsFileBuilder.h"
+#include "AeGfsFileCreator.h"
 
 #include "BatchRelinker/AeBatchRelinker.h"
 

@@ -10,16 +10,14 @@ ErrorCodesAE AeBatchRelinker::ParseAepxXmlDocument()
 		if (aepxXmlDocument.LoadFile(aepxXmlDocumentPath.string().c_str()) != tinyxml2::XML_NO_ERROR)
 			return ErrorResult;
 
-		const std::string searchStringFile = "fileReference";
-		const std::string searchStringPin = "Pin";
 		tinyxml2::XMLElement *AepxXmlElement = aepxXmlDocument.FirstChildElement();
 		FileReferenceInterface *fileReference;
 		
 		while (AepxXmlElement)
 		{
-			if (AepxXmlElement->Value() && !std::string(AepxXmlElement->Value()).compare(searchStringFile))
+			if (AepxXmlElement->Value() && !std::string(AepxXmlElement->Value()).compare("fileReference"))
 			{
-				if (AepxXmlElement->Parent()->Parent() && !std::string(AepxXmlElement->Parent()->Parent()->Value()).compare(searchStringPin))
+				if (AepxXmlElement->Parent()->Parent() && !std::string(AepxXmlElement->Parent()->Parent()->Value()).compare("Pin"))
 				{
 					GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(progressDialog, 0, static_cast<A_long>(FileReferenceInterfaceHelper::GetUniqueFilesTotalSize())))
 					rbProjLogger->logg("BatchAepxParser", "Path", AepxXmlElement->Attribute("fullpath"));
@@ -62,18 +60,51 @@ FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElemen
 
 	try {		
 		fs::path FileBasePath = fs::absolute(fs::path(fileReferencePt->Attribute("fullpath"))).lexically_normal();
-		/*fs::file_status FileBasePathStatus = status(FileBasePath, fileRefError);
+		int ascendcount_base = fileReferencePt->IntAttribute("ascendcount_base");
+		int ascendcount_target = fileReferencePt->IntAttribute("ascendcount_target");
 
-		if (fileRefError.value() != 0)
-			return nullptr;
+		try {			
+			fs::file_status FileBasePathStatus = status(FileBasePath);
+	
+			if (fs::status_known(FileBasePathStatus) ? !fs::exists(FileBasePathStatus) : !fs::exists(FileBasePath))
+				throw fs::filesystem_error("File does not exist! Trying to AE style path resolve ", std::error_code(100, std::generic_category()));
+			if (FileBasePathStatus.type() == fs::file_type::unknown)
+				return nullptr;
+			if (fs::is_symlink(FileBasePath))
+				FileBasePath = fs::read_symlink(FileBasePath);
+		}
+		catch(fs::filesystem_error &e) {
+			rbProjLogger->loggErr("BatchAepxParser", "Path", e.what());
+			if(ascendcount_base != 0 && ascendcount_target != 0)
+			{
+				FileBasePath = aepxXmlDocumentPath;
+				fs::path FileBaseRelative = fs::absolute(fs::path(fileReferencePt->Attribute("fullpath"))).lexically_normal();
+				fs::path FileBaseFilename;
+				if (FileBaseRelative.has_filename()) {
+					FileBaseFilename = FileBaseRelative.filename();
+					FileBaseRelative = FileBaseRelative.parent_path();
+					--ascendcount_target;
+				}
+				
+				auto it = FileBaseRelative.end();
+				
+				while(ascendcount_base--)
+					FileBasePath = FileBasePath.parent_path();
+				while (it != FileBaseRelative.begin() && --ascendcount_target)
+					--it;
+				
+				while (it != FileBaseRelative.end())
+					FileBasePath /= (it++)->string();
 
-		if (fs::status_known(FileBasePathStatus) ? !fs::exists(FileBasePathStatus) : (!fs::exists(FileBasePath, fileRefError) || fileRefError.value() != 0))
-			return nullptr;*/
-
+				if (!FileBaseFilename.empty())
+					FileBasePath /= FileBaseFilename;
+			}
+		}
+		
 		if (fileReferencePt->Parent()->Parent()->Parent() && fileReferencePt->Parent()->Parent()->Parent()->FirstChildElement()) {
 			if (strcmp(fileReferencePt->Parent()->Parent()->Parent()->FirstChildElement()->Name(), "iide") == 0) {			
 				fileUid = std::to_string(FileReferenceInterfaceHelper::GetLongFilesUID(std::string(fileReferencePt->Parent()->Parent()->Parent()->FirstChildElement()->Attribute("bdata"))));	
-			}		//fileUid = std::string(fileReferencePt->Parent()->Parent()->Parent()->FirstChildElement()->Attribute("bdata"));
+			}	
 		}
 
 		if (fileReferencePt->Attribute("target_is_folder", "0"))
@@ -155,9 +186,10 @@ ErrorCodesAE AeBatchRelinker::CopyUniqueFiles(const fs::path &localCopyPath, con
 			}
 			else
 			{
-				if(fs::copy_file(node->GetFileFullSourcePath(i), node->GetFileFullCopyPath(i), FS_COPY_OPTIONS, copyError))
+                fs::copy_file(node->GetFileFullSourcePath(i), node->GetFileFullCopyPath(i), FS_COPY_OPTIONS, copyError);
+                if(copyError.value() == 0)
 				{
-					rbProjLogger->logg("BatchRelink::Copy", node->GetFileFullSourcePath(i).string().c_str(), node->GetFileFullCopyPath(i).string().c_str());
+					rbProjLogger->logg("BatchRelink", "Copy", node->GetFileFullSourcePath(i).string().c_str());
 				}
 				else
 				{

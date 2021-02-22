@@ -60,8 +60,8 @@ long AeEffectNode::loadEffectInfo(SPBasicSuite *sp)
 	suites.EffectSuite4()->AEGP_GetEffectCategory(installedKey, effectCategory);
 	suites.EffectSuite4()->AEGP_GetEffectName(installedKey, effectNameSafe);
 	rbUtilities::leaveAllowedOnly(effectNameSafe);
-	rbUtilities::leaveAllowedOnly(effectMatchN);
-	rbUtilities::leaveAllowedOnly(effectCategory);
+	//rbUtilities::leaveAllowedOnly(effectMatchN);
+	//rbUtilities::leaveAllowedOnly(effectCategory);
 	return 0;
 }
 

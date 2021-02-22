@@ -24,9 +24,9 @@ ErrorCodesAE GF_AEGP_Relinker::RelinkerInitialize(beamerParamsStruct &tmpBps, rb
 		if (batchRelink == TRUE)
 		{
 			if (tmpBps.bp.relinkedSavePath.has_extension())
-				tmpBps.bp.relinkedSavePath.replace_extension(fs::path(".aepx"));
+				tmpBps.bp.relinkedSavePath.replace_extension(".aepx");
 			else
-				tmpBps.bp.relinkedSavePath += fs::path(".aepx");
+				tmpBps.bp.relinkedSavePath += ".aepx";
 		}
 		rbUtilities::toUTF16(tmpBps.bp.relinkedSavePath.wstring().c_str(), projectSavePath, AEGP_MAX_PATH_SIZE);
 		
@@ -173,8 +173,9 @@ ErrorCodesAE GF_AEGP_Relinker::CopyFont(AeFontNode *node, A_long id, std::vector
 	if (fs::exists(node->path))
 	{
 		node->pathRelinked = bps->bp.fontsMainOutput;
-		node->pathRelinked += node->path.filename();
-        if (!fonts_interface || !fonts_interface->isLibraryLoaded()) {
+		node->pathRelinked /= node->path.filename();
+        if (!fonts_interface || !fonts_interface->isLibraryLoaded())
+        {
 			if (GFCopyFile(std::to_string(id), node->path, node->pathRelinked, false, true)) {
 				fontsList.push_back(FS_U8STRING(node->pathRelinked.filename()).c_str());
 				rbProj->logg("CopyFont", FS_U8STRING(node->path).c_str(), FS_U8STRING(node->pathRelinked).c_str());
@@ -217,9 +218,12 @@ ErrorCodesAE GF_AEGP_Relinker::CopyConvertFontLib(PlatformLibLoader* libIt, fs::
                 rbProj->logg("FontLibrary", "RelinkTo", dstPath);
                 
                 converted = theConverter(srcFile, srcPath, dstPath, ind, fntList);
-                if(fntList) {
-                    if(converted > 0 && fntList->pathsTable) {
-                        for(int it=0; it < fntList->structureSize; it++) {
+                if(fntList)
+                {
+                    if(converted > 0 && fntList->pathsTable)
+                    {
+                        for(int it=0; it < fntList->structureSize; it++)
+                        {
                             fs::path fontFile(fntList->pathsTable[it].fontPath);
                             fontsList.push_back(FS_U8STRING(fontFile.filename()) );
                         }

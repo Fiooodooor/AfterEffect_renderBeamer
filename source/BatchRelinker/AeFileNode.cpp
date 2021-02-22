@@ -145,7 +145,7 @@ const fs::path &AeFileNode::GetFileSourcePath() const
 }
 const fs::path &AeFileNode::GetFileFullSourcePath(unsigned long long n)
 {
-	reference_file_full_source_path = GetFileSourcePath();
+	reference_file_full_source_path = GetFileSourcePath().lexically_normal();
 	auto *const pt = GetFilenameCouple(n);
 	if(pt != nullptr)
 		reference_file_full_source_path /= pt->sourceFileName;
@@ -154,7 +154,7 @@ const fs::path &AeFileNode::GetFileFullSourcePath(unsigned long long n)
 fs::path AeFileNode::GetFileFullSourceConstPath(unsigned long long n) const
 {
 	auto *const pt = GetFilenameCouple(n);
-	return GetFileSourcePath() / (pt == nullptr ? "" : pt->sourceFileName);
+	return GetFileSourcePath().lexically_normal() / (pt == nullptr ? "" : pt->sourceFileName);
 }
 const fs::path &AeFileNode::GetFileCopyPath() const
 {
@@ -165,7 +165,7 @@ const fs::path &AeFileNode::GetFileCopyPath() const
 }
 const fs::path &AeFileNode::GetFileFullCopyPath(unsigned long long n)
 {
-	reference_file_full_copy_path = GetFileCopyPath();
+	reference_file_full_copy_path = GetFileCopyPath().lexically_normal();
 	auto *const pt = GetFilenameCouple(n);
 	if (pt != nullptr)
 		reference_file_full_copy_path /= pt->relinkedFileName;
@@ -180,7 +180,7 @@ const fs::path &AeFileNode::GetFileRelinkPath() const
 }
 const fs::path &AeFileNode::GetFileFullRelinkPath(unsigned long long n)
 {
-	reference_file_full_relink_path = GetFileRelinkPath();
+	reference_file_full_relink_path = GetFileRelinkPath().lexically_normal();
 	auto *const pt = GetFilenameCouple(n);
 	if (pt != nullptr)
 		reference_file_full_relink_path /= pt->relinkedFileName;

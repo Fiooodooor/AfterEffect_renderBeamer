@@ -1,4 +1,6 @@
 #pragma once
+#ifndef AEBATCHRELINKER_HPP
+#define AEBATCHRELINKER_HPP
 
 #include "AeFileReferenceInterface.h"
 #include "../GF_AEGP_Relinker.h"
@@ -7,7 +9,7 @@ class AeBatchRelinker
 {
 public:
 	AeBatchRelinker(SPBasicSuite *pb, PlatformLibLoader* c4dLoader, rbProjectClass& rbLogger, PF_AppProgressDialogP &progressD, const fs::path &aepxPath, const fs::path &aepxRemote)
-		: picaBasic(pb), libC4dPointer(c4dLoader), rbProjLogger(&rbLogger), progressDialog(progressD), aepxXmlDocumentPath(aepxPath), aepxXmlDocumentRemotePath(aepxRemote) {}
+        : picaBasic(pb), libC4dPointer(c4dLoader), rbProjLogger(&rbLogger), progressDialog(progressD), aepxXmlDocumentPath(aepxPath.lexically_normal()), aepxXmlDocumentRemotePath(aepxRemote.lexically_normal()) {}
 	
 	ErrorCodesAE ParseAepxXmlDocument();
 	ErrorCodesAE CopyAndRelinkFiles(const fs::path &localAssetsPath, const fs::path &remoteAssetsPath);
@@ -27,3 +29,4 @@ protected:
 	std::vector<FileReferenceInterface*> fileItemNodes;
 };
 
+#endif

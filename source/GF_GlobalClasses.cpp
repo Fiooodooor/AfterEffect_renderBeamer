@@ -39,7 +39,7 @@ void rbProjectClass::loggErr(const wchar_t* object, const wchar_t* type, const w
 	if (appendLogger() == false)
 		return;
 	getTimeString();
-    logger << timeString << "::ERROR::" << rbUtilities::toUtf8(object).c_str() << "::" << type << "::" << rbUtilities::toUtf8(message).c_str();
+    logger << timeString << "::ERROR::" << rbUtilities::toUtf8(object).c_str() << "::" << rbUtilities::toUtf8(type).c_str() << "::" << rbUtilities::toUtf8(message).c_str();
 	if (nLine)
 		logger << std::endl;
 }
@@ -58,7 +58,7 @@ void rbProjectClass::logg(const wchar_t* object, const wchar_t* type, const wcha
 		return;
 	getTimeStringA();
 
-    logger << timeStringA << "::INFO::" << rbUtilities::toUtf8(object).c_str() << "::" << type << "::" << rbUtilities::toUtf8(message).c_str();
+    logger << timeStringA << "::INFO::" << rbUtilities::toUtf8(object).c_str() << "::" << rbUtilities::toUtf8(type).c_str() << "::" << rbUtilities::toUtf8(message).c_str();
     if (nLine)
         logger << std::endl;
 }
@@ -293,13 +293,10 @@ void rbUtilities::pathStringFixIllegal(fs::path &path, bool dissalowed, bool cut
 {
     unsigned long long length;
 	fs::path extension;
-	fs::path tempPath;
-	if (path.has_extension() && cut_extension==false) {
-		extension = path.extension();
-		tempPath = path.replace_extension();
-	}
-	else {
-		tempPath = path;
+	fs::path tempPath = path;
+	if (tempPath.has_extension()) {
+		extension = tempPath.extension();
+		tempPath = tempPath.replace_extension();
 	}
     
     length = TSTRLEN(tempPath.TSTRING().c_str()) + 1;
@@ -320,7 +317,7 @@ void rbUtilities::pathStringFixIllegal(fs::path &path, bool dissalowed, bool cut
 #else
         path.assign(tmp_str, tmp_str + length);
 #endif
-		if (!extension.empty()) {
+		if (!extension.empty() && !cut_extension) {
 			path.replace_extension(extension);
 		}
         delete[] tmp_str;
@@ -561,9 +558,8 @@ void rbUtilities::execCmd(SPBasicSuite *pb, wchar_t* theTmpCmd, wchar_t *bufforW
 ErrorCodesAE rbUtilities::getVersionString(A_char* buff, long buff_size)
 {
 	ERROR_CATCH_START
-		std::string versionString = GetStringPtr(StrID_AboutDialogText);
-		versionString += std::string(GF_PLUGIN_VERSION("renderBeamer for After Effects v.", GF_PLUGIN_VERSION_MAJOR));
-		versionString += std::string(" with c4d relinker and macOs fonts fixer.");
+		const std::string versionString = GetStringPtr(StrID_Name);
+		//versionString += std::string("renderBeamer for After Effects v.") + std::string(GF_PLUGIN_VERSION_MAJOR);
 		ASTRNCPY(buff, versionString.c_str(), buff_size);
 	ERROR_CATCH_END_NO_INFO_RETURN
 }
