@@ -8,15 +8,14 @@
 class LibLoaderInterface
 {
 public:
-    LibLoaderInterface();
-    ~LibLoaderInterface();
-
-    bool loadLibraryFromPathW(const std::wstring path_string);
+    LibLoaderInterface();    
+    virtual ~LibLoaderInterface();    
+    bool loadLibraryFromPathW(const std::wstring &path_string);
     virtual bool loadLibraryFromPath(const std::string path_string) = 0;
     
-    bool isLibraryLoaded();
+    bool isLibraryLoaded() const;
     
-    virtual void unloadTheLibrary();
+    virtual void unloadTheLibrary() = 0;
 
 protected:
    // virtual void* functionLibAddress(const char* functionName) = 0;
@@ -31,10 +30,10 @@ class PlatformLibLoader : public LibLoaderInterface
 {
 public:
     PlatformLibLoader();
-    ~PlatformLibLoader();
+    ~PlatformLibLoader() override;
 
-    virtual bool loadLibraryFromPath(const std::string path_string) override;
-    virtual void unloadTheLibrary() override;
+    bool loadLibraryFromPath(const std::string path_string) override;
+    void unloadTheLibrary() override;
     
     bool loadFunctionDefinition(void** functionPt, const char* functionName);
     

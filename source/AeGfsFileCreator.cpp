@@ -41,6 +41,7 @@ ErrorCodesAE AeGfsFileCreator::GenerateAndSaveDocument()
 
 	// <AfterEffects height="1080" width="1920" fontDir="AE_Mac_test_1K/data/fonts" >
 	doc_aftereffects = gfs_document.NewElement("AfterEffects");
+	doc_aftereffects->SetAttribute("continueOnMissingAssets", "true");
 	doc_aftereffects->SetAttribute("height", pt->height);
 	doc_aftereffects->SetAttribute("width", pt->width);
 	doc_aftereffects->SetAttribute("fontDir", outFontsDir.string().c_str());
@@ -89,10 +90,10 @@ ErrorCodesAE AeGfsFileCreator::GenerateRenderQueueItems()
 		rq_item->SetAttribute("isMultiFr", pt->outMods.back()->outFileIsMultiframe);
 		rq_item->SetAttribute("outType", "png");
 		rq_item->SetAttribute("outInfo", "-");
+		rq_item->SetAttribute("audioEnabled", pt->outMods.back()->outputAudioEnabled);
 
 		if (pt->outMods.back()->outputAudioEnabled) {
-			// audioEnabled="1" audioInUse="1" numChannels="2" bytesPerSample="4294967298" encoding="105553116266498" sampleRate="48000.00000" />
-			rq_item->SetAttribute("audioEnabled", pt->outMods.back()->outputAudioEnabled);
+			// audioEnabled="1" audioInUse="1" numChannels="2" bytesPerSample="4294967298" encoding="105553116266498" sampleRate="48000.00000" />			
 			rq_item->SetAttribute("audioInUse", pt->outMods.back()->outputAudioSetToUse);
 			rq_item->SetAttribute("numChannels", pt->outMods.back()->soundFormat.num_channelsL);
 			rq_item->SetAttribute("bytesPerSample", pt->outMods.back()->soundFormat.bytes_per_sampleL);
@@ -161,7 +162,7 @@ ErrorCodesAE AeGfsFileCreator::PushEffectNode(gfsEffectNode* node_pt)
 ErrorCodesAE AeGfsFileCreator::InitGfsFileBuilder(beamerParamsStruct const &theBps)
 {
 	ClearGfsFileCreator();
-	return InitGfsFileCreator(theBps.bp.relGfsFile, theBps.bp.projectFilenameCorrect, theBps.bp.remotePath, theBps.bp.remoteFontsPath, theBps.versionStr);
+	return InitGfsFileCreator(theBps.bp.relGfsFile, theBps.bp.projectFilenameCorrect, theBps.bp.remote_renders_path, theBps.bp.remoteFontsPath, theBps.versionStr);
 }
 
 ErrorCodesAE AeGfsFileCreator::InitGfsFileCreator(fs::path const &gfsFilePath, fs::path const &fileName, fs::path const &outPath, fs::path const &fontsDir, A_char const *version)

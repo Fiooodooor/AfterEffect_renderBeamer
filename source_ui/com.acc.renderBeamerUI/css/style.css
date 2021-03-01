@@ -29,6 +29,16 @@ body{
     
     font-size: var(--labelFontSize);
 }
+
+.c{
+    text-align: left;
+    padding-bottom: 0px;
+    color: #fff;
+    margin-left: 20px;
+    margin-top: 3px;
+    padding-top: 0px;
+    font-size: var(--labelFontSize);
+}
 .topL{
     
 }
@@ -80,7 +90,7 @@ body{
 
 .center{
     
-    height:720px;
+    height:auto;
 }
 
 .menu nav {
@@ -166,7 +176,7 @@ body{
 
 .scrollable-list{
     width: 95%;
-    height: 220px;
+    height: 180px;
     margin-left: 20px;
     overflow: auto;
     /*box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.7); */
@@ -233,7 +243,13 @@ tr:last-child{
     border-bottom: 0px solid #fff;
 }
 
-td .checkbox{
+.checkbox{
+    background-color: var(--blue);
+    cursor: default;
+    appearance: auto;
+    box-sizing: border-box;
+    margin: 3px 3px 3px 4px;
+
 }
 
 .double-cell{
@@ -272,6 +288,21 @@ td .checkbox{
     
     
 }
+.ttop{
+    margin-top: 0px;
+    padding-top: 12px;
+    padding-bottom: 0px;
+    width: 95%;
+    margin-left:20px;
+    display: grid;
+    grid-template-columns:  140px 200px;
+    grid-template-rows: auto;
+    align-content: left;
+    background: #2C2D30;
+    border-bottom-right-radius: 1px;
+    border-top-right-radius: 1px;
+}
+
 .three-by-two{
     height: 110px;
     grid-template-rows: 50px 50px;
@@ -317,6 +348,16 @@ td .checkbox{
     grid-template-columns: 100px 110px 20px;
     height: 30px;
 }
+.checkbox-conatiner{
+    display: grid;
+    grid-template-columns: 100px 110px 20px;
+    height: 30px;
+}
+
+.cc{
+    grid-template-columns: 150px 110px 20px;
+}
+
 .dropdown{
     position: relative;
     display: inline-block;
@@ -477,7 +518,8 @@ td .checkbox{
     background: var(--bg);
 
     display:grid;
-    grid-template-columns:  auto 100px 30px;
+    grid-template-columns:   auto 100px 100px 10px;
+    grid-column-gap: 10px;
 }
 .footer .send-button{
     display: flex;

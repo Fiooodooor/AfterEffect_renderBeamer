@@ -52,15 +52,15 @@
 					<Menu>renderBeamer</Menu>
 					<Geometry>
 						<Size>
-							<Height>842</Height>
+							<Height>922</Height>
 							<Width>728</Width>
 						</Size>
                         <MinSize>
-                            <Height>842</Height>
+                            <Height>922</Height>
                             <Width>728</Width>
                         </MinSize>
                         <MaxSize>
-                            <Height>842</Height>
+                            <Height>922</Height>
                             <Width>1280</Width>
                         </MaxSize>
                         

@@ -5,40 +5,34 @@
 #include "AEConfig.h"
 #include "entry.h"
 
-#define GF_PLUGIN_VERSION_MAJOR "17"
+#define GF_PLUGIN_VERSION_MAJOR 17
 #define GF_PLUGIN_VERSION(...) #__VA_ARGS__ 
 //#define GF_PLUGIN_VERSION_STRING(VER_STRING, VER_MAJOR, VER_MINOR) VER_STRING ## VER_MAJOR ## VER_MINOR
 // "renderBeamer for After Effects v.17",
 
 #define GF_PLUGIN_LANGUAGE UserLanguage::UserEnglish
 #define GF_PLUGIN_BUILD_GARAGEFARM 1    // If not, the copernicus build will be compiled
-
 #define ALLOWED_CHARACTERSA  "_-0123456789ABCDEFGHIJKLMNOPQRSTUWVXYZabcdefghijklmnopqrstuwvxyz/\\[]:!"
 #define ALLOWED_CHARACTERSW L"_-0123456789ABCDEFGHIJKLMNOPQRSTUWVXYZabcdefghijklmnopqrstuwvxyz/\\[]:!"
-#define DISALLOWED_CHARACTERSA  " ~`!@#$%^&*()+=[]{};:'\"\\|,<>/?."
-#define DISALLOWED_CHARACTERSW L" ~`!@#$%^&*()+=[]{};:'\"\\|,<>/?."
+#define DISALLOWED_CHARACTERSA  " ~`!@#$%^&*()+=[]{};:'\"\\/|,<>/?."
+#define DISALLOWED_CHARACTERSW L" ~`!@#$%^&*()+=[]{};:'\"\\/|,<>/?."
 #define MAIN_BEAMER_TEMP L"beamer_temp_"
-#define MAIN_PROJECT_DIR L"\\data"
 #define MAIN_PROJECT_DIR1 L"data"
-#define MAIN_FOOTAGE_DIR L"\\footage\\"
 #define MAIN_FOOTAGE_DIR1 L"footage"
-#define MAIN_FOONT_DIR L"\\fonts\\"
 #define MAIN_FOONT_DIR1 L"fonts"
-#define MAIN_LOGS_DIR L"\\logs\\"
 #define MAIN_LOGS_DIR1 L"logs"
-#define MAIN_OUTPUT_DIR1 L"\\.."
-#define BEAMER_TEMP_FILE L"\\beamer_tmp.txt"
+
+#include <cstdio>
+#include <cwchar>
+#include <fstream>
+#include <string>
 
 #ifdef AE_OS_WIN
 #define BEAMER_SCRIPT L"\\renderbeamer\\renderbeamer.bat"
-//#define BEAMER_SCRIPT L"\\renderbeamer\\renderbeamer.exe"
 #define FONT_LIB_NAME L"\\libgf_font_converter.dll"
 #define C4D_LIB_NAME L"\\C4dRelinkerLibrary.dll"
-#include <windows.h>
-#include <wchar.h>
-#include <stdio.h>
-#include <string.h>
-#include <fstream>
+#define SEP '\\'
+#include <Windows.h>
 #define RB_DUPENV(...) _dupenv_s(__VA_ARGS__)
 #define RB_SPRINTF(...) sprintf_s(__VA_ARGS__)
 #define RB_SWPRINTF(buff, ...) swprintf_s(buff, __VA_ARGS__)
@@ -56,17 +50,13 @@
 #define TSTRNCPY(ST1,ST2,N) wcsncpy_s(ST1,N+1,ST2,N);
 #define TSTRING wstring
 
-
 #elif defined AE_OS_MAC
 #define BEAMER_SCRIPT L"/renderbeamer/renderbeamer.sh"
 #define FONT_LIB_NAME L"/renderBeamer.plugin/Contents/Resources/libgf_font_converter.dylib"
 #define C4D_LIB_NAME L"/renderBeamer.plugin/Contents/Resources/libC4dRelinkerLibrary.dylib"
-#include <wchar.h>
-#include <stdio.h>
-#include <string.h>
-#include <fstream>
+#define SEP '/'
 #define RB_DUPENV(...) getenv(__VA_ARGS__)
-#define RB_SPRINTF(...) sprintf(__VA_ARGS__)
+#define RB_SPRINTF(...) snprintf(__VA_ARGS__)
 #define RB_SWPRINTF(buff, ...) swprintf(buff, __VA_ARGS__)
 #define RB_STRNCPTY(...) strncpy(__VA_ARGS__)
 #define ASTRNCPY(ST1,ST2,N) strncpy(ST1,ST2,N);
@@ -91,9 +81,11 @@ namespace fs = std::filesystem;
 #define FS_COPY_DEFINE(NAME) fs::copy_options NAME;
 #define FS_COPY_OPTIONS fs::copy_options::overwrite_existing
 #define FS_ERROR_CODE(NAME) std::error_code NAME;
-#define FS_REPLACE_FILENAME(MY_PTH, MY_ID) MY_PTH->pathRelinked.replace_filename(std::to_string(MY_ID) + '_' + MY_PTH->path.filename().string());
+#define FS_ERROR_ASSIGN(NAME,NR) NAME.assign(NR, std::generic_category());
+#define FS_REPLACE_FILENAME(MY_PTH, MY_ID) (MY_PTH)->pathRelinked.replace_filename(std::to_string(MY_ID) + '_' + (MY_PTH)->path.filename().string());
 #define FS_U8STRING(MY_PTH) MY_PTH.u8string()
-#define WOPEN(FILEH,FILEP,PARAMS) FILEH.open(FILEP.wstring().c_str(), PARAMS)
+#define WOPEN(FILEH,FILEP,PARAMS) FILEH.open((FILEP).wstring().c_str(), PARAMS)
+#define FS_TYPE_UNKNOWN fs::file_type::unknown
 #else
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #include <boost/filesystem.hpp>
@@ -101,9 +93,11 @@ namespace fs = boost::filesystem;
 #define FS_COPY_DEFINE(NAME) fs::copy_option NAME;
 #define FS_COPY_OPTIONS fs::copy_option::overwrite_if_exists
 #define FS_ERROR_CODE(NAME) boost::system::error_code NAME;
+#define FS_ERROR_ASSIGN(NAME,NR) NAME.assign(NR, boost::system::generic_category());
 #define FS_REPLACE_FILENAME(MY_PTH, MY_ID) MY_PTH->pathRelinked.remove_filename(); MY_PTH->pathRelinked.append(std::to_string(MY_ID) + '_' + MY_PTH->path.filename().string());
 #define FS_U8STRING(MY_PTH) MY_PTH.string()
 #define WOPEN(FILEH,FILEP,PARAMS) FILEH.open(FILEP.string().c_str(), PARAMS)
+#define FS_TYPE_UNKNOWN fs::file_type::type_unknown
 #endif
 
 #include "AE_GeneralPlug.h"
@@ -121,6 +115,7 @@ typedef enum StrIDType {
     StrID_MenuEdit,
 	StrID_MenuEditSmart,
 	StrID_MenuBatch,
+	StrID_MenuUiCollect,
     StrID_MenuExport,
     StrID_MenuVersion,
     StrID_MenuCost,
@@ -142,6 +137,7 @@ typedef enum BeamerMasks {
     BeamerMask_GetFontFamily,
     BeamerMask_GetFontPath,
 	BeamerMask_SendTaskEncoded,
+	BeamerMask_SendLogFile,
     _BeamerMask_ItemsN
 } BeamerMasks;
 
@@ -163,12 +159,11 @@ typedef struct {
     fs::path logsMainOutput;
     fs::path rqMainOutput;
     fs::path remoteProjectPath;
-    fs::path remotePath;
+    fs::path remote_renders_path;
     fs::path remoteFootagePath;
 	fs::path remoteFontsPath;
     fs::path projectRootCorrect;
-    fs::path projectFilenameCorrect;
-    fs::path projectCheckVersion;
+    fs::path projectFilenameCorrect;    
     fs::path tempPrefix;
     fs::path tempSufix;
 } beamerPaths;
@@ -204,7 +199,7 @@ typedef struct {
         std::wstring        c4d_LibPath;
         wchar_t             beamerTmpPath[AEGP_MAX_PATH_SIZE];
         wchar_t             beamerScript[AEGP_MAX_PATH_SIZE];
-        wchar_t             beamerExecScript[2048];
+        A_char              beamerExecScript[2048];
         wchar_t             rmtUser[16];
         wchar_t             timeString[20];
         A_char              timeStringA[20];

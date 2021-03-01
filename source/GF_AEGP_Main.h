@@ -6,7 +6,7 @@
 #include "GF_AEGP_Strings.h"
 #include "GF_AEGP_Dumper.h"
 #include "NodeObjects/AeSceneCollector.h"
-#include "GF_AEGP_MainUI.h"
+//#include "GF_AEGP_MainUI.h"
 
 //AEGP_PFInterfaceSuite1
 //AEGP_ItemViewSuite1
@@ -19,7 +19,7 @@ public:
     AEGP_PluginID                    pluginId;
     AEGP_SuiteHandler                i_sp;
 	SuiteHelper<AEGP_PanelSuite1>	 i_ps;
-    AEGP_Command                     beamerEditCmd, beamerExportCmd, beamerEditSmartCmd, beamerBatchExport, beamerCostCalcCmd;
+    AEGP_Command                     beamerEditCmd, beamerExportCmd, beamerEditSmartCmd, beamerBatchExport, beamerCostCalcCmd, beamerUiBatchExport;
     const A_u_char*                  i_match_nameZ;
     beamerParamsStruct               myPaths;
     
@@ -73,17 +73,17 @@ public:
 		*handledPB = FALSE;
 		PT_XTE_START{
 			reinterpret_cast<Renderbeamer*>(refconP)->CommandHook(command, hook_priority, already_handledB, handledPB);
-		} PT_XTE_CATCH_RETURN_ERR;
+		} PT_XTE_CATCH_RETURN_ERR
 	}
 
 private:
 	A_char tmp_message[512] = { '\0' };
 	A_Boolean smart_collect, output_prompt;
-    void CreatePanelHook(AEGP_PlatformViewRef container, AEGP_PanelH panelH, AEGP_PanelFunctions1* outFunctionTable, AEGP_PanelRefcon* outRefcon) { };
+    void CreatePanelHook(AEGP_PlatformViewRef container, AEGP_PanelH panelH, AEGP_PanelFunctions1* outFunctionTable, AEGP_PanelRefcon* outRefcon) { }
     void UpdateMenuHook(AEGP_WindowType active_window);
     void CommandHook(AEGP_Command command, AEGP_HookPriority hook_priority, A_Boolean already_handledB, A_Boolean *handledPB);
 
-	void DumpProject(A_Boolean useSmartCollector, A_Boolean useBatchExporter = FALSE);
+	void DumpProject(A_Boolean useSmartCollector, A_Boolean useBatchExporter = FALSE, A_Boolean useUiExporter = FALSE);
 	void PluginVersion();
 	void CostCalculator();
 

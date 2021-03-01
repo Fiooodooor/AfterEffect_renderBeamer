@@ -2,23 +2,10 @@
 /*global $, window, location, CSInterface, SystemPath, themeManager*/
 
 
-// table seter
+
 parsed = "";
 parsed2 = new Array(); 
-var currentRowId = "";
-// composition object
-function compositionX(){
-    this.name = '';
-    this.frameRange = '';
-    this.ext  = '';
-    this.renderable = '';
-    this.audio = '';
-    this.audioDepth = '';
-    this.audioChannels = '';
-    this.audioSampleRate = '';
-    this.outputFullPath = '';
-    this.outputFileName = '';
-}
+currentRowId = "";
 function readParsedComps(parsed,currentName){
     var c = new Array();
     for(var x=0; x < parsed.length; x++){
@@ -45,6 +32,8 @@ function assetsButtonToggle() {
     document.getElementById("settings").classList.add("hide");
     document.getElementById("assets").classList.remove("hide");
 } 
+
+// setting up video settings dropdowns elements based on selected encoder 
 function setVideoSettings(args){
     var encoderValue = "";
     if(args[2] == true){
@@ -395,7 +384,7 @@ function setDropdownValue(args) {
                currentObj.encoder = attribute;
             }
             if(dropName == "pixel format"){
-               currentObj.pixelFormat = attribute;
+               currentObj.pixel_format = attribute;
             }
             if(dropName == "profile"){
                currentObj.profile = attribute;
@@ -403,18 +392,18 @@ function setDropdownValue(args) {
             if(dropName == "extension"){
                 alert("extension changed");
                 currentObj.encoder =  "";
-                currentObj.pixelFormat = "";
+                currentObj.pixel_format = "";
                 currentObj.profile = "";
             }
             
             if(dropName == "sample rate"){
-                currentObj.audioSampleRate = sampleRateValue.innerHTML; 
+                currentObj.audio_sample_rate = sampleRateValue.innerHTML; 
             }
             if(dropName == "bit depth"){
-                currentObj.audioDepth = bitDepthValue.innerHTML;
+                currentObj.audio_depth = bitDepthValue.innerHTML;
             }
             if(dropName == "channels"){
-                currentObj.audioChannels = channelsValue.innerHTML;
+                currentObj.audio_channels = channelsValue.innerHTML;
             }
             if(dropName == "extension"){
                 currentObj.ext = extensionValue.innerHTML;  
@@ -435,20 +424,25 @@ function setDropdownValue(args) {
                 topLabel = "audio";
             }
             
-            if(parsed[args[3]-1].audioSampleRate != ""){
-                sampleRateValue.innerHTML = parsed[args[3]-1].audioSampleRate;   
+            if(parsed[args[3]-1].audio_sample_rate != ""){
+                sampleRateValue.innerHTML = (parsed[args[3]-1].audio_sample_rate).toString() + " kHz";   
             }
             else{
                 sampleRateValue.innerHTML = "48,000 kHz"
             }
-            if(parsed[args[3]-1].audioDepth != ""){
-                bitDepthValue.innerHTML = parsed[args[3]-1].audioDepth;
+            if(parsed[args[3]-1].audio_depth != ""){
+                bitDepthValue.innerHTML = (parsed[args[3]-1].audio_depth * 8).toString() + " bit";
             }
             else{
                 bitDepthValue.innerHTML = "16 bit"
             }
-            if(parsed[args[3]-1].audioChannels != ""){
-                channelsValue.innerHTML = parsed[args[3]-1].audioChannels;
+            if(parsed[args[3]-1].audio_channels != ""){
+				if(parsed[args[3]-1].audio_channels == 1) {
+					channelsValue.innerHTML = "mono";
+				}
+				else {
+					channelsValue.innerHTML = "stereo";
+				}
             }
             else{
                 channelsValue.innerHTML = "stereo"
@@ -553,11 +547,8 @@ function setDropdownValue(args) {
             var framerate = document.getElementById("framerate"); 
             var bitrate = document.getElementById("bitrate"); 
             
-
-            
             // read from object and display or set if empty
-            
-            
+
             //video settings
             if(parsed[args[3]-1].encoder != "" ){
                 encoderValue.innerHTML = parsed[args[3]-1].encoder;
@@ -565,11 +556,11 @@ function setDropdownValue(args) {
             else{
                 parsed[args[3]-1].encoder = encoderValue.innerHTML;
             }
-            if(parsed[args[3]-1].pixelFormat != "" ){
-                pixelFormatValue.innerHTML = parsed[args[3]-1].pixelFormat;
+            if(parsed[args[3]-1].pixel_format != "" ){
+                pixelFormatValue.innerHTML = parsed[args[3]-1].pixel_format;
             }
             else{
-                parsed[args[3]-1].pixelFormat = pixelFormatValue.innerHTML;
+                parsed[args[3]-1].pixel_format = pixelFormatValue.innerHTML;
             }
             if(parsed[args[3]-1].profile != ""){
                 profileValue.innerHTML = parsed[args[3]-1].profile;
@@ -589,9 +580,6 @@ function setDropdownValue(args) {
             else{
                 parsed[args[3]-1].bitrate = bitrate.value;
             }
-            
-            
-            
         }
         
         else if(topLabel=="image sequence"){
@@ -621,37 +609,27 @@ function setDropdownValue(args) {
             var audioValues = attribute.split(" ");
             bitDepthValue.innerHTML = audioValues[2];
             if(audioValues[1] == "44kHz"){
-               sampleRateValue.innerHTML = "44,100kHz";
+               sampleRateValue.innerHTML = "44100";
             }
             else if(audioValues[1] == "48kHz"){
-               sampleRateValue.innerHTML = "48,000kHz";
+               sampleRateValue.innerHTML = "48000";
             }
             else if(audioValues[1] == "88kHz"){
-               sampleRateValue.innerHTML = "88,200kHz";
+               sampleRateValue.innerHTML = "88200";
             }
             else if(audioValues[1] == "96kHz"){
-               sampleRateValue.innerHTML = "96,000kHz";
+               sampleRateValue.innerHTML = "96000";
             }
         }
-  
-        
-       
         if(manual==false){
-            editRow();
-            
+            curentRow.getElementsByTagName("td")[2].innerHTML = document.getElementById("extensionValue").innerHTML;
         }
-       
-
         setVideoSettings(args);
     }
     
 }
-function editRow(){
-    curentRow.getElementsByTagName("td")[2].innerHTML = document.getElementById("extensionValue").innerHTML;
-}
 
 // callback function for composition list row event
-
 function compoListClicked(ar){
     var row = ar;
     curentRow = row;
@@ -675,7 +653,6 @@ function compoListClicked(ar){
     
     var ex = row.getElementsByTagName("td")[2].innerHTML;
     var n = row.getElementsByTagName("td")[0].innerHTML;
-    //readParsedComps(parsed,n);
     var ext = "";
     if(ex!=""){
         ext = ex;
@@ -698,15 +675,14 @@ function compoListClicked(ar){
         document.getElementById("bitrate").value = "5000"
     }
         
-    setDropdownValue(args);
-    
-    
-    
+    setDropdownValue(args);  
 }
 
+
+// events functions for text fields and compo list checkbox
 function frameRangeChanged(ar){
     curentRow.getElementsByTagName("td")[1].innerHTML = ar.value;
-    parsed[currentRowId-1].frameRange = ar.value;
+    parsed[currentRowId-1].frame_range = ar.value;
 }
 function framerateChanged(ar){
     parsed[currentRowId-1].framerate = ar.value;
@@ -715,15 +691,22 @@ function bitrateChanged(ar){
     parsed[currentRowId-1].bitrate = ar.value;
 }
 function renderableChecked(ar){
-    console.log("checked");
     if(parsed[currentRowId-1].renderable == "true"){
        parsed[currentRowId-1].renderable = false;
     }
     else{
        parsed[currentRowId-1].renderable = true;
     }
-    
 }
+function ignoreMissingsChecked(ar){
+    parsed[currentRowId-1].ignoreMissings = ar.checked;
+}
+function smartCollectChecked(ar){
+    parsed[currentRowId-1].smartCollect = ar.checked;
+}
+
+
+// filtering for queued compositions before submit
 function setObjectSubmit(){
     var reparsed = new Array();
     var ar = "";
@@ -743,6 +726,8 @@ function setObjectSubmit(){
     compoListClicked(ar);
     return reparsed
 }
+
+// submit function executed by SEND button
 function submit(ar){
     var reparsed = setObjectSubmit();
     
@@ -797,7 +782,26 @@ function addEvents(){
                                                         submit(ar);
                                                     }, false);
     
+    // add event listener to smart collect checkbox
+    var smartCollect = document.getElementById("smartCollect");
+    smartCollect.addEventListener('click', function(){
+                                                    var ar = this;
+                                                    smartCollectChecked(ar);}
+                                        , false);
+    
+    // add event listener to ignore missing assets checkbox
+    var ignoreMissings = document.getElementById("ignoreMissings");
+    ignoreMissings.addEventListener('click', function(){
+                                                    var ar = this;
+                                                    ignoreMissingsChecked(ar);}
+                                        , false);
+    
 }
+
+
+// execute function with the same name in hostscript.jsx
+// reads all compositions + renderqueue items and return them back as JSON 
+// + default setup for composition list table
 function initx() {    
     /*themeManager.init();*/
     var csInterface = new CSInterface();
@@ -824,7 +828,7 @@ function initx() {
 
                 // Add some text to the new cells:
                 cell1.innerHTML = parsed[x].name;
-                cell2.innerHTML = parsed[x].frameRange;
+                cell2.innerHTML = parsed[x].frame_range;
                 if(parsed[x].ext == ""){
                    parsed[x].ext = "not set";
                 }
@@ -862,7 +866,7 @@ function initx() {
                                                     var ar = this;
                                                     renderableChecked(ar);}
                                         , false);
-    }
+        }
     });
     
     addEvents();

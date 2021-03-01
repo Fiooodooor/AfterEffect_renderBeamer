@@ -30,7 +30,7 @@ public:
 class AeObjectNode : public ObjectCount
 {
 public:
-	AeObjectNode(AEGP_PluginID pluginId, SPBasicSuite *sp, AEGP_ItemH theItemH, A_long theItemNr);
+	AeObjectNode(AEGP_PluginID pluginId, SPBasicSuite *sp_bs, AEGP_ItemH theItemH, A_long theItemNr);
 	AeObjectNode(AeObjectNode* node);
 	bool isItemFooSolid() const;
 	AEGP_ItemType getItemType() const;

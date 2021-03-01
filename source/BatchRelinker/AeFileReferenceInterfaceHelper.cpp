@@ -11,7 +11,7 @@ unsigned long long &FileReferenceInterfaceHelper::GetUniqueFilesTotalSize()
 	return uniqueFilesTotalSize;
 }
 
-long FileReferenceInterfaceHelper::PushUniqueFilePath(AeFileNode *node)
+unsigned long FileReferenceInterfaceHelper::PushUniqueFilePath(AeFileNode *node)
 {
 	unsigned long i = 0;
 	
@@ -55,5 +55,5 @@ long FileReferenceInterfaceHelper::GetLongFilesUID(std::string uid)
 		tmp_uid.push_back(*(it + 1));
 		tmp_uid.push_back(*(it++));
 	}
-	return strtol(tmp_uid.c_str(), NULL, 16);
+	return strtol(tmp_uid.c_str(), nullptr, 16);
 }

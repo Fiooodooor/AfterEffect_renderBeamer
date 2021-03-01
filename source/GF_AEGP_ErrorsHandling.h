@@ -57,8 +57,8 @@
 #define GF_PROGRESS(EXPR) { PF_Err PT_res = (EXPR); if(PT_res == PF_Interrupt_CANCEL) return ErrorCodesAE::UserDialogCancel;}
 
 typedef struct {
-    long    index;
-    char    str[256];
+    const long    index;
+    const char    str[256];
 } ErrorString;
 
 typedef enum UserLanguage {
@@ -88,6 +88,7 @@ typedef enum CallerModuleName {
 	OutputCollectModule,
 	RelinkerInitModule,
     MainCommandHookModule,
+	SceneCollectorModule,
 	ModulesCount
 } CallerModuleName;
 
@@ -130,7 +131,7 @@ typedef enum ErrorCodesAE {
 	AE_ErrMissingSuiteOther,
 	NumberOfElements,
 } ErrorCodesAE;
-ErrorCodesAE aErrToRb(A_Err err);
+ErrorCodesAE aErrToRb(const A_Err err);
 
 typedef struct ErrorStringTables
 {
@@ -142,14 +143,14 @@ typedef struct ErrorStringTables
 class PluginError : public std::exception
 {
 public:
-	A_Err aeCode;
 	ErrorCodesAE errCode;
+	A_Err aeCode;
     const char *message_ptr;
 	typedef std::exception _Mybase;
 
 	explicit PluginError(const std::string& _Message)
 		: _Mybase()
-        , errCode(UnknownError)
+        , errCode(UnknownError), aeCode(A_Err_NONE)
         , message_ptr(_Message.c_str())
 	{
 	}
@@ -181,7 +182,7 @@ public:
         , message_ptr(GetErrorStringA(_Message, lang))
 	{ 
 	}
-    ~PluginError() {  }
+	~PluginError() = default;
     
     virtual const char *what() const noexcept { return message_ptr; }
 	const ErrorCodesAE theCode() const { return errCode; }

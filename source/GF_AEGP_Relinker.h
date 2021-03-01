@@ -16,7 +16,7 @@ public:
 	GF_AEGP_Relinker(SPBasicSuite *basicSuite, AEGP_PluginID pluginId);
 	~GF_AEGP_Relinker();
 	
-	ErrorCodesAE RelinkerInitialize(beamerParamsStruct &tmpBps, rbProjectClass &rbProj, A_Boolean batchRelink = FALSE);
+	ErrorCodesAE RelinkerInitialize(beamerParamsStruct &tmpBps, A_Boolean batchRelink = FALSE);
 
 	A_Err RelinkProject(AEGP_ProjectH projectH);
 	ErrorCodesAE newRelinkFootage(AeFootageNode *node);
@@ -27,7 +27,7 @@ public:
 
     ErrorCodesAE CopyConvertFontLib(PlatformLibLoader* libIt, fs::path &nodePath, fs::path &nodeRelinked, A_long id, std::vector<std::string> &fontsList);
 	static bool GFCopyFile(const std::string &UID, fs::path oldFootagePath, fs::path &tmpNewFootagePath, bool forceNoRename = false, bool forceNoSymlinks = false);
-	static ErrorCodesAE GFCopy_C4D_File(PlatformLibLoader* libIt, rbProjectClass *rbProj, const fs::path &oldFootagePath, const fs::path &tmpNewFootagePath, const fs::path &remoteFootagePath, const std::string  &id);
+	static ErrorCodesAE GFCopy_C4D_File(PlatformLibLoader* libIt, const fs::path &oldFootagePath, const fs::path &tmpNewFootagePath, const fs::path &remoteFootagePath, const std::string  &id);
 
 	void setPathsStruct(beamerParamsStruct *beamerParamsS);
 	PlatformLibLoader *GetC4dLibloader();
@@ -40,7 +40,6 @@ private:
 	PlatformLibLoader *fonts_interface;
 
 	FILE *out;
-	rbProjectClass *rbProj;
 
 	fs::path newProjectPath;
 	A_UTF16Char projectSavePath[AEGP_MAX_PATH_SIZE];

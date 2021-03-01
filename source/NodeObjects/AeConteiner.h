@@ -6,6 +6,7 @@
 #include "AeObjectNode.h"
 #include "AeCompNode.h"
 #include "AeFooNode.h"
+#include "../AeGfsFileCreatorStructures.h"
 
 class AeSceneConteiner
 {
@@ -13,7 +14,7 @@ public:
 	AeSceneConteiner();
 	void countCollectedNr();
 	A_long getCollectedNr() const;
-
+	
 	aeCmpNodes renderCompositionSortedList;
 	aeFooNodes renderFootageSortedList;
 	aeFooNodes renderFootageMissingList;
@@ -21,6 +22,7 @@ public:
 
 	std::list<AeEffectNode*> effectsList;
 	std::list<AeFontNode*> fontsList;
+	std::list<gfsRqItem*> gfsRqItemsList;
 
 private:
 	A_long nrOfCollectedItems;

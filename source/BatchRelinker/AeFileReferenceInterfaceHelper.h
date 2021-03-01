@@ -7,7 +7,7 @@ class FileReferenceInterfaceHelper
 public:
 	static long GetLongFilesUID(std::string uid);
 	static void ListUniqueFiles();
-	static long PushUniqueFilePath(AeFileNode *fileNode);
+	static unsigned long PushUniqueFilePath(AeFileNode *fileNode);
 	
 	static std::vector<AeFileNode*> &GetUniqueFilesContainer();
 	static unsigned long long &GetUniqueFilesTotalSize();

@@ -1,12 +1,12 @@
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, regexp: true, indent: 4, maxerr: 50 */
 /*global $, Folder*/
 
-function compositionX(name,frameRange,ext,renderable)
+function compositionX(name,frameRange,theFps,renderable)
 {
     this.name = name;
     this.frame_range = frameRange;
-	this.fps = "29.97";
-    this.ext  = ext;
+	this.fps = theFps;
+    this.ext  = "";
     this.renderable = renderable;
     this.comp_has_audio = 0;
     this.out_audio_enabled = 0;
@@ -40,8 +40,8 @@ function submit(objS){
     }
     app.preferences.saveToDisk();
     
-    var rbid = app.findMenuCommandId("renderBeamer Batch Relinker");
-   // app.executeCommand(rbid);
+    var rbid = app.findMenuCommandId("renderBeamer_ui_function");
+    app.executeCommand(rbid);
     return "success"
 }
 
@@ -49,8 +49,8 @@ function initX(){
     var renderQueueItems = readRenderQueueItems();
     var compositions = new Array();
     
-	var rqFps= "";
-	var rqFrameRange = "";
+	var rq_fps= "";
+	var rq_frame_range = "";
 	var rq;
 	var rq_settings;
 	var rq_out;
@@ -65,15 +65,12 @@ function initX(){
 			rq_settings = rq.getSettings(GetSettingsFormat.STRING);
 			rq_out = rq.outputModule(rq_out_nr)        
 			rq_out_settings = rq_out.getSettings(GetSettingsFormat.NUMBER );
-			var c = new compositionX('','','',true);
-			rqFps=rqMod[rqMod["Frame Rate"]];
-			rqFrameRange = (Math.round((rq.timeSpanStart)*rqFps)).toString()+"to"+(Math.round((rq.timeSpanStart+rq.timeSpanDuration)*rqFps)-1).toString()+"s1";
+			rq_fps=rq_settings[rq_settings["Frame Rate"]];
+			rq_frame_range = (Math.round((rq.timeSpanStart)*rq_fps)).toString()+"to"+(Math.round((rq.timeSpanStart+rq.timeSpanDuration)*rq_fps)-1).toString()+"s1";
 			
-			c.name = rq.comp.name;
+			var c = new compositionX(rq.comp.name,rq_frame_range,rq_fps,true);			
 			c.width = rq.comp.width;
-			c.height = rq.comp.height;
-			c.fps = rqFps;
-			c.frame_range = rqFrameRange;
+			c.height = rq.comp.height;				
 			c.composition_id = rq.comp.id;
 			c.rq_id = (i+1).toString();
 			c.rq_out_id = (rq_out_nr).toString();
@@ -83,7 +80,7 @@ function initX(){
 				} else {
 					c.comp_has_audio  = 0;
 			}
-			if(rq_out_settings_num["Output Audio"] == 3)
+			if(rq_out_settings["Output Audio"] == 3)
 			{
 				c.out_audio_enabled = c.comp_has_audio;
 			}
@@ -100,10 +97,7 @@ function initX(){
 			compositions.push(c);
 		}
 	}
-
-    var na = createArrayFromObject(compositions);
-    var jj = JSON.stringify(compositions);
-    return jj;
+    return JSON.stringify(compositions);
 }
 
 function createArrayFromObject(obj){

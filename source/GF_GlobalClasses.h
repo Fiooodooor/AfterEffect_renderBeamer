@@ -33,14 +33,20 @@ public:
     static void getTimeString(wchar_t *buff, A_long buffSize, bool path=false);
     static void getEnvVariable(const char *variable, char *buffer, unsigned long long size);
 
-    static ErrorCodesAE execBeamerCmd(SPBasicSuite *pb, BeamerMasks mask, wchar_t *buffor, A_long size, beamerParamsStruct bps);
-    static void execCmd(SPBasicSuite *pb, wchar_t* theTmpCmd, wchar_t *buffor, A_long size, const wchar_t *outFileName);
+    static ErrorCodesAE execBeamerCmd(beamerParamsStruct bps, BeamerMasks mask, wchar_t *buffor=nullptr, A_long size=0);
+	static ErrorCodesAE exec_cmd(fs::path const &app, std::string const &args, fs::path const &out_file, wchar_t *bufferW, unsigned long bufferSize);
+
 	
 	static ErrorCodesAE getVersionString(A_char* buff, long buff_size);
 	static ErrorCodesAE getCpuInfoString(SPBasicSuite *pb, wchar_t *buffer, A_long buffer_length, const wchar_t *outFileName);
     static ErrorCodesAE encodeUrlString(const wchar_t *url, wchar_t *buffor, long buffor_size);
 	static ErrorCodesAE openCostCalculator(SPBasicSuite *pb);
     static std::string toUtf8(const wchar_t* stringToConvert);
+
+protected:
+	static ErrorCodesAE win_exec_cmd_new(fs::path const &app, std::string const &args, fs::path const &out_file, wchar_t *bufforW, unsigned long bufforSize);
+	static ErrorCodesAE win_exec_cmd(fs::path const &app, std::string const &args, fs::path const &out_file, wchar_t *bufforW, unsigned long bufforSize);
+	static ErrorCodesAE mac_exec_cmd(fs::path const &app, std::string const &args, fs::path const &out_file, wchar_t *bufforW, unsigned long bufforSize);
 };
 
 
@@ -48,7 +54,8 @@ class rbProjectClass
 {
 public:
     rbProjectClass();
-
+	~rbProjectClass();
+	
     bool createLogger(const wchar_t* file, int mode);
     bool openLogger();
 	bool appendLogger();

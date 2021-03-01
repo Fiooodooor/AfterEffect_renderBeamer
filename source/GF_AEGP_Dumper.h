@@ -5,11 +5,8 @@
 #include "GF_GlobalTypes.h"
 #include "GF_GlobalClasses.h"
 #include "GF_AEGP_Relinker.h"
-#include "GF_AEGP_Main.h"
-#include "GF_AEGP_Strings.h"
 #include "NodeObjects/AeConteiner.h"
 #include "AeGfsFileCreator.h"
-
 #include "BatchRelinker/AeBatchRelinker.h"
 
 class GF_AEGP_Relinker;
@@ -22,17 +19,18 @@ public:
 
 	ErrorCodesAE newCopyRelinkFootages();
 	ErrorCodesAE newCopyCollectFonts();
-	ErrorCodesAE newCollectEffectsInfo();
+	ErrorCodesAE newCollectEffectsInfo() const;
 
 	ErrorCodesAE newDumpProject();
-	ErrorCodesAE newBatchDumpProject();
+	ErrorCodesAE newBatchDumpProject(bool is_ui_caller = false);
 	static ErrorCodesAE PreCheckProject(SPBasicSuite *pb, AEGP_PluginID pluginId, beamerParamsStruct *GF_params);
 	ErrorCodesAE PrepareProject();
 
-	ErrorCodesAE DumpQueeItems(fs::path outputPath);
-	ErrorCodesAE DumpQueeItem(A_long itemIndex, fs::path outputPath);
+	ErrorCodesAE DumpUiQueueItems(const fs::path& outputPath) const;
+	ErrorCodesAE DumpQueueItems(const fs::path& outputPath);
+	ErrorCodesAE DumpQueueItem(A_long itemIndex, const fs::path& outputPath);
 	ErrorCodesAE DumpOutputModules(AEGP_RQItemRefH &rq_ItemRef, A_long outModulesNumber, gfsRqItem *parentItem, fs::path outputPath);
-	ErrorCodesAE setConteiner(AeSceneConteiner &sc);
+	ErrorCodesAE setConteiner(AeSceneConteiner &aesc);
 
 	static rbProjectClass *rbProj() {
 		static rbProjectClass rbProjIt;
@@ -47,7 +45,6 @@ private:
 	PF_AppProgressDialogP relinkerProg;
 	GF_AEGP_Relinker relinker;
 
-	A_UTF16Char newRemotePath[AEGP_MAX_PATH_SIZE];
 	A_UTF16Char dialogText[128];
 	A_char projectName[AEGP_MAX_PROJ_NAME_SIZE];
 

@@ -15,13 +15,14 @@ public:
 	AeSceneCollector(AEGP_PluginID pluginId, SPBasicSuite *sp, AEGP_ProjectH projectH, AeSceneConteiner &theCt);
 	ErrorCodesAE AeNormalCollect();
 	ErrorCodesAE AeSmartCollect();
-	void generateDebugItemsInfo();
+	ErrorCodesAE generateDebugItemsInfo();
 
 	AeSceneConteiner* ct;
 
 protected:
 	ErrorCodesAE collectSceneItems();
 	ErrorCodesAE collectSceneRenderQueueItems();
+	ErrorCodesAE collectSceneUiRenderQueueItems() const;
 	ErrorCodesAE collectSceneItem(AeObjectNode *node);
 	ErrorCodesAE collectSceneRqItem(AeObjectNode *node);
 	ErrorCodesAE collectToRender();

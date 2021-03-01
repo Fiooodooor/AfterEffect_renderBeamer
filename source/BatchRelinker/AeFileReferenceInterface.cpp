@@ -70,7 +70,7 @@ bool SequenceListFileReference::RelinkFiles()
 
 		for (unsigned long long i = 0; i < node->GetFilenamesNumber(); ++i)
 		{
-			const auto pt = node->GetFilenameCouple(i);
+			auto *const pt = node->GetFilenameCouple(i);
 			if(pt != nullptr && pt->xmlFileReference != nullptr)
 				pt->xmlFileReference->FirstChild()->ToText()->SetValue(pt->relinkedFileName.c_str());
 		}

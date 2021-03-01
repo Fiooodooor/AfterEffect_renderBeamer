@@ -9,11 +9,14 @@ int ObjectCount::showCount() {
 }
 int ObjectCount::count = 0;
 
-AeObjectNode::AeObjectNode(AEGP_PluginID pluginId, SPBasicSuite *sp, AEGP_ItemH theItemH, A_long theItemNr)
+AeObjectNode::AeObjectNode(AEGP_PluginID pluginId, SPBasicSuite *sp_bs, AEGP_ItemH theItemH, A_long theItemNr)
+	: itemType(0)
+	, itemFlags(0)
+	, uniqueID(0)
 {
 	pId = pluginId;
-	this->sp = sp;
-	AEGP_SuiteHandler suites(sp);
+	this->sp = sp_bs;
+	AEGP_SuiteHandler suites(sp_bs);
 	this->itemH = theItemH;
 	this->itemNr = theItemNr;
 	suites.ItemSuite8()->AEGP_GetItemID(itemH, &uniqueID);
@@ -34,7 +37,7 @@ AeObjectNode::AeObjectNode(AeObjectNode* node)
 	this->itemFlags = node->getItemFlags();
 	itemActCount = showCount();
 	delete node;
-	node = NULL;
+	node = nullptr;
 }
 
 bool AeObjectNode::operator==(const AeObjectNode &right) const
@@ -66,8 +69,8 @@ bool AeObjectNode::sortByUidMethodShrink(const AeObjectNode *left, const AeObjec
 bool AeObjectNode::isItemFooSolid() const
 {
 	AEGP_SuiteHandler suites(sp);
-	AEGP_FootageH tmpFooH;
-	AEGP_FootageSignature tmpSignature;
+	AEGP_FootageH tmpFooH = nullptr;
+	AEGP_FootageSignature tmpSignature = 0;
 	A_Err err = A_Err_NONE;
 	if (this->getItemType() == AEGP_ItemType_FOOTAGE) {
 		ERR(suites.FootageSuite5()->AEGP_GetMainFootageFromItem(this->getItemH(), &tmpFooH));
@@ -97,5 +100,5 @@ void AeObjectNode::deleteItem()
 	AEGP_SuiteHandler suites(sp);
 	if(itemH)
 		suites.ItemSuite9()->AEGP_DeleteItem(itemH);
-	itemH = NULL;
+	itemH = nullptr;
 }

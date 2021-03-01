@@ -17,7 +17,7 @@
                 <div class="menu">
                     <nav>
                         <ul>
-                            <li><button id="settingsBtn" class="navbtn topBtn" >settings</button></li>
+                            <li><button id="settingsBtn" class="navbtn topBtn hide" >settings</button></li>
                             <li><button id="assetsBtn" class="navbtn rightBtn topBtn hide" onclick="assetsButtonToggle()">assets</button></li>    
                         </ul>
                     </nav>
@@ -34,6 +34,20 @@
         </div>
         <div id="cntr" class="center">
             <div id="settings" class="settings-container">
+                <br>
+                <div class="label main">plugin settings</div>
+                <div class="ttop">
+                    
+                    <div class="checkbox-conatiner">
+                        <div class="c">smart collect</div>
+                        <input type="checkbox" id ="smartCollect" class="checkbox" name="smartCollect" checked>
+                    </div>
+                    <div class="checkbox-conatiner cc">
+                        <div class="c">ignore missing assets</div>
+                        <input type="checkbox" id ="ignoreMissings" class="checkbox" name="missingsIgnored" checked>
+                    </div>
+                    
+                </div>
                 <div class="composition-list">
                     <br>
                     <div class="label main">compositions list</div>
@@ -51,7 +65,7 @@
                 <div class="settings">
                     <br>
                     <div class="label main">general</div>
-
+                    
                     <div class="grid-container">
                         <div class="text-field-container">
                             <div class="label">frame range</div>
@@ -247,15 +261,14 @@
                             <div class="label">sample rate</div>
                             <div class="dropdown">
                                 <div id="sampleRate-value" class="dropdown-value">44,100kHz</div>
-                                <div class="dropdownBtn">
-                                     
+                                <div class="dropdownBtn">                                     
                                     <div class="arrow down"></div>
                                 </div>
                                 <div id="dropdownContent" class="dropdown-content top-item-content dropdown-short">
-                                            <p class="item" data-el="44,100kHz">44,100kHz</p>
-                                            <p class="item" data-el="48,000kHz">48,000kHz</p>
-                                            <p class="item" data-el="88,200kHz">88,200kHz</p>
-                                            <p class="item" data-el="96,000kHz">96,000kHz</p>
+                                            <p class="item" data-el="44100">44,100kHz</p>
+                                            <p class="item" data-el="48000">48,000kHz</p>
+                                            <p class="item" data-el="88200">88,200kHz</p>
+                                            <p class="item" data-el="96000">96,000kHz</p>
                                 </div>
                             </div>  
                         </div>
@@ -268,10 +281,9 @@
                                     <div class="arrow down"></div>
                                 </div>
                                 <div id="dropdownContent" class="dropdown-content top-item-content dropdown-short">
-                                            <p class="item" data-el="16 bit">16 bit</p>
-                                            <p class="item" data-el="32 bit">32 bit</p>
-
-
+                                            <p class="item" data-el="1">8 bit</p>
+                                            <p class="item" data-el="2">16 bit</p>
+                                            <p class="item" data-el="4">32 bit</p>
                                 </div>
                             </div>  
                         </div>
@@ -279,13 +291,12 @@
                             <div  class="label ">channels</div>
                             <div class="dropdown">
                                 <div id="channels-value" class="dropdown-value">stereo</div>
-                                <div class="dropdownBtn">
-                                     
+                                <div class="dropdownBtn">                                     
                                     <div class="arrow down"></div>
                                 </div>
                                 <div id="dropdownContent" class="dropdown-content top-item-content dropdown-short">
-                                            <p class="item" data-el="mono">mono</p>
-                                            <p class="item" data-el="stereo">stereo</p>
+                                            <p class="item" data-el="1">mono</p>
+                                            <p class="item" data-el="2">stereo</p>
 
                                 </div>
                             </div>  
@@ -377,7 +388,9 @@
         </div>
         <div class="footer">
             <div></div>
+            <div></div>
             <div id="sendButton" class="send-button">SEND<i class="fas fa-share"></i></div>
+            <div></div>
         </div>
     </div>
     

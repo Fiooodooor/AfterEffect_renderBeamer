@@ -1,7 +1,5 @@
 #include "AeFileNode.h"
 
-#include "AeFileReferenceInterfaceHelper.h"
-
 AeFileNode::AeFileNode(bool is_sequence, std::string node_uid, fs::path source_path, std::string mask_base)
 	: node_is_sequence(is_sequence)
 	, node_files_size(0)
@@ -35,11 +33,11 @@ bool AeFileNode::operator ==(const AeFileNode &right) const
 		{			
 			if(GetFilenamesNumber() == right.GetFilenamesNumber() && GetNodeFilesSize() == right.GetNodeFilesSize())
 			{
-				if (GetFileNodeUid().compare(right.GetFileNodeUid()) == 0)
+				if (GetFileNodeUid() == right.GetFileNodeUid())
 					return true;
 			}
 		}
-		else if(!GetSequenceMaskBase().empty() && !right.GetSequenceMaskBase().empty() && GetSequenceMaskBase().compare(right.GetSequenceMaskBase()) == 0)
+		else if(!GetSequenceMaskBase().empty() && !right.GetSequenceMaskBase().empty() && GetSequenceMaskBase() == right.GetSequenceMaskBase())
 		{
 			if (fs::equivalent(GetFileSourcePath(), right.GetFileSourcePath(), fileError))
 				return true;

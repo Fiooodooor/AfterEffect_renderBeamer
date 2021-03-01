@@ -6,7 +6,7 @@
 #include <vector>
 
 typedef struct gfsFontNode {
-	int subFontNr;
+	unsigned long long subFontNr;
 	std::string fontName;
 	fs::path fontFile;
 } gfsFontNode;
@@ -39,8 +39,8 @@ typedef struct gfsRqItem {
 	A_char compositioName[AEGP_MAX_ITEM_NAME_SIZE + 4];
 	A_long width;
 	A_long height;
-	A_char frameString[36];
-	A_char fps[36];
+	A_char frameString[AEGP_MAX_ITEM_NAME_SIZE];
+	A_char fps[AEGP_MAX_ITEM_NAME_SIZE];
 	std::vector<gfsRqItemOutput*> outMods;
 } gfsRqItem;
 

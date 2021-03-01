@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4A36D2AF24AD779B0044DC28 /* AeGfsFileBuilder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A36D2AE24AD779B0044DC28 /* AeGfsFileBuilder.cpp */; };
 		4A3D131B23F4B49E00517E24 /* GF_GlobalClasses.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A3D131623F4B49D00517E24 /* GF_GlobalClasses.cpp */; };
 		4A3D131C23F4B49E00517E24 /* GF_AEGP_Relinker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A3D131723F4B49D00517E24 /* GF_AEGP_Relinker.cpp */; };
 		4A3D131D23F4B49E00517E24 /* GF_AEGP_Dumper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A3D131923F4B49D00517E24 /* GF_AEGP_Dumper.cpp */; };
@@ -43,7 +42,7 @@
 		4A7F21A225D2C834003CD8DD /* AeBatchRelinker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A7F219C25D2C833003CD8DD /* AeBatchRelinker.cpp */; };
 		4A7F21A325D2C834003CD8DD /* tinyXml2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A7F219D25D2C833003CD8DD /* tinyXml2.cpp */; };
 		4A7F21A925D2D41F003CD8DD /* AeNodesConteiner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A7F21A825D2D41F003CD8DD /* AeNodesConteiner.cpp */; };
-		4A979B0B257E0FF000BDF3E3 /* GF_AEGP_MainUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A979B0A257E0FF000BDF3E3 /* GF_AEGP_MainUI.cpp */; };
+		4AFCCBAB25E3779F009B9124 /* AeGfsFileCreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AFCCBAA25E3779F009B9124 /* AeGfsFileCreator.cpp */; };
 		7EF36FB716F29701002A3CB3 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EF36FB616F29701002A3CB3 /* Cocoa.framework */; };
 		D0FE575F0993C4E900139A60 /* GF_AEGP_Strings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0FE575A0993C4E900139A60 /* GF_AEGP_Strings.cpp */; };
 		D0FE57600993C4E900139A60 /* GF_AEGP_Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0FE575C0993C4E900139A60 /* GF_AEGP_Main.cpp */; };
@@ -52,8 +51,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		4A36D2AE24AD779B0044DC28 /* AeGfsFileBuilder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AeGfsFileBuilder.cpp; path = ../AeGfsFileBuilder.cpp; sourceTree = "<group>"; };
-		4A36D2B024AD77C90044DC28 /* AeGfsFileBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeGfsFileBuilder.h; path = ../AeGfsFileBuilder.h; sourceTree = "<group>"; };
 		4A3D131523F4B49D00517E24 /* GF_AEGP_Relinker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GF_AEGP_Relinker.h; path = ../GF_AEGP_Relinker.h; sourceTree = "<group>"; };
 		4A3D131623F4B49D00517E24 /* GF_GlobalClasses.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GF_GlobalClasses.cpp; path = ../GF_GlobalClasses.cpp; sourceTree = "<group>"; };
 		4A3D131723F4B49D00517E24 /* GF_AEGP_Relinker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GF_AEGP_Relinker.cpp; path = ../GF_AEGP_Relinker.cpp; sourceTree = "<group>"; };
@@ -109,9 +106,10 @@
 		4A7F219F25D2C834003CD8DD /* AeFileReferenceInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeFileReferenceInterface.h; path = ../BatchRelinker/AeFileReferenceInterface.h; sourceTree = "<group>"; };
 		4A7F21A725D2D41F003CD8DD /* AeNodesConteiner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeNodesConteiner.h; path = ../Win/AeNodesConteiner.h; sourceTree = "<group>"; };
 		4A7F21A825D2D41F003CD8DD /* AeNodesConteiner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AeNodesConteiner.cpp; path = ../Win/AeNodesConteiner.cpp; sourceTree = "<group>"; };
-		4A979B0A257E0FF000BDF3E3 /* GF_AEGP_MainUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GF_AEGP_MainUI.cpp; path = ../GF_AEGP_MainUI.cpp; sourceTree = "<group>"; };
-		4A979B0D257E13C800BDF3E3 /* GF_AEGP_MainUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GF_AEGP_MainUI.h; path = ../GF_AEGP_MainUI.h; sourceTree = "<group>"; };
 		4AD4FA2B23F4049B009C7189 /* GF_GlobalTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GF_GlobalTypes.h; path = ../GF_GlobalTypes.h; sourceTree = "<group>"; };
+		4AFCCBA825E3779E009B9124 /* AeGfsFileCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeGfsFileCreator.h; path = ../AeGfsFileCreator.h; sourceTree = "<group>"; };
+		4AFCCBA925E3779E009B9124 /* AeGfsFileCreatorStructures.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeGfsFileCreatorStructures.h; path = ../AeGfsFileCreatorStructures.h; sourceTree = "<group>"; };
+		4AFCCBAA25E3779F009B9124 /* AeGfsFileCreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AeGfsFileCreator.cpp; path = ../AeGfsFileCreator.cpp; sourceTree = "<group>"; };
 		7EF36FB616F29701002A3CB3 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		7EF36FB816F29807002A3CB3 /* GF_AEGP_Main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GF_AEGP_Main.h; path = ../GF_AEGP_Main.h; sourceTree = "<group>"; };
 		C4E618CC095A3CE80012CA3F /* renderBeamer.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = renderBeamer.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -221,13 +219,12 @@
 				4A6DD6212425B4CB001AB42D /* Headers */,
 				4A3D131723F4B49D00517E24 /* GF_AEGP_Relinker.cpp */,
 				4A6DD6282428E024001AB42D /* GF_AEGP_LibraryLoader.cpp */,
-				4A979B0A257E0FF000BDF3E3 /* GF_AEGP_MainUI.cpp */,
-				4A979B0D257E13C800BDF3E3 /* GF_AEGP_MainUI.h */,
 				4A3D131923F4B49D00517E24 /* GF_AEGP_Dumper.cpp */,
-				4A36D2AE24AD779B0044DC28 /* AeGfsFileBuilder.cpp */,
-				4A36D2B024AD77C90044DC28 /* AeGfsFileBuilder.h */,
 				4A65129E243F331600C32C49 /* AeSceneCollector.cpp */,
 				4A65129B243F331400C32C49 /* AeSceneCollector.h */,
+				4AFCCBAA25E3779F009B9124 /* AeGfsFileCreator.cpp */,
+				4AFCCBA825E3779E009B9124 /* AeGfsFileCreator.h */,
+				4AFCCBA925E3779E009B9124 /* AeGfsFileCreatorStructures.h */,
 				4A3D131623F4B49D00517E24 /* GF_GlobalClasses.cpp */,
 				4A6DD6222425B587001AB42D /* GF_AEGP_ErrorsHandling.cpp */,
 				D0FE575C0993C4E900139A60 /* GF_AEGP_Main.cpp */,
@@ -363,8 +360,8 @@
 				D0FE579D0993C5E500139A60 /* AEGP_SuiteHandler.cpp in Sources */,
 				4A7F21A925D2D41F003CD8DD /* AeNodesConteiner.cpp in Sources */,
 				4A3D131D23F4B49E00517E24 /* GF_AEGP_Dumper.cpp in Sources */,
-				4A36D2AF24AD779B0044DC28 /* AeGfsFileBuilder.cpp in Sources */,
 				4A50F6F5244DDCFC002E0A7D /* MissingSuiteError.cpp in Sources */,
+				4AFCCBAB25E3779F009B9124 /* AeGfsFileCreator.cpp in Sources */,
 				4A69B21325DBABAA002D94B9 /* AeFileNode.cpp in Sources */,
 				4A6512A3243F331800C32C49 /* AeSceneCollector.cpp in Sources */,
 				4A6512A1243F331800C32C49 /* AeCompNode.cpp in Sources */,
@@ -375,7 +372,6 @@
 				4A3D131B23F4B49E00517E24 /* GF_GlobalClasses.cpp in Sources */,
 				4A6512A4243F331800C32C49 /* AeConteiner.cpp in Sources */,
 				4A7F21A125D2C834003CD8DD /* AeFileReferenceInterfaceHelper.cpp in Sources */,
-				4A979B0B257E0FF000BDF3E3 /* GF_AEGP_MainUI.cpp in Sources */,
 				4A7F21A325D2C834003CD8DD /* tinyXml2.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
