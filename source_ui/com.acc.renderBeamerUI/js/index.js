@@ -10,14 +10,13 @@ function readParsedComps(parsed,currentName){
     var c = new Array();
     for(var x=0; x < parsed.length; x++){
         if(parsed[x].name == currentName){
-            alert(x);
+            //alert(x);
             for(key in parsed[x]){
                 c.push(parsed[x][key]);
             }
            }
     }
-    alert(c);
-    
+    //alert(c);
 }
 // top nav buttons toggle functionality
 function settingsButtonToggle() {
@@ -389,8 +388,7 @@ function setDropdownValue(args) {
             if(dropName == "profile"){
                currentObj.profile = attribute;
             }
-            if(dropName == "extension"){
-                alert("extension changed");
+            if(dropName == "extension"){                
                 currentObj.encoder =  "";
                 currentObj.pixel_format = "";
                 currentObj.profile = "";
@@ -398,12 +396,20 @@ function setDropdownValue(args) {
             
             if(dropName == "sample rate"){
                 currentObj.audio_sample_rate = sampleRateValue.innerHTML; 
+				sampleRateValue.innerHTML = (currentObj.audio_sample_rate).toString() + " kHz";
             }
             if(dropName == "bit depth"){
                 currentObj.audio_depth = bitDepthValue.innerHTML;
+				bitDepthValue.innerHTML = (currentObj.audio_depth * 8).toString() + " bit";
             }
             if(dropName == "channels"){
                 currentObj.audio_channels = channelsValue.innerHTML;
+				if(currentObj.audio_channels == 1) {
+					channelsValue.innerHTML = "mono";
+				}
+				else {
+					channelsValue.innerHTML = "stereo";
+				}
             }
             if(dropName == "extension"){
                 currentObj.ext = extensionValue.innerHTML;  
@@ -424,29 +430,24 @@ function setDropdownValue(args) {
                 topLabel = "audio";
             }
             
-            if(parsed[args[3]-1].audio_sample_rate != ""){
-                sampleRateValue.innerHTML = (parsed[args[3]-1].audio_sample_rate).toString() + " kHz";   
-            }
-            else{
-                sampleRateValue.innerHTML = "48,000 kHz"
-            }
-            if(parsed[args[3]-1].audio_depth != ""){
-                bitDepthValue.innerHTML = (parsed[args[3]-1].audio_depth * 8).toString() + " bit";
-            }
-            else{
-                bitDepthValue.innerHTML = "16 bit"
-            }
-            if(parsed[args[3]-1].audio_channels != ""){
-				if(parsed[args[3]-1].audio_channels == 1) {
-					channelsValue.innerHTML = "mono";
-				}
-				else {
-					channelsValue.innerHTML = "stereo";
-				}
-            }
-            else{
-                channelsValue.innerHTML = "stereo"
-            }   
+            if(parsed[args[3]-1].audio_sample_rate == ""){
+				parsed[args[3]-1].audio_sample_rate = 48000;
+			}
+            sampleRateValue.innerHTML = (parsed[args[3]-1].audio_sample_rate).toString() + " kHz"; 
+            if(parsed[args[3]-1].audio_depth == ""){
+				parsed[args[3]-1].audio_depth = 2;
+			}
+            bitDepthValue.innerHTML = (parsed[args[3]-1].audio_depth * 8).toString() + " bit";
+            
+            if(parsed[args[3]-1].audio_channels == ""){
+				parsed[args[3]-1].audio_channels = 2;
+			}
+			if(parsed[args[3]-1].audio_channels == 1) {
+				channelsValue.innerHTML = "mono";
+			}
+			else {
+				channelsValue.innerHTML = "stereo";
+			}               
             extensionValue.innerHTML = parsed[args[3]-1].ext;
             
         }
@@ -636,9 +637,9 @@ function compoListClicked(ar){
     var tab = document.getElementById("compositionList");
     var allRows = tab.getElementsByTagName("TR");
     var allRowsL = tab.getElementsByTagName("TR").length;
-    
     for(var x =1;x<allRowsL;x++){
-        if(allRows[x].getElementsByTagName("td")[0].innerHTML==row.getElementsByTagName("td")[0].innerHTML){
+        //if(allRows[x].getElementsByTagName("td")[0].innerHTML==row.getElementsByTagName("td")[0].innerHTML){
+        if(allRows[x].getElementsByTagName("input")[0].getAttribute("data-el")==row.getElementsByTagName("input")[0].getAttribute("data-el")){
            currentRowId = x;
            }
         allRows[x].style.background = "#2c2d30";
@@ -691,18 +692,29 @@ function bitrateChanged(ar){
     parsed[currentRowId-1].bitrate = ar.value;
 }
 function renderableChecked(ar){
-    if(parsed[currentRowId-1].renderable == "true"){
-       parsed[currentRowId-1].renderable = false;
-    }
-    else{
-       parsed[currentRowId-1].renderable = true;
-    }
+	var the_row = ar.getAttribute("data-el");
+	var rend_checked = 0;
+	if(ar.checked == true)
+		rend_checked = 1;
+	parsed[the_row-1].renderable = rend_checked;
 }
 function ignoreMissingsChecked(ar){
-    parsed[currentRowId-1].ignoreMissings = ar.checked;
+	var miss_checked_val = 0;
+	if(ar.checked == true) {
+		miss_checked_val = 1;
+	}
+	for(var x=0; x < parsed.length; x++){
+		parsed[x].ignore_missings = miss_checked_val;
+	}
 }
 function smartCollectChecked(ar){
-    parsed[currentRowId-1].smartCollect = ar.checked;
+	var smart_checked_val = 0;
+	if(ar.checked == true) {
+		smart_checked_val = 1;
+	}
+	for(var x=0; x < parsed.length; x++){
+		parsed[x].smart_collect = smart_checked_val;
+	}
 }
 
 
@@ -713,7 +725,7 @@ function setObjectSubmit(){
     var lastSelected = currentRowId;
     
     for(var x=0;x< parsed.length;x++){
-        if(parsed[x].renderable == true){
+        if(parsed[x].renderable == 1){
             ar = document.getElementById("compositionList").getElementsByTagName("tr")[x+1];
             currentRowId = x;
             compoListClicked(ar);
@@ -818,7 +830,7 @@ function initx() {
         console.log(cc);
         var c =1;
         for(var x=0; x < parsed.length; x++){
-            if(parsed[x].renderable == true){
+            if(parsed[x].renderable == 1){
                 var row = table.insertRow(c);
                 c++;
                 var cell1 = row.insertCell(0);
@@ -834,11 +846,11 @@ function initx() {
                 }
 
                 cell3.innerHTML = parsed[x].ext;
-                if(parsed[x].renderable == true){
-                    cell4.innerHTML = '<input type="checkbox" class="checkbox" name="scales" checked>';
+                if(parsed[x].renderable == 1){
+                    cell4.innerHTML = '<input type="checkbox" class="checkbox" name="scales" data-el="' + (x+1).toString() + '" checked>';
                    }
                 else{
-                    cell4.innerHTML = '<input type="checkbox" class="checkbox" name="scales">';
+                    cell4.innerHTML = '<input type="checkbox" class="checkbox" name="scales data-el="' + (x+1).toString() + '">';
                 }
                 parsed2.push(parsed[x]);
             }
@@ -855,14 +867,14 @@ function initx() {
         // add event listener to composition list rows in <body> onload event due to dynamically added content 
         var table = document.getElementById("compositionList");
         var rows = table.getElementsByTagName("tr");
-        var checkbox = "";
+        var check_box = "";
         for (i = 1; i < rows.length; i++) {
             rows[i].addEventListener('click', function(){
                                                     var ar = this;
                                                     compoListClicked(ar);}
                                         , false);
-            checkbox = rows[i].getElementsByTagName("td")[3];
-            checkbox.addEventListener('click', function(){
+            check_box = rows[i].getElementsByTagName("input")[0];
+            check_box.addEventListener('click', function(){
                                                     var ar = this;
                                                     renderableChecked(ar);}
                                         , false);

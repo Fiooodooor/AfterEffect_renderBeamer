@@ -36,12 +36,14 @@ typedef struct gfsRqItemOutput {
 
 typedef struct gfsRqItem {
 	A_long indexNr;
-	A_char compositioName[AEGP_MAX_ITEM_NAME_SIZE + 4];
+	A_char compositio_name[AEGP_MAX_ITEM_NAME_SIZE + 4];
 	A_long width;
 	A_long height;
-	A_char frameString[AEGP_MAX_ITEM_NAME_SIZE];
+	A_Boolean continue_on_missing;
+	A_Boolean smart_collect;
+	A_char frame_string[AEGP_MAX_ITEM_NAME_SIZE];
 	A_char fps[AEGP_MAX_ITEM_NAME_SIZE];
-	std::vector<gfsRqItemOutput*> outMods;
+	std::vector<gfsRqItemOutput*> output_mods;
 } gfsRqItem;
 
 #endif

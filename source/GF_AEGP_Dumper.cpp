@@ -448,18 +448,20 @@ ErrorCodesAE GF_Dumper::DumpQueueItem(A_long itemIndex, const fs::path& outputPa
 		if (!gfsItem) throw AE_ErrAlloc;
 
 		gfsItem->indexNr = itemIndex + 1;
+		gfsItem->continue_on_missing = 1;
+		gfsItem->smart_collect = 0;
 
 		ERROR_THROW_AE_MOD(suites.RQItemSuite3()->AEGP_GetCompFromRQItem(rq_ItemRef, &rq_ItemComposition))
 		ERROR_THROW_AE_MOD(suites.CompSuite10()->AEGP_GetItemFromComp(rq_ItemComposition, &rq_ItemH))
 
         suites.ANSICallbacksSuite1()->sprintf(frameScript, "var rqItem=app.project.renderQueue.item(%d);var rqMod=rqItem.getSettings(GetSettingsFormat.STRING);var rqFps=rqMod[rqMod[\"Frame Rate\"]];\n(Math.round((rqItem.timeSpanStart)*rqFps)).toString()+\"to\"+(Math.round((rqItem.timeSpanStart+rqItem.timeSpanDuration)*rqFps)-1).toString()+\"s1\";", itemIndex + 1);
-		ERROR_THROW_MOD(rbUtilities::execScript(sP, pluginId, frameScript, gfsItem->frameString, 32))
+		ERROR_THROW_MOD(rbUtilities::execScript(sP, pluginId, frameScript, gfsItem->frame_string, 32))
 
 		suites.ANSICallbacksSuite1()->sprintf(frameScript, "var fpsRqMod=app.project.renderQueue.item(%d).getSettings(GetSettingsFormat.STRING);fpsRqMod[fpsRqMod[\"Frame Rate\"]].toString();", itemIndex + 1);
 		ERROR_THROW_MOD(rbUtilities::execScript(sP, pluginId, frameScript, gfsItem->fps, 32))
 
 		ERROR_THROW_AE_MOD(suites.ItemSuite8()->AEGP_GetItemDimensions(rq_ItemH, &gfsItem->width, &gfsItem->height))
-		ERROR_THROW_AE_MOD(suites.ItemSuite7()->AEGP_GetItemName(rq_ItemH, gfsItem->compositioName))		
+		ERROR_THROW_AE_MOD(suites.ItemSuite7()->AEGP_GetItemName(rq_ItemH, gfsItem->compositio_name))		
 		
 		rbProj()->logg("QueueItemDumper", "Parsed Render queue item nr:", std::to_string(itemIndex + 1).c_str());
 		ERROR_THROW_AE_MOD(DumpOutputModules(rq_ItemRef, rq_OutModulessN, gfsItem, outputPath))
@@ -510,7 +512,7 @@ ErrorCodesAE GF_Dumper::DumpOutputModules(AEGP_RQItemRefH &rq_ItemRef, A_long ou
 				outNode->indexNr = outModulesNumber+1;
 				RB_STRNCPTY(outNode->outputType, memBuff1.c_str(), 46);
 				RB_STRNCPTY(outNode->outputInfo, memBuff2.c_str(), 94);
-				parentItem->outMods.push_back(outNode);
+				parentItem->output_mods.push_back(outNode);
 				outNode = nullptr;
 			}
 			else if(outNode)

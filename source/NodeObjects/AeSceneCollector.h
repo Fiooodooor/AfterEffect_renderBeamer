@@ -13,8 +13,8 @@ class AeSceneCollector
 {
 public:	
 	AeSceneCollector(AEGP_PluginID pluginId, SPBasicSuite *sp, AEGP_ProjectH projectH, AeSceneConteiner &theCt);
-	ErrorCodesAE AeNormalCollect();
-	ErrorCodesAE AeSmartCollect();
+	ErrorCodesAE AeNormalCollect(A_Boolean useUiExporter=0);
+	ErrorCodesAE AeSmartCollect(A_Boolean useUiExporter=0);
 	ErrorCodesAE generateDebugItemsInfo();
 
 	AeSceneConteiner* ct;
@@ -22,7 +22,7 @@ public:
 protected:
 	ErrorCodesAE collectSceneItems();
 	ErrorCodesAE collectSceneRenderQueueItems();
-	ErrorCodesAE collectSceneUiRenderQueueItems() const;
+	ErrorCodesAE collectSceneUiRenderQueueItems();
 	ErrorCodesAE collectSceneItem(AeObjectNode *node);
 	ErrorCodesAE collectSceneRqItem(AeObjectNode *node);
 	ErrorCodesAE collectToRender();

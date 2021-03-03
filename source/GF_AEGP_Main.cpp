@@ -113,10 +113,10 @@ void Renderbeamer::DumpProject(A_Boolean useSmartCollector, A_Boolean useBatchEx
 				AeSceneConteiner SceneContainer;
 				AeSceneCollector collector(pluginId, i_pica_basicP, tempDumper.rootProjH, SceneContainer);
 				if (useSmartCollector == TRUE) {
-					ERROR_AE(collector.AeSmartCollect())
+					ERROR_AE(collector.AeSmartCollect(useUiExporter))
 				}
 				else {
-					ERROR_AE(collector.AeNormalCollect())
+					ERROR_AE(collector.AeNormalCollect(useUiExporter))
 				}
 				ERROR_AE(tempDumper.setConteiner(SceneContainer))
 				if (useBatchExporter == FALSE) {

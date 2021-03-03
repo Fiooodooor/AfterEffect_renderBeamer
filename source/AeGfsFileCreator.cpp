@@ -33,15 +33,18 @@ ErrorCodesAE AeGfsFileCreator::GenerateAndSaveDocument()
 	// <Settings outFileExt="png" framestring="0to505s1" outFileName="AE_Mac_test_1_.aepx" outFilePath="AE_Mac_test_1K/AE_Mac_test_1K-renders" userOutput="/Users/soth/Desktop/AE_v17_mac_tests/AE_Mac_test_1_/Final_Comp_.png" >
 	doc_settings = gfs_document.NewElement("Settings");
 	doc_settings->SetAttribute("outFileExt", "png");
-	doc_settings->SetAttribute("framestring", pt->frameString);
+	doc_settings->SetAttribute("framestring", pt->frame_string);
 	doc_settings->SetAttribute("outFileName", outFileName.string().c_str());
 	doc_settings->SetAttribute("outFilePath", outFilePath.string().c_str());
-	doc_settings->SetAttribute("userOutput", fs::path(pt->outMods.back()->outputFile).replace_extension(".png").string().c_str());
+	doc_settings->SetAttribute("userOutput", fs::path(pt->output_mods.back()->outputFile).replace_extension(".png").string().c_str());
 	doc_root->InsertEndChild(doc_settings);
 
 	// <AfterEffects height="1080" width="1920" fontDir="AE_Mac_test_1K/data/fonts" >
 	doc_aftereffects = gfs_document.NewElement("AfterEffects");
-	doc_aftereffects->SetAttribute("continueOnMissingAssets", "true");
+	if(pt->continue_on_missing == 1)
+		doc_aftereffects->SetAttribute("continueOnMissingAssets", "true");
+	else
+		doc_aftereffects->SetAttribute("continueOnMissingAssets", "false");
 	doc_aftereffects->SetAttribute("height", pt->height);
 	doc_aftereffects->SetAttribute("width", pt->width);
 	doc_aftereffects->SetAttribute("fontDir", outFontsDir.string().c_str());
@@ -73,32 +76,32 @@ ErrorCodesAE AeGfsFileCreator::GenerateRenderQueueItems()
 	ErrorCodesAE _ErrorCode = NoError;
 	for (auto *pt : this->rqItems)
 	{
-		if (pt->outMods.empty()) {
+		if (pt->output_mods.empty()) {
 			_ErrorCode = AE_ErrStruct;
 			continue;
 		}
 		// <RenderQueueItem index="1" nameComp="Final_Comp" outFileExt="png" width="1920" height="1080" framestring="0to505s1" fps="30.0" isSeq="0" isMultiFr="1" outType="png" outInfo="-">
 		rq_item = gfs_document.NewElement("RenderQueueItem");
 		rq_item->SetAttribute("index", pt->indexNr);
-		rq_item->SetAttribute("nameComp", pt->compositioName);
+		rq_item->SetAttribute("nameComp", pt->compositio_name);
 		rq_item->SetAttribute("outFileExt", "png");
 		rq_item->SetAttribute("width", pt->width);
 		rq_item->SetAttribute("height", pt->height);
-		rq_item->SetAttribute("framestring", pt->frameString);
+		rq_item->SetAttribute("framestring", pt->frame_string);
 		rq_item->SetAttribute("fps", pt->fps);
-		rq_item->SetAttribute("isSeq", pt->outMods.back()->outFileIsSeq);
-		rq_item->SetAttribute("isMultiFr", pt->outMods.back()->outFileIsMultiframe);
+		rq_item->SetAttribute("isSeq", pt->output_mods.back()->outFileIsSeq);
+		rq_item->SetAttribute("isMultiFr", pt->output_mods.back()->outFileIsMultiframe);
 		rq_item->SetAttribute("outType", "png");
 		rq_item->SetAttribute("outInfo", "-");
-		rq_item->SetAttribute("audioEnabled", pt->outMods.back()->outputAudioEnabled);
+		rq_item->SetAttribute("audioEnabled", pt->output_mods.back()->outputAudioEnabled);
 
-		if (pt->outMods.back()->outputAudioEnabled) {
+		if (pt->output_mods.back()->outputAudioEnabled) {
 			// audioEnabled="1" audioInUse="1" numChannels="2" bytesPerSample="4294967298" encoding="105553116266498" sampleRate="48000.00000" />			
-			rq_item->SetAttribute("audioInUse", pt->outMods.back()->outputAudioSetToUse);
-			rq_item->SetAttribute("numChannels", pt->outMods.back()->soundFormat.num_channelsL);
-			rq_item->SetAttribute("bytesPerSample", pt->outMods.back()->soundFormat.bytes_per_sampleL);
-			rq_item->SetAttribute("encoding", pt->outMods.back()->soundFormat.encoding);
-			rq_item->SetAttribute("sampleRate", pt->outMods.back()->soundFormat.sample_rateF);
+			rq_item->SetAttribute("audioInUse", pt->output_mods.back()->outputAudioSetToUse);
+			rq_item->SetAttribute("numChannels", pt->output_mods.back()->soundFormat.num_channelsL);
+			rq_item->SetAttribute("bytesPerSample", pt->output_mods.back()->soundFormat.bytes_per_sampleL);
+			rq_item->SetAttribute("encoding", pt->output_mods.back()->soundFormat.encoding);
+			rq_item->SetAttribute("sampleRate", pt->output_mods.back()->soundFormat.sample_rateF);
 		}
 		doc_aftereffects->InsertEndChild(rq_item);
 	}
