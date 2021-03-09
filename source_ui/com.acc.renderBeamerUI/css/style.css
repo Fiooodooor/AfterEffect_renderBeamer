@@ -62,7 +62,7 @@ body{
     background: #3A404D;
     z-index: 2;
     display:grid;
-    grid-template-columns: 200px auto 64px 220px;
+    grid-template-columns: 190px auto 64px 230px;
     box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.4);
     grid
 }
@@ -90,7 +90,7 @@ body{
 
 .center{
     
-    height:auto;
+    height:824px;
 }
 
 .menu nav {
@@ -288,6 +288,9 @@ tr:last-child{
     
     
 }
+.aplus{
+    height: 80px;
+}
 .ttop{
     margin-top: 0px;
     padding-top: 12px;
@@ -375,10 +378,12 @@ tr:last-child{
 .dropdown:hover{
     cursor:pointer;
 }
-.dropdown:hover >div{
-    
+
+.dropdownClicked > div{
     display:block;
-    
+}
+.dropdown:hover >div{
+   display:block;
 }
 .dropdown:hover .down{
     transition: all 0.1s ease 0s;
@@ -438,12 +443,13 @@ tr:last-child{
     top:0px;
     background: #43464D;
     overflow-y: auto;
-    height: 240px;
+    height: 263px;
     width:140px;
     
 }
 .video{
     top:0px;
+    height: 190px;
 }
 .image-seq{
     top:32px;
@@ -458,6 +464,12 @@ tr:last-child{
     height: 195px;
 }
 .dropdown-short{
+    top:30px;
+    left:0px;
+    width:110px;
+    height: auto;
+}
+.sr{
     top:30px;
     left:0px;
     width:110px;
@@ -517,11 +529,14 @@ tr:last-child{
 .footer{
     background: var(--bg);
 
+    height: 40px;
     display:grid;
     grid-template-columns:   auto 100px 100px 10px;
+    grid-template-rows: 30px;
     grid-column-gap: 10px;
 }
 .footer .send-button{
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;

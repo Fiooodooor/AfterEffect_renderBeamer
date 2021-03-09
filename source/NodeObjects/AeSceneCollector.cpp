@@ -10,18 +10,18 @@ AeSceneCollector::AeSceneCollector(AEGP_PluginID PluginId, SPBasicSuite *Sp, AEG
 ErrorCodesAE AeSceneCollector::AeNormalCollect(A_Boolean useUiExporter)
 {
 	AEGP_SuiteHandler suites(sp);
-	ERROR_CATCH_START_MOD(CallerModuleName::SceneCollectorModule)
+	ERROR_CATCH_START
 		ERROR_AE(collectSceneItems())
 		ERROR_AE(collectToRender())
 		if (useUiExporter != 0) {
 			ERROR_AE(collectSceneUiRenderQueueItems())
 		}
-	ERROR_CATCH_END_RETURN(suites)
+    ERROR_CATCH_END_RETURN(suites)
 }
 ErrorCodesAE AeSceneCollector::AeSmartCollect(A_Boolean useUiExporter)
 {
 	AEGP_SuiteHandler suites(sp);
-	ERROR_CATCH_START_MOD(CallerModuleName::SceneCollectorModule)
+	ERROR_CATCH_START
 		ERROR_AE(collectSceneItems())
 		if(useUiExporter != 0) {
 			ERROR_AE(collectSceneUiRenderQueueItems())
@@ -85,7 +85,6 @@ ErrorCodesAE AeSceneCollector::collectSceneUiRenderQueueItems()
 	ErrorCodesAE _ErrorCode = NoError;
 	AEGP_PersistentBlobH bh = nullptr;
 	A_long rq_items=0, it=0, temp_long=0;
-	A_char rq_path[AEGP_MAX_PATH_SIZE] = { '\0' };
 	std::string it_str, memory_buff, memory_buff1;
 	AEGP_RQItemRefH	rq_ItemRef = nullptr;
 	AEGP_ItemH rq_ItemH = nullptr;

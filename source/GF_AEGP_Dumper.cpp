@@ -412,7 +412,7 @@ ErrorCodesAE GF_Dumper::DumpUiQueueItems(const fs::path& outputPath) const
 			AeGfsFileCreator::getInstance()->PushRenderQueueItem(sc->gfsRqItemsList.back());
 			sc->gfsRqItemsList.pop_back();
 		}
-	ERROR_CATCH_END_RETURN(suites)
+	ERROR_CATCH_END_LOGGER_RETURN("DumpUiQueueItems")
 }
 
 ErrorCodesAE GF_Dumper::DumpQueueItems(const fs::path& outputPath)

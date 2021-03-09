@@ -6,6 +6,9 @@
 parsed = "";
 parsed2 = new Array(); 
 currentRowId = "";
+
+
+
 function readParsedComps(parsed,currentName){
     var c = new Array();
     for(var x=0; x < parsed.length; x++){
@@ -370,6 +373,7 @@ function setDropdownValue(args) {
         dropdown = document.getElementById("extensionValue");
         attribute = atr;    
     }
+    dropdown.classList.remove("dropdownClicked");
     if(attribute != ""){
        
         if(manual==false){
@@ -681,6 +685,12 @@ function compoListClicked(ar){
 
 
 // events functions for text fields and compo list checkbox
+
+function dropdown(ar){ 
+    //console.log("dd clicked")
+    //ar.classList.add("dropdownClicked");
+}
+
 function frameRangeChanged(ar){
     curentRow.getElementsByTagName("td")[1].innerHTML = ar.value;
     parsed[currentRowId-1].frame_range = ar.value;
@@ -807,6 +817,16 @@ function addEvents(){
                                                     var ar = this;
                                                     ignoreMissingsChecked(ar);}
                                         , false);
+    
+    // add event listener for opening dropdowns
+    var openDrop = document.getElementsByClassName("dropdown");
+    for (i = 0; i < openDrop.length; i++) {
+        console.log(openDrop[i]);
+        openDrop[i].addEventListener('click', function(){
+                                                    var ar = this;
+                                                    dropdown(ar);}
+                                        , false);
+    }
     
 }
 

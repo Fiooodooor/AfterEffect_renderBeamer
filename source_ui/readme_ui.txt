@@ -1,10 +1,9 @@
 
 WINDOWS:
-* Copy the extracted UI folder to (create if one does not exists):
-	c:\Users\[user name]\AppData\Roaming\Adobe\CEP\extensions\
+	just run win_install.bat  
+	* directory com.acc.renderBeamerUI and c++ plugin files C4dRelinkerLibrary.dll, GF_AEGP_Renderbeamer.aex should be placed next to win_install.bat
+	
 
-* Regedit the registry key listed bellow and add a key named PlayerDebugMode, of type String, and value 1: 
-	HKEY_CURRENT_USER/Software/Adobe/CSXS.6 
 
 MAC:
 * Copy the extracted UI folder to (create if one does not exists):
