@@ -1,0 +1,395 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4A3EC00E243765ED00844196 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A6DD6A02429AD80001AB42D /* AppKit.framework */; };
+		4A3EC011243765EF00844196 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A6DD69C2429AD63001AB42D /* CoreAudio.framework */; };
+		4A3EC013243765F100844196 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A6DD69E2429AD72001AB42D /* CoreFoundation.framework */; };
+		4A3EC01624376D9200844196 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A3EC01524376D9200844196 /* CoreServices.framework */; };
+		4A6DD68C2429A20F001AB42D /* GF_C4D_Relinker.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 4A6DD68B2429A20F001AB42D /* GF_C4D_Relinker.hpp */; };
+		4A6DD68E2429A20F001AB42D /* GF_C4D_RelinkerPriv.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 4A6DD68D2429A20F001AB42D /* GF_C4D_RelinkerPriv.hpp */; };
+		4A6DD6902429A20F001AB42D /* GF_C4D_Relinker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A6DD68F2429A20F001AB42D /* GF_C4D_Relinker.cpp */; };
+		4A6DD6A22429AF09001AB42D /* libcinewarelib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A6DD6982429AC85001AB42D /* libcinewarelib.a */; };
+		4A6DD6A32429AF09001AB42D /* libjpeglib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A6DD6992429AC85001AB42D /* libjpeglib.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		4A3EC01524376D9200844196 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
+		4A6DD6882429A20F001AB42D /* libC4dRelinkerLibrary.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libC4dRelinkerLibrary.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		4A6DD68B2429A20F001AB42D /* GF_C4D_Relinker.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GF_C4D_Relinker.hpp; sourceTree = "<group>"; };
+		4A6DD68D2429A20F001AB42D /* GF_C4D_RelinkerPriv.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GF_C4D_RelinkerPriv.hpp; sourceTree = "<group>"; };
+		4A6DD68F2429A20F001AB42D /* GF_C4D_Relinker.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GF_C4D_Relinker.cpp; sourceTree = "<group>"; };
+		4A6DD6982429AC85001AB42D /* libcinewarelib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcinewarelib.a; path = ../../../Downloads/RBCinewaresdk/libraries/osx/release/libcinewarelib.a; sourceTree = "<group>"; };
+		4A6DD6992429AC85001AB42D /* libjpeglib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjpeglib.a; path = ../../../Downloads/RBCinewaresdk/libraries/osx/release/libjpeglib.a; sourceTree = "<group>"; };
+		4A6DD69C2429AD63001AB42D /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		4A6DD69E2429AD72001AB42D /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		4A6DD6A02429AD80001AB42D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4A6DD6862429A20F001AB42D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A3EC013243765F100844196 /* CoreFoundation.framework in Frameworks */,
+				4A3EC01624376D9200844196 /* CoreServices.framework in Frameworks */,
+				4A6DD6A32429AF09001AB42D /* libjpeglib.a in Frameworks */,
+				4A3EC00E243765ED00844196 /* AppKit.framework in Frameworks */,
+				4A3EC011243765EF00844196 /* CoreAudio.framework in Frameworks */,
+				4A6DD6A22429AF09001AB42D /* libcinewarelib.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4A6DD67F2429A20F001AB42D = {
+			isa = PBXGroup;
+			children = (
+				4A6DD68A2429A20F001AB42D /* Garagefarm c4d relinker */,
+				4A6DD6892429A20F001AB42D /* Products */,
+				4A6DD6972429AC83001AB42D /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		4A6DD6892429A20F001AB42D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4A6DD6882429A20F001AB42D /* libC4dRelinkerLibrary.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4A6DD68A2429A20F001AB42D /* Garagefarm c4d relinker */ = {
+			isa = PBXGroup;
+			children = (
+				4A6DD68B2429A20F001AB42D /* GF_C4D_Relinker.hpp */,
+				4A6DD68D2429A20F001AB42D /* GF_C4D_RelinkerPriv.hpp */,
+				4A6DD68F2429A20F001AB42D /* GF_C4D_Relinker.cpp */,
+			);
+			path = "Garagefarm c4d relinker";
+			sourceTree = "<group>";
+		};
+		4A6DD6972429AC83001AB42D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4A3EC01524376D9200844196 /* CoreServices.framework */,
+				4A6DD6A02429AD80001AB42D /* AppKit.framework */,
+				4A6DD69E2429AD72001AB42D /* CoreFoundation.framework */,
+				4A6DD69C2429AD63001AB42D /* CoreAudio.framework */,
+				4A6DD6982429AC85001AB42D /* libcinewarelib.a */,
+				4A6DD6992429AC85001AB42D /* libjpeglib.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		4A6DD6842429A20F001AB42D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A6DD68E2429A20F001AB42D /* GF_C4D_RelinkerPriv.hpp in Headers */,
+				4A6DD68C2429A20F001AB42D /* GF_C4D_Relinker.hpp in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		4A6DD6872429A20F001AB42D /* C4dRelinkerLibrary */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4A6DD6932429A20F001AB42D /* Build configuration list for PBXNativeTarget "C4dRelinkerLibrary" */;
+			buildPhases = (
+				4A6DD6842429A20F001AB42D /* Headers */,
+				4A6DD6852429A20F001AB42D /* Sources */,
+				4A6DD6862429A20F001AB42D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = C4dRelinkerLibrary;
+			productName = "Garagefarm c4d relinker";
+			productReference = 4A6DD6882429A20F001AB42D /* libC4dRelinkerLibrary.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4A6DD6802429A20F001AB42D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1110;
+				ORGANIZATIONNAME = garageFarm.net;
+				TargetAttributes = {
+					4A6DD6872429A20F001AB42D = {
+						CreatedOnToolsVersion = 11.1;
+					};
+				};
+			};
+			buildConfigurationList = 4A6DD6832429A20F001AB42D /* Build configuration list for PBXProject "C4dRelinkerLibrary" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 4A6DD67F2429A20F001AB42D;
+			productRefGroup = 4A6DD6892429A20F001AB42D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4A6DD6872429A20F001AB42D /* C4dRelinkerLibrary */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4A6DD6852429A20F001AB42D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A6DD6902429A20F001AB42D /* GF_C4D_Relinker.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		4A6DD6912429A20F001AB42D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_DEBUG,
+					__MAC,
+					__64BIT,
+					MAXON_TARGET_DEBUG,
+					MAXON_TARGET_OSX,
+					MAXON_TARGET_64BIT,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = NO;
+				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
+				SDKROOT = macosx;
+				VALID_ARCHS = x86_64;
+			};
+			name = Debug;
+		};
+		4A6DD6922429A20F001AB42D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					__MAC,
+					__64BIT,
+					MAXON_TARGET_RELEASE,
+					MAXON_TARGET_OSX,
+					MAXON_TARGET_64BIT,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
+				SDKROOT = macosx;
+				VALID_ARCHS = x86_64;
+			};
+			name = Release;
+		};
+		4A6DD6942429A20F001AB42D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_DEBUG,
+					__MAC,
+					__64BIT,
+					MAXON_TARGET_DEBUG,
+					MAXON_TARGET_OSX,
+					MAXON_TARGET_64BIT,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				HEADER_SEARCH_PATHS = /Users/ccc/Downloads/RBCinewaresdk/includes;
+				INSTALL_PATH = "/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/renderBeamer.plugin/Contents/Resources/";
+				LIBRARY_SEARCH_PATHS = /Users/ccc/Downloads/RBCinewaresdk/libraries/osx/debug;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = (
+					"-Wl",
+					"-Bstatic",
+					"-lcinewarelib",
+					"-ljpeglib",
+				);
+				PRELINK_LIBS = "/Users/ccc/Downloads/RBCinewaresdk/libraries/osx/debug/libcinewarelib.a /Users/ccc/Downloads/RBCinewaresdk/libraries/osx/debug/libjpeglib.a";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				VALID_ARCHS = x86_64;
+			};
+			name = Debug;
+		};
+		4A6DD6952429A20F001AB42D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					__MAC,
+					__64BIT,
+					MAXON_TARGET_RELEASE,
+					MAXON_TARGET_OSX,
+					MAXON_TARGET_64BIT,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				HEADER_SEARCH_PATHS = /Users/ccc/Downloads/RBCinewaresdk/includes;
+				INSTALL_PATH = "/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/renderBeamer.plugin/Contents/Resources/";
+				LIBRARY_SEARCH_PATHS = /Users/ccc/Downloads/RBCinewaresdk/libraries/osx/release;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-Wl",
+					"-Bstatic",
+					"-lcinewarelib",
+					"-ljpeglib",
+				);
+				PRELINK_LIBS = "/Users/ccc/Downloads/RBCinewaresdk/libraries/osx/release/libcinewarelib.a /Users/ccc/Downloads/RBCinewaresdk/libraries/osx/release/libjpeglib.a";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				VALID_ARCHS = x86_64;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4A6DD6832429A20F001AB42D /* Build configuration list for PBXProject "C4dRelinkerLibrary" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4A6DD6912429A20F001AB42D /* Debug */,
+				4A6DD6922429A20F001AB42D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4A6DD6932429A20F001AB42D /* Build configuration list for PBXNativeTarget "C4dRelinkerLibrary" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4A6DD6942429A20F001AB42D /* Debug */,
+				4A6DD6952429A20F001AB42D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4A6DD6802429A20F001AB42D /* Project object */;
+}
