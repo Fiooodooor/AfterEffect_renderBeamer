@@ -1,0 +1,424 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4A6512A5244E154200C32C49 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A6DD6B12429E294001AB42D /* CoreServices.framework */; };
+		4A6512A8244E154400C32C49 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A6DD6CE242A0A6D001AB42D /* CoreFoundation.framework */; };
+		4A6DD6A82429DBD6001AB42D /* libfontforge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A6DD6A72429DBD6001AB42D /* libfontforge.a */; };
+		4A8787202409209C004D1DFC /* gf_font_converter.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 4A87871F2409209C004D1DFC /* gf_font_converter.hpp */; };
+		4A8787222409209C004D1DFC /* gf_font_converterPriv.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 4A8787212409209C004D1DFC /* gf_font_converterPriv.hpp */; };
+		4A8787242409209C004D1DFC /* gf_font_converter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A8787232409209C004D1DFC /* gf_font_converter.cpp */; };
+		4AC2E6C22416689A00786233 /* gf_font_generate.c in Sources */ = {isa = PBXBuildFile; fileRef = 4AC2E6C12416689A00786233 /* gf_font_generate.c */; };
+		4AC2E6C4241668AF00786233 /* gf_font_generate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4AC2E6C3241668AF00786233 /* gf_font_generate.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		4A6DD6A72429DBD6001AB42D /* libfontforge.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfontforge.a; path = "../../../../Downloads/fontforge-master/builds/lib/libfontforge.a"; sourceTree = "<group>"; };
+		4A6DD6B12429E294001AB42D /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
+		4A6DD6CE242A0A6D001AB42D /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		4A87871D2409209C004D1DFC /* libgf_font_converter.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libgf_font_converter.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		4A87871F2409209C004D1DFC /* gf_font_converter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = gf_font_converter.hpp; sourceTree = "<group>"; };
+		4A8787212409209C004D1DFC /* gf_font_converterPriv.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = gf_font_converterPriv.hpp; sourceTree = "<group>"; };
+		4A8787232409209C004D1DFC /* gf_font_converter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = gf_font_converter.cpp; sourceTree = "<group>"; };
+		4AC2E6C12416689A00786233 /* gf_font_generate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gf_font_generate.c; sourceTree = "<group>"; };
+		4AC2E6C3241668AF00786233 /* gf_font_generate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gf_font_generate.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4A87871B2409209C004D1DFC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A6512A8244E154400C32C49 /* CoreFoundation.framework in Frameworks */,
+				4A6DD6A82429DBD6001AB42D /* libfontforge.a in Frameworks */,
+				4A6512A5244E154200C32C49 /* CoreServices.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4A8786E224017238004D1DFC = {
+			isa = PBXGroup;
+			children = (
+				4A87871E2409209C004D1DFC /* gf_font_converter */,
+				4A8786EC24017239004D1DFC /* Products */,
+				4A8786FB24080616004D1DFC /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		4A8786EC24017239004D1DFC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4A87871D2409209C004D1DFC /* libgf_font_converter.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4A8786FB24080616004D1DFC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4A6DD6CE242A0A6D001AB42D /* CoreFoundation.framework */,
+				4A6DD6B12429E294001AB42D /* CoreServices.framework */,
+				4A6DD6A72429DBD6001AB42D /* libfontforge.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4A87871E2409209C004D1DFC /* gf_font_converter */ = {
+			isa = PBXGroup;
+			children = (
+				4AC2E6C3241668AF00786233 /* gf_font_generate.h */,
+				4AC2E6C12416689A00786233 /* gf_font_generate.c */,
+				4A87871F2409209C004D1DFC /* gf_font_converter.hpp */,
+				4A8787232409209C004D1DFC /* gf_font_converter.cpp */,
+				4A8787212409209C004D1DFC /* gf_font_converterPriv.hpp */,
+			);
+			path = gf_font_converter;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		4A8787192409209C004D1DFC /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4AC2E6C4241668AF00786233 /* gf_font_generate.h in Headers */,
+				4A8787222409209C004D1DFC /* gf_font_converterPriv.hpp in Headers */,
+				4A8787202409209C004D1DFC /* gf_font_converter.hpp in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		4A87871C2409209C004D1DFC /* gf_font_converter */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4A8787252409209C004D1DFC /* Build configuration list for PBXNativeTarget "gf_font_converter" */;
+			buildPhases = (
+				4A8787192409209C004D1DFC /* Headers */,
+				4A87871A2409209C004D1DFC /* Sources */,
+				4A87871B2409209C004D1DFC /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = gf_font_converter;
+			productName = gf_font_converter;
+			productReference = 4A87871D2409209C004D1DFC /* libgf_font_converter.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4A8786E324017238004D1DFC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				KnownAssetTags = (
+					New,
+				);
+				LastUpgradeCheck = 1110;
+				ORGANIZATIONNAME = "";
+				TargetAttributes = {
+					4A87871C2409209C004D1DFC = {
+						CreatedOnToolsVersion = 11.1;
+					};
+				};
+			};
+			buildConfigurationList = 4A8786E624017238004D1DFC /* Build configuration list for PBXProject "GF_FontConverterLib" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 4A8786E224017238004D1DFC;
+			productRefGroup = 4A8786EC24017239004D1DFC /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4A87871C2409209C004D1DFC /* gf_font_converter */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4A87871A2409209C004D1DFC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A8787242409209C004D1DFC /* gf_font_converter.cpp in Sources */,
+				4AC2E6C22416689A00786233 /* gf_font_generate.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		4A8786F024017239004D1DFC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LIBRARY_SEARCH_PATHS = "/Users/ccc/Downloads/fontforge-master/builds/lib";
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRELINK_LIBS = libfontforge.a;
+				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
+				SDKROOT = macosx;
+				VALID_ARCHS = x86_64;
+			};
+			name = Debug;
+		};
+		4A8786F124017239004D1DFC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LIBRARY_SEARCH_PATHS = "/Users/ccc/Downloads/fontforge-master/builds/lib";
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRELINK_LIBS = libfontforge.a;
+				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
+				SDKROOT = macosx;
+				VALID_ARCHS = x86_64;
+			};
+			name = Release;
+		};
+		4A8787262409209C004D1DFC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				HEADER_SEARCH_PATHS = "/Users/ccc/Desktop/fontforge-master/**";
+				INFOPLIST_FILE = "/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/renderBeamer.plugin-Info.plist";
+				INSTALL_PATH = "/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/renderBeamer.plugin/Contents/Resources/";
+				LIBRARY_SEARCH_PATHS = (
+					"/Users/ccc/Desktop/fontforge-master/builds/lib",
+					/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/Libs_groyp,
+				);
+				MACH_O_TYPE = mh_dylib;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MARKETING_VERSION = 0.9.0.4;
+				OTHER_LDFLAGS = (
+					"-Wl",
+					"-Bstatic",
+					"/Users/ccc/Desktop/fontforge-master/builds/lib/libfontforge.a",
+					/usr/local/Cellar/libxml2/2.9.10_1/lib/libxml2.a,
+					/usr/local/Cellar/freetype/2.10.1/lib/libfreetype.a,
+					/usr/local/Cellar/gettext/0.20.2_1/lib/libintl.a,
+					/usr/local/Cellar/zlib/1.2.11/lib/libz.a,
+					/usr/local/Cellar/bzip2/1.0.8/lib/libbz2.a,
+					/usr/local/Cellar/libpng/1.6.37/lib/libpng.a,
+					/usr/local/Cellar/libffi/3.3/lib/libffi.a,
+					/usr/local/Cellar/libpng/1.6.37/lib/libpng16.a,
+					"-framework",
+					CoreServices,
+					"-framework",
+					CoreFoundation,
+					"-Wl",
+					"-Bshared",
+					"/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/Libs_groyp/libgio-2.0.0.dylib",
+					"/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/Libs_groyp/libglib-2.0.0.dylib",
+					"/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/Libs_groyp/libgmodule-2.0.0.dylib",
+					"/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/Libs_groyp/libgobject-2.0.0.dylib",
+					/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/Libs_groyp/libiconv.2.dylib,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.adobe.AfterEffects.renderBeamer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
+				SYMROOT = /Users/ccc/Documents/GF_Font_Converter;
+				VALID_ARCHS = x86_64;
+			};
+			name = Debug;
+		};
+		4A8787272409209C004D1DFC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				HEADER_SEARCH_PATHS = "/Users/ccc/Desktop/fontforge-master/**";
+				INFOPLIST_FILE = "/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/renderBeamer.plugin-Info.plist";
+				INSTALL_PATH = "/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/renderBeamer.plugin/Contents/Resources/";
+				LIBRARY_SEARCH_PATHS = (
+					"/Users/ccc/Desktop/fontforge-master/builds/lib",
+					/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/Libs_groyp,
+				);
+				MACH_O_TYPE = mh_dylib;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MARKETING_VERSION = 0.9.0.4;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-Wl",
+					"-Bstatic",
+					"/Users/ccc/Desktop/fontforge-master/builds/lib/libfontforge.a",
+					/usr/local/Cellar/libxml2/2.9.10_1/lib/libxml2.a,
+					/usr/local/Cellar/freetype/2.10.1/lib/libfreetype.a,
+					/usr/local/Cellar/gettext/0.20.2_1/lib/libintl.a,
+					/usr/local/Cellar/zlib/1.2.11/lib/libz.a,
+					/usr/local/Cellar/bzip2/1.0.8/lib/libbz2.a,
+					/usr/local/Cellar/libpng/1.6.37/lib/libpng.a,
+					/usr/local/Cellar/libffi/3.3/lib/libffi.a,
+					/usr/local/Cellar/libpng/1.6.37/lib/libpng16.a,
+					"-framework",
+					CoreServices,
+					"-framework",
+					CoreFoundation,
+					"-Wl",
+					"-Bshared",
+					"/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/Libs_groyp/libgio-2.0.0.dylib",
+					"/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/Libs_groyp/libglib-2.0.0.dylib",
+					"/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/Libs_groyp/libgmodule-2.0.0.dylib",
+					"/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/Libs_groyp/libgobject-2.0.0.dylib",
+					/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/Libs_groyp/libiconv.2.dylib,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.adobe.AfterEffects.renderBeamer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
+				SYMROOT = /Users/ccc/Documents/GF_Font_Converter;
+				VALID_ARCHS = x86_64;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4A8786E624017238004D1DFC /* Build configuration list for PBXProject "GF_FontConverterLib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4A8786F024017239004D1DFC /* Debug */,
+				4A8786F124017239004D1DFC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4A8787252409209C004D1DFC /* Build configuration list for PBXNativeTarget "gf_font_converter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4A8787262409209C004D1DFC /* Debug */,
+				4A8787272409209C004D1DFC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4A8786E324017238004D1DFC /* Project object */;
+}

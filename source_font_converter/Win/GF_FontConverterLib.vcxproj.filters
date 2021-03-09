@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="../gf_font_converter/gf_font_converter.cpp" />
+    <ClCompile Include="../ttc2ttf/main.cpp" />
+    <ClCompile Include="..\gf_font_converter\gf_font_generate.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="../gf_font_converter/gf_font_converter.hpp">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="../gf_font_converter/gf_font_converterPriv.hpp">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\gf_font_converter\gf_font_generate.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{5da18ce2-02e4-4a1d-bf59-75a8efeb7e5c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
