@@ -5,12 +5,6 @@
 #include "GF_GlobalTypes.h"
 #include "GF_AEGP_Strings.h"
 #include "GF_AEGP_Dumper.h"
-#include "NodeObjects/AeSceneCollector.h"
-//#include "GF_AEGP_MainUI.h"
-
-//AEGP_PFInterfaceSuite1
-//AEGP_ItemViewSuite1
-//#include "win/GF_AEGP_WindowsUI.h"
  
 class Renderbeamer
 {
@@ -19,7 +13,7 @@ public:
     AEGP_PluginID                    pluginId;
     AEGP_SuiteHandler                i_sp;
 	SuiteHelper<AEGP_PanelSuite1>	 i_ps;
-    AEGP_Command                     beamerEditCmd, beamerExportCmd, beamerEditSmartCmd, beamerBatchExport, beamerCostCalcCmd, beamerUiBatchExport;
+    AEGP_Command                     beamerEditCmd, beamerCostCalcCmd, beamerUiBatchExport;
     const A_u_char*                  i_match_nameZ;
     beamerParamsStruct               myPaths;
     
@@ -30,7 +24,7 @@ public:
 		try {
 			if (pica_basicP)
 				*global_refconP = (AEGP_GlobalRefcon) new Renderbeamer(pica_basicP, pluginID);
-			else
+			else 
 				return A_Err_ALLOC;
 			if (!global_refconP)
 				throw PluginError(A_Err_ALLOC);
@@ -78,9 +72,9 @@ public:
 
 private:
 	A_char tmp_message[512] = { '\0' };
-	A_Boolean smart_collect, output_prompt;
+	A_Boolean output_prompt;
     void CreatePanelHook(AEGP_PlatformViewRef container, AEGP_PanelH panelH, AEGP_PanelFunctions1* outFunctionTable, AEGP_PanelRefcon* outRefcon) { }
-    void UpdateMenuHook(AEGP_WindowType active_window);
+    void UpdateMenuHook(AEGP_WindowType active_window) const;
     void CommandHook(AEGP_Command command, AEGP_HookPriority hook_priority, A_Boolean already_handledB, A_Boolean *handledPB);
 
 	void DumpProject(A_Boolean useSmartCollector, A_Boolean useBatchExporter = FALSE, A_Boolean useUiExporter = FALSE);

@@ -1,5 +1,8 @@
 
 #include "GF_AEGP_Main.h"
+
+#include "NodeObjects/AeSceneCollector.h"
+
 template <> const A_char* SuiteTraits<AEGP_PanelSuite1>::i_name = kAEGPPanelSuite;
 template <> const int32_t SuiteTraits<AEGP_PanelSuite1>::i_version = kAEGPPanelSuiteVersion1;
 
@@ -18,31 +21,20 @@ Renderbeamer::Renderbeamer(SPBasicSuite *pica_basicP, AEGP_PluginID pluginID)
     , pluginId(pluginID)
     , i_sp(pica_basicP)
 	, i_ps(pica_basicP)
-	, beamerEditCmd(0), beamerExportCmd(0), beamerEditSmartCmd(0)
-	, beamerBatchExport(0), beamerCostCalcCmd(0), beamerUiBatchExport(0)
+	, beamerEditCmd(0), beamerCostCalcCmd(0), beamerUiBatchExport(0)
 	, i_match_nameZ((A_u_char*)GetStringPtr(StrID_Name))
-	, smart_collect(FALSE)
 	, output_prompt(FALSE)
 {
 	
     PT_ETX(i_sp.CommandSuite1()->AEGP_GetUniqueCommand(&beamerEditCmd))
-    PT_ETX(i_sp.CommandSuite1()->AEGP_GetUniqueCommand(&beamerEditSmartCmd))
-    PT_ETX(i_sp.CommandSuite1()->AEGP_GetUniqueCommand(&beamerBatchExport))
-    PT_ETX(i_sp.CommandSuite1()->AEGP_GetUniqueCommand(&beamerExportCmd))
     PT_ETX(i_sp.CommandSuite1()->AEGP_GetUniqueCommand(&beamerCostCalcCmd))
     PT_ETX(i_sp.CommandSuite1()->AEGP_GetUniqueCommand(&beamerUiBatchExport))
 
-    PT_ETX(i_sp.CommandSuite1()->AEGP_InsertMenuCommand(beamerEditCmd, GetStringPtr(StrID_MenuEdit), AEGP_Menu_COMPOSITION, AEGP_MENU_INSERT_SORTED))
-    PT_ETX(i_sp.CommandSuite1()->AEGP_InsertMenuCommand(beamerEditSmartCmd, GetStringPtr(StrID_MenuEditSmart), AEGP_Menu_COMPOSITION, AEGP_MENU_INSERT_SORTED))
-    PT_ETX(i_sp.CommandSuite1()->AEGP_InsertMenuCommand(beamerBatchExport, GetStringPtr(StrID_MenuBatch), AEGP_Menu_COMPOSITION, AEGP_MENU_INSERT_SORTED))
-    PT_ETX(i_sp.CommandSuite1()->AEGP_InsertMenuCommand(beamerExportCmd, GetStringPtr(StrID_MenuExport), AEGP_Menu_EXPORT, AEGP_MENU_INSERT_SORTED))
-    PT_ETX(i_sp.CommandSuite1()->AEGP_InsertMenuCommand(beamerCostCalcCmd, GetStringPtr(StrID_MenuCost), AEGP_Menu_COMPOSITION, AEGP_MENU_INSERT_SORTED))
+    PT_ETX(i_sp.CommandSuite1()->AEGP_InsertMenuCommand(beamerEditCmd, GetStringPtr(StrID_MenuUiLocation), AEGP_Menu_COMPOSITION, AEGP_MENU_INSERT_AT_BOTTOM))
+    PT_ETX(i_sp.CommandSuite1()->AEGP_InsertMenuCommand(beamerCostCalcCmd, GetStringPtr(StrID_MenuCost), AEGP_Menu_COMPOSITION, AEGP_MENU_INSERT_AT_BOTTOM))
     PT_ETX(i_sp.CommandSuite1()->AEGP_InsertMenuCommand(beamerUiBatchExport, GetStringPtr(StrID_MenuUiCollect), AEGP_Menu_NONE, AEGP_MENU_INSERT_SORTED))
 
     PT_ETX(i_sp.RegisterSuite5()->AEGP_RegisterCommandHook(pluginId, AEGP_HP_BeforeAE, beamerEditCmd, &Renderbeamer::SCommandHook, reinterpret_cast<AEGP_CommandRefcon>(this)))
-    PT_ETX(i_sp.RegisterSuite5()->AEGP_RegisterCommandHook(pluginId, AEGP_HP_BeforeAE, beamerEditSmartCmd, &Renderbeamer::SCommandHook, reinterpret_cast<AEGP_CommandRefcon>(this)))
-    PT_ETX(i_sp.RegisterSuite5()->AEGP_RegisterCommandHook(pluginId, AEGP_HP_BeforeAE, beamerBatchExport, &Renderbeamer::SCommandHook, reinterpret_cast<AEGP_CommandRefcon>(this)))
-    PT_ETX(i_sp.RegisterSuite5()->AEGP_RegisterCommandHook(pluginId, AEGP_HP_BeforeAE, beamerExportCmd, &Renderbeamer::SCommandHook, reinterpret_cast<AEGP_CommandRefcon>(this)))
     PT_ETX(i_sp.RegisterSuite5()->AEGP_RegisterCommandHook(pluginId, AEGP_HP_BeforeAE, beamerCostCalcCmd, &Renderbeamer::SCommandHook, reinterpret_cast<AEGP_CommandRefcon>(this)))
     PT_ETX(i_sp.RegisterSuite5()->AEGP_RegisterCommandHook(pluginId, AEGP_HP_BeforeAE, beamerUiBatchExport, &Renderbeamer::SCommandHook, reinterpret_cast<AEGP_CommandRefcon>(this)))
 
@@ -59,22 +51,12 @@ void Renderbeamer::CommandHook(
 {
 	ERROR_CATCH_START//_MOD(MainCommandHookModule)
 		*handledPB = TRUE;		
-		if (command == beamerEditCmd || command == beamerExportCmd) {
-			DumpProject(FALSE);
+		if (command == beamerEditCmd) {
+			*handledPB = TRUE;
         }
 		else if (command == beamerUiBatchExport) {
 			DumpProject(FALSE, TRUE, TRUE);
-		}
-		else if(command == beamerBatchExport) {
-			DumpProject(FALSE, TRUE);
-		}
-		else if (command == beamerEditSmartCmd) {
-			if (smart_collect == FALSE) {
-				ERROR_AEER(i_sp.UtilitySuite6()->AEGP_ReportInfo(pluginId, GetStringPtr(StrID_CollectSmartWarning)))
-				smart_collect = TRUE;
-			}
-			DumpProject(TRUE);
-		}
+		}	
 		else if(command == beamerCostCalcCmd) {
 			CostCalculator();
         }
@@ -84,14 +66,11 @@ void Renderbeamer::CommandHook(
 	ERROR_CATCH_END(i_sp)
 }
 
-void Renderbeamer::UpdateMenuHook(AEGP_WindowType active_window)
+void Renderbeamer::UpdateMenuHook(AEGP_WindowType active_window) const
 {
 	ERROR_CATCH_START
-		//ERROR_AEER(i_sp.CommandSuite1()->AEGP_EnableCommand(beamerEditCmd))
-		//ERROR_AEER(i_sp.CommandSuite1()->AEGP_EnableCommand(beamerEditSmartCmd))
-		ERROR_AEER(i_sp.CommandSuite1()->AEGP_EnableCommand(beamerBatchExport))
-		ERROR_AEER(i_sp.CommandSuite1()->AEGP_EnableCommand(beamerUiBatchExport))
-		//ERROR_AEER(i_sp.CommandSuite1()->AEGP_EnableCommand(beamerExportCmd))
+		ERROR_AEER(i_sp.CommandSuite1()->AEGP_DisableCommand(beamerEditCmd))
+		ERROR_AEER(i_sp.CommandSuite1()->AEGP_EnableCommand(beamerUiBatchExport))		
 		ERROR_AEER(i_sp.CommandSuite1()->AEGP_EnableCommand(beamerCostCalcCmd))
 	ERROR_CATCH_END(i_sp)
 }

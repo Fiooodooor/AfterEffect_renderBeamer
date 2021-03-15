@@ -10,6 +10,7 @@ GF_Dumper::GF_Dumper(SPBasicSuite *basicSuite, AEGP_PluginID pI, beamerParamsStr
 	, relinkerProg(nullptr)
 	, relinker(basicSuite, pI)
     , bps(*GF_params)
+	, sc(nullptr)
 {
     projectName[0] = '\0';
 }
@@ -196,7 +197,7 @@ ErrorCodesAE GF_Dumper::PrepareProject()
 
 		bps.bp.rqMainOutput = bps.bp.relinkedSceneRoot.lexically_normal().c_str();
 		bps.bp.rqMainOutput /= bps.bp.projectRootCorrect.c_str();
-		bps.bp.rqMainOutput += "-renders";	
+		bps.bp.rqMainOutput += "-Renders";	
 
         bps.bp.footageMainOutput = bps.bp.relProjPath.lexically_normal().c_str();
 		bps.bp.footageMainOutput /= MAIN_FOOTAGE_DIR1;

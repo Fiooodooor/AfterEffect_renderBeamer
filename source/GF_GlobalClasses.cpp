@@ -530,8 +530,9 @@ ErrorCodesAE rbUtilities::exec_cmd(fs::path const &app, std::string const &args,
 ErrorCodesAE rbUtilities::win_exec_cmd(fs::path const &app, std::string const &args, fs::path const &out_file, wchar_t *bufforW, unsigned long bufforSize)
 {
 #ifdef AE_OS_WIN
-	try {
+	try {		
 		bool bProcessEnded = false;
+		DWORD returnCode = 0;
 		STARTUPINFOW si = { sizeof(STARTUPINFOW) };
 		ZeroMemory(&si, sizeof(si));
 		si.cb = sizeof(si);
@@ -540,7 +541,7 @@ ErrorCodesAE rbUtilities::win_exec_cmd(fs::path const &app, std::string const &a
 
 		PROCESS_INFORMATION pi = { 0 };
 		ZeroMemory(&pi, sizeof(pi));
-
+		//std::wstring cmd(MAX_PATH, '\0');
 		std::wstring cmd = L"\"" + app.wstring() + L"\" " + std::wstring(args.cbegin(), args.cend());
 		if(!out_file.empty())
 			cmd += L" > \"" + out_file.wstring() + L"\"";
@@ -548,22 +549,29 @@ ErrorCodesAE rbUtilities::win_exec_cmd(fs::path const &app, std::string const &a
 
 		if (CreateProcessW(NULL, &cmd[0], NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
 		{
-			while (!bProcessEnded) { bProcessEnded = WaitForSingleObject(pi.hProcess, 300) == WAIT_OBJECT_0; }
-		}
-		CloseHandle(pi.hProcess);
-		CloseHandle(pi.hThread);
-		
-		if (bufforW && bufforSize > 0 && !out_file.empty())
-		{
-			std::wfstream tempStr;
-			tempStr.open(out_file.wstring().c_str(), std::fstream::in);
-			if (tempStr.is_open())
+			while (!bProcessEnded)
 			{
+				bProcessEnded = WaitForSingleObject(pi.hProcess, 300) == WAIT_OBJECT_0;
+			}
+			if(GetExitCodeProcess(pi.hProcess, &returnCode))
+			{
+				GF_Dumper::rbProj()->logg("HelperClass", "WinExecCmd::ExitCode", std::to_string(returnCode).c_str());
+			}
+
+			if (bufforW && bufforSize > 0 && !out_file.empty())
+			{
+				std::wfstream tempStr;
+				tempStr.open(out_file.wstring().c_str(), std::fstream::in);
+				if (!tempStr.is_open())
+					return ErrorResult;
+
 				tempStr.getline(bufforW, bufforSize);
 				bufforW[bufforSize - 1] = '\0';
-				tempStr.close();
-				return NoError;
+				tempStr.close();		
 			}
+			CloseHandle(pi.hProcess);
+			CloseHandle(pi.hThread);
+			return NoError;
 		}
 	}
 	catch(...)
@@ -571,7 +579,7 @@ ErrorCodesAE rbUtilities::win_exec_cmd(fs::path const &app, std::string const &a
 		return ErrorResult;
 	}
 #endif
-	return NoError;
+	return ErrorResult;
 }
 ErrorCodesAE rbUtilities::mac_exec_cmd(fs::path const &app, std::string const &args, fs::path const &out_file, wchar_t *bufforW, unsigned long bufforSize)
 {
@@ -585,7 +593,8 @@ ErrorCodesAE rbUtilities::mac_exec_cmd(fs::path const &app, std::string const &a
 		}
 		
 		std::system(cmd.c_str());
-		
+		// Add error handling for result
+		// if stat_val != 0 --> WEXITSTATUS(stat_val)
 		if (bufforW && bufforSize > 0 && !out_file.empty())
 		{
 			std::wfstream temp_stream;

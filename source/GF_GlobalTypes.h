@@ -116,6 +116,7 @@ typedef enum StrIDType {
 	StrID_MenuEditSmart,
 	StrID_MenuBatch,
 	StrID_MenuUiCollect,
+	StrID_MenuUiLocation,
     StrID_MenuExport,
     StrID_MenuVersion,
     StrID_MenuCost,

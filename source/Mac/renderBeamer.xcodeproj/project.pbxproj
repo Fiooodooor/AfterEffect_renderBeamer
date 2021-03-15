@@ -10,9 +10,10 @@
 		4A3D131B23F4B49E00517E24 /* GF_GlobalClasses.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A3D131623F4B49D00517E24 /* GF_GlobalClasses.cpp */; };
 		4A3D131C23F4B49E00517E24 /* GF_AEGP_Relinker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A3D131723F4B49D00517E24 /* GF_AEGP_Relinker.cpp */; };
 		4A3D131D23F4B49E00517E24 /* GF_AEGP_Dumper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A3D131923F4B49D00517E24 /* GF_AEGP_Dumper.cpp */; };
-		4A50F6F5244DDCFC002E0A7D /* MissingSuiteError.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A50F6F4244DDCFC002E0A7D /* MissingSuiteError.cpp */; };
 		4A53E137245331DB00339C9D /* AeObjectNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A651297243F331100C32C49 /* AeObjectNode.cpp */; };
 		4A56C61024B5152400961F0D /* base64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A56C60F24B5152400961F0D /* base64.cpp */; };
+		4A62B51E25FD8696006D7923 /* AEGP_SuiteHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A62B51C25FD8695006D7923 /* AEGP_SuiteHandler.cpp */; };
+		4A62B52025FD86D1006D7923 /* MissingSuiteError.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A62B51F25FD86D1006D7923 /* MissingSuiteError.cpp */; };
 		4A6512A1243F331800C32C49 /* AeCompNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A65129C243F331500C32C49 /* AeCompNode.cpp */; };
 		4A6512A2243F331800C32C49 /* AeFooNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A65129D243F331500C32C49 /* AeFooNode.cpp */; };
 		4A6512A3243F331800C32C49 /* AeSceneCollector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A65129E243F331600C32C49 /* AeSceneCollector.cpp */; };
@@ -47,7 +48,6 @@
 		D0FE575F0993C4E900139A60 /* GF_AEGP_Strings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0FE575A0993C4E900139A60 /* GF_AEGP_Strings.cpp */; };
 		D0FE57600993C4E900139A60 /* GF_AEGP_Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0FE575C0993C4E900139A60 /* GF_AEGP_Main.cpp */; };
 		D0FE57610993C4E900139A60 /* GF_AEGP_MainPiPL.r in Rez */ = {isa = PBXBuildFile; fileRef = D0FE575E0993C4E900139A60 /* GF_AEGP_MainPiPL.r */; };
-		D0FE579D0993C5E500139A60 /* AEGP_SuiteHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0FE579A0993C5E500139A60 /* AEGP_SuiteHandler.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,10 +56,12 @@
 		4A3D131723F4B49D00517E24 /* GF_AEGP_Relinker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GF_AEGP_Relinker.cpp; path = ../GF_AEGP_Relinker.cpp; sourceTree = "<group>"; };
 		4A3D131923F4B49D00517E24 /* GF_AEGP_Dumper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GF_AEGP_Dumper.cpp; path = ../GF_AEGP_Dumper.cpp; sourceTree = "<group>"; };
 		4A3D131A23F4B49E00517E24 /* GF_GlobalClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GF_GlobalClasses.h; path = ../GF_GlobalClasses.h; sourceTree = "<group>"; };
-		4A50F6F4244DDCFC002E0A7D /* MissingSuiteError.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MissingSuiteError.cpp; path = ../../../AfterEffectsSDK/Examples/Util/MissingSuiteError.cpp; sourceTree = "<group>"; };
-		4A50F6F6244DDD31002E0A7D /* AE_PluginData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AE_PluginData.h; path = ../../../AfterEffectsSDK/Examples/Headers/AE_PluginData.h; sourceTree = "<group>"; };
 		4A56C60F24B5152400961F0D /* base64.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = base64.cpp; path = ../base64.cpp; sourceTree = "<group>"; };
 		4A56C61124B5153000961F0D /* base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = base64.h; path = ../base64.h; sourceTree = "<group>"; };
+		4A62B51C25FD8695006D7923 /* AEGP_SuiteHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AEGP_SuiteHandler.cpp; path = ../../../../AfterEffectsSDK/Examples/Util/AEGP_SuiteHandler.cpp; sourceTree = "<group>"; };
+		4A62B51D25FD8695006D7923 /* AEGP_SuiteHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AEGP_SuiteHandler.h; path = ../../../../AfterEffectsSDK/Examples/Util/AEGP_SuiteHandler.h; sourceTree = "<group>"; };
+		4A62B51F25FD86D1006D7923 /* MissingSuiteError.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MissingSuiteError.cpp; path = ../../../../AfterEffectsSDK/Examples/Util/MissingSuiteError.cpp; sourceTree = "<group>"; };
+		4A62B52125FD86FB006D7923 /* AE_PluginData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AE_PluginData.h; path = ../../../../AfterEffectsSDK/Examples/Headers/AE_PluginData.h; sourceTree = "<group>"; };
 		4A651296243F331000C32C49 /* AeFooNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeFooNode.h; path = ../NodeObjects/AeFooNode.h; sourceTree = "<group>"; };
 		4A651297243F331100C32C49 /* AeObjectNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AeObjectNode.cpp; path = ../NodeObjects/AeObjectNode.cpp; sourceTree = "<group>"; };
 		4A651298243F331200C32C49 /* AeConteiner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeConteiner.h; path = ../NodeObjects/AeConteiner.h; sourceTree = "<group>"; };
@@ -117,8 +119,6 @@
 		D0FE575B0993C4E900139A60 /* GF_AEGP_Strings.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = GF_AEGP_Strings.h; path = ../GF_AEGP_Strings.h; sourceTree = SOURCE_ROOT; };
 		D0FE575C0993C4E900139A60 /* GF_AEGP_Main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = GF_AEGP_Main.cpp; path = ../GF_AEGP_Main.cpp; sourceTree = SOURCE_ROOT; };
 		D0FE575E0993C4E900139A60 /* GF_AEGP_MainPiPL.r */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.rez; name = GF_AEGP_MainPiPL.r; path = ../GF_AEGP_MainPiPL.r; sourceTree = SOURCE_ROOT; };
-		D0FE579A0993C5E500139A60 /* AEGP_SuiteHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = AEGP_SuiteHandler.cpp; path = ../../../AfterEffectsSDK/Examples/Util/AEGP_SuiteHandler.cpp; sourceTree = SOURCE_ROOT; };
-		D0FE579B0993C5E500139A60 /* AEGP_SuiteHandler.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AEGP_SuiteHandler.h; path = ../../../AfterEffectsSDK/Examples/Util/AEGP_SuiteHandler.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -246,11 +246,11 @@
 		D0FE57630993C4FD00139A60 /* Supporting Code */ = {
 			isa = PBXGroup;
 			children = (
-				4A50F6F6244DDD31002E0A7D /* AE_PluginData.h */,
-				4A50F6F4244DDCFC002E0A7D /* MissingSuiteError.cpp */,
+				4A62B52125FD86FB006D7923 /* AE_PluginData.h */,
+				4A62B51F25FD86D1006D7923 /* MissingSuiteError.cpp */,
+				4A62B51C25FD8695006D7923 /* AEGP_SuiteHandler.cpp */,
+				4A62B51D25FD8695006D7923 /* AEGP_SuiteHandler.h */,
 				D0FE575E0993C4E900139A60 /* GF_AEGP_MainPiPL.r */,
-				D0FE579A0993C5E500139A60 /* AEGP_SuiteHandler.cpp */,
-				D0FE579B0993C5E500139A60 /* AEGP_SuiteHandler.h */,
 			);
 			name = "Supporting Code";
 			sourceTree = "<group>";
@@ -357,19 +357,19 @@
 				4A53E137245331DB00339C9D /* AeObjectNode.cpp in Sources */,
 				4A7F21A225D2C834003CD8DD /* AeBatchRelinker.cpp in Sources */,
 				4A6512A2243F331800C32C49 /* AeFooNode.cpp in Sources */,
-				D0FE579D0993C5E500139A60 /* AEGP_SuiteHandler.cpp in Sources */,
 				4A7F21A925D2D41F003CD8DD /* AeNodesConteiner.cpp in Sources */,
 				4A3D131D23F4B49E00517E24 /* GF_AEGP_Dumper.cpp in Sources */,
-				4A50F6F5244DDCFC002E0A7D /* MissingSuiteError.cpp in Sources */,
 				4AFCCBAB25E3779F009B9124 /* AeGfsFileCreator.cpp in Sources */,
 				4A69B21325DBABAA002D94B9 /* AeFileNode.cpp in Sources */,
 				4A6512A3243F331800C32C49 /* AeSceneCollector.cpp in Sources */,
+				4A62B51E25FD8696006D7923 /* AEGP_SuiteHandler.cpp in Sources */,
 				4A6512A1243F331800C32C49 /* AeCompNode.cpp in Sources */,
 				4A3D131C23F4B49E00517E24 /* GF_AEGP_Relinker.cpp in Sources */,
 				4A6DD6232425B587001AB42D /* GF_AEGP_ErrorsHandling.cpp in Sources */,
 				4A7F21A025D2C834003CD8DD /* AeFileReferenceInterface.cpp in Sources */,
 				4A6DD6292428E024001AB42D /* GF_AEGP_LibraryLoader.cpp in Sources */,
 				4A3D131B23F4B49E00517E24 /* GF_GlobalClasses.cpp in Sources */,
+				4A62B52025FD86D1006D7923 /* MissingSuiteError.cpp in Sources */,
 				4A6512A4243F331800C32C49 /* AeConteiner.cpp in Sources */,
 				4A7F21A125D2C834003CD8DD /* AeFileReferenceInterfaceHelper.cpp in Sources */,
 				4A7F21A325D2C834003CD8DD /* tinyXml2.cpp in Sources */,
@@ -458,7 +458,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = 87N4927WRD;
 				GCC_MODEL_TUNING = G5;
 				GENERATE_PKGINFO_FILE = YES;
@@ -487,7 +487,7 @@
 					/Users/ccc/Downloads/boost_1_72_0/stage/lib/libboost_filesystem.a,
 					"-Wl",
 					"-Bshared",
-					/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/Libs_groyp/libgf_font_converter.dylib,
+					"$(PROJECT_DIR)/Libs_groyp/libgf_font_converter.dylib",
 				);
 				PRELINK_LIBS = "\"libC4dRelinkerLibrary.dylib\" \"libgf_font_converter.dylib\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.adobe.AfterEffects.renderBeamer;
@@ -581,7 +581,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = 87N4927WRD;
 				GCC_MODEL_TUNING = G5;
 				GENERATE_PKGINFO_FILE = YES;
@@ -610,7 +610,7 @@
 					/Users/ccc/Downloads/boost_1_72_0/stage/lib/libboost_filesystem.a,
 					"-Wl",
 					"-Bshared",
-					/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/Libs_groyp/libgf_font_converter.dylib,
+					"$(PROJECT_DIR)/Libs_groyp/libgf_font_converter.dylib",
 				);
 				PRELINK_LIBS = "\"libC4dRelinkerLibrary.dylib\" \"libgf_font_converter.dylib\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.adobe.AfterEffects.renderBeamer;

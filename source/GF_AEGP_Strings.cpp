@@ -7,6 +7,7 @@ TableString    g_strs[StrID_NUMTYPES] = {
 	{StrID_MenuEditSmart,			"renderBeamer Collect Smart"},
 	{StrID_MenuBatch,				"renderBeamer Batch Relinker"},
 	{StrID_MenuUiCollect,			"renderBeamer_ui_function"},
+	{StrID_MenuUiLocation,			"(Windows->Extensions->renderBeamer)"},
 	{StrID_MenuExport,				"renderBeamer"},
 	{StrID_MenuVersion,			"renderBeamer Version"},
 	{StrID_MenuCost,				"renderBeamer CostCalc"},
