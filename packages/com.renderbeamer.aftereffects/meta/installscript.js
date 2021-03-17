@@ -44,84 +44,58 @@ Component.prototype.createOperationsForArchive = function(archive)
 	component.addOperation("Copy", QDesktopServices.storageLocation(QDesktopServices.HomeLocation)+ "/renderbeamer/uninstall/AfterEffects/data/AfterEffects", QDesktopServices.storageLocation(QDesktopServices.HomeLocation)+"/renderbeamer/plugins/AfterEffects");
 
 
-	if (systemInfo.kernelType === "winnt") {
+	if (systemInfo.kernelType === "winnt") 
+	{
 		
 		lastPath = ""
 		fromPath = QDesktopServices.storageLocation(QDesktopServices.HomeLocation)+ "/renderbeamer/uninstall/AfterEffects/data/GF_AEGP_Renderbeamer.aex"
 		fromPath2 = QDesktopServices.storageLocation(QDesktopServices.HomeLocation)+ "/renderbeamer/uninstall/AfterEffects/data/C4dRelinkerLibrary.dll"
 		
-		var regPath = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Adobe\\After Effects\\14.0";
+		
 		var keyName = "CommonPluginInstallPath";
 		var typeDat = "REG_SZ";
-
-			
-		var registryQueryResult = installer.execute("reg", new Array("QUERY", regPath, "/v", keyName, "/reg:64"))[0];
-		if(registryQueryResult != null)
-		{
-			afterPath = registryQueryResult.replace(regPath, "").replace(keyName, "").replace(typeDat, "").trim();
-			if (installer.fileExists(afterPath) && afterPath != lastPath  )
-			{
-				lastPath = afterPath;
-				component.addOperation("Copy", fromPath, afterPath+"//GF_AEGP_Renderbeamer.aex");
-				component.addOperation("Copy", fromPath2, afterPath+"//C4dRelinkerLibrary.dll");
-			}
-		}
-	
 		
-		var regPath = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Adobe\\After Effects\\15.0";
-
-
-			
-		var registryQueryResult = installer.execute("reg", new Array("QUERY", regPath, "/v", keyName, "/reg:64"))[0];
-		if(registryQueryResult != null)
+		for (i = 14; i < 18; i++) 
 		{
-			afterPath = registryQueryResult.replace(regPath, "").replace(keyName, "").replace(typeDat, "").trim();
-			if (installer.fileExists(afterPath) && afterPath != lastPath  )
+			
+			var regPath = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Adobe\\After Effects\\" + i.toString() + ".0";
+			
+			var registryQueryResult = installer.execute("reg", new Array("QUERY", regPath, "/v", keyName, "/reg:64"))[0];
+			if(registryQueryResult != null)
 			{
-				lastPath = afterPath;
-				component.addOperation("Copy", fromPath, afterPath+"//GF_AEGP_Renderbeamer.aex");
-				component.addOperation("Copy", fromPath2, afterPath+"//C4dRelinkerLibrary.dll");
+				afterPath = registryQueryResult.replace(regPath, "").replace(keyName, "").replace(typeDat, "").trim();
+				if (installer.fileExists(afterPath) && afterPath != lastPath  )
+				{
+					lastPath = afterPath;
+					component.addOperation("Copy", fromPath, afterPath+"//GF_AEGP_Renderbeamer.aex");
+					component.addOperation("Copy", fromPath2, afterPath+"//C4dRelinkerLibrary.dll");
+				}
 			}
+				
 		}
 		
-		var regPath = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Adobe\\After Effects\\16.0";
-
-
-			
-		var registryQueryResult = installer.execute("reg", new Array("QUERY", regPath, "/v", keyName, "/reg:64"))[0];
-		if(registryQueryResult != null)
+		UIpath = QDesktopServices.storageLocation(QDesktopServices.HomeLocation)+ "/renderbeamer/uninstall/AfterEffects/data/renderBeamerUI";
+		UIpathDir = QDesktopServices.storageLocation(QDesktopServices.HomeLocation) +"/AppData/Roaming/Adobe/CEP/extensions/renderBeamerUI";
+		if (installer.fileExists(UIpathDir))
 		{
-			afterPath = registryQueryResult.replace(regPath, "").replace(keyName, "").replace(typeDat, "").trim();
-			if (installer.fileExists(afterPath) && afterPath != lastPath  )
-			{
-				lastPath = afterPath;
-				component.addOperation("Copy", fromPath, afterPath+"//GF_AEGP_Renderbeamer.aex");
-				component.addOperation("Copy", fromPath2, afterPath+"//C4dRelinkerLibrary.dll");
-			}
-
+			var re = new RegExp("/", 'g');
+			path3 = UIpathDir.replace(re, '\\');
+			component.addOperation("Execute", ["cmd", "/C", "del", "/Q", "/S", "/F",path3, "UNDOEXECUTE", "cmd", "/C"]);
+		}
+		if (!installer.fileExists(UIpathDir))
+		{
+			component.addOperation("Mkdir", UIpathDir);
 		}
 		
-		var regPath = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Adobe\\After Effects\\17.0";
+		component.addOperation("CopyDirectory", UIpath, UIpathDir);
 
-
-			
-		var registryQueryResult = installer.execute("reg", new Array("QUERY", regPath, "/v", keyName, "/reg:64"))[0];
-		if(registryQueryResult != null)
-		{
-			afterPath = registryQueryResult.replace(regPath, "").replace(keyName, "").replace(typeDat, "").trim();
-			if (installer.fileExists(afterPath) && afterPath != lastPath  )
-			{
-				lastPath = afterPath;
-				component.addOperation("Copy", fromPath, afterPath+"//GF_AEGP_Renderbeamer.aex");
-				component.addOperation("Copy", fromPath2, afterPath+"//C4dRelinkerLibrary.dll");
-			}
-		}
 	
 	}
-	else if (systemInfo.kernelType === "darwin") {
-		
+	else if (systemInfo.kernelType === "darwin") 
+	{
 		component.addOperation("CopyDirectory", QDesktopServices.storageLocation(QDesktopServices.HomeLocation)+ "/renderbeamer/uninstall/AfterEffects/data/renderBeamer.plugin", "/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/");
-
+		component.addOperation("Mkdir", "/Library/Application Support/Adobe/CEP/extensions/");
+		component.addOperation("CopyDirectory", QDesktopServices.storageLocation(QDesktopServices.HomeLocation)+ "/renderbeamer/uninstall/AfterEffects/data/renderBeamerUI", "/Library/Application Support/Adobe/CEP/extensions/");
 	}
 		
 
