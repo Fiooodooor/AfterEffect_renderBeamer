@@ -16,7 +16,8 @@ TableString    g_strs[StrID_NUMTYPES] = {
 	{StrID_LoadPluginError,		"There was an error in renderBeamer plugin load function. Contact support."},
 	{StrID_AboutDialogText,		(GF_PLUGIN_VERSION("renderBeamer plugin from GarageFARM.net\n Build version: ", GF_PLUGIN_VERSION_MAJOR))	},
 	{StrID_CollectSmartWarning,	"Warning!\n Use \"Collect Smart\" carefully. It does not include compositions or footages dependencies inside scripts or expressions."},
-	{StrID_OutputFormatPNGWarning,	"Warning!\n Your project will be rendered to PNG frames and converted to video after complete rendering."
+	{StrID_OutputFormatPNGWarning,	"Warning!\n Your project will be rendered to PNG frames and converted to video after complete rendering."},
+	{StrID_ProjectSent, "Your project has been succesfuly forwarded to renderBeamer."
 	}
 };
 // renderBeamer for After Effects v.17

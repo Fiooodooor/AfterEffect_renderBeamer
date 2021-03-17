@@ -755,7 +755,7 @@ function submit(ar){
     
     var csInterface = new CSInterface();
     csInterface.evalScript('submit(' + JSON.stringify(reparsed) + ')', function(returned){
-        //alert(returned);
+		window.close();
     });
     
 }

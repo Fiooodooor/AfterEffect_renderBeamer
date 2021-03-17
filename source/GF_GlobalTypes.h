@@ -126,6 +126,7 @@ typedef enum StrIDType {
     StrID_AboutDialogText,
 	StrID_CollectSmartWarning,
 	StrID_OutputFormatPNGWarning,
+	StrID_ProjectSent,
     StrID_NUMTYPES
 } StrIDType;
 

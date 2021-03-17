@@ -100,9 +100,17 @@ void Renderbeamer::DumpProject(A_Boolean useSmartCollector, A_Boolean useBatchEx
 				ERROR_AE(tempDumper.setConteiner(SceneContainer))
 				if (useBatchExporter == FALSE) {
 					ERROR_AE(tempDumper.newDumpProject())
+					if (_ErrorCode == NoError)
+					{
+						ERROR_AEER(i_sp.UtilitySuite6()->AEGP_ReportInfo(pluginId, GetStringPtr(StrID_ProjectSent)))
+					}
 				}
 				else {
 					ERROR_AE(tempDumper.newBatchDumpProject(useUiExporter))
+					if (_ErrorCode == NoError)
+					{
+						ERROR_AEER(i_sp.UtilitySuite6()->AEGP_ReportInfo(pluginId, GetStringPtr(StrID_ProjectSent)))
+					}
 				}
 			}
 		}

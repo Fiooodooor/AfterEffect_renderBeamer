@@ -90,13 +90,11 @@ void RenderbeamerUI::PopulateFlyout(AEGP_FlyoutMenuItem* itemsP, A_long * in_out
 #ifdef AE_OS_WIN
 	#pragma warning(pop)
 #endif
-
 	*in_out_numItemsP = menuTableSizeL;
 }
 
 void RenderbeamerUI::DoFlyoutCommand(AEGP_FlyoutMenuCmdID commandID)
 {
-
 	switch(commandID){
 		case PT_MenuCmd_RED:
 			i_use_bg = false;

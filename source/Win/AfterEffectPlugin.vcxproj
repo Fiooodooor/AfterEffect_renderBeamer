@@ -12,7 +12,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2C8DED3E-111D-4272-A54A-F1865F02A90E}</ProjectGuid>
-    <AdobeAE_SDK>d:\Program Files\AfterEffectsSDK\Examples</AdobeAE_SDK>
+    <AdobeAE_SDK>$(ProgramW6432)\AfterEffectsSDK\Examples</AdobeAE_SDK>
     <AE_PLUGIN_BUILD_DIR>c:\Program Files\Adobe\Common\Plug-ins\7.0\MediaCore</AE_PLUGIN_BUILD_DIR>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
     <ProjectName>AfterEffects_plugin</ProjectName>
