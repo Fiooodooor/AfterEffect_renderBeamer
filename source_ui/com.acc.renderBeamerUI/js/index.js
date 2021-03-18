@@ -754,8 +754,9 @@ function submit(ar){
     var reparsed = setObjectSubmit();
     
     var csInterface = new CSInterface();
+	window.close();
     csInterface.evalScript('submit(' + JSON.stringify(reparsed) + ')', function(returned){
-		window.close();
+		//alert
     });
     
 }
