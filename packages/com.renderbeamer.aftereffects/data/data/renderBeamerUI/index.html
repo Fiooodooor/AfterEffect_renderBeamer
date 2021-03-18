@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>renderBeamer for After Effects v17</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    
+</head>
+<body onload="initx()">
+
+    <div class="base-container">
+        <div class="headerx">
+            <div class = "headerTop">
+                <div class="menu">
+                    <nav>
+                        <ul>
+                            <li><button id="settingsBtn" class="navbtn topBtn hide" >settings</button></li>
+                            <li><button id="assetsBtn" class="navbtn rightBtn topBtn hide" onclick="assetsButtonToggle()">assets</button></li>    
+                        </ul>
+                    </nav>
+                </div>
+                <div class="n1"></div>
+                <div class="logo">
+                    <img src="res/GFlogo.png">
+                </div>
+                <div class="title">renderBeamer for After Effects v17</div>
+            </div>
+            <div class="headerShadow">
+                
+            </div>
+        </div>
+        <div id="cntr" class="center">
+            <div id="settings" class="settings-container">
+                <br>
+                <div class="label main">plugin settings</div>
+                <div class="ttop">
+                    
+                    <div class="checkbox-conatiner">
+                        <div class="c">smart collect</div>
+                        <input type="checkbox" id ="smartCollect" class="checkbox" name="smartCollect">
+                    </div>
+                    <div class="checkbox-conatiner cc">
+                        <div class="c">ignore missing assets</div>
+                        <input type="checkbox" id ="ignoreMissings" class="checkbox" name="missingsIgnored" checked>
+                    </div>
+                    
+                </div>
+                <div class="composition-list">
+                    <br>
+                    <div class="label main">compositions list</div>
+                    <div class="scrollable-list">
+                        <table id="compositionList">
+                            <tr>
+                                <th>name</th>
+                                <th>frame range</th>
+                                <th>extension</th>
+                                <th>renderable</th>
+                            </tr>  
+                        </table>
+                    </div>                                       
+                </div>
+                <div class="settings">
+                    <br>
+                    <div class="label main">general</div>
+                    
+                    <div class="grid-container">
+                        <div class="text-field-container">
+                            <div class="label">frame range</div>
+                            <input id ="frameRange" type="text" class="textField" value="0to1000s1">
+                        </div>
+                        <div class="dropdown-conatiner long">
+                            <div class="label">extension</div>
+                            <div class="dropdown long" >
+                                <div id="extensionValue" class="dropdown-value" >mp4</div>
+                                     
+                                    <div class="arrow down longItem">
+                                </div>
+                                <div id="dropdownContent" class="dropdown-content long">
+                                    <span class="top-item">
+                                        <p class="item">video</p>
+                                        <div class="top-item-content video">
+                                            <p class="item" data-el="mp4" >MP4 MPEG-4(.mp4)</p>
+                                            <p class="item" data-el="mkv">Matroska(.mkv)</p>
+  >
+                                <div id="dropdownContent" class="dropdown-content top-item-content dropdown-long">
+
+                                    <p class="item" data-el="H265/HEVC">H265/HEVC</p>
+                                    <p class="item" data-el="H264/AVC">H264/AVC</p>
+                                    <p class="item" data-el="HAP">HAP</p>
+                                    <p class="item" data-el="VC3/DNxHD">VC3/DNxHD</p>
+                                    <p class="item" data-el="VP9">VP9</p>
+                                    <p class="item" data-el="AOMedia Video 1(AV1)">AOMedia Video 1(AV1)</p>
+                                    <p class="item" data-el="ProRes">ProRes</p>
+                                    <p class="item" data-el="QuickTime Animation RLE">QuickTime Animation RLE</p>
+
+                                </div>
+                            </div>  
+                        </div>
+                        <div class="dropdown-conatiner">
+                            <div class="label ">pixel format</div>
+                            <div class="dropdown">
+                                <div id="pixelFormat-value" class="dropdown-value">yuv420p</div>
+                                <div class="dropdownBtn">
+                                     
+                                    <div class="arrow down"></div>
+                                </div>
+                                <div id="dropdownContent" class="dropdown-content top-item-content dropdown-long">
+                                    <p class="item" data-el="yuv420p">yuv420p</p>                           <!--0      h265 | h264 | VP9 | AOMedia                  --> 
+                                    <p class="item" data-el="yuvj420p">yuvj420p</p>                         <!--1      h264                                         -->
+                                    <p class="item" data-el="yuva420p">yuva420p</p>                         <!--2      VP9                                          -->
+                                    <p class="item" data-el="yuv422p">yuv422p</p>                           <!--3      h265 | h264 | VP9 | AOMedia | VC3            -->
+                                    <p class="item" data-el="yuvj422p">yuvj422p</p>                         <!--4      h264                                         -->
+                                    <p class="item" data-el="yuv444p">yuv444p</p>                           <!--5      h265 | h264 | VP9 | AOMedia                  -->
+                                    <p class="item" data-el="yuvj444p">yuvj444p</p>                         <!--6      h264                                         -->
+                                    <p class="item" data-el="nv12">nv12</p>                                 <!--7      h264                                         -->
+                                    <p class="item" data-el="nv16">nv16</p>                                 <!--8      h264                                         -->
+                                    <p class="item" data-el="nv21">nv21</p>                                 <!--9      h264                                         -->
+                                    <p class="item" data-el="gbrp">gbrp</p>                                 <!--10     h265 | VP9  |                                -->
+                                    <p class="item" data-el="yuv420p10le">yuv420p10le</p>                   <!--11     h265 | h264 | VP9 | AOMedia                  -->
+                                    <p class="item" data-el="yuv422p10le">yuv422p10le</p>                   <!--12     ProRes | h265 | h264 | VP9 | AOMedia | VC3   -->
+                                    <p class="item" data-el="yuv444p10le">yuv444p10le</p>                   <!--13     ProRes | h265 | VP9 | AOMedia | VC3          -->
+                                    <p class="item" data-el="yuv444p10le nv20le">yuv444p10le nv20le</p>     <!--14     h264 | VP9                                   -->
+               in444-10">main444-10</p>                      <!--8  -->     
+                                    <p class="item" data-el="main444-10-intra">main444-10-intra</p>          <!--9  -->                           
+                                    <p class="item" data-el="main12">main12</p>                              <!--10  --> 
+                                    <p class="item" data-el="main12-intra">main12-intra</p>                  <!--11  -->             
+                                    <p class="item" data-el="main422-12">main422-12</p>                      <!--12  -->     
+                                    <p class="item" data-el="main422-12-intra">main422-12-intra</p>          <!--13  -->                            
+                                    <p class="item" data-el="main444-12">main444-12</p>                      <!--14  -->           
+                                    <p class="item" data-el="main444-12-intra">main444-12-intra</p>          <!--15  -->     
+                                    <p class="item" data-el="main444-16-intra">main444-16-intra</p>          <!--16  -->     
+                                    <p class="item" data-el="high">high</p>                                  <!--17  --> 
+                                    <p class="item" data-el="high10">high10</p>                              <!--18  -->     
+                                    <p class="item" data-el="high422">high422</p>                            <!--19  --> 
+                                    <p class="item" data-el="high444">high444</p>                            <!--20  -->         
+                                    <p class="item" data-el="dnxhd">dnxhd</p>                                <!--21  -->     
+                                    <p class="item" data-el="dnxhr_444">dnxhr_444</p>                        <!--22  -->                                      
+                                    <p class="item" data-el="dnxhr_hqx">dnxhr_hqx</p>                        <!--23  -->     
+                                    <p class="item" data-el="dnxhr_hq">dnxhr_hq</p>                          <!--24  -->     
+                                    <p class="item" data-el="dnxhr_sq">dnxhr_sq</p>                          <!--25  -->     
+                                    <p class="item" data-el="dnxhr_lb">dnxhr_lb</p>                          <!--26  -->     
+                                    <p class="item" data-el="proxy">proxy</p>                                <!--27  -->     
+                                    <p class="item" data-el="LT">LT</p>                                      <!--28  -->     
+                                    <p class="item" data-el="SQ">SQ</p>                                      <!--29  -->     
+                                    <p class="item" data-el="HQ">HQ</p>                                      <!--30  -->     
+                                    <p class="item" data-el="4444">4444</p>                                  <!--31  -->     
+                                    <p class="item" data-el="hap">hap</p>                                    <!--32  -->     
+                                    <p class="item" data-el="hap_alpha">hap_alpha</p>                        <!--33  -->     
+                                    <p class="item" data-el="hap_q">hap_q</p>                                <!--34  -->
+
+                                </div>
+                            </div>  
+                        </div>
+                        <div class="text-field-container">
+                            <div class="label">framerate</div>
+                            <input id="framerate" type="text" class="textField" value="25">
+                        </div>
+                        <div class="text-field-container">
+                            <div class="label">bitrate</div>
+                            <input id="bitrate" type="text" class="textField" value="5000">
+                        </div>
+                    </div> 
+                                                    <span>search</span>
+                                        <span>delete</span>
+                                    </div>
+                                </th>
+                            </tr>  
+                            <tr>
+                                <td>H:\SteamLibrary\steamapps\common\Mansions of Madness\Atlas_Main.png</td>
+                                <td>Atlas_Main.png</td>
+                                <td>main</td>
+                                <td>png</td>
+                                <td>
+                                    <div class="double-cell">
+                                        <i class="fas fa-search"></i>
+                                        <i class="fas fa-trash"></i>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>H:\SteamLibrary\steamapps\common\Mansions of Madness\Atlas_Main.png</td>
+                                <td>logo.jpg</td>
+                                <td>main</td>
+                                <td>png</td>
+                                <td>
+                                    <div class="double-cell">
+                                        <i class="fas fa-search"></i>
+                                        <i class="fas fa-trash"></i>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>H:\SteamLibrary\steamapps\common\Mansions of Madness\Atlas_Main.png</td>
+                                <td>logo.jpg</td>
+                                <td>main</td>
+                                <td>png</td>
+                                <td>
+                                    <div class="double-cell">
+                                        <i class="fas fa-search"></i>
+                                        <i class="fas fa-trash"></i>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>H:\SteamLibrary\steamapps\common\Mansions of Madness\Atlas_Main.png</td>
+                                <td>logo.jpg</td>
+                                <td>main</td>
+                                <td>png</td>
+                                <td>
+                                    <div class="double-cell">
+                                        <i class="fas fa-search"></i>
+                                        <i class="fas fa-trash"></i>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </table>
+                    </div>                                       
+                </div>
+            </div>
+            
+        </div>
+        <div class="footer">
+            <div></div>
+            <div></div>
+            <div id="sendButton" class="send-button">SEND<i class="fas fa-share"></i></div>
+            <div></div>
+        </div>
+    </div>
+    
+    <script src="js/libs/CSInterface.js"></script>
+    <script src="js/libs/jquery-2.0.2.min.js"></script>
+    
+    <script type="text/javascript" src="js/index.js"></script>
+
+    
+    
+    <script src="https://kit.fontawesome.com/63d92741b4.js" crossorigin="anonymous"></script>
+    <!--<script src="js/themeManager.js"></script>
+    <script src="js/main.js"></script>
+
+    -->
+    
+</body>
+</html>
