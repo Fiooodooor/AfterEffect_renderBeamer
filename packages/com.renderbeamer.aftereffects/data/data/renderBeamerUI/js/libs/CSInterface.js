@@ -118,7 +118,118 @@ function Runtime(name, versionRange)
 * @param windowType          The window type of the main window of this extension.
                  Valid values are defined by \c #CSXSWindowType.
 * @param width           The default width in pixels of the main window of this extension.
-* @param height          The d   The default, 255.0, means that the color is fully opaque.
+* @param height          The default height in pixels of the main window of this extension.
+* @param minWidth        The minimum width in pixels of the main window of this extension.
+* @param minHeight       The minimum height in pixels of the main window of this extension.
+* @param maxWidth        The maximum width in pixels of the main window of this extension.
+* @param maxHeight       The maximum height in pixels of the main window of this extension.
+* @param defaultExtensionDataXml The extension data contained in the default \c ExtensionDispatchInfo section of the extension manifest.
+* @param specialExtensionDataXml The extension data contained in the application-specific \c ExtensionDispatchInfo section of the extension manifest.
+* @param requiredRuntimeList     An array of \c Runtime objects for runtimes required by this extension.
+* @param isAutoVisible       True if this extension is visible on loading.
+* @param isPluginExtension   True if this extension has been deployed in the Plugins folder of the host application.
+*
+* @return A new \c Extension object.
+*/
+function Extension(id, name, mainPath, basePath, windowType, width, height, minWidth, minHeight, maxWidth, maxHeight,
+                   defaultExtensionDataXml, specialExtensionDataXml, requiredRuntimeList, isAutoVisible, isPluginExtension)
+{
+    this.id = id;
+    this.name = name;
+    this.mainPath = mainPath;
+    this.basePath = basePath;
+    this.windowType = windowType;
+    this.width = width;
+    this.height = height;
+    this.minWidth = minWidth;
+    this.minHeight = minHeight;
+    this.maxWidth = maxWidth;
+    this.maxHeight = maxHeight;
+    this.defaultExtensionDataXml = defaultExtensionDataXml;
+    this.specialExtensionDataXml = specialExtensionDataXml;
+    this.requiredRuntimeList = requiredRuntimeList;
+    this.isAutoVisible = isAutoVisible;
+    this.isPluginExtension = isPluginExtension;
+}
+
+/**
+ * @class CSEvent
+ * A standard JavaScript event, the base class for CEP events.
+ *
+ * @param type        The name of the event type.
+ * @param scope       The scope of event, can be "GLOBAL" or "APPLICATION".
+ * @param appId       The unique identifier of the application that generated the event.
+ * @param extensionId     The unique identifier of the extension that generated the event.
+ *
+ * @return A new \c CSEvent object
+ */
+function CSEvent(type, scope, appId, extensionId)
+{
+    this.type = type;
+    this.scope = scope;
+    this.appId = appId;
+    this.extensionId = extensionId;
+}
+
+/** Event-specific data. */
+CSEvent.prototype.data = "";
+
+/**
+ * @class SystemPath
+ * Stores operating-system-specific location constants for use in the
+ * \c #CSInterface.getSystemPath() method.
+ * @return A new \c SystemPath object.
+ */
+function SystemPath()
+{
+}
+
+/** The path to user data.  */
+SystemPath.USER_DATA = "userData";
+
+/** The path to common files for Adobe applications.  */
+SystemPath.COMMON_FILES = "commonFiles";
+
+/** The path to the user's default document folder.  */
+SystemPath.MY_DOCUMENTS = "myDocuments";
+
+/** @deprecated. Use \c #SystemPath.Extension.  */
+SystemPath.APPLICATION = "application";
+
+/** The path to current extension.  */
+SystemPath.EXTENSION = "extension";
+
+/** The path to hosting application's executable.  */
+SystemPath.HOST_APPLICATION = "hostApplication";
+
+/**
+ * @class ColorType
+ * Stores color-type constants.
+ */
+function ColorType()
+{
+}
+
+/** RGB color type. */
+ColorType.RGB = "rgb";
+
+/** Gradient color type. */
+ColorType.GRADIENT = "gradient";
+
+/** Null color type. */
+ColorType.NONE = "none";
+
+/**
+ * @class RGBColor
+ * Stores an RGB color with red, green, blue, and alpha values.
+ * All values are in the range [0.0 to 255.0]. Invalid numeric values are
+ * converted to numbers within this range.
+ *
+ * @param red   The red value, in the range [0.0 to 255.0].
+ * @param green The green value, in the range [0.0 to 255.0].
+ * @param blue  The blue value, in the range [0.0 to 255.0].
+ * @param alpha The alpha (transparency) value, in the range [0.0 to 255.0].
+ *      The default, 255.0, means that the color is fully opaque.
  *
  * @return A new RGBColor object.
  */
@@ -232,7 +343,133 @@ function AppSkinInfo(baseFontFamily, baseFontSize, appBarBackgroundColor, panelB
  * Stores information about the environment in which the extension is loaded.
  *
  * @param appName   The application's name.
- * @param appVersion    Tar skinInfo = JSON.parse(window.__adobe_cep__.getHostEnvironment()).appSkinInfo;
+ * @param appVersion    The application's version.
+ * @param appLocale The application's current license locale.
+ * @param appUILocale   The application's current UI locale.
+ * @param appId     The application's unique identifier.
+ * @param isAppOnline  True if the application is currently online.
+ * @param appSkinInfo   An \c #AppSkinInfo object containing the application's default color and font styles.
+ *
+ * @return A new \c HostEnvironment object.
+ */
+function HostEnvironment(appName, appVersion, appLocale, appUILocale, appId, isAppOnline, appSkinInfo)
+{
+    this.appName = appName;
+    this.appVersion = appVersion;
+    this.appLocale = appLocale;
+    this.appUILocale = appUILocale;
+    this.appId = appId;
+    this.isAppOnline = isAppOnline;
+    this.appSkinInfo = appSkinInfo;
+}
+
+/**
+ * @class HostCapabilities
+ * Stores information about the host capabilities.
+ *
+ * @param EXTENDED_PANEL_MENU True if the application supports panel menu.
+ * @param EXTENDED_PANEL_ICONS True if the application supports panel icon.
+ * @param DELEGATE_APE_ENGINE True if the application supports delegated APE engine.
+ * @param SUPPORT_HTML_EXTENSIONS True if the application supports HTML extensions.
+ * @param DISABLE_FLASH_EXTENSIONS True if the application disables FLASH extensions.
+ *
+ * @return A new \c HostCapabilities object.
+ */
+function HostCapabilities(EXTENDED_PANEL_MENU, EXTENDED_PANEL_ICONS, DELEGATE_APE_ENGINE, SUPPORT_HTML_EXTENSIONS, DISABLE_FLASH_EXTENSIONS)
+{
+    this.EXTENDED_PANEL_MENU = EXTENDED_PANEL_MENU;
+    this.EXTENDED_PANEL_ICONS = EXTENDED_PANEL_ICONS;
+    this.DELEGATE_APE_ENGINE = DELEGATE_APE_ENGINE;
+    this.SUPPORT_HTML_EXTENSIONS = SUPPORT_HTML_EXTENSIONS;
+	this.DISABLE_FLASH_EXTENSIONS = DISABLE_FLASH_EXTENSIONS; // Since 5.0.0
+}
+
+/**
+ * @class ApiVersion
+ * Stores current api version.
+ *
+ * Since 4.2.0
+ *
+ * @param major  The major version
+ * @param minor  The minor version.
+ * @param micro  The micro version.
+ *
+ * @return ApiVersion object.
+ */
+function ApiVersion(major, minor, micro)
+{
+    this.major = major;
+    this.minor = minor;
+    this.micro = micro;
+}
+
+/**
+ * @class MenuItemStatus
+ * Stores flyout menu item status
+ *
+ * Since 5.2.0
+ *
+ * @param menuItemLabel  The menu item label.
+ * @param enabled  		 True if user wants to enable the menu item.
+ * @param checked  		 True if user wants to check the menu item.
+ *
+ * @return MenuItemStatus object.
+ */
+function MenuItemStatus(menuItemLabel, enabled, checked)
+{
+	this.menuItemLabel = menuItemLabel;
+	this.enabled = enabled;
+	this.checked = checked;
+}
+
+/**
+ * @class ContextMenuItemStatus
+ * Stores the status of the context menu item.
+ *
+ * Since 5.2.0
+ *
+ * @param menuItemID     The menu item id.
+ * @param enabled  		 True if user wants to enable the menu item.
+ * @param checked  		 True if user wants to check the menu item.
+ *
+ * @return MenuItemStatus object.
+ */
+function ContextMenuItemStatus(menuItemID, enabled, checked)
+{
+	this.menuItemID = menuItemID;
+	this.enabled = enabled;
+	this.checked = checked;
+}
+//------------------------------ CSInterface ----------------------------------
+
+/**
+ * @class CSInterface
+ * This is the entry point to the CEP extensibility infrastructure.
+ * Instantiate this object and use it to:
+ * <ul>
+ * <li>Access information about the host application in which an extension is running</li>
+ * <li>Launch an extension</li>
+ * <li>Register interest in event notifications, and dispatch events</li>
+ * </ul>
+ *
+ * @return A new \c CSInterface object
+ */
+function CSInterface()
+{
+}
+
+/**
+ * User can add this event listener to handle native application theme color changes.
+ * Callback function gives extensions ability to fine-tune their theme color after the
+ * global theme color has been changed.
+ * The callback function should be like below:
+ *
+ * @example
+ * // event is a CSEvent object, but user can ignore it.
+ * function OnAppThemeColorChanged(event)
+ * {
+ *    // Should get a latest HostEnvironment object from application.
+ *    var skinInfo = JSON.parse(window.__adobe_cep__.getHostEnvironment()).appSkinInfo;
  *    // Gets the style information such as color info from the skinInfo,
  *    // and redraw all UI controls of your extension according to the style info.
  * }
@@ -359,7 +596,126 @@ CSInterface.prototype.addEventListener = function(type, listener, obj)
  *
  * @param type      The name of the event type of interest.
  * @param listener  The JavaScript handler function or method that was registered.
- * @param obj       Optional, the object 
+ * @param obj       Optional, the object containing the handler method, if any.
+ *          Default is null.
+ */
+CSInterface.prototype.removeEventListener = function(type, listener, obj)
+{
+    window.__adobe_cep__.removeEventListener(type, listener, obj);
+};
+
+/**
+ * Loads and launches another extension, or activates the extension if it is already loaded.
+ *
+ * @param extensionId       The extension's unique identifier.
+ * @param startupParams     Not currently used, pass "".
+ *
+ * @example
+ * To launch the extension "help" with ID "HLP" from this extension, call:
+ * <code>requestOpenExtension("HLP", ""); </code>
+ *
+ */
+CSInterface.prototype.requestOpenExtension = function(extensionId, params)
+{
+    window.__adobe_cep__.requestOpenExtension(extensionId, params);
+};
+
+/**
+ * Retrieves the list of extensions currently loaded in the current host application.
+ * The extension list is initialized once, and remains the same during the lifetime
+ * of the CEP session.
+ *
+ * @param extensionIds  Optional, an array of unique identifiers for extensions of interest.
+ *          If omitted, retrieves data for all extensions.
+ *
+ * @return Zero or more \c #Extension objects.
+ */
+CSInterface.prototype.getExtensions = function(extensionIds)
+{
+    var extensionIdsStr = JSON.stringify(extensionIds);
+    var extensionsStr = window.__adobe_cep__.getExtensions(extensionIdsStr);
+
+    var extensions = JSON.parse(extensionsStr);
+    return extensions;
+};
+
+/**
+ * Retrieves network-related preferences.
+ *
+ * @return A JavaScript object containing network preferences.
+ */
+CSInterface.prototype.getNetworkPreferences = function()
+{
+    var result = window.__adobe_cep__.getNetworkPreferences();
+    var networkPre = JSON.parse(result);
+
+    return networkPre;
+};
+
+/**
+ * Initializes the resource bundle for this extension with property values
+ * for the current application and locale.
+ * To support multiple locales, you must define a property file for each locale,
+ * containing keyed display-string values for that locale.
+ * See localization documentation for Extension Builder and related products.
+ *
+ * Keys can be in the
+ * form <code>key.value="localized string"</code>, for use in HTML text elements.
+ * For example, in this input element, the localized \c key.value string is displayed
+ * instead of the empty \c value string:
+ *
+ * <code><input type="submit" value="" data-locale="key"/></code>
+ *
+ * @return An object containing the resource bundle information.
+ */
+CSInterface.prototype.initResourceBundle = function()
+{
+    var resourceBundle = JSON.parse(window.__adobe_cep__.initResourceBundle());
+    var resElms = document.querySelectorAll('[data-locale]');
+    for (var n = 0; n < resElms.length; n++)
+    {
+       var resEl = resElms[n];
+       // Get the resource key from the element.
+       var resKey = resEl.getAttribute('data-locale');
+       if (resKey)
+       {
+           // Get all the resources that start with the key.
+           for (var key in resourceBundle)
+           {
+               if (key.indexOf(resKey) === 0)
+               {
+                   var resValue = resourceBundle[key];
+                   if (key.length == resKey.length)
+                   {
+                        resEl.innerHTML = resValue;
+                   }
+                   else if ('.' == key.charAt(resKey.length))
+                   {
+                        var attrKey = key.substring(resKey.length + 1);
+                        resEl[attrKey] = resValue;
+                   }
+               }
+           }
+       }
+    }
+    return resourceBundle;
+};
+
+/**
+ * Writes installation information to a file.
+ *
+ * @return The file path.
+ */
+CSInterface.prototype.dumpInstallationInfo = function()
+{
+    return window.__adobe_cep__.dumpInstallationInfo();
+};
+
+/**
+ * Retrieves version information for the current Operating System,
+ * See http://www.useragentstring.com/pages/Chrome/ for Chrome \c navigator.userAgent values.
+ *
+ * @return A string containing the OS version, or "unknown Operation System".
  * If user customizes the User Agent by setting CEF command parameter "--user-agent", only
  * "Mac OS X" or "Windows" will be returned. 
  */
@@ -500,7 +856,112 @@ CSInterface.prototype.getScaleFactor = function()
  */
 CSInterface.prototype.setScaleFactorChangedHandler = function(handler)
 {
-    window.__adobe_cep__.semple2-2" Enabled="true" Checkable="true" Checked="true"/>
+    window.__adobe_cep__.setScaleFactorChangedHandler(handler);
+};
+
+/**
+ * Retrieves current API version.
+ *
+ * Since 4.2.0
+ *
+ * @return ApiVersion object.
+ *
+ */
+CSInterface.prototype.getCurrentApiVersion = function()
+{
+    var apiVersion = JSON.parse(window.__adobe_cep__.getCurrentApiVersion());
+    return apiVersion;
+};
+
+/**
+ * Set panel flyout menu by an XML.
+ *
+ * Since 5.2.0
+ *
+ * Register a callback function for "com.adobe.csxs.events.flyoutMenuClicked" to get notified when a 
+ * menu item is clicked.
+ * The "data" attribute of event is an object which contains "menuId" and "menuName" attributes. 
+ *
+ * Register callback functions for "com.adobe.csxs.events.flyoutMenuOpened" and "com.adobe.csxs.events.flyoutMenuClosed"
+ * respectively to get notified when flyout menu is opened or closed.
+ *
+ * @param menu     A XML string which describes menu structure.
+ * An example menu XML:
+ * <Menu>
+ *   <MenuItem Id="menuItemId1" Label="TestExample1" Enabled="true" Checked="false"/>
+ *   <MenuItem Label="TestExample2">
+ *     <MenuItem Label="TestExample2-1" >
+ *       <MenuItem Label="TestExample2-1-1" Enabled="false" Checked="true"/>
+ *     </MenuItem>
+ *     <MenuItem Label="TestExample2-2" Enabled="true" Checked="true"/>
+ *   </MenuItem>
+ *   <MenuItem Label="---" />
+ *   <MenuItem Label="TestExample3" Enabled="false" Checked="false"/>
+ * </Menu>
+ *
+ */
+CSInterface.prototype.setPanelFlyoutMenu = function(menu)
+{
+    if ("string" != typeof menu)
+    {
+        return;	
+    }
+
+	window.__adobe_cep__.invokeSync("setPanelFlyoutMenu", menu);
+};
+
+/**
+ * Updates a menu item in the extension window's flyout menu, by setting the enabled
+ * and selection status.
+ *  
+ * Since 5.2.0
+ *
+ * @param menuItemLabel	The menu item label. 
+ * @param enabled		True to enable the item, false to disable it (gray it out).
+ * @param checked		True to select the item, false to deselect it.
+ *
+ * @return false when the host application does not support this functionality (HostCapabilities.EXTENDED_PANEL_MENU is false). 
+ *         Fails silently if menu label is invalid.
+ *
+ * @see HostCapabilities.EXTENDED_PANEL_MENU
+ */
+CSInterface.prototype.updatePanelMenuItem = function(menuItemLabel, enabled, checked)
+{
+	var ret = false;
+	if (this.getHostCapabilities().EXTENDED_PANEL_MENU) 
+	{
+		var itemStatus = new MenuItemStatus(menuItemLabel, enabled, checked);
+		ret = window.__adobe_cep__.invokeSync("updatePanelMenuItem", JSON.stringify(itemStatus));
+	}
+	return ret;
+};
+
+
+/**
+ * Set context menu by XML string.
+ *
+ * Since 5.2.0
+ *
+ * There are a number of conventions used to communicate what type of menu item to create and how it should be handled.
+ * - an item without menu ID or menu name is disabled and is not shown.
+ * - if the item name is "---" (three hyphens) then it is treated as a separator. The menu ID in this case will always be NULL.
+ * - Checkable attribute takes precedence over Checked attribute.
+ * - a PNG icon. For optimal display results please supply a 16 x 16px icon as larger dimensions will increase the size of the menu item. 
+     The Chrome extension contextMenus API was taken as a reference. 
+     https://developer.chrome.com/extensions/contextMenus
+ * - the items with icons and checkable items cannot coexist on the same menu level. The former take precedences over the latter.
+ *
+ * @param menu      A XML string which describes menu structure.
+ * @param callback  The callback function which is called when a menu item is clicked. The only parameter is the returned ID of clicked menu item.
+ *
+ * @description An example menu XML:
+ * <Menu>
+ *   <MenuItem Id="menuItemId1" Label="TestExample1" Enabled="true" Checkable="true" Checked="false" Icon="./image/small_16X16.png"/>
+ *   <MenuItem Id="menuItemId2" Label="TestExample2">
+ *     <MenuItem Id="menuItemId2-1" Label="TestExample2-1" >
+ *       <MenuItem Id="menuItemId2-1-1" Label="TestExample2-1-1" Enabled="false" Checkable="true" Checked="true"/>
+ *     </MenuItem>
+ *     <MenuItem Id="menuItemId2-2" Label="TestExample2-2" Enabled="true" Checkable="true" Checked="true"/>
  *   </MenuItem>
  *   <MenuItem Label="---" />
  *   <MenuItem Id="menuItemId3" Label="TestExample3" Enabled="false" Checkable="true" Checked="false"/>
@@ -615,7 +1076,112 @@ CSInterface.prototype.updateContextMenuItem = function(menuItemID, enabled, chec
  *  
  * Since 6.0.0
  *
- * @return true if the extension window is visible; false if the extension wi * This function works with modal and modeless extensions in all Adobe products, and panel extensions in Photoshop, InDesign, InCopy, Illustrator, Flash Pro and Dreamweaver.
+ * @return true if the extension window is visible; false if the extension window is hidden.
+ */
+CSInterface.prototype.isWindowVisible = function()
+{
+	return window.__adobe_cep__.invokeSync("isWindowVisible", "");
+};
+
+/**
+ * Resize extension's content to the specified dimensions.
+ * 1. Works with modal and modeless extensions in all Adobe products.
+ * 2. Extension's manifest min/max size constraints apply and take precedence. 
+ * 3. For panel extensions
+ *    3.1 This works in all Adobe products except:
+ *        * Premiere Pro
+ *        * Prelude
+ *        * After Effects
+ *    3.2 When the panel is in certain states (especially when being docked),
+ *        it will not change to the desired dimensions even when the
+ *        specified size satisfies min/max constraints.
+ *
+ * Since 6.0.0
+ *
+ * @param width  The new width
+ * @param height The new height
+ */
+CSInterface.prototype.resizeContent = function(width, height)
+{
+    window.__adobe_cep__.resizeContent(width, height);
+};
+
+/**
+ * Register the invalid certificate callback for an extension. 
+ * This callback will be triggered when the extension tries to access the web site that contains the invalid certificate on the main frame.
+ * But if the extension does not call this function and tries to access the web site containing the invalid certificate, a default error page will be shown.
+ *  
+ * Since 6.1.0
+ *
+ * @param callback the callback function
+ */
+CSInterface.prototype.registerInvalidCertificateCallback = function(callback)
+{
+    return window.__adobe_cep__.registerInvalidCertificateCallback(callback);
+};
+
+/**
+ * Register an interest in some key events to prevent them from being sent to the host application.
+ *
+ * This function works with modeless extensions and panel extensions. 
+ * Generally all the key events will be sent to the host application for these two extensions if the current focused element
+ * is not text input or dropdown,
+ * If you want to intercept some key events and want them to be handled in the extension, please call this function
+ * in advance to prevent them being sent to the host application.
+ *
+ * Since 6.1.0
+ *
+ * @param keyEventsInterest      A JSON string describing those key events you are interested in. A null object or
+                                 an empty string will lead to removing the interest
+ *
+ * This JSON string should be an array, each object has following keys:
+ *
+ * keyCode:  [Required] represents an OS system dependent virtual key code identifying
+ *           the unmodified value of the pressed key.
+ * ctrlKey:  [optional] a Boolean that indicates if the control key was pressed (true) or not (false) when the event occurred.
+ * altKey:   [optional] a Boolean that indicates if the alt key was pressed (true) or not (false) when the event occurred.
+ * shiftKey: [optional] a Boolean that indicates if the shift key was pressed (true) or not (false) when the event occurred.
+ * metaKey:  [optional] (Mac Only) a Boolean that indicates if the Meta key was pressed (true) or not (false) when the event occurred.
+ *                      On Macintosh keyboards, this is the command key. To detect Windows key on Windows, please use keyCode instead.
+ * An example JSON string:
+ *
+ * [
+ *     {
+ *         "keyCode": 48
+ *     },
+ *     {
+ *         "keyCode": 123,
+ *         "ctrlKey": true
+ *     },
+ *     {
+ *         "keyCode": 123,
+ *         "ctrlKey": true,
+ *         "metaKey": true
+ *     }
+ * ]
+ *
+ */
+CSInterface.prototype.registerKeyEventsInterest = function(keyEventsInterest)
+{
+    return window.__adobe_cep__.registerKeyEventsInterest(keyEventsInterest);
+};
+
+/**
+ * Set the title of the extension window. 
+ * This function works with modal and modeless extensions in all Adobe products, and panel extensions in Photoshop, InDesign, InCopy, Illustrator, Flash Pro and Dreamweaver.
+ *
+ * Since 6.1.0
+ *
+ * @param title The window title.
+ */
+CSInterface.prototype.setWindowTitle = function(title)
+{
+    window.__adobe_cep__.invokeSync("setWindowTitle", title);
+};
+
+/**
+ * Get the title of the extension window. 
+ * This function works with modal and modeless extensions in all Adobe products, and panel extensions in Photoshop, InDesign, InCopy, Illustrator, Flash Pro and Dreamweaver.
  *
  * Since 6.1.0
  *

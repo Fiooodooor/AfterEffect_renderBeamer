@@ -93,9 +93,9 @@ Component.prototype.createOperationsForArchive = function(archive)
 	}
 	else if (systemInfo.kernelType === "darwin") 
 	{
-		component.addOperation("CopyDirectory", QDesktopServices.storageLocation(QDesktopServices.HomeLocation)+ "/renderbeamer/uninstall/AfterEffects/data/renderBeamer.plugin", "/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/");
+		component.addOperation("CopyDirectory", [QDesktopServices.storageLocation(QDesktopServices.HomeLocation)+ "/renderbeamer/uninstall/AfterEffects/data/renderBeamer.plugin", "/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/", "forceOverwrite"]);
 		component.addOperation("Mkdir", "/Library/Application Support/Adobe/CEP/extensions/");
-		component.addOperation("CopyDirectory", QDesktopServices.storageLocation(QDesktopServices.HomeLocation)+ "/renderbeamer/uninstall/AfterEffects/data/renderBeamerUI", "/Library/Application Support/Adobe/CEP/extensions/");
+		component.addOperation("CopyDirectory", [QDesktopServices.storageLocation(QDesktopServices.HomeLocation)+ "/renderbeamer/uninstall/AfterEffects/data/renderBeamerUI", "/Library/Application Support/Adobe/CEP/extensions/", "forceOverwrite"]);
 	}
 		
 
