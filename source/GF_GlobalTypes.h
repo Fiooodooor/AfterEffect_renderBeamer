@@ -28,7 +28,7 @@
 #include <string>
 
 #ifdef AE_OS_WIN
-#define BEAMER_SCRIPT L"\\renderbeamer\\renderbeamer.bat"
+#define BEAMER_SCRIPT L"\\renderbeamer\\renderbeamer.exe"
 #define FONT_LIB_NAME L"\\libgf_font_converter.dll"
 #define C4D_LIB_NAME L"\\C4dRelinkerLibrary.dll"
 #define SEP '\\'
@@ -39,7 +39,7 @@
 #define RB_STRNCPTY(...) strncpy_s(__VA_ARGS__)
 #define ASTRNCPY(ST1,ST2,N) strncpy_s(ST1,N+1,ST2,N);
 #define WSTRNCPY(ST1,ST2,N) wcsncpy_s(ST1,N+1,ST2,N);
-#define RB_LOCALESTRING "en-US.utf-8"
+#define RB_LOCALESTRING "en-US.utf-8" // .utf8
 #define RB_DEFINELOCALE(TLOCNAME) _locale_t TLOCNAME
 #define RB_NEWLOCALE(TLOCNAME,TLOCSTRING) TLOCNAME = _create_locale(LC_ALL, TLOCSTRING)
 #define RB_FREELOCALE(TLOCNAME) _free_locale(TLOCNAME)

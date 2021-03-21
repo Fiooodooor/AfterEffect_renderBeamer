@@ -447,25 +447,25 @@ void rbUtilities::getTimeString(wchar_t *buff, A_long buffSize, bool path)
 
 void rbUtilities::getEnvVariable(const char *variable, char *buffer, unsigned long long size)
 {
-    char* tmpbuffer = nullptr;
+    char* tmp_buffer = nullptr;
 #ifdef AE_OS_WIN
     size_t bufferSize = 0;
-    if (_dupenv_s(&tmpbuffer, &bufferSize, variable) == 0 && buffer != nullptr)
+    if (_dupenv_s(&tmp_buffer, &bufferSize, variable) == 0 && buffer != nullptr)
     {
-        strcpy_s(buffer, size, tmpbuffer);
-        free(tmpbuffer);
+        strcpy_s(buffer, size, tmp_buffer);
+        free(tmp_buffer);
     }
 
 #else
-    tmpbuffer = getenv(variable);
-    if (tmpbuffer != NULL)
-        strncpy(buffer, tmpbuffer, size);
+	tmp_buffer = getenv(variable);
+    if (tmp_buffer != NULL)
+        strncpy(buffer, tmp_buffer, size);
     else
         buffer[0] = '\0';
 #endif
 }
 
-ErrorCodesAE rbUtilities::execBeamerCmd(beamerParamsStruct bps, BeamerMasks mask, wchar_t *buffor, A_long size)
+ErrorCodesAE rbUtilities::execBeamerCmd(beamerParamsStruct bps, BeamerMasks mask, wchar_t *buffer, A_long buffer_size)
 {
 	ERROR_CATCH_START
 	switch (mask)
@@ -488,23 +488,23 @@ ErrorCodesAE rbUtilities::execBeamerCmd(beamerParamsStruct bps, BeamerMasks mask
 	default:
 		return ErrorResult;
 	}
-	_ErrorCode = exec_cmd(fs::path(bps.beamerScript), std::string(bps.beamerExecScript), bps.beamerTmpFile.lexically_normal(), buffor, size);
+	_ErrorCode = exec_cmd(fs::path(bps.beamerScript), std::string(bps.beamerExecScript), bps.beamerTmpFile.lexically_normal(), buffer, buffer_size);
 	
 	if (_ErrorCode == NoError)
 	{
-		if(size == 0) {
+		if(buffer_size == 0) {
 			_ErrorCode = NoError;
 		}
-		else if (buffor == nullptr) {
+		else if (buffer == nullptr) {
 			_ErrorCode = NullPointerResult;
 		}
-		else if (buffor[0] == '\0') {
+		else if (buffer[0] == '\0') {
 			_ErrorCode = ErrorResult;
 		}
-		else if (wcscmp(buffor, L"[NULL]") == 0) {
+		else if (wcscmp(buffer, L"[NULL]") == 0) {
 			_ErrorCode = NullResult;
 		}
-		else if (wcsncmp(buffor, L"ERROR", 5) == 0) {
+		else if (wcsncmp(buffer, L"ERROR", 5) == 0) {
 			_ErrorCode = ErrorResult;
 		}
 	}
@@ -512,181 +512,101 @@ ErrorCodesAE rbUtilities::execBeamerCmd(beamerParamsStruct bps, BeamerMasks mask
 	return _ErrorCode;
 }
 
-ErrorCodesAE rbUtilities::exec_cmd(fs::path const &app, std::string const &args, fs::path const &out_file, wchar_t *bufferW, unsigned long bufferSize)
+ErrorCodesAE rbUtilities::exec_cmd(fs::path const &app, std::string const &args, fs::path const &out_file, wchar_t *buffer_w, unsigned long buffer_size)
 {
 	ErrorCodesAE _ErrorCode = NoError;
 	GF_Dumper::rbProj()->logg("HelperClass", "ExecCmd::Args", args.c_str());
 #ifdef AE_OS_WIN
-	_ErrorCode = win_exec_cmd(app, args, out_file, bufferW, bufferSize);
+	_ErrorCode = win_exec_cmd(app, args, out_file, buffer_w, buffer_size);
 #else
-	_ErrorCode = mac_exec_cmd(app, args, out_file, bufferW, bufferSize);
+	_ErrorCode = mac_exec_cmd(app, args, out_file, buffer_w, buffer_size);
 #endif
 	GF_Dumper::rbProj()->logg("HelperClass", "ExecCmd::Result", std::to_string(static_cast<int>(_ErrorCode)).c_str());
-	if(_ErrorCode == NoError && bufferSize > 0 && bufferW)
-		GF_Dumper::rbProj()->logg(L"HelperClass", L"ExecCmd::ResultBuffer", bufferW);
+	if(_ErrorCode == NoError && buffer_size > 0 && buffer_w)
+		GF_Dumper::rbProj()->logg(L"HelperClass", L"ExecCmd::ResultBuffer", buffer_w);
 	return _ErrorCode;
 }
 
-ErrorCodesAE rbUtilities::win_exec_cmd(fs::path const &app, std::string const &args, fs::path const &out_file, wchar_t *bufforW, unsigned long bufforSize)
+ErrorCodesAE rbUtilities::win_exec_cmd(fs::path const &app, std::string const &args, fs::path const &out_file, wchar_t *buffer_w, unsigned long buffer_size)
 {
+	ERROR_CATCH_START_MOD(HelperClassesModule)
 #ifdef AE_OS_WIN
-	try {		
-		bool bProcessEnded = false;
-		DWORD returnCode = 0;
-		STARTUPINFOW si = { sizeof(STARTUPINFOW) };
-		ZeroMemory(&si, sizeof(si));
-		si.cb = sizeof(si);
-		si.dwFlags = STARTF_USESHOWWINDOW;
-		si.wShowWindow = SW_HIDE;
-
-		PROCESS_INFORMATION pi = { 0 };
-		ZeroMemory(&pi, sizeof(pi));
-		//std::wstring cmd(MAX_PATH, '\0');
-		std::wstring cmd = L"\"" + app.wstring() + L"\" " + std::wstring(args.cbegin(), args.cend());
-		if(!out_file.empty())
-			cmd += L" > \"" + out_file.wstring() + L"\"";
-		cmd.resize(MAX_PATH, '\0');
-
-		if (CreateProcessW(NULL, &cmd[0], NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
-		{
-			while (!bProcessEnded)
-			{
-				bProcessEnded = WaitForSingleObject(pi.hProcess, 300) == WAIT_OBJECT_0;
-			}
-			if(GetExitCodeProcess(pi.hProcess, &returnCode))
-			{
-				GF_Dumper::rbProj()->logg("HelperClass", "WinExecCmd::ExitCode", std::to_string(returnCode).c_str());
-			}
-
-			if (bufforW && bufforSize > 0 && !out_file.empty())
-			{
-				std::wfstream tempStr;
-				tempStr.open(out_file.wstring().c_str(), std::fstream::in);
-				if (!tempStr.is_open())
-					return ErrorResult;
-
-				tempStr.getline(bufforW, bufforSize);
-				bufforW[bufforSize - 1] = '\0';
-				tempStr.close();		
-			}
-			CloseHandle(pi.hProcess);
-			CloseHandle(pi.hThread);
-			return NoError;
-		}
-	}
-	catch(...)
-	{
+	if (app.empty() || args.empty())
 		return ErrorResult;
-	}
+	std::wstring cmd;
+	DWORD return_code = 0;
+	STARTUPINFOW si;
+	PROCESS_INFORMATION pi;
+	ZeroMemory(&si, sizeof(si));
+	ZeroMemory(&pi, sizeof(pi));
+	si.cb = sizeof(si);
+	si.dwFlags = STARTF_USESHOWWINDOW;
+	si.wShowWindow = SW_HIDE;
+
+	cmd.reserve(MAX_PATH);
+	cmd = L"\"" + app.filename().wstring() + L"\" " + std::wstring(args.cbegin(), args.cend());
+	if (!out_file.empty())
+		cmd += L" -f \"" + out_file.wstring() + L"\"";
+
+	if (!CreateProcessW(app.wstring().c_str(), &cmd[0], nullptr, nullptr, TRUE, CREATE_NO_WINDOW, nullptr, nullptr, &si, &pi))
+		throw PluginError(ExecCommandFailedToExec);
+
+	const DWORD fn_signaled_state = WaitForSingleObject(pi.hProcess, INFINITE);
+	if (!GetExitCodeProcess(pi.hProcess, &return_code))
+		return_code = 0;
+	CloseHandle(pi.hProcess);
+	CloseHandle(pi.hThread);
+
+	if (fn_signaled_state != WAIT_OBJECT_0)
+		throw PluginError(ExecCommandFailedObjWait);
+	if (return_code != 0)
+		throw PluginError(ExecCommandFailed);
+	_ErrorCode = read_file_buffer_w(out_file, buffer_w, buffer_size);
+	
 #endif
-	return ErrorResult;
+	ERROR_CATCH_END_LOGGER_RETURN("WinExecCmd")
 }
-ErrorCodesAE rbUtilities::mac_exec_cmd(fs::path const &app, std::string const &args, fs::path const &out_file, wchar_t *bufforW, unsigned long bufforSize)
+ErrorCodesAE rbUtilities::mac_exec_cmd(fs::path const &app, std::string const &args, fs::path const &out_file, wchar_t *buffer_w, unsigned long buffer_size)
 {
-	try {
-		if (app.empty() || args.empty())
-			return ErrorResult;
-
-		std::string cmd = app.string() + " " + args;
-		if (!out_file.empty()) {
-			cmd += " > \"" + out_file.string() + "\"";
-		}
-		
-		std::system(cmd.c_str());
-		// Add error handling for result
-		// if stat_val != 0 --> WEXITSTATUS(stat_val)
-		if (bufforW && bufforSize > 0 && !out_file.empty())
-		{
-			std::wfstream temp_stream;
-			temp_stream.open(out_file.string().c_str(), std::wfstream::in);
-			if (temp_stream.is_open())
-			{
-				bufforW[0] = '\0';
-				temp_stream.getline(bufforW, bufforSize);
-				temp_stream.close();
-				bufforW[bufforSize - 1] = '\0';
-				return NoError;
-			}
-		}
-	}
-	catch (...) {
+	ERROR_CATCH_START_MOD(HelperClassesModule)
+#ifndef AE_OS_WIN
+	if (app.empty() || args.empty())
 		return ErrorResult;
+
+	std::string cmd = app.string() + " " + args;
+	if (!out_file.empty()) {
+		cmd += " -f \"" + out_file.string() + "\"";
 	}
-	return NoError;
-}
-ErrorCodesAE rbUtilities::win_exec_cmd_new(fs::path const &app, std::string const &args, fs::path const &out_file, wchar_t *bufforW, unsigned long bufforSize)
-{
-#ifdef AE_OS_WIN
-	try {
-		bool bProcessEnded = false;
-		DWORD dw_read = 0;
-		BOOL read_result = 0;
-		char *buffor = new char[bufforSize];
-		HANDLE pipeRead = nullptr, pipeWrite = nullptr;
-		STARTUPINFOW si;
-		PROCESS_INFORMATION pi;
-		SECURITY_ATTRIBUTES sa;
-		ZeroMemory(&pi, sizeof(pi));
-		ZeroMemory(&si, sizeof(si));
-		ZeroMemory(&sa, sizeof(sa));
-		std::wstring cmd = app.filename().wstring() + L" " + std::wstring(args.cbegin(), args.cend());
-		cmd.resize(MAX_PATH, '\0');
 
-		if (bufforW == nullptr)
-			return ErrorResult;
+	if (!std::system(nullptr))
+		throw PluginError(ExecCommandFailedToExec);
 
-		sa.nLength = sizeof(sa);
-		sa.lpSecurityDescriptor = NULL;
-		sa.bInheritHandle = FALSE;
+	const int exit_status = std::system(cmd.c_str());
+	if (exit_status == -1)
+		throw PluginError(ExecCommandFailedToExec);
+	if (exit_status != 0)
+		throw PluginError(ExecCommandFailed);
 
-		if (!CreatePipe(&pipeRead, &pipeWrite, &sa, 0))
-			return ErrorResult;
-
-		if (!SetHandleInformation(pipeRead, HANDLE_FLAG_INHERIT, 0))
-			return ErrorResult;
-
-		si.cb = sizeof(si);
-		si.hStdError = pipeWrite;
-		si.hStdOutput = pipeWrite;
-		si.hStdInput = nullptr;
-		si.dwFlags |= STARTF_USESTDHANDLES;
-
-		if (CreateProcessW(app.wstring().c_str(), &cmd[0], nullptr, nullptr, TRUE, 0, nullptr, nullptr, &si, &pi))
-		{
-			while (!bProcessEnded)
-			{
-				bProcessEnded = WaitForSingleObject(pi.hProcess, 200) == WAIT_OBJECT_0;
-			}
-		}
-		else {
-			CloseHandle(pipeWrite);
-			CloseHandle(pipeRead);
-			return ErrorResult;
-		}
-
-		CloseHandle(pi.hProcess);
-		CloseHandle(pi.hThread);
-		CloseHandle(pipeWrite);
-
-		read_result = ReadFile(pipeRead, buffor, bufforSize, &dw_read, nullptr);
-		GF_Dumper::rbProj()->logg("WinExecCmd", "ReadFileResult", std::to_string(read_result).c_str());
-		GF_Dumper::rbProj()->logg("WinExecCmd", "ReadFileRead", std::to_string(dw_read).c_str());
-		GF_Dumper::rbProj()->logg("WinExecCmd", "ReadFileBuffor", buffor);
-		CloseHandle(pipeRead);
-		if (!read_result)
-			return ErrorResult;
-		if (dw_read == 0)
-			buffor[0] = '\0';
-		if (dw_read < bufforSize)
-			buffor[dw_read] = '\0';
-		swprintf_s(bufforW, bufforSize, L"%hs", buffor);
-		GF_Dumper::rbProj()->logg(L"WinExecCmd", L"ReadFileBufforW", bufforW);
-	}
-	catch (...) {
-		return ErrorResult;
-	}
+	_ErrorCode = read_file_buffer_w(out_file, buffer_w, buffer_size);
+	
 #endif
-	return NoError;
+	ERROR_CATCH_END_LOGGER_RETURN("MacExecCmd")
+}
+ErrorCodesAE rbUtilities::read_file_buffer_w(fs::path const &out_file, wchar_t *buffer_w, unsigned long buffer_size)
+{
+	ERROR_CATCH_START_MOD(HelperClassesModule)
+		if (buffer_w && buffer_size > 0 && !out_file.empty())
+		{
+			std::wfstream tmp_stream(out_file.wstring().c_str(), std::wfstream::in);
+			if (!tmp_stream.is_open())
+				throw PluginError(ExecCommandFailedToRead);
+
+			tmp_stream.getline(buffer_w, buffer_size);
+			buffer_w[buffer_size - 1] = '\0';
+			if (tmp_stream.gcount() < 1 || tmp_stream.rdstate() == std::ios_base::failbit || tmp_stream.rdstate() == std::ios_base::badbit)
+				throw PluginError(ExecCommandFailedToRead);
+		}
+	ERROR_CATCH_END_LOGGER_RETURN("ReadFileBuffer")
 }
 ErrorCodesAE rbUtilities::getVersionString(A_char* buff, long buff_size)
 {
@@ -732,7 +652,7 @@ ErrorCodesAE rbUtilities::getCpuInfoString(SPBasicSuite *pb, wchar_t *buffer, A_
 	ERROR_CATCH_END_NO_INFO_RETURN
 }
 
-ErrorCodesAE rbUtilities::encodeUrlString(const wchar_t *url, wchar_t *buffor, long buffor_size)
+ErrorCodesAE rbUtilities::encodeUrlString(const wchar_t *url, wchar_t *buffer, long buffer_size)
 {
 	std::wstring returnUrl = L"";
     
@@ -753,7 +673,7 @@ ErrorCodesAE rbUtilities::encodeUrlString(const wchar_t *url, wchar_t *buffor, l
 			returnUrl += bufHex;
 		}
 	}
-	WSTRNCPY(buffor, returnUrl.c_str(), buffor_size);
+	WSTRNCPY(buffer, returnUrl.c_str(), buffer_size)
 	return NoError;
 }
 ErrorCodesAE rbUtilities::openCostCalculator(SPBasicSuite *pb)
@@ -762,7 +682,7 @@ ErrorCodesAE rbUtilities::openCostCalculator(SPBasicSuite *pb)
     
     fs::path data_tmp =  fs::temp_directory_path();
     data_tmp += "beamerExchange.txt";
-		A_long frames = 250;
+	A_long frames = 250;
 	#ifdef GF_PLUGIN_BUILD_GARAGEFARM
 		wchar_t theUrl[] = L"https://garagefarm.net/cost-calculator/";
 	#else
@@ -771,17 +691,17 @@ ErrorCodesAE rbUtilities::openCostCalculator(SPBasicSuite *pb)
     wchar_t theTempProcChar[512] = L"\0";
     wchar_t procEncoded[512] = L"\0";
     
-	if (rbUtilities::getCpuInfoString(pb, theTempProcChar, 512, data_tmp.wstring().c_str()) != ErrorCodesAE::NoError)
-        return ErrorCodesAE::ErrorResult;
+	if (getCpuInfoString(pb, theTempProcChar, 512, data_tmp.wstring().c_str()) != ErrorCodesAE::NoError)
+        return ErrorResult;
     
-    if(rbUtilities::encodeUrlString(theTempProcChar, procEncoded, 512) != ErrorCodesAE::NoError)
-        return ErrorCodesAE::ErrorResult;
+    if(encodeUrlString(theTempProcChar, procEncoded, 512) != ErrorCodesAE::NoError)
+        return ErrorResult;
         //procEncoded[0] = '\0';
     #ifdef AE_OS_WIN
 		wchar_t theTempCmd[1024];
 		RB_SWPRINTF(theTempCmd, 1024, L"%ls?cpu=%ls&frames=%d", theUrl, procEncoded,  frames);
-		if (32 >= reinterpret_cast<ULONG_PTR>(ShellExecuteW(NULL, L"open", theTempCmd, NULL, NULL, SW_SHOWNORMAL))) {
-			throw PluginError(ErrorCodesAE::FailedToOpenWebPage);
+		if (32 >= reinterpret_cast<ULONG_PTR>(ShellExecuteW(nullptr, L"open", theTempCmd, nullptr, nullptr, SW_SHOWNORMAL))) {
+			throw PluginError(FailedToOpenWebPage);
 		}
 #else
 		char theTempCmd[1024];
@@ -802,12 +722,12 @@ std::string rbUtilities::toUtf8(const wchar_t* stringToConvert)
 	catch(...) {
 		RB_NEWLOCALE(utf_locale, "en-US");
 	}
-    RB_WCSTOMBS_L(retval, nullptr, 0, stringToConvert, 0, utf_locale);
+    RB_WCSTOMBS_L(retval, nullptr, 0, stringToConvert, 0, utf_locale)
     if(retval != 0 && retval != (size_t)-1)
     {
         dstsz = retval;
         newbuffer.resize(dstsz);
-        RB_WCSTOMBS_L(retval, const_cast<char*>(newbuffer.c_str()), dstsz+1, stringToConvert, dstsz, utf_locale);
+        RB_WCSTOMBS_L(retval, const_cast<char*>(newbuffer.c_str()), dstsz+1, stringToConvert, dstsz, utf_locale)
     }
     RB_FREELOCALE(utf_locale);
     return newbuffer;

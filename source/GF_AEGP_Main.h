@@ -24,9 +24,7 @@ public:
 		try {
 			if (pica_basicP)
 				*global_refconP = (AEGP_GlobalRefcon) new Renderbeamer(pica_basicP, pluginID);
-			else 
-				return A_Err_ALLOC;
-			if (!global_refconP)
+			if (!global_refconP || !pica_basicP)
 				throw PluginError(A_Err_ALLOC);
 		}
 		catch (...) {
@@ -34,9 +32,7 @@ public:
 			sh.UtilitySuite6()->AEGP_ReportInfo(pluginID, GetStringPtr(StrID_LoadPluginError));
 			return A_Err_ALLOC;
 		}
-		if (global_refconP)
-			return A_Err_NONE;
-		return A_Err_ALLOC;
+		return A_Err_NONE;
 	}
 
     static A_Err SCreatePanelHook(AEGP_GlobalRefcon plugin_refconP, AEGP_CreatePanelRefcon refconP, AEGP_PlatformViewRef container, AEGP_PanelH panelH, AEGP_PanelFunctions1* outFunctionTable, AEGP_PanelRefcon* outRefcon)

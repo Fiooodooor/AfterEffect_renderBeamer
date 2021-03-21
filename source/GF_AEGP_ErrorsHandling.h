@@ -42,7 +42,7 @@
 #define ERROR_CATCH_END_NO_INFO ERROR_CATCH_END_CONSTRUCT(;,;,;,&)
 #define ERROR_CATCH_END_NO_INFO_RETURN ERROR_CATCH_END_NO_INFO return _ErrorCode;
 
-#define ERROR_CATCH_END_LOGGER1(OBJECT,TYPE) ERROR_CATCH_END_CONSTRUCT(rbProj()->loggErr(OBJECT,TYPE,theErr.what());,rbProj()->loggErr(OBJECT,TYPE,PluginError::GetErrorStringA(UnknownError,GF_PLUGIN_LANGUAGE));,rbProj()->loggErr(OBJECT,TYPE,PluginError::GetErrorStringA(theErr,GF_PLUGIN_LANGUAGE));,&theErr)
+#define ERROR_CATCH_END_LOGGER1(OBJECT,TYPE) ERROR_CATCH_END_CONSTRUCT(GF_Dumper::rbProj()->loggErr(OBJECT,TYPE,theErr.what());,GF_Dumper::rbProj()->loggErr(OBJECT,TYPE,PluginError::GetErrorStringA(UnknownError,GF_PLUGIN_LANGUAGE));,GF_Dumper::rbProj()->loggErr(OBJECT,TYPE,PluginError::GetErrorStringA(theErr,GF_PLUGIN_LANGUAGE));,&theErr)
 #define ERROR_CATCH_END_LOGGER(ATYPE) ERROR_CATCH_END_LOGGER1(PluginError::GetCallerStringA(_ErrorCaller,GF_PLUGIN_LANGUAGE),ATYPE)
 #define ERROR_CATCH_END_LOGGER_RETURN(ATYPE) ERROR_CATCH_END_LOGGER1(PluginError::GetCallerStringA(_ErrorCaller,GF_PLUGIN_LANGUAGE),ATYPE) return _ErrorCode;
 
@@ -121,6 +121,10 @@ typedef enum ErrorCodesAE {
 	GetLocalBeamerPath,
 	BeamerSendTaskFailed,
 	FailedToOpenWebPage,
+	ExecCommandFailed,
+	ExecCommandFailedToExec,
+	ExecCommandFailedToRead,
+	ExecCommandFailedObjWait,
 	AE_ErrNone,
 	AE_ErrGeneric,
 	AE_ErrStruct,
@@ -188,13 +192,13 @@ public:
 	const ErrorCodesAE theCode() const { return errCode; }
 	const A_Err theAeCode() const { return aeCode; }
 
-	static const char *GetCallerStringA(const CallerModuleName& _Caller, const UserLanguage &lang_number) noexcept;
+	static const char *GetCallerStringA(const CallerModuleName& caller, const UserLanguage &lang_number) noexcept;
 	
 	static const char *GetErrorStringA(const A_Err &code_number, const UserLanguage &lang_number) noexcept;
 	static const char *GetErrorStringA(const ErrorCodesAE &code_number, const UserLanguage &lang_number) noexcept;
 
-	static const char *GetErrorStringS(const CallerModuleName& _Caller, const A_Err &code_number, const UserLanguage &lang_number);
-	static const char *GetErrorStringS(const CallerModuleName& _Caller, const ErrorCodesAE &code_number, const UserLanguage &lang_number);
+	static const char *GetErrorStringS(const CallerModuleName& caller, const A_Err &code_number, const UserLanguage &lang_number);
+	static const char *GetErrorStringS(const CallerModuleName& caller, const ErrorCodesAE &code_number, const UserLanguage &lang_number);
     
     static ErrorStringTables* GetEnglishTable();
 };

@@ -33,20 +33,20 @@ public:
     static void getTimeString(wchar_t *buff, A_long buffSize, bool path=false);
     static void getEnvVariable(const char *variable, char *buffer, unsigned long long size);
 
-    static ErrorCodesAE execBeamerCmd(beamerParamsStruct bps, BeamerMasks mask, wchar_t *buffor=nullptr, A_long size=0);
-	static ErrorCodesAE exec_cmd(fs::path const &app, std::string const &args, fs::path const &out_file, wchar_t *bufferW, unsigned long bufferSize);
+    static ErrorCodesAE execBeamerCmd(beamerParamsStruct bps, BeamerMasks mask, wchar_t *buffer_w =nullptr, A_long buffer_size =0);
+	static ErrorCodesAE exec_cmd(fs::path const &app, std::string const &args, fs::path const &out_file, wchar_t *buffer_w, unsigned long buffer_size);
 
 	
 	static ErrorCodesAE getVersionString(A_char* buff, long buff_size);
 	static ErrorCodesAE getCpuInfoString(SPBasicSuite *pb, wchar_t *buffer, A_long buffer_length, const wchar_t *outFileName);
-    static ErrorCodesAE encodeUrlString(const wchar_t *url, wchar_t *buffor, long buffor_size);
+    static ErrorCodesAE encodeUrlString(const wchar_t *url, wchar_t *buffer, long buffer_size);
 	static ErrorCodesAE openCostCalculator(SPBasicSuite *pb);
     static std::string toUtf8(const wchar_t* stringToConvert);
 
-protected:
-	static ErrorCodesAE win_exec_cmd_new(fs::path const &app, std::string const &args, fs::path const &out_file, wchar_t *bufforW, unsigned long bufforSize);
-	static ErrorCodesAE win_exec_cmd(fs::path const &app, std::string const &args, fs::path const &out_file, wchar_t *bufforW, unsigned long bufforSize);
-	static ErrorCodesAE mac_exec_cmd(fs::path const &app, std::string const &args, fs::path const &out_file, wchar_t *bufforW, unsigned long bufforSize);
+protected:	
+	static ErrorCodesAE win_exec_cmd(fs::path const &app, std::string const &args, fs::path const &out_file, wchar_t *buffer_w, unsigned long buffer_size);
+	static ErrorCodesAE mac_exec_cmd(fs::path const &app, std::string const &args, fs::path const &out_file, wchar_t *buffer_w, unsigned long buffer_size);
+	static ErrorCodesAE read_file_buffer_w(fs::path const &out_file, wchar_t *buffer_w, unsigned long buffer_size);
 };
 
 
@@ -78,8 +78,6 @@ private:
     void getTimeStringA() { rbUtilities::getTimeString(timeStringA, 25); };
     wchar_t timeString[25];
 	char timeStringA[25];
-
-
 };
 
 #endif

@@ -62,6 +62,10 @@ static ErrorStringTables instance = {
     {GetLocalBeamerPath, "Error. Could not get local valid renderBeamer path."},
     {BeamerSendTaskFailed, "Error. Project was prepared correctly but renderBeamer send command failed."},
     {FailedToOpenWebPage, "Error. Plugin could not open specified web page."},
+    {ExecCommandFailed, "Error. Plugin execute of commandline script returned non zero result."},
+    {ExecCommandFailedToExec, "Error. Plugin process create and script execute failed."},
+    {ExecCommandFailedToRead, "Error. Plugin execute of commandline script result could not have been read."},
+    {ExecCommandFailedObjWait, "Error. Plugin wait for finish to execute commandline script failed."},
     {AE_ErrNone, "No error (code 0)"},
 	{AE_ErrGeneric, "Generic AfterEffects Error (code 1)"},
     {AE_ErrStruct, "Structural AfterEffects Error (code 2)"},
@@ -89,16 +93,16 @@ ErrorCodesAE aErrToRb(const A_Err err)
     }
     return AE_ErrMissingSuiteOther;
 }
-const char *PluginError::GetCallerStringA(const CallerModuleName& _Caller, const UserLanguage &lang_number) noexcept
+const char *PluginError::GetCallerStringA(const CallerModuleName& caller, const UserLanguage &lang_number) noexcept
 {
-	return GetEnglishTable()->CallerModuleString[_Caller].str;
+	return GetEnglishTable()->CallerModuleString[caller].str;
 }
-const char *PluginError::GetErrorStringS(const CallerModuleName& _Caller, const A_Err &code_number, const UserLanguage &lang_number)
+const char *PluginError::GetErrorStringS(const CallerModuleName& caller, const A_Err &code_number, const UserLanguage &lang_number)
 {
-	std::string returnStr(GetEnglishTable()->CallerModuleString[_Caller].str);
-	returnStr += PluginError::GetErrorStringA(code_number, lang_number);
+	std::string returnStr(GetEnglishTable()->CallerModuleString[caller].str);
+	returnStr += GetErrorStringA(code_number, lang_number);
     char *tmp_cpy = new char[returnStr.size()];
-	ASTRNCPY(tmp_cpy, returnStr.c_str(), returnStr.size());
+	ASTRNCPY(tmp_cpy, returnStr.c_str(), returnStr.size())
     return tmp_cpy;
 }
 const char *PluginError::GetErrorStringA(const A_Err &code_number, const UserLanguage &lang_number) noexcept
@@ -106,15 +110,15 @@ const char *PluginError::GetErrorStringA(const A_Err &code_number, const UserLan
 	if (code_number >= 0 && code_number < 7)
 		return GetEnglishTable()->A_Err_ErrorStrings_Eng[code_number].str;
 	else
-		return GetEnglishTable()->A_Err_ErrorStrings_Eng[7].str;;
+		return GetEnglishTable()->A_Err_ErrorStrings_Eng[7].str;
 }
 
-const char *PluginError::GetErrorStringS(const CallerModuleName& _Caller, const ErrorCodesAE &code_number, const UserLanguage &lang_number)
+const char *PluginError::GetErrorStringS(const CallerModuleName& caller, const ErrorCodesAE &code_number, const UserLanguage &lang_number)
 {
-	std::string returnStr(GetEnglishTable()->CallerModuleString[_Caller].str);
-    returnStr += PluginError::GetErrorStringA(code_number, lang_number);
+	std::string returnStr(GetEnglishTable()->CallerModuleString[caller].str);
+    returnStr += GetErrorStringA(code_number, lang_number);
     char *tmpCpy = new char[returnStr.size()];
-	ASTRNCPY(tmpCpy, returnStr.c_str(), returnStr.size());
+	ASTRNCPY(tmpCpy, returnStr.c_str(), returnStr.size())
     return tmpCpy;
 }
 const char *PluginError::GetErrorStringA(const ErrorCodesAE &code_number, const UserLanguage &lang_number) noexcept
