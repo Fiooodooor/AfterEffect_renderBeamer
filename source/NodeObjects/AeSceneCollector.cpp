@@ -222,46 +222,41 @@ ErrorCodesAE AeSceneCollector::collectSceneRqItem(AeObjectNode *node)
 
 ErrorCodesAE AeSceneCollector::collectToRender()
 {
-	AeCompNode *cmpNode;
-	AeFootageNode * ftNode;
 	while (!compositionsSortedList.empty())
 	{
-		cmpNode = new AeCompNode(compositionsSortedList.front());
-		cmpNode->generateLayers();
-		renderCompositionPushBack(cmpNode);
+		auto *comp_node = new AeCompNode(compositionsSortedList.front());
+		comp_node->generateLayers();
+		renderCompositionPushBack(comp_node);
         compositionsSortedList.pop_front();
 	}
 	while (!footageSortedList.empty())
 	{
-		ftNode = new AeFootageNode(footageSortedList.front());
-		renderFootagePushBack(ftNode);
+		auto *footage_node = new AeFootageNode(footageSortedList.front());
+		renderFootagePushBack(footage_node);
         footageSortedList.pop_front();
 	}
 	return NoError;
 }
 ErrorCodesAE AeSceneCollector::smartCollectToRender()
 {
-	AeObjectNode *node;
-	AeCompNode *cmpNode;
-	aeObjNodesIt end, it;
-
 	while (!rqCompositionSortedList.empty())
 	{
-		node = rqCompositionSortedList.front();
+		auto *node = rqCompositionSortedList.front();
 		
-		it = compositionsSortedList.cbegin();
-		end = compositionsSortedList.cend();
+		auto it = compositionsSortedList.cbegin();
+		auto end = compositionsSortedList.cend();
+		
 		while (it != end) {
-			if ((*node) == it)
+			if (*node == it)
 				break;
-			it++;
+			++it;
 		}
 		if (it != end) {
-			cmpNode = new AeCompNode(*it);
+			auto *comp_node = new AeCompNode(*it);
 			compositionsSortedList.erase(it); 
-			cmpNode->generateLayers();
-			renderCompositionPushBack(cmpNode);
-			collectCompositionLayersToRender(cmpNode);
+			comp_node->generateLayers();
+			renderCompositionPushBack(comp_node);
+			collectCompositionLayersToRender(comp_node);
 		}
 		rqCompositionSortedList.pop_front();
 	}
@@ -325,44 +320,49 @@ ErrorCodesAE AeSceneCollector::collectCompositionLayersToRender(AeCompNode *node
 	}
 	return NoError;
 }
-ErrorCodesAE AeSceneCollector::collectFootagesToRender(AeObjectNode *node)
+ErrorCodesAE AeSceneCollector::collectFootagesToRender(AeObjectNode *object_node)
 {
-	if (!node)
+	if (!object_node)
 		return NullPointerResult;
 	auto it = footageSortedList.cbegin();
-	auto end = footageSortedList.cend();
+	const auto end = footageSortedList.cend();
 
 	while (it != end) {
-		if ((*node) == it)
+		if (*object_node == it)
 			break;
 		++it;
 	}
 	if (it != end) {
-		auto *ftNode = new AeFootageNode(*it);
+		auto *footage_node = new AeFootageNode(*it);
 		footageSortedList.erase(it);
-		renderFootagePushBack(ftNode);
+		renderFootagePushBack(footage_node);
 	}
-	delete node;
-	node = nullptr;
+	delete object_node;
+	object_node = nullptr;
 	return NoError;
 }
-ErrorCodesAE AeSceneCollector::renderFootagePushBack(AeFootageNode *node)
+ErrorCodesAE AeSceneCollector::renderFootagePushBack(AeFootageNode *footage_node)
 {
-	if (!node)
+	if (!footage_node)
 		return NullPointerResult;
 
-	node->generateFootData();
-	if (node->isFooMissing()) {
-		ct->renderFootageMissingList.push_back(node);
+	footage_node->generateFootData();
+	if (footage_node->isFooMissing()) {
+		ct->renderFootageMissingList.push_back(footage_node);
 	}
 	else {
-		ct->renderFootageSortedList.push_back(node);
+		ct->renderFootageSortedList.push_back(footage_node);
 	}
 	return NoError;
 }
 
 ErrorCodesAE AeSceneCollector::smartTrimProject()
 {
+	while (!compositionsSortedList.empty()) 
+	{		
+		footageSortedList.push_back(compositionsSortedList.front());		
+		compositionsSortedList.pop_front();
+	}
 	footageSortedList.sort();
 	while (!footageSortedList.empty()) 
 	{		
@@ -371,14 +371,6 @@ ErrorCodesAE AeSceneCollector::smartTrimProject()
 			delete footageSortedList.front();
 		}
 		footageSortedList.pop_front();
-	}
-	compositionsSortedList.sort();
-	while (!compositionsSortedList.empty()) {		
-		if (compositionsSortedList.front()) {
-			compositionsSortedList.front()->deleteItem();
-			delete compositionsSortedList.front();
-		}
-		compositionsSortedList.pop_front();
 	}
 	return NoError;
 }

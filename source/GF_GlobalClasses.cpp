@@ -141,30 +141,28 @@ A_Err rbUtilities::getFontFromLayer(SPBasicSuite *pb, AEGP_PluginID pluginId, A_
         AEGP_SuiteHandler suites(pb);
         A_char tmpScript[256] = { '\0' };
         suites.ANSICallbacksSuite1()->sprintf(tmpScript, GetBeamerMaskA(BeamerMask_GetFont), itemNr, layerNr);
-        PT_ETX(execScript(pb, pluginId, tmpScript, font, AEGP_MAX_PATH_SIZE));
+        PT_ETX(execScript(pb, pluginId, tmpScript, font, AEGP_MAX_PATH_SIZE))
         suites.ANSICallbacksSuite1()->sprintf(tmpScript, GetBeamerMaskA(BeamerMask_GetFontFamily), itemNr, layerNr);
-        PT_ETX(execScript(pb, pluginId, tmpScript, family, AEGP_MAX_PATH_SIZE));
+        PT_ETX(execScript(pb, pluginId, tmpScript, family, AEGP_MAX_PATH_SIZE))
         suites.ANSICallbacksSuite1()->sprintf(tmpScript, GetBeamerMaskA(BeamerMask_GetFontPath), itemNr, layerNr);
-        PT_ETX(execScript(pb, pluginId, tmpScript, location, AEGP_MAX_PATH_SIZE));
-    } PT_XTE_CATCH_RETURN_ERR;
+        PT_ETX(execScript(pb, pluginId, tmpScript, location, AEGP_MAX_PATH_SIZE))
+    } PT_XTE_CATCH_RETURN_ERR
 }
 
 ErrorCodesAE rbUtilities::execScript(SPBasicSuite *pb, AEGP_PluginID pluginId, const A_char *inScript, A_char *outAchar, A_long maxLength)
 {
 	ERROR_CATCH_START
 		AEGP_SuiteHandler suites(pb);
-        AEGP_MemHandle result = NULL;
-        AEGP_MemHandle error = NULL;
-        A_Err errRes = suites.UtilitySuite6()->AEGP_ExecuteScript(pluginId, inScript, FALSE, &result, &error);
-        if (errRes == A_Err_NONE) {
-            copyMemhandleToAChar(pb, result, outAchar, maxLength);
-            PT_ETX(suites.MemorySuite1()->AEGP_FreeMemHandle(error));
-            return ErrorCodesAE::NoError;
-        }
+        AEGP_MemHandle result = nullptr, error = nullptr;
+		ERROR_AEER(suites.UtilitySuite6()->AEGP_ExecuteScript(pluginId, inScript, FALSE, &result, &error))
+        if (_ErrorCode == NoError) {
+			ERROR_AEER(copyMemhandleToAChar(pb, result, outAchar, maxLength))
+			suites.MemorySuite1()->AEGP_FreeMemHandle(error);
+        }		
         else {
-            copyMemhandleToAChar(pb, error, outAchar, maxLength);
-            PT_ETX(suites.MemorySuite1()->AEGP_FreeMemHandle(result));
-            return ErrorCodesAE::ScriptExecuteError;
+			copyMemhandleToAChar(pb, error, outAchar, maxLength);
+			suites.MemorySuite1()->AEGP_FreeMemHandle(result);
+			_ErrorCode = ScriptExecuteError;
         }
 	ERROR_CATCH_END_NO_INFO_RETURN
 }
@@ -175,7 +173,7 @@ A_Err rbUtilities::copyMemhandleToAChar(SPBasicSuite *pb, AEGP_MemHandle& inputS
     PT_XTE_START{
         A_char* tempBuffor;
 
-        PT_ETX(suites.MemorySuite1()->AEGP_LockMemHandle(inputString, reinterpret_cast<void**>(&tempBuffor)));
+        PT_ETX(suites.MemorySuite1()->AEGP_LockMemHandle(inputString, reinterpret_cast<void**>(&tempBuffor)))
 		if (!destination)
 			_err = A_Err_ALLOC;
 		else if (!tempBuffor)
@@ -188,19 +186,18 @@ A_Err rbUtilities::copyMemhandleToAChar(SPBasicSuite *pb, AEGP_MemHandle& inputS
 		#endif
 			destination[maxLength - 1] = '\0';
 		}
-        PT_ETX(suites.MemorySuite1()->AEGP_UnlockMemHandle(inputString));
-        PT_ETX(suites.MemorySuite1()->AEGP_FreeMemHandle(inputString));
-    } PT_XTE_CATCH_RETURN_ERR;
+        PT_ETX(suites.MemorySuite1()->AEGP_UnlockMemHandle(inputString))
+        PT_ETX(suites.MemorySuite1()->AEGP_FreeMemHandle(inputString))
+    } PT_XTE_CATCH_RETURN_ERR
 }
 
 size_t rbUtilities::utf16Length(A_UTF16Char* in)
 {
 	size_t i = 0;
-	A_UTF16Char itChar;
 	if (in) {
-		do {
-			itChar = in[i++];
-		} while (itChar != 0);
+		while(in[i] != 0) {
+			++i;
+		}
 		return i;
 	}
 	return 0;
@@ -211,7 +208,7 @@ A_Err rbUtilities::copyMemhUTF16ToPath(SPBasicSuite *pb, AEGP_MemHandle& inputSt
 	A_Err err = A_Err_NONE;
     #ifndef USE_BOOST
 	AEGP_SuiteHandler suites(pb);
-	char16_t* res16B = NULL;
+	char16_t* res16B = nullptr;
 	ERR(suites.MemorySuite1()->AEGP_LockMemHandle(inputString, reinterpret_cast<void**>(&res16B)));	
 	if (err == A_Err_NONE) {
 		resPath = res16B;
@@ -319,7 +316,7 @@ void rbUtilities::pathStringFixIllegal(fs::path &path, bool dissalowed, bool cut
 
     if (tmp_str)
     {
-        TSTRNCPY(tmp_str, tempPath.TSTRING().c_str(), length - 1);
+        TSTRNCPY(tmp_str, tempPath.TSTRING().c_str(), length - 1)
 
         if(dissalowed) {
             replaceDisallowedOnly(tmp_str);
@@ -341,68 +338,56 @@ void rbUtilities::pathStringFixIllegal(fs::path &path, bool dissalowed, bool cut
 
 void rbUtilities::replaceDisallowedOnly(wchar_t *sourceStr)
 {
-    unsigned long long charNrPos = 0;
-    wchar_t *analizedString = sourceStr;
+    auto *source_str_ptr = sourceStr;
     wchar_t *mask = DISALLOWED_CHARACTERSW;
 
-    while (analizedString && *analizedString)
+    while (source_str_ptr && *source_str_ptr)
     {
-        charNrPos = wcscspn(analizedString, mask);
-        analizedString += charNrPos;
-        if (analizedString[0] == '\0')
+		source_str_ptr += wcscspn(source_str_ptr, mask);
+        if (source_str_ptr[0] == '\0')
             break;
-        else
-            analizedString[0] = '_';
+		source_str_ptr[0] = '_';
     }
 }
 
 void rbUtilities::replaceDisallowedOnly(A_char *sourceStr)
 {
-    unsigned long long charNrPos = 0;
-    A_char *analizedString = sourceStr;
+    auto *source_str_ptr = sourceStr;
     A_char *mask = DISALLOWED_CHARACTERSA;
 
-    while (analizedString && *analizedString)
+    while (source_str_ptr && *source_str_ptr)
     {
-        charNrPos = strcspn(analizedString, mask);
-        analizedString += charNrPos;
-        if (analizedString[0] == '\0')
+		source_str_ptr += strcspn(source_str_ptr, mask);
+        if (source_str_ptr[0] == '\0')
             break;
-        else
-            analizedString[0] = '_';
+		source_str_ptr[0] = '_';
     }
 }
 
 void rbUtilities::leaveAllowedOnly(wchar_t *sourceStr)
 {
-    unsigned long long charNrPos = 0;
-    wchar_t *analizedString = sourceStr;
+    auto *source_str_ptr = sourceStr;
     wchar_t *mask = ALLOWED_CHARACTERSW;
 
-    while (analizedString && *analizedString)
+    while (source_str_ptr && *source_str_ptr)
     {
-        charNrPos = wcsspn(analizedString, mask);
-        analizedString += charNrPos;
-        if (analizedString[0] == '\0')
+		source_str_ptr += wcsspn(source_str_ptr, mask);
+        if (source_str_ptr[0] == '\0')
             break;
-        else
-            analizedString[0] = '_';
+		source_str_ptr[0] = '_';
     }
 }
 void rbUtilities::leaveAllowedOnly(A_char *sourceStr)
 {
-    unsigned long long charNrPos = 0;
-    A_char *analizedString = sourceStr;
+    auto *source_str_ptr = sourceStr;
     A_char *mask = ALLOWED_CHARACTERSA;
 
-    while (analizedString && *analizedString)
+    while (source_str_ptr && *source_str_ptr)
     {
-        charNrPos = strspn(analizedString, mask);
-        analizedString += charNrPos;
-        if (analizedString[0] == '\0')
+		source_str_ptr += strspn(source_str_ptr, mask);
+        if (source_str_ptr[0] == '\0')
             break;
-        else
-            analizedString[0] = '_';
+		source_str_ptr[0] = '_';
     }
 }
 
@@ -612,7 +597,7 @@ ErrorCodesAE rbUtilities::getVersionString(A_char* buff, long buff_size)
 {
 	ERROR_CATCH_START
 		const std::string versionString = GetStringPtr(StrID_Name);		
-		ASTRNCPY(buff, versionString.c_str(), buff_size);
+		ASTRNCPY(buff, versionString.c_str(), buff_size)
 	ERROR_CATCH_END_NO_INFO_RETURN
 }
 
@@ -710,25 +695,34 @@ ErrorCodesAE rbUtilities::openCostCalculator(SPBasicSuite *pb)
 #endif
 	ERROR_CATCH_END_NO_INFO_RETURN
 }
+// in windows change to WideCharToMultiByte with
+// CP_UTF8 - for output to files, beamer etc.
+// CP_OEMCP - for string literals for AE.
+// 
+// in macOs change to use locale with
+// .UTF-8 for output files, beamer etc.
+// GetApplicationTextEncoding()  - for string literals for AE
 std::string rbUtilities::toUtf8(const wchar_t* stringToConvert)
 {
-    size_t retval = 0;
-    rsize_t dstsz = 0;
-    std::string newbuffer;
-    RB_DEFINELOCALE(utf_locale);
-	try {
-		RB_NEWLOCALE(utf_locale, RB_LOCALESTRING);
-	}
-	catch(...) {
-		RB_NEWLOCALE(utf_locale, "en-US");
-	}
-    RB_WCSTOMBS_L(retval, nullptr, 0, stringToConvert, 0, utf_locale)
-    if(retval != 0 && retval != (size_t)-1)
-    {
-        dstsz = retval;
-        newbuffer.resize(dstsz);
-        RB_WCSTOMBS_L(retval, const_cast<char*>(newbuffer.c_str()), dstsz+1, stringToConvert, dstsz, utf_locale)
-    }
-    RB_FREELOCALE(utf_locale);
-    return newbuffer;
+	std::string new_buffer;
+	ERROR_CATCH_START
+	size_t retval = 0;
+	rsize_t dstsz;
+
+	_locale_t utf_locale = _create_locale(LC_ALL, RB_LOCALESTRING);
+	
+	// RB_WCSTOMBS_L(bts_converted,dst,dst_bytes,src,max_bytes,locale) bts_converted=wcstombs_l(dst,src,max_bytes,locale)
+	// 
+	// RB_WCSTOMBS_L(bts_converted,dst,dst_bytes,src,max_bytes,locale) if(_wcstombs_s_l(&bts_converted,dst,dst_bytes,src,max_bytes,locale)==0) bts_converted-=1;
+	RB_WCSTOMBS_L(retval, nullptr, 0, stringToConvert, 0, utf_locale)
+		if (retval != 0 && retval != static_cast<std::size_t>(-1))
+		{
+			dstsz = retval;
+			new_buffer.resize(dstsz);
+			RB_WCSTOMBS_L(retval, const_cast<char*>(new_buffer.c_str()), dstsz + 1, stringToConvert, dstsz, utf_locale)
+		}
+	
+	_free_locale(utf_locale);	
+	ERROR_CATCH_END_NO_INFO
+	return new_buffer;
 }

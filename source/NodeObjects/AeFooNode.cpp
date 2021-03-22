@@ -36,7 +36,7 @@ bool AeFootageNode::isFooSequence() const
 long AeFootageNode::generateFootData()
 {
 	AEGP_SuiteHandler suites(sp);
-	AEGP_MemHandle memoryH = NULL;
+	AEGP_MemHandle memoryH = nullptr;
 
 	suites.FootageSuite5()->AEGP_GetFootagePath(getFooH(), 0, AEGP_FOOTAGE_MAIN_FILE_INDEX, &memoryH);
 

@@ -30,9 +30,9 @@ protected:
 
 	ErrorCodesAE smartTrimProject();
 	ErrorCodesAE collectCompositionLayersToRender(AeCompNode *node);
-	ErrorCodesAE collectFootagesToRender(AeObjectNode *node);
+	ErrorCodesAE collectFootagesToRender(AeObjectNode *object_node);
 	ErrorCodesAE renderCompositionPushBack(AeCompNode *node);
-	ErrorCodesAE renderFootagePushBack(AeFootageNode *node);
+	ErrorCodesAE renderFootagePushBack(AeFootageNode *footage_node);
 
 	aeObjNodes compositionsSortedList;
 	aeObjNodes footageSortedList;
