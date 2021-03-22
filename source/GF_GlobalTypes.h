@@ -40,9 +40,9 @@
 #define ASTRNCPY(ST1,ST2,N) strncpy_s(ST1,N+1,ST2,N);
 #define WSTRNCPY(ST1,ST2,N) wcsncpy_s(ST1,N+1,ST2,N);
 #define RB_LOCALESTRING "en-US.utf-8" // .utf8
-#define RB_DEFINELOCALE(TLOCNAME) _locale_t TLOCNAME
-#define RB_NEWLOCALE(TLOCNAME,TLOCSTRING) TLOCNAME = _create_locale(LC_ALL, TLOCSTRING)
-#define RB_FREELOCALE(TLOCNAME) _free_locale(TLOCNAME)
+#define RB_DEFINELOCALE(TLOCNAME) _locale_t TLOCNAME;
+#define RB_NEWLOCALE(TLOCNAME,TLOCSTRING) TLOCNAME = _create_locale(LC_ALL, TLOCSTRING);
+#define RB_FREELOCALE(TLOCNAME) _free_locale(TLOCNAME);
 #define RB_WCSTOMBS_L(bts_converted,dst,dst_bytes,src,max_bytes,locale) if(_wcstombs_s_l(&bts_converted,dst,dst_bytes,src,max_bytes,locale)==0) bts_converted-=1;
 #define TCHAR wchar_t
 #define TCHARPT wchar_t*
@@ -62,14 +62,14 @@
 #define ASTRNCPY(ST1,ST2,N) strncpy(ST1,ST2,N);
 #define WSTRNCPY(ST1,ST2,N) wcsncpy(ST1,ST2,N);
 #define RB_LOCALESTRING "en_US.UTF-8"
-#define RB_DEFINELOCALE(TLOCNAME) locale_t TLOCNAME
-#define RB_NEWLOCALE(TLOCNAME,TLOCSTRING) TLOCNAME = newlocale(LC_ALL_MASK, TLOCSTRING ,NULL)
-#define RB_FREELOCALE(TLOCNAME) freelocale(TLOCNAME)
-#define RB_WCSTOMBS_L(bts_converted,dst,dst_bytes,src,max_bytes,locale) bts_converted=wcstombs_l(dst,src,max_bytes,locale)
+#define RB_DEFINELOCALE(TLOCNAME) locale_t TLOCNAME;
+#define RB_NEWLOCALE(TLOCNAME,TLOCSTRING) TLOCNAME = newlocale(LC_ALL_MASK, TLOCSTRING ,NULL);
+#define RB_FREELOCALE(TLOCNAME) freelocale(TLOCNAME);
+#define RB_WCSTOMBS_L(bts_converted,dst,dst_bytes,src,max_bytes,locale) bts_converted=wcstombs_l(dst,src,max_bytes,locale);
 #define TCHAR char
 #define TCHARPT char*
 #define TSTRLEN(...) strlen(__VA_ARGS__)
-#define TSTRNCPY(...) strncpy(__VA_ARGS__)
+#define TSTRNCPY(...) strncpy(__VA_ARGS__);
 #define TSTRING string
 
 #define USE_BOOST 1
