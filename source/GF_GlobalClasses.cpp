@@ -198,7 +198,7 @@ size_t rbUtilities::utf16Length(A_UTF16Char* in)
 		while(in[i] != 0) {
 			++i;
 		}
-		return i;
+		return i+1;
 	}
 	return 0;
 }
@@ -217,7 +217,7 @@ A_Err rbUtilities::copyMemhUTF16ToPath(SPBasicSuite *pb, AEGP_MemHandle& inputSt
 	ERR(suites.MemorySuite1()->AEGP_FreeMemHandle(inputString));
     #else
     std::wstring result;
-    err = rbUtilities::copyMemhUTF16ToString(pb, inputString, result);
+    err = copyMemhUTF16ToString(pb, inputString, result);
     if (err == A_Err_NONE) {
        resPath = result;
     }
@@ -228,7 +228,7 @@ A_Err rbUtilities::copyMemhUTF16ToString(SPBasicSuite *pb, AEGP_MemHandle& input
 {
     A_Err err = A_Err_NONE;
     std::wstring resStringW;
-    err = rbUtilities::copyMemhUTF16ToString(pb, inputString, resStringW);
+    err = copyMemhUTF16ToString(pb, inputString, resStringW);
     if (!err) {
 		if (resStringW.empty())
 			resString = "";
@@ -247,7 +247,7 @@ A_Err rbUtilities::copyMemhUTF16ToString(SPBasicSuite *pb, AEGP_MemHandle& input
 		resString = L"";
 		ERR(suites.MemorySuite1()->AEGP_LockMemHandle(inputString, reinterpret_cast<void**>(&res16B)));
 		if (!err) {
-			size_t length = rbUtilities::utf16Length(res16B) - 1;
+			size_t length = utf16Length(res16B) - 1;
 			if (length > 0)
 			{
 #ifdef AE_OS_MAC
