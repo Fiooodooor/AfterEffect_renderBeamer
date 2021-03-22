@@ -577,7 +577,7 @@ ErrorCodesAE rbUtilities::read_file_buffer_w(fs::path const &out_file, wchar_t *
 	ERROR_CATCH_START_MOD(HelperClassesModule)
 		if (buffer_w && buffer_size > 0 && !out_file.empty())
 		{
-			std::wfstream tmp_stream(out_file.wstring().c_str(), std::wfstream::in);
+            std::wfstream tmp_stream(out_file.c_str(), std::fstream::in);
 			if (!tmp_stream.is_open())
 				throw PluginError(ExecCommandFailedToRead);
 
@@ -705,9 +705,9 @@ std::string rbUtilities::toUtf8(const wchar_t* stringToConvert)
 	ERROR_CATCH_START
 	size_t retval = 0;
 	rsize_t dstsz;
+    RB_DEFINELOCALE(utf_locale)
+    RB_NEWLOCALE(utf_locale,RB_LOCALESTRING)
 
-	_locale_t utf_locale = _create_locale(LC_ALL, RB_LOCALESTRING);
-	
 	// RB_WCSTOMBS_L(bts_converted,dst,dst_bytes,src,max_bytes,locale) bts_converted=wcstombs_l(dst,src,max_bytes,locale)
 	// 
 	// RB_WCSTOMBS_L(bts_converted,dst,dst_bytes,src,max_bytes,locale) if(_wcstombs_s_l(&bts_converted,dst,dst_bytes,src,max_bytes,locale)==0) bts_converted-=1;
@@ -718,8 +718,7 @@ std::string rbUtilities::toUtf8(const wchar_t* stringToConvert)
 			new_buffer.resize(dstsz);
 			RB_WCSTOMBS_L(retval, const_cast<char*>(new_buffer.c_str()), dstsz + 1, stringToConvert, dstsz, utf_locale)
 		}
-	
-	_free_locale(utf_locale);	
+	RB_FREELOCALE(utf_locale)
 	ERROR_CATCH_END_NO_INFO
 	return new_buffer;
 }
