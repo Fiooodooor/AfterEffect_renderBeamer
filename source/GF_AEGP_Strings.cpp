@@ -23,15 +23,15 @@ TableString    g_strs[StrID_NUMTYPES] = {
 // renderBeamer for After Effects v.17
 
 TableString beamerMaskTable[_BeamerMask_ItemsN] = {
-	{BeamerMask_GetUser, "-getusr"},
-	{BeamerMask_GetTemp, "-tempdir"},
-	{BeamerMask_SendTask, "-app AfterEffects -a \"%ls\" -sn \"%ls\""},
-	{BeamerMask_CheckScene, "-checkName \"%ls\" %ls -app AfterEffects"},
+	{BeamerMask_GetUser, "-getusr -f \"%ls\""},
+	{BeamerMask_GetTemp, "-tempdir -f \"%ls\""},
+	{BeamerMask_SendTask, "-app AfterEffects -a \"%ls\" -sn \"%ls\" -f \"%ls\""},
+	{BeamerMask_CheckScene, "-checkName \"%ls\" %ls -app AfterEffects -f \"%ls\""},
 	{BeamerMask_GetFont, "app.project.item(%ld).layer(%ld).property(\"Source Text\").value.font"},
 	{BeamerMask_GetFontFamily, "app.project.item(%ld).layer(%ld).property(\"Source Text\").value.fontFamily"},
 	{BeamerMask_GetFontPath, "app.project.item(%ld).layer(%ld).property(\"Source Text\").value.fontLocation"},
-	{BeamerMask_SendTaskEncoded, "-app AfterEffects -a \"%hs\" -encoded -sn \"%ls\""},
-	{BeamerMask_SendLogFile, "-log \"%ls\" -logSubject %ls AfterEffects"}
+	{BeamerMask_SendTaskEncoded, "-app AfterEffects -a \"%hs\" -encoded -sn \"%ls\" -f \"%ls\""},
+	{BeamerMask_SendLogFile, "-log \"%ls\" -logSubject %ls AfterEffects -f \"%ls\""}
 };
 
 A_char *GetStringPtr(int strNum) { return g_strs[strNum].str; }

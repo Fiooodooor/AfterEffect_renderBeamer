@@ -456,19 +456,19 @@ ErrorCodesAE rbUtilities::execBeamerCmd(beamerParamsStruct bps, BeamerMasks mask
 	switch (mask)
 	{
 	case BeamerMask_GetUser:
-        RB_SPRINTF(bps.beamerExecScript, 2048, "%s", GetBeamerMaskA(BeamerMask_GetUser));
+        RB_SPRINTF(bps.beamerExecScript, 2048, GetBeamerMaskA(BeamerMask_GetUser), bps.beamerTmpFile.lexically_normal().wstring().c_str());
 		break;
 	case BeamerMask_GetTemp:
-		RB_SPRINTF(bps.beamerExecScript, 2048, "%s", GetBeamerMaskA(BeamerMask_GetTemp));
+		RB_SPRINTF(bps.beamerExecScript, 2048, GetBeamerMaskA(BeamerMask_GetTemp), bps.beamerTmpFile.lexically_normal().wstring().c_str());
 		break;
 	case BeamerMask_CheckScene:
-		RB_SPRINTF(bps.beamerExecScript, 2048, GetBeamerMaskA(BeamerMask_CheckScene), bps.bp.remoteProjectPath.lexically_normal().wstring().c_str(), bps.rmtUser);
+		RB_SPRINTF(bps.beamerExecScript, 2048, GetBeamerMaskA(BeamerMask_CheckScene), bps.bp.remoteProjectPath.lexically_normal().wstring().c_str(), bps.rmtUser, bps.beamerTmpFile.lexically_normal().wstring().c_str());
 		break;
 	case BeamerMask_SendTask:
-		RB_SPRINTF(bps.beamerExecScript, 2048, GetBeamerMaskA(BeamerMask_SendTask), bps.bp.relinkedSceneRoot.lexically_normal().wstring().c_str(), bps.bp.remoteProjectPath.lexically_normal().wstring().c_str());
+		RB_SPRINTF(bps.beamerExecScript, 2048, GetBeamerMaskA(BeamerMask_SendTask), bps.bp.relinkedSceneRoot.lexically_normal().wstring().c_str(), bps.bp.remoteProjectPath.lexically_normal().wstring().c_str(), bps.beamerTmpFile.lexically_normal().wstring().c_str());
 		break;
 	case BeamerMask_SendTaskEncoded:
-		RB_SPRINTF(bps.beamerExecScript, 2048, GetBeamerMaskA(BeamerMask_SendTaskEncoded), base64_encode( FS_U8STRING(bps.bp.relinkedSceneRoot.lexically_normal())).c_str(), bps.bp.remoteProjectPath.lexically_normal().wstring().c_str());
+		RB_SPRINTF(bps.beamerExecScript, 2048, GetBeamerMaskA(BeamerMask_SendTaskEncoded), base64_encode( FS_U8STRING(bps.bp.relinkedSceneRoot.lexically_normal())).c_str(), bps.bp.remoteProjectPath.lexically_normal().wstring().c_str(), bps.beamerTmpFile.lexically_normal().wstring().c_str());
 		break;
 	default:
 		return ErrorResult;
@@ -530,8 +530,6 @@ ErrorCodesAE rbUtilities::win_exec_cmd(fs::path const &app, std::string const &a
 
 	cmd.reserve(MAX_PATH);
 	cmd = L"\"" + app.filename().wstring() + L"\" " + std::wstring(args.cbegin(), args.cend());
-	if (!out_file.empty())
-		cmd += L" -f \"" + out_file.wstring() + L"\"";
 
 	if (!CreateProcessW(app.wstring().c_str(), &cmd[0], nullptr, nullptr, TRUE, CREATE_NO_WINDOW, nullptr, nullptr, &si, &pi))
 		throw PluginError(ExecCommandFailedToExec);
@@ -559,9 +557,6 @@ ErrorCodesAE rbUtilities::mac_exec_cmd(fs::path const &app, std::string const &a
 		return ErrorResult;
 
 	std::string cmd = app.string() + " " + args;
-	if (!out_file.empty()) {
-		cmd += " -f \"" + out_file.string() + "\"";
-	}
 
 	if (!std::system(nullptr))
 		throw PluginError(ExecCommandFailedToExec);
@@ -613,11 +608,11 @@ ErrorCodesAE rbUtilities::getCpuInfoString(SPBasicSuite *pb, wchar_t *buffer, A_
 	reg_exe /= "reg.exe";
 	RB_SPRINTF(regParams, "EXPORT \"HKLM\\HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0\" \"%ls\" /y /reg:64", outFileName);
 	win_exec_cmd(reg_exe, regParams, fs::path(), nullptr, 0);
-	
-	std::wifstream myfile(outFileName, std::ios::binary | std::wfstream::in);
-	std::wstring line, subLine=L"";
 
-	if (myfile.is_open()) 
+	std::wifstream myfile(outFileName, std::ios::binary | std::wfstream::in);
+	std::wstring line, subLine = L"";
+
+	if (myfile.is_open())
 	{
 		myfile.imbue(std::locale(myfile.getloc(), new std::codecvt_utf16<wchar_t, 0xffff, std::consume_header>));
 		std::wstring keyString = L"\"ProcessorNameString\"=\"";
@@ -631,7 +626,9 @@ ErrorCodesAE rbUtilities::getCpuInfoString(SPBasicSuite *pb, wchar_t *buffer, A_
 	}
 	swprintf(buffer, buffer_length, L"%ls", subLine.c_str());
 #else
-	mac_exec_cmd("/usr/sbin/sysctl", "-n \"machdep.cpu.brand_string\"", fs::path(outFileName), buffer, buffer_length);
+	fs::path out_path = fs::path(outFileName);
+	std::string args = std::string("-n \"machdep.cpu.brand_string\" > \"") + out_path.string() + std::string("\"");
+	mac_exec_cmd("/usr/sbin/sysctl", args, out_path, buffer, buffer_length);
 #endif
 	
 	ERROR_CATCH_END_NO_INFO_RETURN
@@ -682,7 +679,7 @@ ErrorCodesAE rbUtilities::openCostCalculator(SPBasicSuite *pb)
     if(encodeUrlString(theTempProcChar, procEncoded, 512) != ErrorCodesAE::NoError)
         return ErrorResult;
         //procEncoded[0] = '\0';
-    #ifdef AE_OS_WIN
+#ifdef AE_OS_WIN
 		wchar_t theTempCmd[1024];
 		RB_SWPRINTF(theTempCmd, 1024, L"%ls?cpu=%ls&frames=%d", theUrl, procEncoded,  frames);
 		if (32 >= reinterpret_cast<ULONG_PTR>(ShellExecuteW(nullptr, L"open", theTempCmd, nullptr, nullptr, SW_SHOWNORMAL))) {
