@@ -484,7 +484,7 @@
 				OTHER_LDFLAGS = (
 					"-Wl",
 					"-Bstatic",
-					/Users/ccc/Downloads/boost_1_72_0/stage/lib/libboost_filesystem.a,
+					"$(PROJECT_DIR)/Libs_groyp/libboost_filesystem.a",
 					"-Wl",
 					"-Bshared",
 					"$(PROJECT_DIR)/Libs_groyp/libgf_font_converter.dylib",
@@ -607,7 +607,7 @@
 				OTHER_LDFLAGS = (
 					"-Wl",
 					"-Bstatic",
-					/Users/ccc/Downloads/boost_1_72_0/stage/lib/libboost_filesystem.a,
+					"$(PROJECT_DIR)/Libs_groyp/libboost_filesystem.a",
 					"-Wl",
 					"-Bshared",
 					"$(PROJECT_DIR)/Libs_groyp/libgf_font_converter.dylib",
