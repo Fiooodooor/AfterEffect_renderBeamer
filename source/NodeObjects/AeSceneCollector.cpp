@@ -19,8 +19,8 @@ ErrorCodesAE AeSceneCollector::AeSceneCollect(A_Boolean useUiExporter)
 		ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(pbh, "renderBeamer", "rq_items", 0, &pbh_items_number))
 		if(_ErrorCode == NoError && pbh_items_number > 0)
 		{
-			ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(pbh, "renderBeamer", "smart_collect_0", 0, &smart_collect))
-			ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(pbh, "renderBeamer", "ignore_missings_0", 0, &continue_on_missing))
+			ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(pbh, "renderBeamer", "smart_collect", 0, &smart_collect))
+			ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(pbh, "renderBeamer", "ignore_missings", 0, &continue_on_missing))
 			if (_ErrorCode != NoError)
 				throw PluginError(_ErrorCode);
 			if(smart_collect == 0)			

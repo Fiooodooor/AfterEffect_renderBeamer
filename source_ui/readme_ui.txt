@@ -1,10 +1,12 @@
 
 WINDOWS:
-	just run win_install.bat  
+	Simply run win_install.bat 
 	# directory com.acc.renderBeamerUI and c++ plugin files C4dRelinkerLibrary.dll, GF_AEGP_Renderbeamer.aex should be placed next to win_install.bat
 	
-
 MAC:	
+	Simply run macos_ui.bash from the terminal.
+
+MANUAL MacOs workflow:	
 	# Copy the extracted UI folder to (create if one does not exists):
 		/Library/Application\ Support/Adobe/CEP/extensions/
 

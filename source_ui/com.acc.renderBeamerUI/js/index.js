@@ -1,6 +1,7 @@
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, regexp: true, indent: 4, maxerr: 50 */
 /*global $, window, location, CSInterface, SystemPath, themeManager*/
 
+data_struct = "";
 parsed = "";
 currentRowId = "";
 
@@ -155,277 +156,250 @@ function setDropdownValue(args) {
     var bitDepthValue = document.getElementById("bitDepth-value");
     var channelsValue = document.getElementById("channels-value");
     
-    //executed from dropdown 
-    if(manual==false){
-        attribute = ar.getAttribute("data-el");
+	if(manual==false) {
+		attribute = ar.getAttribute("data-el");
+		if(attribute == "") {
+			return;
+		}
+		dropdown = ar.parentElement.parentElement;
         if(ar.parentElement.parentElement.classList.contains("top-item")){
-            dropdown = ar.parentElement.parentElement.parentElement.parentElement;
+            dropdown = dropdown.parentElement.parentElement;
         }
-        else{
-            dropdown = ar.parentElement.parentElement;   
-        }
-    }
-    else{
-        dropdown = document.getElementById("extensionValue");
-        attribute = atr;    
-    }
-    dropdown.classList.remove("dropdownClicked");
-    if(attribute != ""){
-       
-        if(manual==false){
-            dropdown.getElementsByClassName("dropdown-value")[0].innerHTML = attribute;
-            topLabel = ar.parentElement.parentElement.getElementsByClassName("item")[0].innerHTML;
-            
-            // set object pproperties
-            var dropName  = dropdown.parentElement.getElementsByClassName("label")[0].innerHTML;
-            var currentObj = parsed[args[3]-1];
-            if(dropName == "encoder"){
-               currentObj.encoder = attribute;
-            }
-            if(dropName == "pixel format"){
-               currentObj.pixel_format = attribute;
-            }
-            if(dropName == "profile"){
-               currentObj.profile = attribute;
-            }
-            if(dropName == "extension"){                
-                currentObj.encoder =  "";
-                currentObj.pixel_format = "";
-                currentObj.profile = "";
-            }
-            
-            if(dropName == "sample rate"){
-                currentObj.audio_sample_rate = sampleRateValue.innerHTML; 
-				sampleRateValue.innerHTML = (currentObj.audio_sample_rate).toString() + " kHz";
-            }
-            if(dropName == "bit depth"){
-                currentObj.audio_depth = bitDepthValue.innerHTML;
-				bitDepthValue.innerHTML = (currentObj.audio_depth * 8).toString() + " bit";
-            }
-            if(dropName == "channels"){
-                currentObj.audio_channels = channelsValue.innerHTML;
-				if(currentObj.audio_channels == 1) {
-					channelsValue.innerHTML = "mono";
-				}
-				else {
-					channelsValue.innerHTML = "stereo";
-				}
-            }
-            if(dropName == "extension"){
-                currentObj.ext = extensionValue.innerHTML;  
-            }
-        }
-        else{
-            var videoExt = new Array("mp4","mkv","mov","webm","mxf");
-            var imgSeqExt = new Array("DPX","IFF","EXR","PNG","PSD","SGI","TIFF");
-            var audioExt = new Array("wav");
-            
-            if(videoExt.includes(attribute)){
-                topLabel = "video";
-            }
-            else if(imgSeqExt.includes(attribute.split(" ")[0])){
-                topLabel = "image sequence";
-            }
-            else if(audioExt.includes(attribute.split(" ")[0].toLowerCase())){
-                topLabel = "audio";
-            }
-            
-            if(parsed[args[3]-1].audio_sample_rate == ""){
-                parsed[args[3]-1].audio_sample_rate = 48000;
-            }
-            sampleRateValue.innerHTML = (parsed[args[3]-1].audio_sample_rate).toString() + " kHz"; 
-            if(parsed[args[3]-1].audio_depth == ""){
-                arsed[args[3]-1].audio_depth = 2;
-            }
-            bitDepthValue.innerHTML = (parsed[args[3]-1].audio_depth * 8).toString() + " bit";
-            
-            if(parsed[args[3]-1].audio_channels == ""){
-                parsed[args[3]-1].audio_channels = 2;
-            }
-            if(parsed[args[3]-1].audio_channels == 1) {
-                channelsValue.innerHTML = "mono";
-            }
-            else {
-                channelsValue.innerHTML = "stereo";
-            }
-            extensionValue.innerHTML = parsed[args[3]-1].ext;
-        }
-        if(attribute == "not set"){
-            
-           // display smth ?
-            
-        }
-        //alert(topLabel);
+		dropdown.classList.remove("dropdownClicked");
+        dropdown.getElementsByClassName("dropdown-value")[0].innerHTML = attribute;
+        topLabel = ar.parentElement.parentElement.getElementsByClassName("item")[0].innerHTML;
         
-        if(topLabel=="video"){
+        // set object pproperties
+        var dropName  = dropdown.parentElement.getElementsByClassName("label")[0].innerHTML;
+        var currentObj = parsed[args[3]-1];
+        if(dropName == "encoder"){
+           currentObj.encoder = attribute;
+        }
+        if(dropName == "pixel format"){
+           currentObj.pixel_format = attribute;
+        }
+        if(dropName == "profile"){
+           currentObj.profile = attribute;
+        }
+        if(dropName == "extension"){                
+            currentObj.encoder =  "";
+            currentObj.pixel_format = "";
+            currentObj.profile = "";
+        }
+        
+        if(dropName == "sample rate"){
+            currentObj.audio_sample_rate = sampleRateValue.innerHTML; 
+			sampleRateValue.innerHTML = (currentObj.audio_sample_rate).toString() + " kHz";
+        }
+        if(dropName == "bit depth"){
+            currentObj.audio_depth = bitDepthValue.innerHTML;
+			bitDepthValue.innerHTML = (currentObj.audio_depth * 8).toString() + " bit";
+        }
+        if(dropName == "channels"){
+            currentObj.audio_channels = channelsValue.innerHTML;
+			if(currentObj.audio_channels == 1) {
+				channelsValue.innerHTML = "mono";
+			}
+			else {
+				channelsValue.innerHTML = "stereo";
+			}
+        }
+        if(dropName == "extension"){
+            currentObj.ext = extensionValue.innerHTML;  
+        }
+	}
+	else {
+		var videoExt = new Array("mp4","mkv","mov","webm","mxf");
+		var imgSeqExt = new Array("DPX","IFF","EXR","PNG","PSD","SGI","TIFF");
+		var audioExt = new Array("wav");
+		
+		attribute = atr;  
+		if(attribute == "") {
+			return;
+		}	
+		dropdown = document.getElementById("extensionValue");
+		dropdown.classList.remove("dropdownClicked");	
+		
+		if(videoExt.includes(attribute)){			
+			topLabel = "video";
+			parsed[args[3]-1].is_sequence = 0;
+		}
+		else if(imgSeqExt.includes(attribute.split(" ")[0])){
+			topLabel = "image sequence";
+			parsed[args[3]-1].is_sequence = 1;
+		}
+		else if(audioExt.includes(attribute.split(" ")[0].toLowerCase())){
+			topLabel = "audio";
+			parsed[args[3]-1].is_sequence = 0;
+		}
+				
+		if(parsed[args[3]-1].audio_sample_rate == ""){
+			parsed[args[3]-1].audio_sample_rate = 48000;
+		}            
+		if(parsed[args[3]-1].audio_depth == ""){
+			arsed[args[3]-1].audio_depth = 2;
+		}
+		sampleRateValue.innerHTML = (parsed[args[3]-1].audio_sample_rate).toString() + " kHz"; 
+		bitDepthValue.innerHTML = (parsed[args[3]-1].audio_depth * 8).toString() + " bit";
+		
+		if(parsed[args[3]-1].audio_channels == ""){
+			parsed[args[3]-1].audio_channels = 2;
+		}
+		if(parsed[args[3]-1].audio_channels == 1) {
+			channelsValue.innerHTML = "mono";
+		}
+		else {
+			channelsValue.innerHTML = "stereo";
+		}
+		extensionValue.innerHTML = parsed[args[3]-1].ext;
+	}
+	if(attribute == "not set") { /* display smth ? */ }
+	if(topLabel=="video") {
+		
             // show video settings container
-            if(document.getElementById("videoLabel").classList.contains("hide")){
-                document.getElementById("videoLabel").classList.remove("hide");
-                document.styleSheets[0].deleteRule(0);    
-            }
-            
-            if(manual==true){
-               extensionValue.innerHTML = attribute;
-            }
-            var x=0;
-            if(attribute=="mp4"){
-                encoderValue.innerHTML = "H265/HEVC";
-                for(x=0;x<encoderParent.length;x++){
-                    if(encoderParent[x].classList.contains("hide")){   
-                        encoderParent[x].classList.remove("hide");
-                    }     
-                }
-                
-                pixelFormatValue.innerHTML = "yuv420p";
-                profileValue.innerHTML = "main";
-                profileValue.parentElement.parentElement.classList.remove("hide");
-            }
-            if(attribute=="mkv"){
-                encoderValue.innerHTML = "H265/HEVC";
-                for(x=0;x<encoderParent.length;x++){
-                    if(encoderParent[x].classList.contains("hide")){   
-                        encoderParent[x].classList.remove("hide");
-                    }
-                    else{
-                        encoderParent[x].classList.add("hide");
-                    }     
-                }
-                
-                pixelFormatValue.innerHTML = "yuv420p";
-                profileValue.innerHTML = "main";
-                profileValue.parentElement.parentElement.classList.remove("hide");
-            }
-            if(attribute=="mov"){
-                encoderValue.innerHTML = "H265/HEVC";
-                for(x=0;x<encoderParent.length;x++){
-                    encoderParent[x].classList.remove("hide");  
-                }
-                
-                pixelFormatValue.innerHTML = "yuv420p";
-                profileValue.innerHTML = "main";
-                profileValue.parentElement.parentElement.classList.remove("hide");
-            }
-            if(attribute=="webm"){
-                encoderValue.innerHTML = "VP9";
-                for(x=0;x<encoderParent.length;x++){
-                    if(x != 4 && x != 5){
-                        if(encoderParent[x].classList.contains("hide")==false){   
-                            encoderParent[x].classList.add("hide");
-                        }
-                    }
-                    else{
-                        if(encoderParent[x].classList.contains("hide")){   
-                            encoderParent[x].classList.remove("hide");
-                        }
-                    }
-                }
-                
-                pixelFormatValue.innerHTML = "yuv420p";
-                profileValue.parentElement.parentElement.classList.add("hide");
-               }
-            if(attribute=="mxf"){
-                encoderValue.innerHTML = "H264/AVC";
-                for(x=0;x<encoderParent.length;x++){
-                    if(x != 1 ){
-                        if(encoderParent[x].classList.contains("hide")==false){   
-                            encoderParent[x].classList.add("hide");
-                        }
-                    }
-                    else{
-                        if(encoderParent[x].classList.contains("hide")){   
-                            encoderParent[x].classList.remove("hide");
-                        }
-                    }
-                }
-                
-                
-                pixelFormatValue.innerHTML = "yuv420p";
-                profileValue.innerHTML = "baseline";
-                profileValue.parentElement.parentElement.classList.remove("hide");
-            }
-            
-            var framerate = document.getElementById("framerate"); 
-            var bitrate = document.getElementById("bitrate"); 
-            
-            // read from object and display or set if empty
-
-            //video settings
-            if(parsed[args[3]-1].encoder != "" ){
-                encoderValue.innerHTML = parsed[args[3]-1].encoder;
-            }
-            else{
-                parsed[args[3]-1].encoder = encoderValue.innerHTML;
-            }
-            if(parsed[args[3]-1].pixel_format != "" ){
-                pixelFormatValue.innerHTML = parsed[args[3]-1].pixel_format;
-            }
-            else{
-                parsed[args[3]-1].pixel_format = pixelFormatValue.innerHTML;
-            }
-            if(parsed[args[3]-1].profile != ""){
-                profileValue.innerHTML = parsed[args[3]-1].profile;
-            }
-            else{
-                parsed[args[3]-1].profile = profileValue.innerHTML;
-            }
-            if(parsed[args[3]-1].framerate != ""){
-                framerate.value = parsed[args[3]-1].framerate;
-            }
-            else{
-                parsed[args[3]-1].framerate = framerate.value;
-            }
-            if(parsed[args[3]-1].bitrate != ""){
-                bitrate.value = parsed[args[3]-1].bitrate;
-            }
-            else{
-                parsed[args[3]-1].bitrate = bitrate.value;
-            }
-        }
-        
-        else if(topLabel=="image sequence"){
+		if(document.getElementById("videoLabel").classList.contains("hide")) {
+			document.getElementById("videoLabel").classList.remove("hide");
+			document.styleSheets[0].deleteRule(0);    
+		}		
+		var x=0;
+		if(attribute=="mp4") {
+			encoderValue.innerHTML = "H265/HEVC";
+			for(x=0;x<encoderParent.length;x++) {
+				if(encoderParent[x].classList.contains("hide")) {   
+					encoderParent[x].classList.remove("hide");
+				}     
+			}			
+			pixelFormatValue.innerHTML = "yuv420p";
+			profileValue.innerHTML = "main";
+			profileValue.parentElement.parentElement.classList.remove("hide");
+		}
+		if(attribute=="mkv"){
+			encoderValue.innerHTML = "H265/HEVC";
+			for(x=0;x<encoderParent.length;x++){
+				if(encoderParent[x].classList.contains("hide")){   
+					encoderParent[x].classList.remove("hide");
+				}
+				else{
+					encoderParent[x].classList.add("hide");
+				}     
+			}
+			
+			pixelFormatValue.innerHTML = "yuv420p";
+			profileValue.innerHTML = "main";
+			profileValue.parentElement.parentElement.classList.remove("hide");
+		}
+		if(attribute=="mov"){
+			encoderValue.innerHTML = "H265/HEVC";
+			for(x=0;x<encoderParent.length;x++){
+				encoderParent[x].classList.remove("hide");  
+			}
+			
+			pixelFormatValue.innerHTML = "yuv420p";
+			profileValue.innerHTML = "main";
+			profileValue.parentElement.parentElement.classList.remove("hide");
+		}
+		if(attribute=="webm"){
+			encoderValue.innerHTML = "VP9";
+			for(x=0;x<encoderParent.length;x++){
+				if(x != 4 && x != 5){
+					if(encoderParent[x].classList.contains("hide")==false){   
+						encoderParent[x].classList.add("hide");
+					}
+				}
+				else{
+					if(encoderParent[x].classList.contains("hide")){   
+						encoderParent[x].classList.remove("hide");
+					}
+				}
+			}
+			
+			pixelFormatValue.innerHTML = "yuv420p";
+			profileValue.parentElement.parentElement.classList.add("hide");
+			}
+		if(attribute=="mxf"){
+			encoderValue.innerHTML = "H264/AVC";
+			for(x=0;x<encoderParent.length;x++){
+				if(x != 1 ){
+					if(encoderParent[x].classList.contains("hide")==false){   
+						encoderParent[x].classList.add("hide");
+					}
+				}
+				else{
+					if(encoderParent[x].classList.contains("hide")){   
+						encoderParent[x].classList.remove("hide");
+					}
+				}
+			}                
+			
+			pixelFormatValue.innerHTML = "yuv420p";
+			profileValue.innerHTML = "baseline";
+			profileValue.parentElement.parentElement.classList.remove("hide");
+		}
+		
+		var framerate = document.getElementById("framerate"); 
+		var bitrate = document.getElementById("bitrate"); 
+		
+		//video settings
+		if(parsed[args[3]-1].encoder != "" ){
+			parsed[args[3]-1].encoder = encoderValue.innerHTML;
+		}
+		if(parsed[args[3]-1].pixel_format == "" ){
+			parsed[args[3]-1].pixel_format = pixelFormatValue.innerHTML;
+		}
+		if(parsed[args[3]-1].profile == ""){
+			parsed[args[3]-1].profile = profileValue.innerHTML;
+		}
+		if(parsed[args[3]-1].fps == ""){ 
+			parsed[args[3]-1].fps = framerate.value;
+		}			
+		if(parsed[args[3]-1].bitrate == "") {
+			parsed[args[3]-1].bitrate = bitrate.value; 
+		}
+		encoderValue.innerHTML = parsed[args[3]-1].encoder;
+		pixelFormatValue.innerHTML = parsed[args[3]-1].pixel_format;
+		profileValue.innerHTML = parsed[args[3]-1].profile;
+		bitrate.value = parsed[args[3]-1].bitrate;
+		framerate.value = parsed[args[3]-1].fps;
+	}
+	else if(topLabel=="image sequence") {
+		// hide video settings container
+		if(document.getElementById("videoLabel").classList.contains("hide")==false) {
+			document.getElementById("videoLabel").classList.add("hide");
+			document.styleSheets[0].insertRule("div#videoContainer { display: none;}", 0);
+		}
+	}
+    else if(topLabel=="audio") {
             // hide video settings container
-            if(manual){
-               extensionValue.innerHTML = attribute;
-            }
-            if(document.getElementById("videoLabel").classList.contains("hide")==false){
-                document.getElementById("videoLabel").classList.add("hide");
-                document.styleSheets[0].insertRule("div#videoContainer { display: none;}", 0);
-            }
-        }
-        else if(topLabel=="audio"){
-            // hide video settings container
-            if(manual){
-               extensionValue.innerHTML = attribute;
-            }
-            if(document.getElementById("videoLabel").classList.contains("hide")==false){
-                document.getElementById("videoLabel").classList.add("hide");
-                document.styleSheets[0].insertRule("div#videoContainer { display: none;}", 0);
-            }
-
-            // set audio settings
-            
-            document.getElementById("extensionValue").innerHTML = "wav";
-            
-            var audioValues = attribute.split(" ");
-            bitDepthValue.innerHTML = audioValues[2];
-            if(audioValues[1] == "44kHz"){
-               sampleRateValue.innerHTML = "44100";
-            }
-            else if(audioValues[1] == "48kHz"){
-               sampleRateValue.innerHTML = "48000";
-            }
-            else if(audioValues[1] == "88kHz"){
-               sampleRateValue.innerHTML = "88200";
-            }
-            else if(audioValues[1] == "96kHz"){
-               sampleRateValue.innerHTML = "96000";
-            }
-        }
-        if(manual==false){
-            curentRow.getElementsByTagName("td")[2].innerHTML = document.getElementById("extensionValue").innerHTML;
-        }
-        setVideoSettings(args);
-    }    
+		if(document.getElementById("videoLabel").classList.contains("hide")==false) {
+			document.getElementById("videoLabel").classList.add("hide");
+			document.styleSheets[0].insertRule("div#videoContainer { display: none;}", 0);
+		}
+		// set audio settings
+		
+		document.getElementById("extensionValue").innerHTML = "wav";
+		
+		var audioValues = attribute.split(" ");
+		bitDepthValue.innerHTML = audioValues[2];
+		if(audioValues[1] == "44kHz"){
+			sampleRateValue.innerHTML = "44100";
+		}
+		else if(audioValues[1] == "48kHz"){
+			sampleRateValue.innerHTML = "48000";
+		}
+		else if(audioValues[1] == "88kHz"){
+			sampleRateValue.innerHTML = "88200";
+		}
+		else if(audioValues[1] == "96kHz"){
+			sampleRateValue.innerHTML = "96000";
+		}
+	}
+	if(manual){
+		extensionValue.innerHTML = attribute;
+	}
+	else {
+		curentRow.getElementsByTagName("td")[2].innerHTML = document.getElementById("extensionValue").innerHTML;
+	}
+	setVideoSettings(args);  
 }
 
 // callback function for composition list row event
@@ -456,30 +430,29 @@ function compoListClicked(ar){
     var args = new Array("", ext, true, currentRowId);
     
     
-	if(parsed[args[3]-1].framerate == ""){
-		parsed[args[3]-1].framerate = "25";
+	if(parsed[args[3]-1].fps == ""){
+		parsed[args[3]-1].fps = "25";
 	}
 	if(parsed[args[3]-1].bitrate == ""){
 		parsed[args[3]-1].bitrate = "5000"
 	}
 	
-    document.getElementById("framerate").value = parsed[args[3]-1].framerate;
+    document.getElementById("framerate").value = parsed[args[3]-1].fps;
 	document.getElementById("bitrate").value = parsed[args[3]-1].bitrate;
 
     setDropdownValue(args);  
 }
 // events functions for text fields and compo list checkbox
 
-function dropdown(ar){ 
-    //console.log("dd clicked")
-}
+function dropdown(ar) { 
+/*//console.log("dd clicked")*/ }
 
 function frameRangeChanged(ar){
     curentRow.getElementsByTagName("td")[1].innerHTML = ar.value;
     parsed[currentRowId-1].frame_range = ar.value;
 }
 function framerateChanged(ar){
-    parsed[currentRowId-1].framerate = ar.value;
+    parsed[currentRowId-1].fps = ar.value;
 }
 function bitrateChanged(ar){
     parsed[currentRowId-1].bitrate = ar.value;
@@ -496,20 +469,15 @@ function ignoreMissingsChecked(ar){
     if(ar.checked == true) {
         miss_checked_val = 1;
     }
-    for(var x=0; x < parsed.length; x++){
-        parsed[x].ignore_missings = miss_checked_val;
-    }
+	data_struct.ignore_missings = miss_checked_val;
 }
 function smartCollectChecked(ar){
     var smart_checked_val = 0;
     if(ar.checked == true) {
         smart_checked_val = 1;
     }
-    for(var x=0; x < parsed.length; x++){
-        parsed[x].smart_collect = smart_checked_val;
-    }
+    data_struct.smart_collect = smart_checked_val;
 }
-
 
 // filtering for queued compositions before submit
 function setObjectSubmit(){
@@ -525,9 +493,15 @@ function setObjectSubmit(){
 
 // submit function executed by SEND button
 function submit(ar){
-    var csInterface = new CSInterface();
-    window.close();
-    csInterface.evalScript('submit(' + JSON.stringify(setObjectSubmit()) + ')', function(returned){});
+	data_struct.data = setObjectSubmit();
+	var csInterface = new CSInterface();
+	if(data_struct.data.length > 0) {
+		window.close();
+		csInterface.evalScript('submit(' + JSON.stringify( data_struct ) + ')', function(returned){});
+	}
+	else {
+		alert("RenderBeamer: Nothing selected for render. Try again.");
+	}
 }
 
 //add events 
@@ -536,74 +510,41 @@ function addEvents(){
     var dropdownItems = document.getElementsByClassName("item");
     var i = 0;
     for (i = 0; i < dropdownItems.length; i++) {
-        dropdownItems[i].addEventListener('click', function(){
-                                                        var ar = this;
-                                                        var args = new Array(ar,"",false, currentRowId);
-                                                        setDropdownValue(args);}
-                                          , false);
-    }
-
+        dropdownItems[i].addEventListener('click', function(){	var ar = this; var args = new Array(ar,"",false, currentRowId); 
+																setDropdownValue(args);}, false); }
    
-    
 // add event listener to frame range input
     var frameRange = document.getElementById("frameRange");
-    frameRange.addEventListener('input', function(){
-                                                        var ar = this;
-                                                        frameRangeChanged(ar);
-                                                    }, false);
+    frameRange.addEventListener('input', function() { var ar = this; frameRangeChanged(ar); }, false);
 
 // add event listener to framerate input
     var framerate = document.getElementById("framerate");
-    framerate.addEventListener('input', function(){
-                                                        var ar = this;
-                                                        framerateChanged(ar);
-                                                    }, false);
+    framerate.addEventListener('input', function(){ var ar = this; framerateChanged(ar); }, false);
 
 // add event listener to bitrate input
     var bitrate = document.getElementById("bitrate");
-    bitrate.addEventListener('input', function(){
-                                                        var ar = this;
-                                                        bitrateChanged(ar);
-                                                    }, false);
-    
+    bitrate.addEventListener('input', function(){ var ar = this; bitrateChanged(ar); }, false);
     
 //  add event listener to send button
     var sendButton = document.getElementById("sendButton");
-    sendButton.addEventListener('click', function(){
-                                                        var ar = this;
-                                                        submit(ar);
-                                                    }, false);
+    sendButton.addEventListener('click', function(){ var ar = this; submit(ar); }, false);
     
-    // add event listener to smart collect checkbox
+// add event listener to smart collect checkbox
     var smartCollect = document.getElementById("smartCollect");
-    smartCollect.addEventListener('click', function(){
-                                                    var ar = this;
-                                                    smartCollectChecked(ar);}
-                                        , false);
+    smartCollect.addEventListener('click', function(){ var ar = this; smartCollectChecked(ar); }, false);
     
-    // add event listener to ignore missing assets checkbox
+// add event listener to ignore missing assets checkbox
     var ignoreMissings = document.getElementById("ignoreMissings");
-    ignoreMissings.addEventListener('click', function(){
-                                                    var ar = this;
-                                                    ignoreMissingsChecked(ar);}
-                                        , false);
+    ignoreMissings.addEventListener('click', function(){ var ar = this; ignoreMissingsChecked(ar); }, false);
     
-    // add event listener for opening dropdowns
+// add event listener for opening dropdowns
     var openDrop = document.getElementsByClassName("dropdown");
     for (i = 0; i < openDrop.length; i++) {
-        console.log(openDrop[i]);
-        openDrop[i].addEventListener('click', function(){
-                                                    var ar = this;
-                                                    dropdown(ar);}
-                                        , false);
-    }
-    
+        openDrop[i].addEventListener('click', function() { var ar = this; dropdown(ar); } , false);
+    }    
 }
 
-
 // execute function with the same name in hostscript.jsx
-// reads all compositions + renderqueue items and return them back as JSON 
-// + default setup for composition list table
 function initx() {    
     /*themeManager.init();*/
     var csInterface = new CSInterface();
@@ -611,10 +552,12 @@ function initx() {
     document.getElementById("videoLabel").classList.add("hide");
     document.styleSheets[0].insertRule("div#videoContainer { display: none;}", 0);
 
-    csInterface.evalScript('initX()', function(cc){
+    csInterface.evalScript('initX()', function(renderqueue_list)
+	{
         var table = document.getElementById("compositionList");
-        parsed = JSON.parse(cc);
-        console.log(cc);
+        data_struct = JSON.parse(renderqueue_list);
+        parsed = data_struct.data;
+        console.log(renderqueue_list);
 		
         for(var x=0; x < parsed.length; x++)
 		{
@@ -650,7 +593,6 @@ function initx() {
             rows[i].addEventListener('click', function(){ var ar = this; compoListClicked(ar);}, false);
             rows[i].getElementsByTagName("input")[0].addEventListener('click', function(){ var ar = this; renderableChecked(ar);}, false);
         }
-    });
-    
+    });    
     addEvents();
 }

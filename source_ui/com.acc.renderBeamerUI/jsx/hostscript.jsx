@@ -3,10 +3,11 @@
 
 function compositionX()
 {
-    this.name = "";
-    this.frame_range = "";
-	this.fps = 25;
-    this.ext  = "";
+    this.name = "No name";
+    this.frame_range = "1to10s1";
+	this.fps = 29.97;
+	this.is_sequence = 1;
+    this.ext = "png";
     this.renderable = 0;
     this.comp_has_audio = 0;
     this.out_audio_enabled = 0;
@@ -16,15 +17,12 @@ function compositionX()
     this.encoder = "";
     this.pixel_format = "";
     this.profile = "";
-    this.framerate = "";
-    this.bitrate = "";
-    this.composition_id = ""; 
-    this.rq_id = "";
-    this.rq_out_id = "";
+    this.bitrate = "5000";
+    this.composition_id = "0"; 
+    this.rq_id = "0";
+    this.rq_out_id = "0";
 	this.width = 0;
 	this.height = 0;
-	this.ignore_missings = 1;
-	this.smart_collect = 0;
 }
 
 function readRenderQueueItems(){
@@ -33,22 +31,6 @@ function readRenderQueueItems(){
         rqi.push(app.project.renderQueue.item(i));
     }
     return rqi;
-}
-
-function submit(objS){
-    var parsed = objS;
-    var sectionName = 'renderBeamer';
-	app.preferences.savePrefAsString(sectionName , "rq_items", parsed.length); 
-    for(var x=0; x < parsed.length; x++){
-        for(var key in parsed[x]){
-            app.preferences.savePrefAsString(sectionName , key + "_" + x.toString(), parsed[x][key]);             
-        }
-    }
-    app.preferences.saveToDisk();
-    
-    var rbid = app.findMenuCommandId("renderBeamer_ui_function");
-    app.executeCommand(rbid);
-    return "success"
 }
 
 function initX(){
@@ -100,28 +82,26 @@ function initX(){
 		c.ext = rq_out_settings["Output File Info"]["File Name"].split(".")[1];			
 		compositions.push(c);	
 	}
-    return JSON.stringify(compositions);
+	
+    return JSON.stringify({ ignore_missings: 1, smart_collect: 0, data: compositions });
 }
 
-function createArrayFromObject(obj){
-    var newArray = new Array();
-    for(var x=0; x < obj.length; x++){
-        newArray.push(new Array(obj[x].name));
-        newArray[x].push(obj[x].rq_id);
-        newArray[x].push(obj[x].rq_out_id);
-        newArray[x].push(obj[x].frame_range);
-        newArray[x].push(obj[x].ext);
-        newArray[x].push(obj[x].width);
-        newArray[x].push(obj[x].height);
-        newArray[x].push(obj[x].renderable);
-        newArray[x].push(obj[x].audio);
-        newArray[x].push(obj[x].audio_sample_rate);
-        newArray[x].push(obj[x].audio_channels);
-        newArray[x].push(obj[x].audio_depth);
-        newArray[x].push(obj[x].fps);
-        newArray[x].push(obj[x].ignore_missings);
-        newArray[x].push(obj[x].smart_collect);
+function submit(renderqueue_list){
+    var parsed = renderqueue_list;
+	var rbid = app.findMenuCommandId("renderBeamer_ui_function");
+    var sectionName = 'renderBeamer';
+	app.preferences.savePrefAsString(sectionName , "rq_items", parsed.data.length);
+	app.preferences.savePrefAsString(sectionName , "ignore_missings", parsed.ignore_missings);
+	app.preferences.savePrefAsString(sectionName , "smart_collect", parsed.smart_collect);
+	
+    for(var x=0; x < parsed.data.length; x++){
+        for(var key in parsed.data[x]){
+            app.preferences.savePrefAsString(sectionName , key + "_" + x.toString(), parsed.data[x][key]);             
+        }
     }
-    return newArray;
+	
+    app.preferences.saveToDisk();
+    app.executeCommand(rbid);
+    return "success"
 }
    
