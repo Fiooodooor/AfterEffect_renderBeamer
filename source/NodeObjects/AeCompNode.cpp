@@ -185,45 +185,44 @@ long AeCompNode::generateLayers()
 	return 0;
 }
 
-long AeCompNode::pushUniqueEffect(AEGP_InstalledEffectKey theEffectKey)
+long AeCompNode::pushUniqueEffect(AEGP_InstalledEffectKey effect_key)
 {
-	std::list<AeEffectNode*>::const_iterator it = effectsList.cbegin();
-	std::list<AeEffectNode*>::const_iterator end = effectsList.cend();
-	AeEffectNode *effectNode = new AeEffectNode(theEffectKey);
-	if (!effectNode)
-		return 1;
-
+	auto it = effectsList.cbegin();
+	const auto end = effectsList.cend();
+	
 	while (it != end) {
-		if ((*effectNode) == it)
+		if (effect_key == (*it)->getKey())
 			break;
 		++it;
 	}
 	if (it == end) {
-		effectsList.push_back(effectNode);
+		auto *effect_node = new AeEffectNode(effect_key);
+		if (!effect_node)
+			return 1;
+		effectsList.push_back(effect_node);
 		return 0;
 	}	
-	delete effectNode;
 	return 2;
 }
 
-long AeCompNode::pushUniqueFont(AeFontNode* fontNode)
+long AeCompNode::pushUniqueFont(AeFontNode* font_node)
 {
-	if (!fontNode)
+	if (!font_node)
 		return 1;
 
-	std::list<AeFontNode*>::const_iterator it = fontsList.cbegin();
-	std::list<AeFontNode*>::const_iterator end = fontsList.cend();
+	auto it = fontsList.cbegin();
+	const auto end = fontsList.cend();
 	while (it != end) {
-		if ((*fontNode) == it)
+		if ((*font_node) == it)
 			break;
 		++it;
 	}
 	if (it == end) {
-		fontsList.push_back(fontNode);
+		fontsList.push_back(font_node);
 		return 0;
 	}	
 
-	delete fontNode;
-	fontNode = NULL;
+	delete font_node;
+	font_node = nullptr;
 	return 2;
 }

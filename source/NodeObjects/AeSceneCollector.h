@@ -13,6 +13,7 @@ class AeSceneCollector
 {
 public:	
 	AeSceneCollector(AEGP_PluginID pluginId, SPBasicSuite *sp, AEGP_ProjectH projectH, AeSceneConteiner &theCt);
+	ErrorCodesAE AeSceneCollect(A_Boolean useUiExporter=0);
 	ErrorCodesAE AeNormalCollect(A_Boolean useUiExporter=0);
 	ErrorCodesAE AeSmartCollect(A_Boolean useUiExporter=0);
 	ErrorCodesAE generateDebugItemsInfo();
@@ -41,6 +42,8 @@ protected:
 	SPBasicSuite *sp;
 	AEGP_PluginID pluginId;
 	AEGP_ProjectH projectH;
+	AEGP_PersistentBlobH pbh;
+	A_long pbh_items_number, smart_collect, continue_on_missing;
 };
 
 #endif

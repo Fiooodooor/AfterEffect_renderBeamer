@@ -59,20 +59,14 @@ ErrorCodesAE GF_Dumper::PreCheckProject(SPBasicSuite *pb, AEGP_PluginID pluginId
         GF_params->bp.originalProject = fs::path(GF_params->projectPath).lexically_normal();		
 		GF_params->bp.projectFilenameCorrect = fs::path(GF_params->bp.originalProject.filename()).replace_extension(".aepx");
 		rbUtilities::pathStringFixIllegal(GF_params->bp.projectFilenameCorrect, false, false);
-        rbUtilities::getTimeString(GF_params->timeString, 20, true);
-    
-	#ifdef AE_OS_WIN        
-		rbUtilities::getEnvVariable("USERPROFILE", GF_params->userPath, AEGP_MAX_PATH_SIZE);		
-	#elif defined AE_OS_MAC
-		strcpy(GF_params->userPath, getenv("HOME"));
-	#endif
-		RB_SWPRINTF(GF_params->beamerScript, AEGP_MAX_PATH_SIZE, L"%hs%ls", GF_params->userPath, BEAMER_SCRIPT);
-
-		if (GF_params->userPath[0] == '\0' || !fs::exists(GF_params->beamerScript)) {
+        rbUtilities::getTimeString(GF_params->timeString, 20, true);	       
+		rbUtilities::getEnvVariable(std::string(ENV_HOME_DIR), GF_params->beamerScript);
+		GF_params->bp.tempLogPath = fs::path(GF_params->beamerScript) / fs::path(".renderbeamer") / fs::path("log") / fs::path("aftereffects");
+		GF_params->beamerScript /= BEAMER_SCRIPT;
+	
+		if (!fs::exists(GF_params->beamerScript)) {
 			throw PluginError(_ErrorCaller, ErrorCodesAE::GetLocalBeamerPath);
 		}
-		GF_params->bp.tempLogPath = fs::path(GF_params->userPath) / fs::path(".renderbeamer") / fs::path("log") / fs::path("aftereffects");
-
 		fs::create_directories(GF_params->bp.tempLogPath, LogCreateError);
 		GF_params->bp.tempLogFile = "Log_AE_renderBeamer_";
         GF_params->bp.tempLogFile += fs::path(GF_params->bp.projectFilenameCorrect.filename()).replace_extension();
@@ -123,11 +117,10 @@ ErrorCodesAE GF_Dumper::PrepareProject()
 		GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, 1, 100))
 
 		bps.beamerTmpFile = fs::temp_directory_path(fsError);
-		bps.beamerTmpFile /= "beamerDataExchange.dat";
 		if (fsError.value() != 0)
-		{
 			throw PluginError(_ErrorCaller, GetLocalTempDirectory);
-		}
+		bps.beamerTmpFile /= "beamerDataExchange.dat";
+		
 		rbProj()->logg(L"PrepareProject", L"DataExchange", bps.beamerTmpFile.wstring().c_str());
 	
 		ERROR_THROW_AE_MOD(suites.UtilitySuite6()->AEGP_GetPluginPaths(pluginId, AEGP_GetPathTypes_ALLUSER_PLUGIN, &memoryH))
@@ -284,8 +277,6 @@ ErrorCodesAE GF_Dumper::newBatchDumpProject(bool is_ui_caller)
 
 ErrorCodesAE GF_Dumper::newDumpProject()
 {
-	//suites.AEGP_ProjSuite6()->AEGP_GetProjectTimeDisplay();
-
 	ERROR_CATCH_START_MOD(CallerModuleName::ProjectDumperModule)
 	
 	sc->countCollectedNr();

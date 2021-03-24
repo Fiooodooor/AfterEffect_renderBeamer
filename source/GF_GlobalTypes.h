@@ -28,9 +28,10 @@
 #include <string>
 
 #ifdef AE_OS_WIN
-#define BEAMER_SCRIPT L"\\renderbeamer\\renderbeamer.exe"
+#define BEAMER_SCRIPT L"renderbeamer\\renderbeamer.exe"
 #define FONT_LIB_NAME L"\\libgf_font_converter.dll"
 #define C4D_LIB_NAME L"\\C4dRelinkerLibrary.dll"
+#define ENV_HOME_DIR "USERPROFILE"
 #define SEP '\\'
 #include <Windows.h>
 #define RB_DUPENV(...) _dupenv_s(__VA_ARGS__)
@@ -51,9 +52,10 @@
 #define TSTRING wstring
 
 #elif defined AE_OS_MAC
-#define BEAMER_SCRIPT L"/renderbeamer/renderbeamer.sh"
+#define BEAMER_SCRIPT L"renderbeamer/renderbeamer.sh"
 #define FONT_LIB_NAME L"/renderBeamer.plugin/Contents/Resources/libgf_font_converter.dylib"
 #define C4D_LIB_NAME L"/renderBeamer.plugin/Contents/Resources/libC4dRelinkerLibrary.dylib"
+#define ENV_HOME_DIR "HOME"
 #define SEP '/'
 #define RB_DUPENV(...) getenv(__VA_ARGS__)
 #define RB_SPRINTF(...) snprintf(__VA_ARGS__)
@@ -192,15 +194,14 @@ typedef struct {
 #else
  */
     typedef struct {
-        A_char              versionStr[32];
-        A_char              userPath[AEGP_MAX_PATH_SIZE];
+        A_char              versionStr[32];       
         fs::path            beamerTmpFile;
         std::wstring        projectPath;
         std::wstring        pluginPath;
         std::wstring        fontLibPath;
         std::wstring        c4d_LibPath;
         wchar_t             beamerTmpPath[AEGP_MAX_PATH_SIZE];
-        wchar_t             beamerScript[AEGP_MAX_PATH_SIZE];
+        fs::path            beamerScript;
         A_char              beamerExecScript[2048];
         wchar_t             rmtUser[16];
         wchar_t             timeString[20];

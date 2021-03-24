@@ -1,26 +1,9 @@
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, regexp: true, indent: 4, maxerr: 50 */
 /*global $, window, location, CSInterface, SystemPath, themeManager*/
 
-
-
 parsed = "";
-parsed2 = new Array(); 
 currentRowId = "";
 
-
-
-function readParsedComps(parsed,currentName){
-    var c = new Array();
-    for(var x=0; x < parsed.length; x++){
-        if(parsed[x].name == currentName){
-            //alert(x);
-            for(key in parsed[x]){
-                c.push(parsed[x][key]);
-            }
-           }
-    }
-    //alert(c);
-}
 // top nav buttons toggle functionality
 function settingsButtonToggle() {
     document.getElementById("settingsBtn").classList.toggle("button-selected");
@@ -33,307 +16,120 @@ function assetsButtonToggle() {
     document.getElementById("assetsBtn").classList.toggle("button-selected");
     document.getElementById("settings").classList.add("hide");
     document.getElementById("assets").classList.remove("hide");
-} 
+}
+
+function setPixelFormat(PFvalidIds) {
+	var pixelFormatParent = document.getElementById("pixelFormat-value").pixelFormatValue.parentElement.getElementsByClassName("item");
+	
+	for(var x=0; x<pixelFormatParent.length; x++){          
+        if(PFvalidIds.includes(x)){			
+            if(pixelFormatParent[x].classList.contains("hide")){   
+                pixelFormatParent[x].classList.remove("hide");
+            } 
+        }
+        else if(pixelFormatParent[x].classList.contains("hide")==false){			
+			pixelFormatParent[x].classList.add("hide");        
+        }
+    }	
+}
+function setProfileParent(PvalidIds) {
+	var profileParent = document.getElementById("profile-value").profileValue.parentElement.getElementsByClassName("item");
+	
+    for(var x=0; x<profileParent.length; x++){            
+        if(PvalidIds.includes(x)){
+            if(profileParent[x].classList.contains("hide")){   
+                profileParent[x].classList.remove("hide");
+            }
+        }
+        else if(profileParent[x].classList.contains("hide")==false){   
+			profileParent[x].classList.add("hide");
+        }
+    }	
+}
+function setPixelAndProfileValues(PFvalidIds, PvalidIds, AddHide)
+{
+	var pixelFormatValue = document.getElementById("pixelFormat-value");
+	var profileValue = document.getElementById("profile-value");
+	
+	if(profileValue.parentElement.parentElement.classList.contains("hide")){
+		profileValue.parentElement.parentElement.classList.remove("hide");
+	}
+	else if(AddHide == true) {
+		profileValue.parentElement.parentElement.classList.add("hide");
+	}
+    if(dropdownName=="encoder"){
+		pixelFormatValue.innerHTML = pixelFormatParent[PFvalidIds[0]].innerHTML;
+		if(AddHide == false) {
+			profileValue.innerHTML = profileParent[PvalidIds[0]].innerHTML;
+		}
+	}
+}
+function setVideoEncoder(PFvalidIds, PvalidIds, AddHide) {	
+	setPixelFormat(PFvalidIds);
+	if(AddHide == false) {
+		setProfileParent(PvalidIds);
+	}	
+	setPixelAndProfileValues(PFvalidIds, PvalidIds, AddHide);
+}
 
 // setting up video settings dropdowns elements based on selected encoder 
 function setVideoSettings(args){
-    var encoderValue = "";
+    var encoderValue = document.getElementById("encoder-value");;
+	var dropdownName = "";
     if(args[2] == true){
         if(parsed[args[3]-1].encoder != ""){
             encoderValue = parsed[args[3]-1].encoder;
+        }      
+    }
+    else{        
+        var dropParent = args[0].parentElement.parentElement.parentElement;
+        if(dropParent.getElementsByClassName("label").length == 0){
+           dropdownName = dropParent.parentElement.parentElement.getElementsByClassName("label")[0].innerHTML;
         }
         else{
-            encoderValue = document.getElementById("encoder-value");
-        }
-        var dropdownName = "";
-    }
-    else{
-        encoderValue = document.getElementById("encoder-value");
-        console.log(args[0].parentElement.parentElement.parentElement);
-        var dropdownName = "";
-        var dropParent = args[0].parentElement.parentElement.parentElement.getElementsByClassName("label");
-        if(dropParent.length == 0){
-           dropdownName = args[0].parentElement.parentElement.parentElement.parentElement.parentElement.getElementsByClassName("label")[0].innerHTML;
-        }
-        else{
-            dropdownName = dropParent[0].innerHTML;
+            dropdownName = dropParent.getElementsByClassName("label")[0].innerHTML;
         }
     }
-    
-    var encoderParent = document.getElementById("encoder-value").parentElement.getElementsByClassName("item");
-
-    var pixelFormatValue = document.getElementById("pixelFormat-value");
-    var pixelFormatParent = pixelFormatValue.parentElement.getElementsByClassName("item");
-
-    var profileValue = document.getElementById("profile-value");
-    var profileParent = profileValue.parentElement.getElementsByClassName("item");
-    
+   
     var PFvalidIds = [];
     var PvalidIds =  [];
-    var x = 0;
-    
-    
+	var AddHide = false;
+       
     if(encoderValue.innerHTML == "H265/HEVC"){
-        for(x=0;x<pixelFormatParent.length;x++){
-            // dropdown-content item id 
-            //
-            PFvalidIds = [0,3,5,10,11,12,13,14,15,16,17,18,20,21,22,23];
-            if(PFvalidIds.includes(x)){
-                if(pixelFormatParent[x].classList.contains("hide")){   
-                    pixelFormatParent[x].classList.remove("hide");
-                } 
-            }
-            else{
-                if(pixelFormatParent[x].classList.contains("hide")==false){   
-                        pixelFormatParent[x].classList.add("hide");
-                }                     
-            }
-
-        }
-        for(x=0;x<profileParent.length;x++){
-            PvalidIds = [1,2,3,4,5,6,7,8,9,10,11,14,15,16];
-            if(PvalidIds.includes(x)){
-                if(profileParent[x].classList.contains("hide")){   
-                    profileParent[x].classList.remove("hide");
-                }
-            }
-            else{
-                if(profileParent[x].classList.contains("hide")==false){   
-                    profileParent[x].classList.add("hide");
-                }  
-            }
-        }
-        if(profileValue.parentElement.parentElement.classList.contains("hide")){
-           profileValue.parentElement.parentElement.classList.remove("hide");
-        }
-        if(dropdownName=="encoder"){
-           pixelFormatValue.innerHTML = pixelFormatParent[0].innerHTML;
-           profileValue.innerHTML = profileParent[1].innerHTML;
-        }
-        
+		PFvalidIds = [0,3,5,10,11,12,13,14,15,16,17,18,20,21,22,23];
+		PvalidIds = [1,2,3,4,5,6,7,8,9,10,11,14,15,16];
     }
     if(encoderValue.innerHTML == "H264/AVC"){
-        for(x=0;x<pixelFormatParent.length;x++){
-            // dropdown-content item id 
-            PFvalidIds = [0,1,3,4,5,6,7,8,9,11,12,14,15,20,21,22,23];
-            if(PFvalidIds.includes(x)){
-                if(pixelFormatParent[x].classList.contains("hide")){   
-                    pixelFormatParent[x].classList.remove("hide");
-                } 
-            }
-            else{
-                if(pixelFormatParent[x].classList.contains("hide")==false){   
-                    pixelFormatParent[x].classList.add("hide");
-                }                     
-            }
-
-        }
-        for(x=0;x<profileParent.length;x++){
-            PvalidIds = [0,1,17,18,19,20];
-            if(PvalidIds.includes(x)){
-                if(profileParent[x].classList.contains("hide")){   
-                        profileParent[x].classList.remove("hide");
-                }
-            }
-            else{
-                if(profileParent[x].classList.contains("hide")==false){   
-                    profileParent[x].classList.add("hide");
-                }  
-            } 
-        }
-        if(profileValue.parentElement.parentElement.classList.contains("hide")){
-           profileValue.parentElement.parentElement.classList.remove("hide");
-        }
-        if(dropdownName=="encoder"){
-            pixelFormatValue.innerHTML = pixelFormatParent[0].innerHTML;
-            profileValue.innerHTML = profileParent[0].innerHTML;
-        }
+		PFvalidIds = [0,1,3,4,5,6,7,8,9,11,12,14,15,20,21,22,23];
+		PvalidIds = [0,1,17,18,19,20];
     }
     if(encoderValue.innerHTML == "VC3/DNxHD"){
-        for(x=0;x<pixelFormatParent.length;x++){
-            // dropdown-content item id 
-            PFvalidIds = [3,12,13,15];
-            if(PFvalidIds.includes(x)){
-                if(pixelFormatParent[x].classList.contains("hide")){   
-                    pixelFormatParent[x].classList.remove("hide");
-                } 
-            }
-            else{
-                if(pixelFormatParent[x].classList.contains("hide")==false){   
-                    pixelFormatParent[x].classList.add("hide");
-                }                     
-            }
-
-        }
-        for(x=0;x<profileParent.length;x++){
-            PvalidIds = [21,22,23,24,25,26];
-            if(PvalidIds.includes(x)){
-                if(profileParent[x].classList.contains("hide")){   
-                        profileParent[x].classList.remove("hide");
-                }
-            }
-            else{
-                if(profileParent[x].classList.contains("hide")==false){   
-                    profileParent[x].classList.add("hide");
-                }  
-            }
-        }
-        if(profileValue.parentElement.parentElement.classList.contains("hide")){
-           profileValue.parentElement.parentElement.classList.remove("hide");
-        }
-        if(dropdownName=="encoder"){
-            pixelFormatValue.innerHTML = pixelFormatParent[3].innerHTML;
-            profileValue.innerHTML = profileParent[21].innerHTML;
-        }
-    }
-    if(encoderValue.innerHTML == "VP9"){
-        for(x=0;x<pixelFormatParent.length;x++){
-            // dropdown-content item id 
-            PFvalidIds = [0,2,3,5,10,11,12,13,14,16,17,19,20,21,22,23];
-            if(PFvalidIds.includes(x)){
-                if(pixelFormatParent[x].classList.contains("hide")){   
-                    pixelFormatParent[x].classList.remove("hide");
-                } 
-            }
-            else{
-            if(pixelFormatParent[x].classList.contains("hide")==false){   
-                    pixelFormatParent[x].classList.add("hide");
-                }                     
-            }
-
-        }
-        if(profileValue.parentElement.parentElement.classList.contains("hide")==false){
-           profileValue.parentElement.parentElement.classList.add("hide");
-        }
-        if(dropdownName=="encoder"){
-            pixelFormatValue.innerHTML = pixelFormatParent[0].innerHTML;
-            //profileValue.innerHTML = profileParent[0].innerHTML;
-        }
-    }
-    if(encoderValue.innerHTML == "AOMedia Video 1(AV1)"){
-        for(x=0;x<pixelFormatParent.length;x++){
-            // dropdown-content item id 
-            PFvalidIds = [0,3,5,11,12,13,16,17,18,20];
-            if(PFvalidIds.includes(x)){
-                if(pixelFormatParent[x].classList.contains("hide")){   
-                    pixelFormatParent[x].classList.remove("hide");
-                } 
-            }
-            else{
-            if(pixelFormatParent[x].classList.contains("hide")==false){   
-                    pixelFormatParent[x].classList.add("hide");
-                }                     
-            }
-
-        }
-        if(profileValue.parentElement.parentElement.classList.contains("hide")==false){
-           profileValue.parentElement.parentElement.classList.add("hide");
-        }
-        if(dropdownName=="encoder"){
-            pixelFormatValue.innerHTML = pixelFormatParent[0].innerHTML;
-            //profileValue.innerHTML = profileParent[0].innerHTML;
-        }
-    }
+		PFvalidIds = [3,12,13,15];
+		PvalidIds = [21,22,23,24,25,26];
+	}
     if(encoderValue.innerHTML == "ProRes"){
-        for(x=0;x<pixelFormatParent.length;x++){
-            // dropdown-content item id 
-            PFvalidIds = [12,13,27];
-            if(PFvalidIds.includes(x)){
-                if(pixelFormatParent[x].classList.contains("hide")){   
-                    pixelFormatParent[x].classList.remove("hide");
-                } 
-            }
-            else{
-            if(pixelFormatParent[x].classList.contains("hide")==false){   
-                    pixelFormatParent[x].classList.add("hide");
-                }                     
-            }
-
-        }
-        for(x=0;x<profileParent.length;x++){
-            PvalidIds = [27,28,29,30,31];
-            if(PvalidIds.includes(x)){
-                if(profileParent[x].classList.contains("hide")){   
-                        profileParent[x].classList.remove("hide");
-                }
-            }
-            else{
-                if(profileParent[x].classList.contains("hide")==false){   
-                    profileParent[x].classList.add("hide");
-                }  
-            }
-
-        }
-        if(profileValue.parentElement.parentElement.classList.contains("hide")){
-           profileValue.parentElement.parentElement.classList.remove("hide");
-        }
-        if(dropdownName=="encoder"){
-            pixelFormatValue.innerHTML = pixelFormatParent[12].innerHTML;
-            profileValue.innerHTML = profileParent[27].innerHTML;
-        }
-    }
-    if(encoderValue.innerHTML == "QuickTime Animation RLE"){
-        for(x=0;x<pixelFormatParent.length;x++){
-            // dropdown-content item id 
-            PFvalidIds = [21,24,25,26];
-            if(PFvalidIds.includes(x)){
-                if(pixelFormatParent[x].classList.contains("hide")){   
-                    pixelFormatParent[x].classList.remove("hide");
-                } 
-            }
-            else{
-                if(pixelFormatParent[x].classList.contains("hide")==false){   
-                        pixelFormatParent[x].classList.add("hide");
-                    }                     
-            }
-
-        }
-        if(profileValue.parentElement.parentElement.classList.contains("hide")==false){
-           profileValue.parentElement.parentElement.classList.add("hide");
-        }
-        if(dropdownName=="encoder"){
-            pixelFormatValue.innerHTML = pixelFormatParent[24].innerHTML;
-            //profileValue.innerHTML = profileParent[0].innerHTML;
-        }
+		PFvalidIds = [12,13,27];
+		PvalidIds = [27,28,29,30,31];
     }
     if(encoderValue.innerHTML == "HAP"){
-        for(x=0;x<pixelFormatParent.length;x++){
-            // dropdown-content item id 
-            PFvalidIds = [12,13,27];
-            if(PFvalidIds.includes(x)){
-                if(pixelFormatParent[x].classList.contains("hide")){   
-                    pixelFormatParent[x].classList.remove("hide");
-                } 
-            }
-            else{
-            if(pixelFormatParent[x].classList.contains("hide")==false){   
-                    pixelFormatParent[x].classList.add("hide");
-                }                     
-            }
-
-        }
-        for(x=0;x<profileParent.length;x++){
-            PvalidIds = [32,33,34];
-            if(PvalidIds.includes(x)){
-                if(profileParent[x].classList.contains("hide")){   
-                    profileParent[x].classList.remove("hide");
-                }
-            }
-            else{
-                if(profileParent[x].classList.contains("hide")==false){   
-                    profileParent[x].classList.add("hide");
-                }  
-            }
-
-        }
-        if(profileValue.parentElement.parentElement.classList.contains("hide")){
-           profileValue.parentElement.parentElement.classList.remove("hide");
-        }
-        if(dropdownName=="encoder"){
-            pixelFormatValue.innerHTML = pixelFormatParent[12].innerHTML;
-            profileValue.innerHTML = profileParent[32].innerHTML;
-        }
+		PFvalidIds = [12,13,27];
+		PvalidIds = [32,33,34];
     }
+	if(encoderValue.innerHTML == "VP9"){
+		PFvalidIds = [0,2,3,5,10,11,12,13,14,16,17,19,20,21,22,23];
+		AddHide = true;
+    }
+    if(encoderValue.innerHTML == "AOMedia Video 1(AV1)"){
+		PFvalidIds = [0,3,5,11,12,13,16,17,18,20];
+		AddHide = true;
+    }
+	if(encoderValue.innerHTML == "QuickTime Animation RLE"){
+		PFvalidIds = [21,24,25,26];
+		AddHide = true;
+    }
+	if(PFvalidIds[0] != undefined) {
+		setVideoEncoder(PFvalidIds, PvalidIds, AddHide);
+	}
 }
 //callback function for dropdown item event listener 
 function setDropdownValue(args) {
@@ -435,25 +231,24 @@ function setDropdownValue(args) {
             }
             
             if(parsed[args[3]-1].audio_sample_rate == ""){
-				parsed[args[3]-1].audio_sample_rate = 48000;
-			}
+                parsed[args[3]-1].audio_sample_rate = 48000;
+            }
             sampleRateValue.innerHTML = (parsed[args[3]-1].audio_sample_rate).toString() + " kHz"; 
             if(parsed[args[3]-1].audio_depth == ""){
-				parsed[args[3]-1].audio_depth = 2;
-			}
+                arsed[args[3]-1].audio_depth = 2;
+            }
             bitDepthValue.innerHTML = (parsed[args[3]-1].audio_depth * 8).toString() + " bit";
             
             if(parsed[args[3]-1].audio_channels == ""){
-				parsed[args[3]-1].audio_channels = 2;
-			}
-			if(parsed[args[3]-1].audio_channels == 1) {
-				channelsValue.innerHTML = "mono";
-			}
-			else {
-				channelsValue.innerHTML = "stereo";
-			}               
+                parsed[args[3]-1].audio_channels = 2;
+            }
+            if(parsed[args[3]-1].audio_channels == 1) {
+                channelsValue.innerHTML = "mono";
+            }
+            else {
+                channelsValue.innerHTML = "stereo";
+            }
             extensionValue.innerHTML = parsed[args[3]-1].ext;
-            
         }
         if(attribute == "not set"){
             
@@ -630,65 +425,53 @@ function setDropdownValue(args) {
             curentRow.getElementsByTagName("td")[2].innerHTML = document.getElementById("extensionValue").innerHTML;
         }
         setVideoSettings(args);
-    }
-    
+    }    
 }
 
 // callback function for composition list row event
 function compoListClicked(ar){
-    var row = ar;
-    curentRow = row;
-    var tab = document.getElementById("compositionList");
-    var allRows = tab.getElementsByTagName("TR");
-    var allRowsL = tab.getElementsByTagName("TR").length;
-    for(var x =1;x<allRowsL;x++){
-        //if(allRows[x].getElementsByTagName("td")[0].innerHTML==row.getElementsByTagName("td")[0].innerHTML){
-        if(allRows[x].getElementsByTagName("input")[0].getAttribute("data-el")==row.getElementsByTagName("input")[0].getAttribute("data-el")){
-           currentRowId = x;
-           }
+    curentRow = ar; 
+	
+    var allRows = document.getElementById("compositionList").getElementsByTagName("TR");
+		
+    for(x=1; x<allRows.length; x++){
         allRows[x].style.background = "#2c2d30";
+        if(allRows[x].getElementsByTagName("input")[0].getAttribute("data-el")==curentRow.getElementsByTagName("input")[0].getAttribute("data-el")){
+           currentRowId = x;
+		   allRows[x].style.background = "#3c87d1";
+        }
     }
-    console.log(row);
-    row.style.background = "#3c87d1";
+  
     var frameRange = document.getElementById("frameRange");
     var extensionValue = document.getElementById("extensionValue");
-    frameRange.value = row.getElementsByTagName("td")[1].innerHTML;
-    extensionValue = row.getElementsByTagName("td")[2].innerHTML;
+    frameRange.value = curentRow.getElementsByTagName("td")[1].innerHTML;
+    extensionValue = curentRow.getElementsByTagName("td")[2].innerHTML;
     
-    
-    var ex = row.getElementsByTagName("td")[2].innerHTML;
-    var n = row.getElementsByTagName("td")[0].innerHTML;
-    var ext = "";
+    var ex = curentRow.getElementsByTagName("td")[2].innerHTML;
+    var n = curentRow.getElementsByTagName("td")[0].innerHTML;
+    var ext = "not set";
     if(ex!=""){
         ext = ex;
     }
-    else{
-        ext = "not set";
-    }
     var args = new Array("", ext, true, currentRowId);
     
-    if(parsed[args[3]-1].framerate != ""){
-        document.getElementById("framerate").value = parsed[args[3]-1].framerate;
-    }
-    else{
-        document.getElementById("framerate").value = "25"
-    }
-    if(parsed[args[3]-1].bitrate != ""){
-        document.getElementById("bitrate").value = parsed[args[3]-1].bitrate;
-    }
-    else{
-        document.getElementById("bitrate").value = "5000"
-    }
-        
+    
+	if(parsed[args[3]-1].framerate == ""){
+		parsed[args[3]-1].framerate = "25";
+	}
+	if(parsed[args[3]-1].bitrate == ""){
+		parsed[args[3]-1].bitrate = "5000"
+	}
+	
+    document.getElementById("framerate").value = parsed[args[3]-1].framerate;
+	document.getElementById("bitrate").value = parsed[args[3]-1].bitrate;
+
     setDropdownValue(args);  
 }
-
-
 // events functions for text fields and compo list checkbox
 
 function dropdown(ar){ 
     //console.log("dd clicked")
-    //ar.classList.add("dropdownClicked");
 }
 
 function frameRangeChanged(ar){
@@ -709,56 +492,42 @@ function renderableChecked(ar){
 	parsed[the_row-1].renderable = rend_checked;
 }
 function ignoreMissingsChecked(ar){
-	var miss_checked_val = 0;
-	if(ar.checked == true) {
-		miss_checked_val = 1;
-	}
-	for(var x=0; x < parsed.length; x++){
-		parsed[x].ignore_missings = miss_checked_val;
-	}
+    var miss_checked_val = 0;
+    if(ar.checked == true) {
+        miss_checked_val = 1;
+    }
+    for(var x=0; x < parsed.length; x++){
+        parsed[x].ignore_missings = miss_checked_val;
+    }
 }
 function smartCollectChecked(ar){
-	var smart_checked_val = 0;
-	if(ar.checked == true) {
-		smart_checked_val = 1;
-	}
-	for(var x=0; x < parsed.length; x++){
-		parsed[x].smart_collect = smart_checked_val;
-	}
+    var smart_checked_val = 0;
+    if(ar.checked == true) {
+        smart_checked_val = 1;
+    }
+    for(var x=0; x < parsed.length; x++){
+        parsed[x].smart_collect = smart_checked_val;
+    }
 }
 
 
 // filtering for queued compositions before submit
 function setObjectSubmit(){
     var reparsed = new Array();
-    var ar = "";
-    var lastSelected = currentRowId;
     
-    for(var x=0;x< parsed.length;x++){
+    for(var x=0; x< parsed.length; x++){
         if(parsed[x].renderable == 1){
-            ar = document.getElementById("compositionList").getElementsByTagName("tr")[x+1];
-            currentRowId = x;
-            compoListClicked(ar);
             reparsed.push(parsed[x]);
         }
     }
-    
-    currentRowId = lastSelected;
-    ar = document.getElementById("compositionList").getElementsByTagName("tr")[currentRowId];
-    compoListClicked(ar);
     return reparsed
 }
 
 // submit function executed by SEND button
 function submit(ar){
-    var reparsed = setObjectSubmit();
-    
     var csInterface = new CSInterface();
-	window.close();
-    csInterface.evalScript('submit(' + JSON.stringify(reparsed) + ')', function(returned){
-		//alert
-    });
-    
+    window.close();
+    csInterface.evalScript('submit(' + JSON.stringify(setObjectSubmit()) + ')', function(returned){});
 }
 
 //add events 
@@ -839,66 +608,47 @@ function initx() {
     /*themeManager.init();*/
     var csInterface = new CSInterface();
     document.getElementById("settingsBtn").classList.toggle("button-selected");
-
     document.getElementById("videoLabel").classList.add("hide");
     document.styleSheets[0].insertRule("div#videoContainer { display: none;}", 0);
 
-
-    csInterface.evalScript('initX()', function(jj){
-        var cc = jj;
+    csInterface.evalScript('initX()', function(cc){
         var table = document.getElementById("compositionList");
         parsed = JSON.parse(cc);
         console.log(cc);
-        var c =1;
-        for(var x=0; x < parsed.length; x++){
-            if(parsed[x].renderable == 1){
-                var row = table.insertRow(c);
-                c++;
-                var cell1 = row.insertCell(0);
-                var cell2 = row.insertCell(1);
-                var cell3 = row.insertCell(2);
-                var cell4 = row.insertCell(3);
+		
+        for(var x=0; x < parsed.length; x++)
+		{
+            var row = table.insertRow(x+1);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
 
-                // Add some text to the new cells:
-                cell1.innerHTML = parsed[x].name;
-                cell2.innerHTML = parsed[x].frame_range;
-                if(parsed[x].ext == ""){
-                   parsed[x].ext = "not set";
-                }
-
-                cell3.innerHTML = parsed[x].ext;
-                if(parsed[x].renderable == 1){
-                    cell4.innerHTML = '<input type="checkbox" class="checkbox" name="scales" data-el="' + (x+1).toString() + '" checked>';
-                   }
-                else{
-                    cell4.innerHTML = '<input type="checkbox" class="checkbox" name="scales data-el="' + (x+1).toString() + '">';
-                }
-                parsed2.push(parsed[x]);
+            // Add some text to the new cells:
+            cell1.innerHTML = parsed[x].name;
+            cell2.innerHTML = parsed[x].frame_range;
+            if(parsed[x].ext == ""){
+               parsed[x].ext = "not set";
             }
 
+            cell3.innerHTML = parsed[x].ext;
+			var is_cell_checked = '" >'
+			if(parsed[x].renderable == 1) {
+                is_cell_checked = '" checked >';
+            }
+			cell4.innerHTML = '<input type="checkbox" class="checkbox" name="scales" data-el="' + (x+1).toString() + is_cell_checked;       
         }
         // set first row as selected 
-        currentRowId = 1;
-        curentRow = document.getElementById("compositionList").getElementsByTagName("tr")[currentRowId];
-        var ar =  document.getElementById("compositionList").getElementsByTagName("tr")[1];
-        console.log(ar);
-        compoListClicked(ar);
-        parsed = parsed2;
         
-        // add event listener to composition list rows in <body> onload event due to dynamically added content 
-        var table = document.getElementById("compositionList");
-        var rows = table.getElementsByTagName("tr");
-        var check_box = "";
-        for (i = 1; i < rows.length; i++) {
-            rows[i].addEventListener('click', function(){
-                                                    var ar = this;
-                                                    compoListClicked(ar);}
-                                        , false);
-            check_box = rows[i].getElementsByTagName("input")[0];
-            check_box.addEventListener('click', function(){
-                                                    var ar = this;
-                                                    renderableChecked(ar);}
-                                        , false);
+		currentRowId = 1;
+		var rows = table.getElementsByTagName("tr");
+        console.log(rows[currentRowId]);
+        compoListClicked(rows[currentRowId]);
+        
+        for (i = 1; i < rows.length; i++) 
+		{
+            rows[i].addEventListener('click', function(){ var ar = this; compoListClicked(ar);}, false);
+            rows[i].getElementsByTagName("input")[0].addEventListener('click', function(){ var ar = this; renderableChecked(ar);}, false);
         }
     });
     

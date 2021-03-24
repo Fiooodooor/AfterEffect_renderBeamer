@@ -4,9 +4,33 @@ AeSceneCollector::AeSceneCollector(AEGP_PluginID PluginId, SPBasicSuite *Sp, AEG
 	: ct(&theCt)
 	, sp(Sp)
 	, pluginId(PluginId)
-	, projectH(ProjectH)	
+	, projectH(ProjectH)
+	, pbh(nullptr)
+	, pbh_items_number(0)
+	, smart_collect(0)
+	, continue_on_missing(0)
 {
 }
+ErrorCodesAE AeSceneCollector::AeSceneCollect(A_Boolean useUiExporter)
+{
+	AEGP_SuiteHandler suites(sp);
+	ERROR_CATCH_START
+		ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetApplicationBlob(AEGP_PersistentType_MACHINE_SPECIFIC, &pbh))
+		ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(pbh, "renderBeamer", "rq_items", 0, &pbh_items_number))
+		if(_ErrorCode == NoError && pbh_items_number > 0)
+		{
+			ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(pbh, "renderBeamer", "smart_collect_0", 0, &smart_collect))
+			ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(pbh, "renderBeamer", "ignore_missings_0", 0, &continue_on_missing))
+			if (_ErrorCode != NoError)
+				throw PluginError(_ErrorCode);
+			if(smart_collect == 0)			
+				ERROR_AE(AeNormalCollect(useUiExporter))
+			else
+				ERROR_AE(AeSmartCollect(useUiExporter))
+		}
+	ERROR_CATCH_END_RETURN(suites)
+}
+
 ErrorCodesAE AeSceneCollector::AeNormalCollect(A_Boolean useUiExporter)
 {
 	AEGP_SuiteHandler suites(sp);
@@ -83,8 +107,7 @@ ErrorCodesAE AeSceneCollector::collectSceneUiRenderQueueItems()
 {
 	AEGP_SuiteHandler suites(sp);
 	ErrorCodesAE _ErrorCode = NoError;
-	AEGP_PersistentBlobH bh = nullptr;
-	A_long rq_items=0, it=0, temp_long=0;
+	A_long it=0, temp_long=0;
 	std::string it_str, memory_buff, memory_buff1;
 	AEGP_RQItemRefH	rq_ItemRef = nullptr;
 	AEGP_ItemH rq_ItemH = nullptr;
@@ -94,76 +117,71 @@ ErrorCodesAE AeSceneCollector::collectSceneUiRenderQueueItems()
 	gfsRqItem *gfs_rq_node = nullptr;
 	gfsRqItemOutput *gfs_rq_node_out = nullptr;	
 	
-	ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetApplicationBlob(AEGP_PersistentType_MACHINE_SPECIFIC, &bh))
-	ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(bh, "renderBeamer", "rq_items", 0, &rq_items))
-	if(_ErrorCode == NoError && rq_items > 0)
+	while(it < pbh_items_number)
 	{
-		while(it < rq_items)
-		{
-			gfs_rq_node = new gfsRqItem;
-			gfs_rq_node_out = new gfsRqItemOutput({ 0, "png", "-", 1, 0, 0, 0, {48000, AEGP_SoundEncoding_UNSIGNED_PCM, 2, 2}, "" });
-			if (!gfs_rq_node || !gfs_rq_node_out)
-				return AE_ErrAlloc;
-			it_str = std::to_string(it);
-			
-			ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(bh, "renderBeamer", ("rq_id_" + it_str).c_str(), 0, &gfs_rq_node->indexNr))
-			ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(bh, "renderBeamer", ("width_" + it_str).c_str(), 0, &gfs_rq_node->width))
-			ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(bh, "renderBeamer", ("height_" + it_str).c_str(), 0, &gfs_rq_node->height))
-			ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetString(bh, "renderBeamer", ("frame_range_" + it_str).c_str(), "0to1s1", AEGP_MAX_ITEM_NAME_SIZE, &gfs_rq_node->frame_string[0], NULL))
-			ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetString(bh, "renderBeamer", ("fps_" + it_str).c_str(), "25", AEGP_MAX_ITEM_NAME_SIZE, &gfs_rq_node->fps[0], NULL))
-			ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(bh, "renderBeamer", ("rq_out_id_" + it_str).c_str(), 0, &gfs_rq_node_out->indexNr))
-			ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(bh, "renderBeamer", ("smart_collect_" + it_str).c_str(), 0, &temp_long))
-			if(_ErrorCode == NoError) gfs_rq_node->smart_collect = static_cast<A_Boolean>(temp_long);
-			ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(bh, "renderBeamer", ("ignore_missings_" + it_str).c_str(), 0, &temp_long))
-			if (_ErrorCode == NoError) gfs_rq_node->continue_on_missing = static_cast<A_Boolean>(temp_long);
-			ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(bh, "renderBeamer", ("audio_depth_" + it_str).c_str(), 0, &gfs_rq_node_out->soundFormat.bytes_per_sampleL))
-			ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(bh, "renderBeamer", ("audio_channels_" + it_str).c_str(), 0, &gfs_rq_node_out->soundFormat.num_channelsL))
-			ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetFpLong(bh, "renderBeamer", ("audio_sample_rate_" + it_str).c_str(), 0, &gfs_rq_node_out->soundFormat.sample_rateF))
-			ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(bh, "renderBeamer", ("out_audio_enabled_" + it_str).c_str(), 0, &temp_long))
-			if (_ErrorCode == NoError) gfs_rq_node_out->outputAudioEnabled = static_cast<A_Boolean>(temp_long);
-			ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(bh, "renderBeamer", ("comp_has_audio_" + it_str).c_str(), 0, &temp_long))
-			if (_ErrorCode == NoError) gfs_rq_node_out->outputAudioSetToUse = static_cast<A_Boolean>(temp_long);
+		gfs_rq_node = new gfsRqItem;
+		gfs_rq_node_out = new gfsRqItemOutput({ 0, "png", "-", 1, 0, 0, 0, {48000, AEGP_SoundEncoding_UNSIGNED_PCM, 2, 2}, "" });
+		if (!gfs_rq_node || !gfs_rq_node_out)
+			return AE_ErrAlloc;
+		it_str = std::to_string(it);
+		gfs_rq_node->smart_collect = static_cast<A_Boolean>(smart_collect);
+		gfs_rq_node->continue_on_missing = static_cast<A_Boolean>(continue_on_missing);
 
-			ERROR_AEER(suites.RQItemSuite3()->AEGP_GetRQItemByIndex(gfs_rq_node->indexNr - 1, &rq_ItemRef))
-			ERROR_AEER(suites.RQItemSuite3()->AEGP_GetCompFromRQItem(rq_ItemRef, &rq_ItemComposition))
-			ERROR_AEER(suites.CompSuite10()->AEGP_GetItemFromComp(rq_ItemComposition, &rq_ItemH))
-			ERROR_AEER(suites.ItemSuite7()->AEGP_GetItemName(rq_ItemH, gfs_rq_node->compositio_name))
-			ERROR_AEER(suites.OutputModuleSuite4()->AEGP_GetOutputModuleByIndex(rq_ItemRef, gfs_rq_node_out->indexNr - 1, &rq_ItemOutModuleRef))
-			ERROR_AEER(suites.OutputModuleSuite4()->AEGP_GetOutputFilePath(rq_ItemRef, rq_ItemOutModuleRef, &mem_handle))
-			ERROR_AEER(rbUtilities::copyMemhUTF16ToString(sp, mem_handle, memory_buff))
-			if (_ErrorCode == NoError) gfs_rq_node_out->outputFile = memory_buff;
-			ERROR_AEER(suites.OutputModuleSuite4()->AEGP_GetExtraOutputModuleInfo(rq_ItemRef, rq_ItemOutModuleRef, &mem_handle, &mem_handle1, &gfs_rq_node_out->outFileIsSeq, &gfs_rq_node_out->outFileIsMultiframe))
-			ERROR_AEER(rbUtilities::copyMemhUTF16ToString(sp, mem_handle, memory_buff))
-			ERROR_AEER(rbUtilities::copyMemhUTF16ToString(sp, mem_handle1, memory_buff1))
-			if (_ErrorCode == NoError) RB_STRNCPTY(gfs_rq_node_out->outputType, memory_buff.c_str(), 46);
-			if (_ErrorCode == NoError) RB_STRNCPTY(gfs_rq_node_out->outputInfo, memory_buff1.c_str(), 94);
+		ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(pbh, "renderBeamer", ("rq_id_" + it_str).c_str(), 0, &gfs_rq_node->indexNr))
+		ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(pbh, "renderBeamer", ("width_" + it_str).c_str(), 0, &gfs_rq_node->width))
+		ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(pbh, "renderBeamer", ("height_" + it_str).c_str(), 0, &gfs_rq_node->height))
+		ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetString(pbh, "renderBeamer", ("frame_range_" + it_str).c_str(), "0to1s1", AEGP_MAX_ITEM_NAME_SIZE, &gfs_rq_node->frame_string[0], NULL))
+		ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetString(pbh, "renderBeamer", ("fps_" + it_str).c_str(), "25", AEGP_MAX_ITEM_NAME_SIZE, &gfs_rq_node->fps[0], NULL))
+		ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(pbh, "renderBeamer", ("rq_out_id_" + it_str).c_str(), 0, &gfs_rq_node_out->indexNr))
 
-			if (gfs_rq_node->smart_collect != 0) {
-				ERROR_AEER(collectSceneRqItem(new AeObjectNode(pluginId, sp, rq_ItemH, 0)))
-			}
-			if (_ErrorCode == NoError)
-			{
-				gfs_rq_node->output_mods.push_back(gfs_rq_node_out);
-				ct->gfsRqItemsList.push_back(gfs_rq_node);
-				gfs_rq_node_out = nullptr;
-				gfs_rq_node = nullptr;
-			}
+		ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(pbh, "renderBeamer", ("audio_depth_" + it_str).c_str(), 0, &gfs_rq_node_out->soundFormat.bytes_per_sampleL))
+		ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(pbh, "renderBeamer", ("audio_channels_" + it_str).c_str(), 0, &gfs_rq_node_out->soundFormat.num_channelsL))
+		ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetFpLong(pbh, "renderBeamer", ("audio_sample_rate_" + it_str).c_str(), 0, &gfs_rq_node_out->soundFormat.sample_rateF))
+		ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(pbh, "renderBeamer", ("out_audio_enabled_" + it_str).c_str(), 0, &temp_long))
+		if (_ErrorCode == NoError) gfs_rq_node_out->outputAudioEnabled = static_cast<A_Boolean>(temp_long);
+		ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(pbh, "renderBeamer", ("comp_has_audio_" + it_str).c_str(), 0, &temp_long))
+		if (_ErrorCode == NoError) gfs_rq_node_out->outputAudioSetToUse = static_cast<A_Boolean>(temp_long);
 
-			suites.PersistentDataSuite4()->AEGP_DeleteEntry(bh, "renderBeamer", ("rq_id_" + it_str).c_str());
-			suites.PersistentDataSuite4()->AEGP_DeleteEntry(bh, "renderBeamer", ("name_" + it_str).c_str());
-			suites.PersistentDataSuite4()->AEGP_DeleteEntry(bh, "renderBeamer", ("width_" + it_str).c_str());
-			suites.PersistentDataSuite4()->AEGP_DeleteEntry(bh, "renderBeamer", ("height_" + it_str).c_str());
-			suites.PersistentDataSuite4()->AEGP_DeleteEntry(bh, "renderBeamer", ("frame_range_" + it_str).c_str());
-			suites.PersistentDataSuite4()->AEGP_DeleteEntry(bh, "renderBeamer", ("fps_" + it_str).c_str());
-			suites.PersistentDataSuite4()->AEGP_DeleteEntry(bh, "renderBeamer", ("rq_out_id_" + it_str).c_str());
-			suites.PersistentDataSuite4()->AEGP_DeleteEntry(bh, "renderBeamer", ("output_full_path_" + it_str).c_str());
-			suites.PersistentDataSuite4()->AEGP_DeleteEntry(bh, "renderBeamer", ("audio_depth_" + it_str).c_str());
-			suites.PersistentDataSuite4()->AEGP_DeleteEntry(bh, "renderBeamer", ("audio_channels_" + it_str).c_str());
-			suites.PersistentDataSuite4()->AEGP_DeleteEntry(bh, "renderBeamer", ("audio_sample_rate_" + it_str).c_str());
-			suites.PersistentDataSuite4()->AEGP_DeleteEntry(bh, "renderBeamer", ("out_audio_enabled_" + it_str).c_str());
-			suites.PersistentDataSuite4()->AEGP_DeleteEntry(bh, "renderBeamer", ("comp_has_audio_" + it_str).c_str());
-			++it;
+		ERROR_AEER(suites.RQItemSuite3()->AEGP_GetRQItemByIndex(gfs_rq_node->indexNr - 1, &rq_ItemRef))
+		ERROR_AEER(suites.RQItemSuite3()->AEGP_GetCompFromRQItem(rq_ItemRef, &rq_ItemComposition))
+		ERROR_AEER(suites.CompSuite10()->AEGP_GetItemFromComp(rq_ItemComposition, &rq_ItemH))
+		ERROR_AEER(suites.ItemSuite7()->AEGP_GetItemName(rq_ItemH, gfs_rq_node->compositio_name))
+		//ERROR_AEER(suites.ItemSuite9()->AEGP_GetItemName() )
+		ERROR_AEER(suites.OutputModuleSuite4()->AEGP_GetOutputModuleByIndex(rq_ItemRef, gfs_rq_node_out->indexNr - 1, &rq_ItemOutModuleRef))
+		ERROR_AEER(suites.OutputModuleSuite4()->AEGP_GetOutputFilePath(rq_ItemRef, rq_ItemOutModuleRef, &mem_handle))
+		ERROR_AEER(rbUtilities::copyMemhUTF16ToString(sp, mem_handle, memory_buff))
+		if (_ErrorCode == NoError) gfs_rq_node_out->outputFile = memory_buff;
+		ERROR_AEER(suites.OutputModuleSuite4()->AEGP_GetExtraOutputModuleInfo(rq_ItemRef, rq_ItemOutModuleRef, &mem_handle, &mem_handle1, &gfs_rq_node_out->outFileIsSeq, &gfs_rq_node_out->outFileIsMultiframe))
+		ERROR_AEER(rbUtilities::copyMemhUTF16ToString(sp, mem_handle, memory_buff))
+		ERROR_AEER(rbUtilities::copyMemhUTF16ToString(sp, mem_handle1, memory_buff1))
+		if (_ErrorCode == NoError) RB_STRNCPTY(gfs_rq_node_out->outputType, memory_buff.c_str(), 46);
+		if (_ErrorCode == NoError) RB_STRNCPTY(gfs_rq_node_out->outputInfo, memory_buff1.c_str(), 94);
+
+		if (gfs_rq_node->smart_collect != 0) {
+			ERROR_AEER(collectSceneRqItem(new AeObjectNode(pluginId, sp, rq_ItemH, 0)))
 		}
+		if (_ErrorCode == NoError)
+		{
+			gfs_rq_node->output_mods.push_back(gfs_rq_node_out);
+			ct->gfsRqItemsList.push_back(gfs_rq_node);
+			gfs_rq_node_out = nullptr;
+			gfs_rq_node = nullptr;
+		}
+
+		suites.PersistentDataSuite4()->AEGP_DeleteEntry(pbh, "renderBeamer", ("rq_id_" + it_str).c_str());
+		suites.PersistentDataSuite4()->AEGP_DeleteEntry(pbh, "renderBeamer", ("name_" + it_str).c_str());
+		suites.PersistentDataSuite4()->AEGP_DeleteEntry(pbh, "renderBeamer", ("width_" + it_str).c_str());
+		suites.PersistentDataSuite4()->AEGP_DeleteEntry(pbh, "renderBeamer", ("height_" + it_str).c_str());
+		suites.PersistentDataSuite4()->AEGP_DeleteEntry(pbh, "renderBeamer", ("frame_range_" + it_str).c_str());
+		suites.PersistentDataSuite4()->AEGP_DeleteEntry(pbh, "renderBeamer", ("fps_" + it_str).c_str());
+		suites.PersistentDataSuite4()->AEGP_DeleteEntry(pbh, "renderBeamer", ("rq_out_id_" + it_str).c_str());
+		suites.PersistentDataSuite4()->AEGP_DeleteEntry(pbh, "renderBeamer", ("output_full_path_" + it_str).c_str());
+		suites.PersistentDataSuite4()->AEGP_DeleteEntry(pbh, "renderBeamer", ("audio_depth_" + it_str).c_str());
+		suites.PersistentDataSuite4()->AEGP_DeleteEntry(pbh, "renderBeamer", ("audio_channels_" + it_str).c_str());
+		suites.PersistentDataSuite4()->AEGP_DeleteEntry(pbh, "renderBeamer", ("audio_sample_rate_" + it_str).c_str());
+		suites.PersistentDataSuite4()->AEGP_DeleteEntry(pbh, "renderBeamer", ("out_audio_enabled_" + it_str).c_str());
+		suites.PersistentDataSuite4()->AEGP_DeleteEntry(pbh, "renderBeamer", ("comp_has_audio_" + it_str).c_str());
+		++it;
 	}
 	return _ErrorCode;
 }
@@ -252,12 +270,15 @@ ErrorCodesAE AeSceneCollector::smartCollectToRender()
 			++it;
 		}
 		if (it != end) {
-			auto *comp_node = new AeCompNode(*it);
+			auto *comp_node = new AeCompNode(node);
 			compositionsSortedList.erase(it); 
 			comp_node->generateLayers();
 			renderCompositionPushBack(comp_node);
 			collectCompositionLayersToRender(comp_node);
 		}
+		else {
+			delete node;			
+		}		
 		rqCompositionSortedList.pop_front();
 	}
 	return smartTrimProject();
@@ -277,6 +298,10 @@ ErrorCodesAE AeSceneCollector::renderCompositionPushBack(AeCompNode *node)
 			effect->loadEffectInfo(node->getSp());
 			ct->effectsList.push_back(effect);
 		}
+	//	else {
+			
+		//}
+		
 	}	
 	for (auto *font : node->getFontsList())
 	{

@@ -430,24 +430,24 @@ void rbUtilities::getTimeString(wchar_t *buff, A_long buffSize, bool path)
 
 }
 
-void rbUtilities::getEnvVariable(const char *variable, char *buffer, unsigned long long size)
+//void rbUtilities::getEnvVariable(const char *variable, char *buffer, unsigned long long size)
+ErrorCodesAE rbUtilities::getEnvVariable(std::string const &env_variable, fs::path &result_path)
 {
-    char* tmp_buffer = nullptr;
-#ifdef AE_OS_WIN
-    size_t bufferSize = 0;
-    if (_dupenv_s(&tmp_buffer, &bufferSize, variable) == 0 && buffer != nullptr)
-    {
-        strcpy_s(buffer, size, tmp_buffer);
-        free(tmp_buffer);
-    }
-
+#ifdef AE_OS_WIN	
+	wchar_t* buffer = nullptr;
+	size_t buffer_size = 0;
+	if (_wdupenv_s(&buffer, &buffer_size, std::wstring(env_variable.begin(), env_variable.end()).c_str()) == 0)
+	{
 #else
-	tmp_buffer = getenv(variable);
-    if (tmp_buffer != NULL)
-        strncpy(buffer, tmp_buffer, size);
-    else
-        buffer[0] = '\0';
+	char *buffer = getenv(env_variable.c_str());
+	if (buffer)
+	{
 #endif
+		result_path = buffer;
+		free(buffer);
+		return NoError;
+	}
+	return ErrorResult;
 }
 
 ErrorCodesAE rbUtilities::execBeamerCmd(beamerParamsStruct bps, BeamerMasks mask, wchar_t *buffer, A_long buffer_size)

@@ -73,7 +73,7 @@ private:
     void UpdateMenuHook(AEGP_WindowType active_window) const;
     void CommandHook(AEGP_Command command, AEGP_HookPriority hook_priority, A_Boolean already_handledB, A_Boolean *handledPB);
 
-	void DumpProject(A_Boolean useSmartCollector, A_Boolean useBatchExporter = FALSE, A_Boolean useUiExporter = FALSE);
+	void DumpProject(A_Boolean useUiExporter = FALSE);
 	void PluginVersion();
 	void CostCalculator();
 

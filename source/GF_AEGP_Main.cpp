@@ -39,8 +39,6 @@ Renderbeamer::Renderbeamer(SPBasicSuite *pica_basicP, AEGP_PluginID pluginID)
     PT_ETX(i_sp.RegisterSuite5()->AEGP_RegisterCommandHook(pluginId, AEGP_HP_BeforeAE, beamerUiBatchExport, &Renderbeamer::SCommandHook, reinterpret_cast<AEGP_CommandRefcon>(this)))
 
     PT_ETX(i_sp.RegisterSuite5()->AEGP_RegisterUpdateMenuHook(pluginId, &Renderbeamer::SUpdateMenuHook, NULL))
-	
-	//i_sp.UtilitySuite6()->AEGP_WriteToDebugLog("subsystem", "event", "info");
 }
 
 void Renderbeamer::CommandHook(
@@ -51,16 +49,16 @@ void Renderbeamer::CommandHook(
 {
 	ERROR_CATCH_START//_MOD(MainCommandHookModule)
 		*handledPB = TRUE;		
-		if (command == beamerEditCmd) {
-			*handledPB = TRUE;
-        }
-		else if (command == beamerUiBatchExport) {
-			DumpProject(FALSE, TRUE, TRUE);
+		if (command == beamerUiBatchExport) {
+			if (output_prompt == FALSE)			
+				ERROR_AEER(i_sp.UtilitySuite6()->AEGP_ReportInfo(pluginId, GetStringPtr(StrID_OutputFormatPNGWarning)))
+			output_prompt = TRUE;		
+			DumpProject(TRUE);
 		}	
 		else if(command == beamerCostCalcCmd) {
 			CostCalculator();
         }
-		else {
+		else if (command != beamerEditCmd) {
 			*handledPB = FALSE;
 		}
 	ERROR_CATCH_END(i_sp)
@@ -74,44 +72,22 @@ void Renderbeamer::UpdateMenuHook(AEGP_WindowType active_window) const
 		ERROR_AEER(i_sp.CommandSuite1()->AEGP_EnableCommand(beamerCostCalcCmd))
 	ERROR_CATCH_END(i_sp)
 }
-void Renderbeamer::DumpProject(A_Boolean useSmartCollector, A_Boolean useBatchExporter, A_Boolean useUiExporter)
+void Renderbeamer::DumpProject(A_Boolean useUiExporter)
 {
 	ERROR_CATCH_START
-		if(output_prompt == FALSE)
-		{
-			ERROR_AEER(i_sp.UtilitySuite6()->AEGP_ReportInfo(pluginId, GetStringPtr(StrID_OutputFormatPNGWarning)))
-			output_prompt = TRUE;
-		}
 		ERROR_AE(GF_Dumper::PreCheckProject(i_pica_basicP, pluginId, &myPaths))
 		if (_ErrorCode == NoError) 
 		{			
-			GF_Dumper tempDumper(i_pica_basicP, pluginId, &myPaths);
-			ERROR_AE(tempDumper.PrepareProject())
+			GF_Dumper project_dumper(i_pica_basicP, pluginId, &myPaths);
+			ERROR_AE(project_dumper.PrepareProject())
 			if (_ErrorCode == NoError) 
 			{
-				AeSceneConteiner SceneContainer;
-				AeSceneCollector collector(pluginId, i_pica_basicP, tempDumper.rootProjH, SceneContainer);
-				if (useSmartCollector == TRUE) {
-					ERROR_AE(collector.AeSmartCollect(useUiExporter))
-				}
-				else {
-					ERROR_AE(collector.AeNormalCollect(useUiExporter))
-				}
-				ERROR_AE(tempDumper.setConteiner(SceneContainer))
-				if (useBatchExporter == FALSE) {
-					ERROR_AE(tempDumper.newDumpProject())
-					if (_ErrorCode == NoError)
-					{
-						ERROR_AEER(i_sp.UtilitySuite6()->AEGP_ReportInfo(pluginId, GetStringPtr(StrID_ProjectSent)))
-					}
-				}
-				else {
-					ERROR_AE(tempDumper.newBatchDumpProject(useUiExporter))
-					if (_ErrorCode == NoError)
-					{
-						ERROR_AEER(i_sp.UtilitySuite6()->AEGP_ReportInfo(pluginId, GetStringPtr(StrID_ProjectSent)))
-					}
-				}
+				AeSceneConteiner scene_items_container;
+				AeSceneCollector collector(pluginId, i_pica_basicP, project_dumper.rootProjH, scene_items_container);
+				ERROR_AE(collector.AeSceneCollect(useUiExporter))
+				ERROR_AE(project_dumper.setConteiner(scene_items_container))
+				ERROR_AE(project_dumper.newBatchDumpProject(useUiExporter))
+				ERROR_AEER(i_sp.UtilitySuite6()->AEGP_ReportInfo(pluginId, GetStringPtr(StrID_ProjectSent)))
 			}
 		}
 		// DEBUG_PLUGIN_DUMP_PROJ_END

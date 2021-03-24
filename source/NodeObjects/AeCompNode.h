@@ -74,8 +74,8 @@ public:
 	std::list<AeFontNode*> &getFontsList();
 
 protected:
-	long pushUniqueEffect(AEGP_InstalledEffectKey theEffectKey);
-	long pushUniqueFont(AeFontNode* fontNode);
+	long pushUniqueEffect(AEGP_InstalledEffectKey effect_key);
+	long pushUniqueFont(AeFontNode* font_node);
 	AEGP_CompH compH;
 	A_long layersN;
 	std::list<AeLayerNode*> layersList;

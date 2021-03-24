@@ -1,13 +1,13 @@
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, regexp: true, indent: 4, maxerr: 50 */
 /*global $, Folder*/
 
-function compositionX(name,frameRange,theFps,renderable)
+function compositionX()
 {
-    this.name = name;
-    this.frame_range = frameRange;
-	this.fps = theFps;
+    this.name = "";
+    this.frame_range = "";
+	this.fps = 25;
     this.ext  = "";
-    this.renderable = renderable;
+    this.renderable = 0;
     this.comp_has_audio = 0;
     this.out_audio_enabled = 0;
     this.audio_depth = 2;
@@ -27,6 +27,13 @@ function compositionX(name,frameRange,theFps,renderable)
 	this.smart_collect = 0;
 }
 
+function readRenderQueueItems(){
+    var rqi = new Array();
+    for (var i = 1; i <= app.project.renderQueue.numItems; i++){ 
+        rqi.push(app.project.renderQueue.item(i));
+    }
+    return rqi;
+}
 
 function submit(objS){
     var parsed = objS;
@@ -34,8 +41,7 @@ function submit(objS){
 	app.preferences.savePrefAsString(sectionName , "rq_items", parsed.length); 
     for(var x=0; x < parsed.length; x++){
         for(var key in parsed[x]){
-            app.preferences.savePrefAsString(sectionName , key + "_" + x.toString(), parsed[x][key]); 
-            //app.preferences.deletePref(sectionName, key+"_"+x.toString());
+            app.preferences.savePrefAsString(sectionName , key + "_" + x.toString(), parsed[x][key]);             
         }
     }
     app.preferences.saveToDisk();
@@ -49,8 +55,6 @@ function initX(){
     var renderQueueItems = readRenderQueueItems();
     var compositions = new Array();
     
-	var rq_fps= "";
-	var rq_frame_range = "";
 	var rq;
 	var rq_settings;
 	var rq_out;
@@ -58,43 +62,43 @@ function initX(){
 	var rq_out_nr = 1;
 	
 	for (var i = 0; i < renderQueueItems.length; i++)
-	{        
-		if(renderQueueItems[i].status == RQItemStatus.QUEUED )
-		{ 
-			rq =  renderQueueItems[i];
-			rq_settings = rq.getSettings(GetSettingsFormat.STRING);
-			rq_out = rq.outputModule(rq_out_nr)        
-			rq_out_settings = rq_out.getSettings(GetSettingsFormat.NUMBER );
-			rq_fps=rq_settings[rq_settings["Frame Rate"]];
-			rq_frame_range = (Math.round((rq.timeSpanStart)*rq_fps)).toString()+"to"+(Math.round((rq.timeSpanStart+rq.timeSpanDuration)*rq_fps)-1).toString()+"s1";
-			
-			var c = new compositionX(rq.comp.name,rq_frame_range,rq_fps,1);			
-			c.width = rq.comp.width;
-			c.height = rq.comp.height;				
-			c.composition_id = rq.comp.id;
-			c.rq_id = (i+1).toString();
-			c.rq_out_id = (rq_out_nr).toString();
-			
-			if(rq.comp.hasAudio == true) {
-					c.comp_has_audio  = 1;
-				} else {
-					c.comp_has_audio  = 0;
-			}
-			if(rq_out_settings["Output Audio"] == 3)
-			{
-				c.out_audio_enabled = c.comp_has_audio;
-			}
-			else
-			{
-				c.out_audio_enabled = rq_out_settings["Output Audio"] - 1;
-			}
-			c.audio_channels = rq_out_settings["Audio Channels"];
-			if(rq_out_settings["Audio Sample Rate"] > 0)
-				c.audio_sample_rate = rq_out_settings["Audio Sample Rate"];
-			c.audio_depth = rq_out_settings["Audio Bit Depth"];
-			c.ext = rq_out_settings["Output File Info"]["File Name"].split(".")[1];			
-			compositions.push(c);
+	{
+		var c = new compositionX();
+		if(renderQueueItems[i].status == RQItemStatus.QUEUED ) {
+			c.renderable = 1;
 		}
+		rq =  renderQueueItems[i];
+		rq_settings = rq.getSettings(GetSettingsFormat.STRING);
+		rq_out = rq.outputModule(rq_out_nr)        
+		rq_out_settings = rq_out.getSettings(GetSettingsFormat.NUMBER );			
+		
+		c.name = rq.comp.name;
+		c.fps = rq_settings[rq_settings["Frame Rate"]];
+		c.frame_range = (Math.round((rq.timeSpanStart)*c.fps)).toString()+"to"+(Math.round((rq.timeSpanStart+rq.timeSpanDuration)*c.fps)-1).toString()+"s1";
+		
+		c.width = rq.comp.width;
+		c.height = rq.comp.height;				
+		c.composition_id = rq.comp.id;
+		c.rq_id = (i+1).toString();
+		c.rq_out_id = (rq_out_nr).toString();
+		
+		if(rq.comp.hasAudio == true) {
+			c.comp_has_audio  = 1;
+		} else {
+			c.comp_has_audio  = 0;
+		}
+		if(rq_out_settings["Output Audio"] == 3) {
+			c.out_audio_enabled = c.comp_has_audio;
+		}
+		else {
+			c.out_audio_enabled = rq_out_settings["Output Audio"] - 1;
+		}
+		c.audio_channels = rq_out_settings["Audio Channels"];
+		if(rq_out_settings["Audio Sample Rate"] > 0)
+			c.audio_sample_rate = rq_out_settings["Audio Sample Rate"];
+		c.audio_depth = rq_out_settings["Audio Bit Depth"];
+		c.ext = rq_out_settings["Output File Info"]["File Name"].split(".")[1];			
+		compositions.push(c);	
 	}
     return JSON.stringify(compositions);
 }
@@ -120,38 +124,4 @@ function createArrayFromObject(obj){
     }
     return newArray;
 }
-    
-
-function readCompositions(){
-    var comps = new Array();
-    for (var i = 1; i <= app.project.numItems; i++){ 
-        if (app.project.item(i) instanceof CompItem) {
-            comps.push(app.project.item(i));
-        }
-    }
-    return comps;
-}
-
-function readRenderQueueItems(){
-    var rqi = new Array();
-    for (var i = 1; i <= app.project.renderQueue.numItems; i++){ 
-        rqi.push(app.project.renderQueue.item(i));
-    }
-    return rqi;
-}
-    
-function mainX(){
-    var cc = initX();
-    var x  = new Array();
-    var s = new Array;
-    for (var i = 1; i <= cc.length; i++){ 
-
-        s.push(cc[i].name);
-        s.push(cc[i].frame_range);
-        s.push(cc[i].ext);
-        s.push(cc[i].renderable);
-        
-        x.push(s.join(' '));
-    }
-    alert(x.join('\n'));
-}
+   
