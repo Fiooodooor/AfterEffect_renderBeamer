@@ -449,7 +449,7 @@ ErrorCodesAE GF_Dumper::DumpOutputModules(AEGP_RQItemRefH &rq_ItemRef, A_long ou
 		if (!parentItem) throw NullPointerResult;
 
 		std::string memBuff1, memBuff2;	
-		AEGP_MemHandle memH1 = nullptr, memH2 = nullptr;
+        AEGP_MemHandle memH1 = nullptr;
 		AEGP_OutputModuleRefH rq_ItemOutModuleRef = nullptr;
 		AEGP_OutputTypes outType = 0;				
 		gfsRqItemOutput* outNode = nullptr;
