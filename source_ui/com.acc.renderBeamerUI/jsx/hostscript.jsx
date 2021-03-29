@@ -1,5 +1,9 @@
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, regexp: true, indent: 4, maxerr: 50 */
 /*global $, Folder*/
+var 	  videoExt = new Array("mp4","mkv","mov","webm","mxf");
+var videoExtFormat = new Array("MP4 MPEG-4 Part 14 (.mp4)", "Matroska (.mkv)", "MOV QuickTime (.mov)", "WebM (.webm)", "Material Exchange Format (.mxf)");
+var imgSeqExt = new Array("DPX","IFF","EXR","PNG","PSD","SGI","TIFF");
+var audioExt = new Array("wav");
 
 function compositionX()
 {
@@ -44,9 +48,10 @@ function initX(){
 	var rq_out_settings;
 	var rq_out_nr = 1;
 	
-	var videoExt = new Array("mp4","mkv","mov","webm","mxf");
-	var imgSeqExt = new Array("DPX","IFF","EXR","PNG","PSD","SGI","TIFF");
-	var audioExt = new Array("wav");
+	//var 	  videoExt = new Array("mp4","mkv","mov","webm","mxf");
+	//var videoExtFormat = new Array("MP4 MPEG-4 Part 14 (.mp4)", "Matroska (.mkv)", "MOV QuickTime (.mov)", "WebM (.webm)", "Material Exchange Format (.mxf)");
+	//var imgSeqExt = new Array("DPX","IFF","EXR","PNG","PSD","SGI","TIFF");
+	//var audioExt = new Array("wav");
 	
 	for (var i = 0; i < renderQueueItems.length; i++)
 	{
@@ -99,7 +104,7 @@ function initX(){
 		
 		if(videoExt.indexOf(c.file_ext.toLowerCase()) != -1)
 		{
-			c.file_ext_format = c.file_ext;
+			c.file_ext_format = c.file_ext.toLowerCase();
 			c.out_is_sequence = 0;
 		}
 		else if(imgSeqExt.indexOf(c.file_ext.toUpperCase()) != -1)
@@ -138,9 +143,16 @@ function submit(renderqueue_list){
 	app.preferences.savePrefAsString(sectionName , "ignore_missings", parsed.ignore_missings);
 	app.preferences.savePrefAsString(sectionName , "smart_collect", parsed.smart_collect);
 	
-    for(var x=0; x < parsed.data.length; x++){
-        for(var key in parsed.data[x]){
-            app.preferences.savePrefAsString(sectionName , key + "_" + x.toString(), parsed.data[x][key]);             
+    for(var x=0; x < parsed.data.length; x++)
+	{
+        for(var key in parsed.data[x])
+		{
+			if(key.toString() == "file_ext_format" && videoExt.indexOf(parsed.data[x][key]) != -1) {
+				app.preferences.savePrefAsString(sectionName , key + "_" + x.toString(), videoExtFormat[videoExt.indexOf(parsed.data[x][key])]);   				
+			}
+			else {
+				app.preferences.savePrefAsString(sectionName , key + "_" + x.toString(), parsed.data[x][key]);
+			}   				
         }
     }
 	

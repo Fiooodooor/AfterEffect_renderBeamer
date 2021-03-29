@@ -228,7 +228,7 @@ function setDropdownValue(args) {
 		dropdown = document.getElementById("extensionValue");
 		dropdown.classList.remove("dropdownClicked");	
 		
-		if(videoExt.includes(attribute.toLowerCase())){			
+		if(videoExt.includes(attribute.toLowerCase())){ 
 			topLabel = "video";
 		}
 		else if(imgSeqExt.includes(attribute.split(" ")[0].toUpperCase())){
@@ -258,8 +258,8 @@ function setDropdownValue(args) {
 			document.getElementById("videoLabel").classList.remove("hide");
 			document.styleSheets[0].deleteRule(0);    
 		}		
-		var x=0;
-		if(attribute=="mp4") {
+		var x=0;	
+		if(attribute.toLowerCase()=="mp4") {
 			encoderValue.innerHTML = "H265/HEVC";
 			for(x=0;x<encoderParent.length;x++) {
 				if(encoderParent[x].classList.contains("hide")) {   
@@ -270,7 +270,7 @@ function setDropdownValue(args) {
 			profileValue.innerHTML = "main";
 			profileValue.parentElement.parentElement.classList.remove("hide");
 		}
-		if(attribute=="mkv"){
+		if(attribute.toLowerCase()=="mkv"){
 			encoderValue.innerHTML = "H265/HEVC";
 			for(x=0;x<encoderParent.length;x++){
 				if(encoderParent[x].classList.contains("hide")){   
@@ -285,7 +285,7 @@ function setDropdownValue(args) {
 			profileValue.innerHTML = "main";
 			profileValue.parentElement.parentElement.classList.remove("hide");
 		}
-		if(attribute=="mov"){
+		if(attribute.toLowerCase()=="mov"){
 			encoderValue.innerHTML = "H265/HEVC";
 			for(x=0;x<encoderParent.length;x++){
 				encoderParent[x].classList.remove("hide");  
@@ -295,7 +295,7 @@ function setDropdownValue(args) {
 			profileValue.innerHTML = "main";
 			profileValue.parentElement.parentElement.classList.remove("hide");
 		}
-		if(attribute=="webm"){
+		if(attribute.toLowerCase()=="webm"){
 			encoderValue.innerHTML = "VP9";
 			for(x=0;x<encoderParent.length;x++){
 				if(x != 4 && x != 5){
@@ -313,7 +313,7 @@ function setDropdownValue(args) {
 			pixelFormatValue.innerHTML = "yuv420p";
 			profileValue.parentElement.parentElement.classList.add("hide");
 			}
-		if(attribute=="mxf"){
+		if(attribute.toLowerCase()=="mxf"){
 			encoderValue.innerHTML = "H264/AVC";
 			for(x=0;x<encoderParent.length;x++){
 				if(x != 1 ){
