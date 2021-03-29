@@ -453,12 +453,13 @@ ErrorCodesAE rbUtilities::getEnvVariable(std::string const &env_variable, fs::pa
 	if (_wdupenv_s(&buffer, &buffer_size, std::wstring(env_variable.begin(), env_variable.end()).c_str()) == 0)
 	{
 #else
-	char *buffer = getenv(env_variable.c_str());
-	if (buffer)
+	if(const char *buffer = std::getenv(env_variable.c_str()))
 	{
 #endif
 		result_path = buffer;
+#ifdef AE_OS_WIN
 		free(buffer);
+#endif
 		return NoError;
 	}
 	return ErrorResult;
