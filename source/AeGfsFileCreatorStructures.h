@@ -20,9 +20,13 @@ typedef struct gfsEffectNode {
 
 typedef struct gfsRqItemOutput {
 	A_long indexNr;
-	A_char outputType[48];
-	A_char outputInfo[96];
-
+	A_char file_ext[8];
+	A_char file_ext_format[32];
+	A_char video_encoder[32];
+	A_char video_pixel_format[32];
+	A_char video_profile[32];
+	A_char video_bitrate[32];
+	
 	A_Boolean outFileIsSeq;
 	A_Boolean outFileIsMultiframe;
 
@@ -36,7 +40,7 @@ typedef struct gfsRqItemOutput {
 
 typedef struct gfsRqItem {
 	A_long indexNr;
-	A_char compositio_name[AEGP_MAX_ITEM_NAME_SIZE + 4];
+	std::string composition_name;
 	A_long width;
 	A_long height;
 	A_Boolean continue_on_missing;

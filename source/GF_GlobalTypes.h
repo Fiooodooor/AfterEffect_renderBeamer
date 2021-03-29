@@ -5,7 +5,7 @@
 #include "AEConfig.h"
 #include "entry.h"
 
-#define GF_PLUGIN_VERSION_MAJOR 17
+#define GF_PLUGIN_VERSION_MAJOR 18
 #define GF_PLUGIN_VERSION(...) #__VA_ARGS__ 
 //#define GF_PLUGIN_VERSION_STRING(VER_STRING, VER_MAJOR, VER_MINOR) VER_STRING ## VER_MAJOR ## VER_MINOR
 // "renderBeamer for After Effects v.17",

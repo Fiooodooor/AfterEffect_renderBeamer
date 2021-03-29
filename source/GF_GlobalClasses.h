@@ -14,6 +14,7 @@ public:
     static A_Err copyMemhandleToAChar(SPBasicSuite *pb, AEGP_MemHandle& inputString, A_char* destination, A_long maxLength);
 
     static size_t utf16Length(A_UTF16Char* in);
+	static std::string utf8_encode(const std::wstring &wstr);
 	static A_Err copyMemhUTF16ToPath(SPBasicSuite *pb, AEGP_MemHandle& inputString, fs::path &resPath);
     static A_Err copyMemhUTF16ToString(SPBasicSuite *pb, AEGP_MemHandle& inputString, std::string &resString);
     static A_Err copyMemhUTF16ToString(SPBasicSuite *pb, AEGP_MemHandle& inputString, std::wstring &resString);

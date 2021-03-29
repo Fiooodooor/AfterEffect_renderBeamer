@@ -15,7 +15,6 @@ public:
 	SuiteHelper<AEGP_PanelSuite1>	 i_ps;
     AEGP_Command                     beamerEditCmd, beamerCostCalcCmd, beamerUiBatchExport;
     const A_u_char*                  i_match_nameZ;
-    beamerParamsStruct               myPaths;
     
     Renderbeamer(SPBasicSuite *pica_basicP,    AEGP_PluginID pluginID);
 
@@ -73,7 +72,7 @@ private:
     void UpdateMenuHook(AEGP_WindowType active_window) const;
     void CommandHook(AEGP_Command command, AEGP_HookPriority hook_priority, A_Boolean already_handledB, A_Boolean *handledPB);
 
-	void DumpProject(A_Boolean useUiExporter = FALSE);
+	void DumpProject(A_Boolean useUiExporter = FALSE) const;
 	void PluginVersion();
 	void CostCalculator();
 

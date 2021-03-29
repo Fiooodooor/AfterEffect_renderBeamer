@@ -203,6 +203,20 @@ size_t rbUtilities::utf16Length(A_UTF16Char* in)
 	return 0;
 }
 
+std::string rbUtilities::utf8_encode(const std::wstring &wstr)	//CP_OEMCP
+{
+#ifndef AE_OS_MAC
+    if(wstr.empty())
+		return std::string();
+    int size_needed = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), NULL, 0, NULL, NULL);
+    std::string strTo(size_needed, 0);
+    WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), &strTo[0], size_needed, NULL, NULL);
+    return strTo;
+#else
+	return std::string(wstr.begin(), wstr.end());
+#endif
+}
+ 
 A_Err rbUtilities::copyMemhUTF16ToPath(SPBasicSuite *pb, AEGP_MemHandle& inputString, fs::path &resPath)
 {
 	A_Err err = A_Err_NONE;
@@ -232,8 +246,8 @@ A_Err rbUtilities::copyMemhUTF16ToString(SPBasicSuite *pb, AEGP_MemHandle& input
     if (!err) {
 		if (resStringW.empty())
 			resString = "";
-        else 
-			resString = std::string(resStringW.begin(), resStringW.end());
+		else
+			resString = utf8_encode(resStringW);
     }
     return err;
 }

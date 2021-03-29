@@ -32,10 +32,10 @@ ErrorCodesAE AeGfsFileCreator::GenerateAndSaveDocument()
 
 	// <Settings outFileExt="png" framestring="0to505s1" outFileName="AE_Mac_test_1_.aepx" outFilePath="AE_Mac_test_1K/AE_Mac_test_1K-renders" userOutput="/Users/soth/Desktop/AE_v17_mac_tests/AE_Mac_test_1_/Final_Comp_.png" >
 	doc_settings = gfs_document.NewElement("Settings");
-	doc_settings->SetAttribute("outFileExt", "png");
+	doc_settings->SetAttribute("outFileExt", pt->output_mods.back()->file_ext);
 	doc_settings->SetAttribute("framestring", pt->frame_string);
 	doc_settings->SetAttribute("outFileName", outFileName.string().c_str());
-	doc_settings->SetAttribute("outFilePath", outFilePath.string().c_str());
+	doc_settings->SetAttribute("outFilePath", ("\\" + outFilePath.string()).c_str());
 	doc_settings->SetAttribute("userOutput", fs::path(pt->output_mods.back()->outputFile).replace_extension(".png").string().c_str());
 	doc_root->InsertEndChild(doc_settings);
 
@@ -47,7 +47,7 @@ ErrorCodesAE AeGfsFileCreator::GenerateAndSaveDocument()
 		doc_aftereffects->SetAttribute("continueOnMissingAssets", "false");
 	doc_aftereffects->SetAttribute("height", pt->height);
 	doc_aftereffects->SetAttribute("width", pt->width);
-	doc_aftereffects->SetAttribute("fontDir", outFontsDir.string().c_str());
+	doc_aftereffects->SetAttribute("fontDir", ("\\" + outFontsDir.string()).c_str());
 	doc_settings->InsertEndChild(doc_aftereffects);
 
 	if (GenerateRenderQueueItems() == NoError)
@@ -83,18 +83,24 @@ ErrorCodesAE AeGfsFileCreator::GenerateRenderQueueItems()
 		// <RenderQueueItem index="1" nameComp="Final_Comp" outFileExt="png" width="1920" height="1080" framestring="0to505s1" fps="30.0" isSeq="0" isMultiFr="1" outType="png" outInfo="-">
 		rq_item = gfs_document.NewElement("RenderQueueItem");
 		rq_item->SetAttribute("index", pt->indexNr);
-		rq_item->SetAttribute("nameComp", pt->compositio_name);
-		rq_item->SetAttribute("outFileExt", "png");
+		rq_item->SetAttribute("nameComp", pt->composition_name.c_str());
+		rq_item->SetAttribute("outFileExt", pt->output_mods.back()->file_ext_format);
 		rq_item->SetAttribute("width", pt->width);
 		rq_item->SetAttribute("height", pt->height);
 		rq_item->SetAttribute("framestring", pt->frame_string);
 		rq_item->SetAttribute("fps", pt->fps);
 		rq_item->SetAttribute("isSeq", pt->output_mods.back()->outFileIsSeq);
-		rq_item->SetAttribute("isMultiFr", pt->output_mods.back()->outFileIsMultiframe);
-		rq_item->SetAttribute("outType", "png");
-		rq_item->SetAttribute("outInfo", "-");
+		rq_item->SetAttribute("isMultiFr", 0);
+		rq_item->SetAttribute("outType", pt->output_mods.back()->file_ext);
 		rq_item->SetAttribute("audioEnabled", pt->output_mods.back()->outputAudioEnabled);
 
+		if(pt->output_mods.back()->video_encoder[0] != '\0' ) {
+			rq_item->SetAttribute("encoder", pt->output_mods.back()->video_encoder);
+			rq_item->SetAttribute("pixelFormat", pt->output_mods.back()->video_pixel_format);
+			rq_item->SetAttribute("profile", pt->output_mods.back()->video_profile);
+			rq_item->SetAttribute("bitRate", pt->output_mods.back()->video_bitrate);
+		}
+		
 		if (pt->output_mods.back()->outputAudioEnabled) {
 			// audioEnabled="1" audioInUse="1" numChannels="2" bytesPerSample="4294967298" encoding="105553116266498" sampleRate="48000.00000" />			
 			rq_item->SetAttribute("audioInUse", pt->output_mods.back()->outputAudioSetToUse);

@@ -1,6 +1,5 @@
 
 #include "GF_AEGP_Main.h"
-
 #include "NodeObjects/AeSceneCollector.h"
 
 template <> const A_char* SuiteTraits<AEGP_PanelSuite1>::i_name = kAEGPPanelSuite;
@@ -49,10 +48,7 @@ void Renderbeamer::CommandHook(
 {
 	ERROR_CATCH_START//_MOD(MainCommandHookModule)
 		*handledPB = TRUE;		
-		if (command == beamerUiBatchExport) {
-			if (output_prompt == FALSE)			
-				ERROR_AEER(i_sp.UtilitySuite6()->AEGP_ReportInfo(pluginId, GetStringPtr(StrID_OutputFormatPNGWarning)))
-			output_prompt = TRUE;		
+		if (command == beamerUiBatchExport) {		
 			DumpProject(TRUE);
 		}	
 		else if(command == beamerCostCalcCmd) {
@@ -72,15 +68,16 @@ void Renderbeamer::UpdateMenuHook(AEGP_WindowType active_window) const
 		ERROR_AEER(i_sp.CommandSuite1()->AEGP_EnableCommand(beamerCostCalcCmd))
 	ERROR_CATCH_END(i_sp)
 }
-void Renderbeamer::DumpProject(A_Boolean useUiExporter)
+void Renderbeamer::DumpProject(A_Boolean useUiExporter) const
 {
 	ERROR_CATCH_START
-		ERROR_AE(GF_Dumper::PreCheckProject(i_pica_basicP, pluginId, &myPaths))
+		beamerParamsStruct paths_structure;
+		ERROR_AE(GF_Dumper::PreCheckProject(i_pica_basicP, pluginId, &paths_structure))
 		if (_ErrorCode == NoError) 
 		{			
-			GF_Dumper project_dumper(i_pica_basicP, pluginId, &myPaths);
+			GF_Dumper project_dumper(i_pica_basicP, pluginId, &paths_structure);
 			ERROR_AE(project_dumper.PrepareProject())
-			if (_ErrorCode == NoError) 
+			if (_ErrorCode == NoError)
 			{
 				AeSceneConteiner scene_items_container;
 				AeSceneCollector collector(pluginId, i_pica_basicP, project_dumper.rootProjH, scene_items_container);
@@ -90,6 +87,10 @@ void Renderbeamer::DumpProject(A_Boolean useUiExporter)
 				ERROR_AEER(i_sp.UtilitySuite6()->AEGP_ReportInfo(pluginId, GetStringPtr(StrID_ProjectSent)))
 			}
 		}
+		if (_ErrorCode != NoError)
+		{
+			i_sp.UtilitySuite6()->AEGP_ReportInfo(pluginId, PluginError::GetErrorStringA(_ErrorCode, UserLanguage::UserEnglish));
+		}		
 		// DEBUG_PLUGIN_DUMP_PROJ_END
 	ERROR_CATCH_END_NO_INFO
 }

@@ -37,10 +37,7 @@ ErrorCodesAE GF_Dumper::PreCheckProject(SPBasicSuite *pb, AEGP_PluginID pluginId
 		A_Boolean projectDirty = TRUE;
 		AEGP_ProjectH rootProjH = nullptr;
 		AEGP_MemHandle memoryH = nullptr;
-		AEGP_RQItemRefH currentItem = nullptr;
-		AEGP_RenderItemStatusType renderState = AEGP_RenderItemStatus_NONE;
-		A_Boolean queued = FALSE;
-		A_long i = 0L, rqItems = 0L, outModules = 0L, numberOfProjects = 0L;
+		A_long numberOfProjects = 0L;
 		FS_ERROR_CODE(LogCreateError)
 
 		ERROR_THROW_AE_MOD(suites.ProjSuite6()->AEGP_GetNumProjects(&numberOfProjects))
@@ -77,31 +74,9 @@ ErrorCodesAE GF_Dumper::PreCheckProject(SPBasicSuite *pb, AEGP_PluginID pluginId
 		rbProj()->createLogger(GF_params->bp.tempLogPath.wstring().c_str(), std::fstream::out | std::fstream::trunc);
 		rbProj()->logg(L"PreChecker", L"Info", L"Pre check phase I success. Looking for active rq items");
 
-		ERROR_THROW_AE_MOD(suites.RQItemSuite3()->AEGP_GetNumRQItems(&rqItems))
-		while (i < rqItems) {
-			ERROR_THROW_AE_MOD(suites.RQItemSuite3()->AEGP_GetRQItemByIndex(i, &currentItem))
-			ERROR_THROW_AE_MOD(suites.RQItemSuite3()->AEGP_GetRenderState(currentItem, &renderState))
-			if (renderState == AEGP_RenderItemStatus_QUEUED) {
-				queued = TRUE;
-				ERROR_THROW_AE_MOD(suites.RQItemSuite3()->AEGP_GetNumOutputModulesForRQItem(currentItem, &outModules))
-				if (outModules > 0)
-					break;
-			}
-			i++;
-		}
 		rbProj()->logg(L"PreChecker", L"TempLogPath", GF_params->bp.tempLogPath.lexically_normal().wstring().c_str());
 		rbProj()->logg(L"PreChecker", L"ProjectPath", GF_params->projectPath.c_str());
 		rbProj()->logg(L"PreChecker", L"FixedProjectPath", GF_params->bp.projectFilenameCorrect.wstring().c_str());
-		rbProj()->logg(L"PreChecker", L"Info", (( rqItems != 0 && rqItems != i) ? L"All ok. Got valid rqItem" : L"No valid rqItems"));
-		if (rqItems == 0)		
-			throw PluginError(_ErrorCaller, NoValidRqItems);
-		
-		if (i == rqItems && queued == TRUE)
-			throw PluginError(_ErrorCaller, NoRqItemOutputs);
-
-		if (i == rqItems && queued == FALSE)
-			throw PluginError(_ErrorCaller, NoRqItemsQueed);
-		
 	ERROR_CATCH_END_RETURN(suites)
 }
 
@@ -356,15 +331,16 @@ ErrorCodesAE GF_Dumper::newCopyRelinkFootages()
 
 ErrorCodesAE GF_Dumper::newCopyCollectFonts()
 {
-	ERROR_CATCH_START
-	A_long it = 0;
-	std::vector<std::string> fontsContainer;
-
+	ERROR_CATCH_START_MOD(CallerModuleName::CopyCollectFontsModule)
+	
+	if (sc->fontsList.empty())
+		return NoError;
+	
 	for (auto *node : sc->fontsList)
 	{
 		rbProj()->loggA(6, "Processing font name", node->getFont(), "Family", node->getFamily(), "File", node->getLocation());
-		it = 0;	
-		fontsContainer.clear();
+		A_long it = 0;
+		std::vector<std::string> fontsContainer;
 		GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, ++bps.currentItem, bps.colectedItems))
 		if (relinker.CopyFont(node, it++, fontsContainer) == NoError) 
 		{
@@ -379,12 +355,15 @@ ErrorCodesAE GF_Dumper::newCopyCollectFonts()
 			rbProj()->loggA(6, "ERROR collecting font name", node->getFont(), "Family", node->getFamily(), "File", node->getLocation());
 		}
 	}
-	ERROR_CATCH_END_RETURN(suites)
+	ERROR_CATCH_END_LOGGER_RETURN("FontsCollecting")
 }
 ErrorCodesAE GF_Dumper::newCollectEffectsInfo() const
 {
 	ERROR_CATCH_START_MOD(CallerModuleName::CollectEffectsModule)
-	rbProj()->logger << std::endl;
+	
+	if (sc->effectsList.empty())
+		return NoError;
+	
 	for (auto *node : sc->effectsList)
 	{
 		auto *gfsEffect = new gfsEffectNode({ node->getKey(), node->getEffectName(), node->getEffectMatchN(), node->getEffectCategory() });
@@ -429,6 +408,7 @@ ErrorCodesAE GF_Dumper::DumpQueueItem(A_long itemIndex, const fs::path& outputPa
     AEGP_RQItemRefH				rq_ItemRef = nullptr;
     AEGP_RenderItemStatusType	rq_ItemQueuedStatus = AEGP_RenderItemStatus_NONE;//AEGP_RenderItemStatus_QUEUED
 	A_long						rq_OutModulessN = 0;
+	AEGP_MemHandle				memH1 = nullptr;
 
 	ERROR_THROW_AE_MOD(suites.RQItemSuite3()->AEGP_GetRQItemByIndex(itemIndex, &rq_ItemRef))
 	ERROR_THROW_AE_MOD(suites.RQItemSuite3()->AEGP_GetRenderState(rq_ItemRef, &rq_ItemQueuedStatus))
@@ -453,7 +433,8 @@ ErrorCodesAE GF_Dumper::DumpQueueItem(A_long itemIndex, const fs::path& outputPa
 		ERROR_THROW_MOD(rbUtilities::execScript(sP, pluginId, frameScript, gfsItem->fps, 32))
 
 		ERROR_THROW_AE_MOD(suites.ItemSuite8()->AEGP_GetItemDimensions(rq_ItemH, &gfsItem->width, &gfsItem->height))
-		ERROR_THROW_AE_MOD(suites.ItemSuite7()->AEGP_GetItemName(rq_ItemH, gfsItem->compositio_name))		
+		ERROR_THROW_AE_MOD(suites.ItemSuite9()->AEGP_GetItemName(pluginId, rq_ItemH, &memH1))
+		ERROR_AEER(rbUtilities::copyMemhUTF16ToString(sP, memH1, gfsItem->composition_name))		
 		
 		rbProj()->logg("QueueItemDumper", "Parsed Render queue item nr:", std::to_string(itemIndex + 1).c_str());
 		ERROR_THROW_AE_MOD(DumpOutputModules(rq_ItemRef, rq_OutModulessN, gfsItem, outputPath))
@@ -474,17 +455,13 @@ ErrorCodesAE GF_Dumper::DumpOutputModules(AEGP_RQItemRefH &rq_ItemRef, A_long ou
 		gfsRqItemOutput* outNode = nullptr;
 
 		while (outModulesNumber > 0) {
-			if ((outNode = new gfsRqItemOutput({0, "", "-", 0, 0, 0, 0, {48000, AEGP_SoundEncoding_UNSIGNED_PCM, 2, 2}, ""})) == nullptr)
+			if ((outNode = new gfsRqItemOutput({ 0, "", "", "", "", "", "", 0, 0, 0, 0, {48000, AEGP_SoundEncoding_UNSIGNED_PCM, 2, 2}, "" })) == nullptr)
 				_ErrorCode = AE_ErrAlloc;			
 			ERROR_AEER(suites.OutputModuleSuite4()->AEGP_GetOutputModuleByIndex(rq_ItemRef, --outModulesNumber, &rq_ItemOutModuleRef))
 			ERROR_AEER(suites.OutputModuleSuite4()->AEGP_GetOutputFilePath(rq_ItemRef, rq_ItemOutModuleRef, &memH1))
 
             ERROR_AEER(rbUtilities::copyMemhUTF16ToString(sP, memH1, memBuff1))
             if (_ErrorCode == NoError) outNode->outputFile = memBuff1;
-
-			ERROR_AEER(suites.OutputModuleSuite4()->AEGP_GetExtraOutputModuleInfo(rq_ItemRef, rq_ItemOutModuleRef, &memH1, &memH2, &outNode->outFileIsSeq, &outNode->outFileIsMultiframe))
-			ERROR_AEER(rbUtilities::copyMemhUTF16ToString(sP, memH1, memBuff1))
-			ERROR_AEER(rbUtilities::copyMemhUTF16ToString(sP, memH2, memBuff2))
 
 			ERROR_AEER(suites.OutputModuleSuite4()->AEGP_GetEnabledOutputs(rq_ItemRef, rq_ItemOutModuleRef, &outType))
 			if (outType & AEGP_OutputType_AUDIO) 
@@ -502,8 +479,6 @@ ErrorCodesAE GF_Dumper::DumpOutputModules(AEGP_RQItemRefH &rq_ItemRef, A_long ou
 
 			if (_ErrorCode == NoError) {
 				outNode->indexNr = outModulesNumber+1;
-				RB_STRNCPTY(outNode->outputType, memBuff1.c_str(), 46);
-				RB_STRNCPTY(outNode->outputInfo, memBuff2.c_str(), 94);
 				parentItem->output_mods.push_back(outNode);
 				outNode = nullptr;
 			}
