@@ -1,23 +1,6 @@
-/*jslint vars: true, plusplus: true, devel: true, nomen: true, regexp: true, indent: 4, maxerr: 50 */
-/*global $, window, location, CSInterface, SystemPath, themeManager*/
-
 data_struct = "";
 parsed = "";
 currentRowId = "";
-
-// top nav buttons toggle functionality
-function settingsButtonToggle() {
-    document.getElementById("settingsBtn").classList.toggle("button-selected");
-    document.getElementById("assetsBtn").classList.remove("button-selected");
-    document.getElementById("settings").classList.remove("hide");
-    document.getElementById("assets").classList.add("hide");  
-}
-function assetsButtonToggle() {
-    document.getElementById("settingsBtn").classList.remove("button-selected");
-    document.getElementById("assetsBtn").classList.toggle("button-selected");
-    document.getElementById("settings").classList.add("hide");
-    document.getElementById("assets").classList.remove("hide");
-}
 
 function setPixelFormat(PFvalidIds) {
 	var pixelFormatParent = document.getElementById("pixelFormat-value").parentElement.getElementsByClassName("item");
@@ -133,14 +116,8 @@ function setVideoSettings(args){
 	}
 }
 //callback function for dropdown item event listener 
-// sampe input:
-// manual click
-// var args = new Array("", ext, true, currentRowId);   
-//
-// dropdown click
-// var ar = this; 
-// var args = new Array(ar,"",false, currentRowId)
-function setDropdownValue(args) {
+function setDropdownValue(args) 
+{
     var ar = args[0];
     var atr = args[1];
     var manual = args[2]; //executed from composition list 
@@ -402,7 +379,6 @@ function setDropdownValue(args) {
 // callback function for composition list row event
 function compoListClicked(ar){
     curentRow = ar; 
-	
     var allRows = document.getElementById("compositionList").getElementsByTagName("TR");
 		
     for(x=1; x<allRows.length; x++){
@@ -465,7 +441,6 @@ function smartCollectChecked(ar){
     }
     data_struct.smart_collect = smart_checked_val;
 }
-
 // filtering for queued compositions before submit
 function setObjectSubmit(){
     var reparsed = new Array();
@@ -475,16 +450,15 @@ function setObjectSubmit(){
             reparsed.push(parsed[x]);
         }
     }
-    return reparsed
+    return reparsed;
 }
-//var eventObj = new CSXSEvent(); eventObj.type="documentCreated"; eventObj.data="blahblah"; eventObj.dispatch();
-// submit function executed by SEND button
+
 function submit(ar){
 	data_struct.data = setObjectSubmit();
 	
 	if(data_struct.data.length > 0) {
 		var csInterface = new CSInterface();		
-		csInterface.evalScript('submit(' + JSON.stringify( data_struct ) + ')', function(returned) {
+		csInterface.evalScript('initRenderbeamerHostRelinker(' + JSON.stringify( data_struct ) + ')', function(returned) {
 			window.close();
 		});		
 	}
@@ -493,9 +467,7 @@ function submit(ar){
 	}
 }
 
-//add events 
 function addEvents(){
-// add event listener to dropdowns
     var dropdownItems = document.getElementsByClassName("item");
     var i = 0;
     for (i = 0; i < dropdownItems.length; i++) {
@@ -532,24 +504,48 @@ function addEvents(){
         openDrop[i].addEventListener('click', function() { var ar = this; dropdown(ar); } , false);
     }    
 }
-
 // execute function with the same name in hostscript.jsx
-function initx() {    
-    /*themeManager.init();*/
+function initRenderbeamerPanel() 
+{    
     var csInterface = new CSInterface();
     document.getElementById("settingsBtn").classList.toggle("button-selected");
     document.getElementById("videoLabel").classList.add("hide");
     document.styleSheets[0].insertRule("div#videoContainer { display: none;}", 0);
 
-    csInterface.evalScript('initX()', function(renderqueue_list)
-	{
-        var table = document.getElementById("compositionList");
-        data_struct = JSON.parse(renderqueue_list);
-        parsed = data_struct.data;
-        console.log(renderqueue_list);
+    csInterface.evalScript('initRenderbeamerHostCollect()', function(renderQueue_list)
+	{		
+		var jsonResult = renderQueue_list;
+		var videoExtensions = ["mp4","mkv","mov","webm","mxf"];
+		var imgSequences    = ["DPX","IFF","EXR","PNG","PSD","SGI","TIFF"];
+		var audioExtensions = ["wav"];
 		
+        var table = document.getElementById("compositionList");		
+        data_struct = JSON.parse(jsonResult);	
+        parsed = data_struct.data;
+	
         for(var x=0; x < parsed.length; x++)
 		{
+			if(parsed[x].file_ext == "") {
+				parsed[x].file_ext = "PNG";
+			}
+			if(videoExtensions.includes(parsed[x].file_ext.toLowerCase())) {
+				parsed[x].file_ext_format = parsed[x].file_ext.toLowerCase();
+				parsed[x].out_is_sequence = 0;
+			}
+			else if(audioExtensions.includes(parsed[x].file_ext.toLowerCase())) {
+				parsed[x].file_ext_format = "wav " + parsed[x].audio_sample_rate.slice(0, -3) + "kHz " + parseInt(parsed[x].audio_depth)*8 + "bit";
+				parsed[x].out_is_sequence = 0;
+			}
+			else if(imgSequences.includes(parsed[x].file_ext.toUpperCase()) != -1 ) {
+				parsed[x].file_ext = parsed[x].file_ext.toUpperCase();
+				parsed[x].file_ext_format = parsed[x].file_ext + " 16bit";
+				parsed[x].out_is_sequence = 1;
+			}
+			else {
+				parsed[x].file_ext = "PNG";
+				parsed[x].file_ext_format = "PNG 16bit"
+				parsed[x].out_is_sequence = 1;
+			}
             var row = table.insertRow(x+1);
             var cell1 = row.insertCell(0);
             var cell2 = row.insertCell(1);
@@ -559,10 +555,6 @@ function initx() {
             // Add some text to the new cells:
             cell1.innerHTML = parsed[x].name;
             cell2.innerHTML = parsed[x].frame_range;
-            if(parsed[x].file_ext_format == ""){
-               parsed[x].file_ext_format = "not set";
-            }
-
             cell3.innerHTML = parsed[x].file_ext_format;
 			var is_cell_checked = '" >'
 			if(parsed[x].renderable == 1) {
@@ -571,8 +563,6 @@ function initx() {
 			cell4.innerHTML = '<input type="checkbox" class="checkbox" name="scales" data-el="' + (x+1).toString() + is_cell_checked;
 			compoListClicked(row);
         }
-        // set first row as selected 
-        
 		currentRowId = 1;
 		var rows = table.getElementsByTagName("tr");
         console.log(rows[currentRowId]);
