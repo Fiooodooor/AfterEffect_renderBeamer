@@ -2,9 +2,8 @@
 #ifndef GF_GLOBAL_CLASSES
 #define GF_GLOBAL_CLASSES
 
-#include "GF_GlobalTypes.h"
 #include "GF_AEGP_Strings.h"
-#include <vector>
+#include "GF_GlobalTypes.h"
 class rbFontNode;
 
 class rbUtilities
@@ -75,8 +74,8 @@ public:
 private:
 	TCHAR logFilePathRenderBeamer[AEGP_MAX_PATH_SIZE];
 	int logFileMode;
-    void getTimeString() { rbUtilities::getTimeString(timeString, 25); };
-    void getTimeStringA() { rbUtilities::getTimeString(timeStringA, 25); };
+    void getTimeString() { rbUtilities::getTimeString(timeString, 25); }
+    void getTimeStringA() { rbUtilities::getTimeString(timeStringA, 25); }
     wchar_t timeString[25];
 	char timeStringA[25];
 };

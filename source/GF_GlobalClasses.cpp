@@ -1,13 +1,19 @@
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 #include "GF_GlobalClasses.h"
 
-#include <ctime>
-#include <vector>
 #include <cstdarg>
+#include <ctime>
 #include "base64.h"
 #include "GF_AEGP_Dumper.h"
 
-rbProjectClass::rbProjectClass() : logFilePathRenderBeamer{ '\0'}, logFileMode(0) {}
+rbProjectClass::rbProjectClass()
+	: logFilePathRenderBeamer{ '\0'}
+	, logFileMode(0)
+	, timeString{ 0 }
+	, timeStringA{ 0 }
+{
+	
+}
 rbProjectClass::~rbProjectClass()
 {
 	try
@@ -115,24 +121,26 @@ bool rbProjectClass::createLogger(const wchar_t* file, int mode)
 #else
 	sprintf(logFilePathRenderBeamer, "%ls", file);
 #endif
+	std::locale locale_utf8;
 	try {
-		logger.imbue(std::locale(RB_LOCALESTRING));
+		locale_utf8 = std::locale("en_US.UTF8");
 	}
-	catch (...) {
-		logger.imbue(std::locale("en-US"));
+	catch (std::runtime_error&) {
+		locale_utf8 = std::locale(locale_utf8, "", std::locale::ctype);
 	}
+	logger.imbue(locale_utf8);
 	logger.open(logFilePathRenderBeamer, logFileMode);
-	bool retVal = logger.is_open();
-	if (logger.is_open())
-		logger.close();
-	return retVal;
+	if (!logger.is_open())
+		return false;
+	logger.close();
+	return true;
 }
 bool rbProjectClass::openLogger()
 {
-	if (logger.is_open())
-		logger.close();
+	if (!logger.is_open()) {
+		logger.open(logFilePathRenderBeamer, std::fstream::app | std::fstream::out);
+	}
 
-	logger.open(logFilePathRenderBeamer, std::fstream::app | std::fstream::out);
 	return logger.is_open();
 }
 A_Err rbUtilities::getFontFromLayer(SPBasicSuite *pb, AEGP_PluginID pluginId, A_long itemNr, A_long layerNr, A_char* font, A_char* family, A_char* location)
@@ -208,9 +216,9 @@ std::string rbUtilities::utf8_encode(const std::wstring &wstr)	//CP_OEMCP
 #ifndef AE_OS_MAC
     if(wstr.empty())
 		return std::string();
-    int size_needed = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), NULL, 0, NULL, NULL);
+    const int size_needed = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], static_cast<int>(wstr.size()), nullptr, 0, nullptr, nullptr);
     std::string strTo(size_needed, 0);
-    WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), &strTo[0], size_needed, NULL, NULL);
+    WideCharToMultiByte(CP_UTF8, 0, &wstr[0], static_cast<int>(wstr.size()), &strTo[0], size_needed, nullptr, nullptr);
     return strTo;
 #else
 	return std::string(wstr.begin(), wstr.end());
@@ -260,7 +268,7 @@ A_Err rbUtilities::copyMemhUTF16ToString(SPBasicSuite *pb, AEGP_MemHandle& input
 		A_UTF16Char* res16B = NULL;
 		resString = L"";
 		ERR(suites.MemorySuite1()->AEGP_LockMemHandle(inputString, reinterpret_cast<void**>(&res16B)));
-		if (!err) {
+		if (err == A_Err_NONE) {
 			size_t length = utf16Length(res16B) - 1;
 			if (length > 0)
 			{
@@ -283,8 +291,8 @@ A_Err rbUtilities::copyMemhUTF16ToString(SPBasicSuite *pb, AEGP_MemHandle& input
 				resString = std::wstring(ws.begin(), ws.end());
 #endif
 			}
-		}
-        ERR(suites.MemorySuite1()->AEGP_UnlockMemHandle(inputString));
+			ERR(suites.MemorySuite1()->AEGP_UnlockMemHandle(inputString));
+		}        
         ERR(suites.MemorySuite1()->AEGP_FreeMemHandle(inputString));
     }
     catch (...) {
@@ -428,7 +436,7 @@ void rbUtilities::getTimeString(wchar_t *buff, A_long buffSize, bool path)
     time_t currentTime;
     tm localTime;
     time(&currentTime);
-    //localtime_s(&localTime, &currentTime);
+    
 #ifdef AE_OS_MAC
     localTime = *localtime(&currentTime);
 #else
@@ -625,12 +633,12 @@ ErrorCodesAE rbUtilities::getCpuInfoString(SPBasicSuite *pb, wchar_t *buffer, A_
 	win_exec_cmd(reg_exe, regParams, fs::path(), nullptr, 0);
 
 	std::wifstream myfile(outFileName, std::ios::binary | std::wfstream::in);
-	std::wstring line, subLine = L"";
+	std::wstring line, subLine;
 
 	if (myfile.is_open())
 	{
 		myfile.imbue(std::locale(myfile.getloc(), new std::codecvt_utf16<wchar_t, 0xffff, std::consume_header>));
-		std::wstring keyString = L"\"ProcessorNameString\"=\"";
+		const std::wstring keyString = L"\"ProcessorNameString\"=\"";
 		for (size_t poz = 0; getline(myfile, line);) {
 			if ((poz = line.find(keyString)) != std::wstring::npos) {
 				subLine = line.substr(poz + keyString.length(), line.length() - poz - keyString.length() - 2);
@@ -651,7 +659,7 @@ ErrorCodesAE rbUtilities::getCpuInfoString(SPBasicSuite *pb, wchar_t *buffer, A_
 
 ErrorCodesAE rbUtilities::encodeUrlString(const wchar_t *url, wchar_t *buffer, long buffer_size)
 {
-	std::wstring returnUrl = L"";
+	std::wstring returnUrl;
     
 	wchar_t c, bufHex[10];
 	long ic, len = static_cast<long>(wcslen(url));
@@ -679,7 +687,7 @@ ErrorCodesAE rbUtilities::openCostCalculator(SPBasicSuite *pb)
     
     fs::path data_tmp =  fs::temp_directory_path();
     data_tmp += "beamerExchange.txt";
-	A_long frames = 250;
+	const A_long frames = 250;
 	#ifdef GF_PLUGIN_BUILD_GARAGEFARM
 		wchar_t theUrl[] = L"https://garagefarm.net/cost-calculator/";
 	#else
@@ -688,10 +696,10 @@ ErrorCodesAE rbUtilities::openCostCalculator(SPBasicSuite *pb)
     wchar_t theTempProcChar[512] = L"\0";
     wchar_t procEncoded[512] = L"\0";
     
-	if (getCpuInfoString(pb, theTempProcChar, 512, data_tmp.wstring().c_str()) != ErrorCodesAE::NoError)
+	if (getCpuInfoString(pb, theTempProcChar, 512, data_tmp.wstring().c_str()) != NoError)
         return ErrorResult;
     
-    if(encodeUrlString(theTempProcChar, procEncoded, 512) != ErrorCodesAE::NoError)
+    if(encodeUrlString(theTempProcChar, procEncoded, 512) != NoError)
         return ErrorResult;
         //procEncoded[0] = '\0';
 #ifdef AE_OS_WIN
