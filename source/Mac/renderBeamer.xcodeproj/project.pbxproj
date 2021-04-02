@@ -39,7 +39,6 @@
 		4A6DD66724294370001AB42D /* libresolv.9.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DD6582429436F001AB42D /* libresolv.9.dylib */; };
 		4A6DD6A62429B9B6001AB42D /* libC4dRelinkerLibrary.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DD6A52429B9B6001AB42D /* libC4dRelinkerLibrary.dylib */; };
 		4A7F21A025D2C834003CD8DD /* AeFileReferenceInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A7F219925D2C833003CD8DD /* AeFileReferenceInterface.cpp */; };
-		4A7F21A125D2C834003CD8DD /* AeFileReferenceInterfaceHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A7F219A25D2C833003CD8DD /* AeFileReferenceInterfaceHelper.cpp */; };
 		4A7F21A225D2C834003CD8DD /* AeBatchRelinker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A7F219C25D2C833003CD8DD /* AeBatchRelinker.cpp */; };
 		4A7F21A325D2C834003CD8DD /* tinyXml2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A7F219D25D2C833003CD8DD /* tinyXml2.cpp */; };
 		4A7F21A925D2D41F003CD8DD /* AeNodesConteiner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A7F21A825D2D41F003CD8DD /* AeNodesConteiner.cpp */; };
@@ -100,8 +99,6 @@
 		4A6DD6A52429B9B6001AB42D /* libC4dRelinkerLibrary.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libC4dRelinkerLibrary.dylib; sourceTree = "<group>"; };
 		4A7F219825D2C833003CD8DD /* tinyXml2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tinyXml2.h; path = ../BatchRelinker/tinyXml2.h; sourceTree = "<group>"; };
 		4A7F219925D2C833003CD8DD /* AeFileReferenceInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AeFileReferenceInterface.cpp; path = ../BatchRelinker/AeFileReferenceInterface.cpp; sourceTree = "<group>"; };
-		4A7F219A25D2C833003CD8DD /* AeFileReferenceInterfaceHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AeFileReferenceInterfaceHelper.cpp; path = ../BatchRelinker/AeFileReferenceInterfaceHelper.cpp; sourceTree = "<group>"; };
-		4A7F219B25D2C833003CD8DD /* AeFileReferenceInterfaceHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeFileReferenceInterfaceHelper.h; path = ../BatchRelinker/AeFileReferenceInterfaceHelper.h; sourceTree = "<group>"; };
 		4A7F219C25D2C833003CD8DD /* AeBatchRelinker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AeBatchRelinker.cpp; path = ../BatchRelinker/AeBatchRelinker.cpp; sourceTree = "<group>"; };
 		4A7F219D25D2C833003CD8DD /* tinyXml2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyXml2.cpp; path = ../BatchRelinker/tinyXml2.cpp; sourceTree = "<group>"; };
 		4A7F219E25D2C834003CD8DD /* AeBatchRelinker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeBatchRelinker.h; path = ../BatchRelinker/AeBatchRelinker.h; sourceTree = "<group>"; };
@@ -159,8 +156,6 @@
 				4A7F219E25D2C834003CD8DD /* AeBatchRelinker.h */,
 				4A7F219925D2C833003CD8DD /* AeFileReferenceInterface.cpp */,
 				4A7F219F25D2C834003CD8DD /* AeFileReferenceInterface.h */,
-				4A7F219A25D2C833003CD8DD /* AeFileReferenceInterfaceHelper.cpp */,
-				4A7F219B25D2C833003CD8DD /* AeFileReferenceInterfaceHelper.h */,
 				4A7F219D25D2C833003CD8DD /* tinyXml2.cpp */,
 				4A7F219825D2C833003CD8DD /* tinyXml2.h */,
 			);
@@ -371,7 +366,6 @@
 				4A3D131B23F4B49E00517E24 /* GF_GlobalClasses.cpp in Sources */,
 				4A62B52025FD86D1006D7923 /* MissingSuiteError.cpp in Sources */,
 				4A6512A4243F331800C32C49 /* AeConteiner.cpp in Sources */,
-				4A7F21A125D2C834003CD8DD /* AeFileReferenceInterfaceHelper.cpp in Sources */,
 				4A7F21A325D2C834003CD8DD /* tinyXml2.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

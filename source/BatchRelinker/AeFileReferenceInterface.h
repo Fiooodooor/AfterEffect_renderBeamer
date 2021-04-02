@@ -15,7 +15,7 @@ class FileReferenceInterface
 {
 public:
 	FileReferenceInterface(std::string theFilesUID, tinyxml2::XMLElement* theFileReferencePointer);
-	//virtual ~FileReferenceInterface() {}
+	virtual ~FileReferenceInterface() {}
 
 	void SetFilesReferencePointer(tinyxml2::XMLElement *pt) { fileReferencePointer = pt; }
 	tinyxml2::XMLElement *GetFilesReferencePointer() const	{ return fileReferencePointer; }
