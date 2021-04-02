@@ -1,7 +1,7 @@
 #pragma once
 
 //#include "tinyXml2.h"
-#include "AeFileReferenceInterfaceHelper.h"
+#include "AeFileNode.h"
 
 #ifdef AE_OS_WIN
     #define PATHPLATFORM "Win"
@@ -9,37 +9,40 @@
     #define PATHPLATFORM "MacPOSIX"
 #endif
 
+typedef unsigned long long AeFileNodeID;
+
 class FileReferenceInterface
 {
-public:	
-	FileReferenceInterface(const std::string &theFilesUID, tinyxml2::XMLElement *theFileReferencePointer) : filesUID(theFilesUID), fileReferencePointer(theFileReferencePointer), mainFilesPath("") {}
-	virtual ~FileReferenceInterface() {}
+public:
+	FileReferenceInterface(std::string theFilesUID, tinyxml2::XMLElement* theFileReferencePointer);
+	//virtual ~FileReferenceInterface() {}
 
-	unsigned long long GetFilesNumber()									{ return FileReferenceInterfaceHelper::GetUniqueFileNode(nodeId)->GetFilenamesNumber(); }
 	void SetFilesReferencePointer(tinyxml2::XMLElement *pt) { fileReferencePointer = pt; }
-	tinyxml2::XMLElement *GetFilesReferencePointer()		{ return fileReferencePointer; }
+	tinyxml2::XMLElement *GetFilesReferencePointer() const	{ return fileReferencePointer; }
 
 	void SetStringFilesUID(const std::string &theUid)		{ filesUID = theUid; }
-	std::string GetStringFilesUID()							{ return filesUID; }
+	std::string GetStringFilesUID() const					{ return filesUID; }
 
 	void SetWstringFilesUID(const std::wstring &theUid)		{ filesUID = std::string(theUid.begin(), theUid.end()); }
-	std::wstring GetWstringFilesUID()						{ return std::wstring(GetStringFilesUID().begin(), GetStringFilesUID().end()); }
-	
-	void SetMainFilesPath(fs::path &mainPath)				{ mainFilesPath = mainPath; }
-	fs::path GetMainFilePath()								{ return mainFilesPath; }
-	
-	fs::path GetFullFilePath(long FileNumber=0) const		{ return FileReferenceInterfaceHelper::GetUniqueFileNode(nodeId)->GetFileFullCopyPath(FileNumber); }
+	std::wstring GetWstringFilesUID() const					{ return std::wstring(GetStringFilesUID().begin(), GetStringFilesUID().end()); }
 
-	virtual bool RelinkFiles() = 0;
+	void SetMainFilesPath(fs::path& mainPath);
+	fs::path GetMainFilePath() const;
+
+	void SetNodeId(const AeFileNodeID id)					{ nodeId = id; }
+	AeFileNodeID GetNodeId() const							{ return nodeId; }
+
+	virtual AeFileNode* AddFiles() = 0;
+	virtual bool RelinkFiles(AeFileNode* node) = 0;
 	
 protected:
 	std::string filesUID;
 	tinyxml2::XMLElement *fileReferencePointer;
 	fs::path mainFilesPath;
-	long nodeId;
+	unsigned long long nodeId;
 	
 private:
-	FileReferenceInterface() : filesUID("00000000"), fileReferencePointer(nullptr), mainFilesPath("") {}
+	FileReferenceInterface() : filesUID("00000000"), fileReferencePointer(nullptr), mainFilesPath(""), nodeId(0) {}
 };
 
 //------------------------------------------------------------------------------------------------
@@ -49,11 +52,13 @@ private:
 class SingleFileReference : public FileReferenceInterface
 {
 public:
-	SingleFileReference(const std::string &theFilesUID, tinyxml2::XMLElement *theFileReferencePointer)
-			: FileReferenceInterface(theFilesUID, theFileReferencePointer) { }
-	
-	void AddFile(const fs::path &fileName);
-	bool RelinkFiles() override;
+	SingleFileReference(const std::string& theFilesUID, tinyxml2::XMLElement* theFileReferencePointer, fs::path fileName);
+
+	AeFileNode* AddFiles() override;
+	bool RelinkFiles(AeFileNode* node) override;
+
+private:
+	fs::path file_name;
 };
 
 //------------------------------------------------------------------------------------------------
@@ -63,12 +68,13 @@ public:
 class SequenceListFileReference : public FileReferenceInterface
 {
 public:
-	SequenceListFileReference(const std::string &theFilesUID, tinyxml2::XMLElement *theFileReferencePointer)
-			: FileReferenceInterface(theFilesUID, theFileReferencePointer) { }
-	
-	void AddFile(tinyxml2::XMLElement *fileReference);
-	bool RelinkFiles() override;
+	SequenceListFileReference(const std::string& theFilesUID, tinyxml2::XMLElement* theFileReferencePointer, tinyxml2::XMLElement *fileReference);
 
+	AeFileNode* AddFiles() override;
+	bool RelinkFiles(AeFileNode* node) override;
+
+private:
+	tinyxml2::XMLElement *file_reference;
 };
 
 //------------------------------------------------------------------------------------------------
@@ -78,14 +84,12 @@ public:
 class SequenceMaskFileReference : public FileReferenceInterface
 {
 public:
-	SequenceMaskFileReference(const std::string &theFilesUID, tinyxml2::XMLElement *theFileReferencePointer)
-			: FileReferenceInterface(theFilesUID, theFileReferencePointer)
-			, filesMaskBase(nullptr), filesMaskExtension(nullptr) { }
-	
-	void AddFilesByMask(tinyxml2::XMLElement *base, tinyxml2::XMLElement *extension);
-	bool RelinkFiles() override;
+	SequenceMaskFileReference(const std::string& theFilesUID, tinyxml2::XMLElement* theFileReferencePointer, tinyxml2::XMLElement *base, tinyxml2::XMLElement *extension);
+
+	AeFileNode* AddFiles() override;
+	bool RelinkFiles(AeFileNode* node) override;
 
 protected:
-	tinyxml2::XMLElement *filesMaskBase;
-	tinyxml2::XMLElement *filesMaskExtension;	
+	tinyxml2::XMLElement *files_mask_base;
+	tinyxml2::XMLElement *files_mask_extension;
 };

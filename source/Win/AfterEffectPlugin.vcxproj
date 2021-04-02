@@ -201,7 +201,6 @@ cl /D "MSWindows" /EP $(IntDir)%(Filename).rrc &gt;               "$(ProjectDir)
     <ClInclude Include="..\BatchRelinker\AeBatchRelinker.h" />
     <ClInclude Include="..\BatchRelinker\AeFileNode.h" />
     <ClInclude Include="..\BatchRelinker\AeFileReferenceInterface.h" />
-    <ClInclude Include="..\BatchRelinker\AeFileReferenceInterfaceHelper.h" />
     <ClInclude Include="..\BatchRelinker\tinyXml2.h" />
     <ClInclude Include="..\GF_AEGP_Dumper.h" />
     <ClInclude Include="..\GF_AEGP_ErrorsHandling.h" />
@@ -246,7 +245,6 @@ cl /D "MSWindows" /EP $(IntDir)%(Filename).rrc &gt;               "$(ProjectDir)
     <ClCompile Include="..\BatchRelinker\AeBatchRelinker.cpp" />
     <ClCompile Include="..\BatchRelinker\AeFileNode.cpp" />
     <ClCompile Include="..\BatchRelinker\AeFileReferenceInterface.cpp" />
-    <ClCompile Include="..\BatchRelinker\AeFileReferenceInterfaceHelper.cpp" />
     <ClCompile Include="..\BatchRelinker\tinyXml2.cpp" />
     <ClCompile Include="..\GF_AEGP_ErrorsHandling.cpp" />
     <ClCompile Include="..\GF_AEGP_LibraryLoader.cpp" />

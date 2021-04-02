@@ -8,8 +8,8 @@
 class AeBatchRelinker
 {
 public:
-	AeBatchRelinker(SPBasicSuite *pb, PlatformLibLoader* c4dLoader, rbProjectClass& rbLogger, PF_AppProgressDialogP &progressD, const fs::path &aepxPath, const fs::path &aepxRemote)
-        : picaBasic(pb), libC4dPointer(c4dLoader), rbProjLogger(&rbLogger), progressDialog(progressD), aepxXmlDocumentPath(aepxPath.lexically_normal()), aepxXmlDocumentRemotePath(aepxRemote.lexically_normal()) {}
+	AeBatchRelinker(SPBasicSuite* pb, PlatformLibLoader* c4dLoader, rbProjectClass& rbLogger, PF_AppProgressDialogP& progressD, const fs::path& aepxPath, const fs::path& aepxRemote);
+	~AeBatchRelinker();
 	
 	ErrorCodesAE ParseAepxXmlDocument();
 	ErrorCodesAE CopyAndRelinkFiles(const fs::path &localAssetsPath, const fs::path &remoteAssetsPath);
@@ -18,6 +18,14 @@ public:
 	FileReferenceInterface *CreateFileReference(tinyxml2::XMLElement *fileReferencePt);
 
 protected:
+	AeFileNodeID PushUniqueFilePath(AeFileNode *node);
+	AeFileNode *GetUniqueFileNode(AeFileNodeID nodeNr) const;
+	unsigned long long GetUniqueFilesTotalSize() const;
+	A_long GetUniqueFilesTotalSizeA() const;
+	void ListUniqueFiles() const;
+	long GetLongFilesUID(std::string uid) const;
+	bool FileExtensionCheck(const fs::path& path_to_check, const fs::path& extension) const;
+	
 	SPBasicSuite *picaBasic;	
 	PlatformLibLoader* libC4dPointer;
 	rbProjectClass *rbProjLogger;
@@ -27,6 +35,9 @@ protected:
 	fs::path aepxXmlDocumentPath;
 	fs::path aepxXmlDocumentRemotePath;
 	std::vector<FileReferenceInterface*> fileItemNodes;
+
+	unsigned long long unique_files_total_size;
+	std::vector<AeFileNode*> unique_file_nodes;
 };
 
 #endif

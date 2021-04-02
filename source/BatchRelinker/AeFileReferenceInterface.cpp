@@ -1,22 +1,54 @@
 #include "AeFileReferenceInterface.h"
 
+#include <utility>
+
+//------------------------------------------------------------------------------------------------
+//
+//			FileReferenceInterface definition
+//		
+//------------------------------------------------------------------------------------------------
+
+FileReferenceInterface::FileReferenceInterface(std::string theFilesUID, tinyxml2::XMLElement* theFileReferencePointer)
+		: filesUID(std::move(theFilesUID))
+		, fileReferencePointer(theFileReferencePointer)
+		, nodeId(0)
+{
+}
+
+void FileReferenceInterface::SetMainFilesPath(fs::path& mainPath)
+{
+	if (mainPath.has_filename())
+		mainFilesPath = fs::path(mainPath).remove_filename();
+	else
+		mainFilesPath = mainPath;
+}
+
+fs::path FileReferenceInterface::GetMainFilePath() const
+{
+	return mainFilesPath;
+}
+
 //------------------------------------------------------------------------------------------------
 //
 //			SingleFileReference
 //		
 //------------------------------------------------------------------------------------------------
 
-void SingleFileReference::AddFile(const fs::path &fileName)
+SingleFileReference::SingleFileReference(const std::string& theFilesUID, tinyxml2::XMLElement* theFileReferencePointer, fs::path fileName)
+	: FileReferenceInterface(theFilesUID, theFileReferencePointer)
+	, file_name(std::move(fileName))
 {
-	SetMainFilesPath(fs::path(fileName).remove_filename());
-	auto *node = new AeFileNode(false, filesUID, GetMainFilePath());
-	node->PushSourceFilename(new AeFileNode::FilenameCouple(false, 0, GetFilesReferencePointer(), fileName.filename().string()));
-	nodeId = FileReferenceInterfaceHelper::PushUniqueFilePath(node);
 }
 
-bool SingleFileReference::RelinkFiles()
+AeFileNode* SingleFileReference::AddFiles()
 {
-	auto *node = FileReferenceInterfaceHelper::GetUniqueFileNode(nodeId);
+	auto *node = new AeFileNode(false, filesUID, GetMainFilePath());
+	node->PushSourceFilename(new AeFileNode::FilenameCouple(false, 0, GetFilesReferencePointer(), file_name.filename().string()));
+	return node;
+}
+
+bool SingleFileReference::RelinkFiles(AeFileNode* node)
+{
 	if (node != nullptr)
 	{
 		GetFilesReferencePointer()->SetAttribute("fullpath", node->GetFileFullRelinkPath().lexically_normal().string().c_str());
@@ -35,31 +67,37 @@ bool SingleFileReference::RelinkFiles()
 //		
 //------------------------------------------------------------------------------------------------
 
-void SequenceListFileReference::AddFile(tinyxml2::XMLElement *fileReference)
+SequenceListFileReference::SequenceListFileReference(const std::string& theFilesUID, tinyxml2::XMLElement* theFileReferencePointer, tinyxml2::XMLElement* fileReference)
+	: FileReferenceInterface(theFilesUID, theFileReferencePointer)
+	, file_reference(fileReference)
 {
-	if (fileReference)
+}
+
+AeFileNode* SequenceListFileReference::AddFiles()
+{
+	if (file_reference)
 	{
 		auto *node = new AeFileNode(true, filesUID, GetMainFilePath());
-		auto filesToLookFor = std::strtol(fileReference->Attribute("bdata"), nullptr, 16);
+		auto filesToLookFor = std::strtol(file_reference->Attribute("bdata"), nullptr, 16);
 		if (filesToLookFor > 59999 || filesToLookFor < 0)
 			filesToLookFor = 59999;
 			
 		node->SetMaxFilesCount(filesToLookFor);
 
-		fileReference = fileReference->NextSiblingElement();
-		while (fileReference)
+		file_reference = file_reference->NextSiblingElement();
+		while (file_reference)
 		{			
-			if (std::string(fileReference->Value()).compare("string") == 0)			
-				node->PushSourceFilename(new AeFileNode::FilenameCouple(false, 0, fileReference, fileReference->GetText()));			
-			fileReference = fileReference->NextSiblingElement();
+			if (std::string(file_reference->Value()).compare("string") == 0)
+				node->PushSourceFilename(new AeFileNode::FilenameCouple(false, 0, file_reference, file_reference->GetText()));
+			file_reference = file_reference->NextSiblingElement();
 		}
-		nodeId = FileReferenceInterfaceHelper::PushUniqueFilePath(node);
+		return node;
 	}
+	return nullptr;
 }
 
-bool SequenceListFileReference::RelinkFiles()
+bool SequenceListFileReference::RelinkFiles(AeFileNode* node)
 {
-	auto *node = FileReferenceInterfaceHelper::GetUniqueFileNode(nodeId);
 	if (node != nullptr)
 	{
 		GetFilesReferencePointer()->SetAttribute("fullpath", node->GetFileRelinkPath().lexically_normal().string().c_str());
@@ -85,13 +123,20 @@ bool SequenceListFileReference::RelinkFiles()
 //		
 //------------------------------------------------------------------------------------------------
 
-void SequenceMaskFileReference::AddFilesByMask(tinyxml2::XMLElement *base, tinyxml2::XMLElement *extension)
+SequenceMaskFileReference::SequenceMaskFileReference(const std::string& theFilesUID, tinyxml2::XMLElement* theFileReferencePointer, tinyxml2::XMLElement *base, tinyxml2::XMLElement *extension)
+		: FileReferenceInterface(theFilesUID, theFileReferencePointer)
+		, files_mask_base(base)
+		, files_mask_extension(extension)
 {
-	filesMaskBase = base;
-	filesMaskExtension = extension;
+}
 
-	const std::string  uStringMaskBase = base->GetText();	
-	const std::string  uStringMaskExtension = extension->GetText();
+AeFileNode* SequenceMaskFileReference::AddFiles()
+{
+	if (!files_mask_base || !files_mask_extension)
+		return nullptr;
+
+	const std::string  uStringMaskBase = files_mask_base->GetText();
+	const std::string  uStringMaskExtension = files_mask_extension->GetText();
 	FS_ERROR_CODE(fileRefError)
 
 	auto *node = new AeFileNode(true, filesUID, GetMainFilePath(), uStringMaskBase);
@@ -127,12 +172,11 @@ void SequenceMaskFileReference::AddFilesByMask(tinyxml2::XMLElement *base, tinyx
 			}
 		}
 	}
-	nodeId = FileReferenceInterfaceHelper::PushUniqueFilePath(node);
+	return node;
 }
 
-bool SequenceMaskFileReference::RelinkFiles()
+bool SequenceMaskFileReference::RelinkFiles(AeFileNode* node)
 {
-	auto *node = FileReferenceInterfaceHelper::GetUniqueFileNode(nodeId);
 	if(node != nullptr)
 	{		
 		GetFilesReferencePointer()->SetAttribute("fullpath", node->GetFileRelinkPath().lexically_normal().string().c_str());
@@ -141,7 +185,7 @@ bool SequenceMaskFileReference::RelinkFiles()
 		GetFilesReferencePointer()->SetAttribute("ascendcount_base", "1");
 		GetFilesReferencePointer()->SetAttribute("ascendcount_target", "2");
 
-		filesMaskBase->FirstChild()->ToText()->SetValue(node->GetSequenceMaskRelinkedBase().c_str());
+		files_mask_base->FirstChild()->ToText()->SetValue(node->GetSequenceMaskRelinkedBase().c_str());
 		return true;
 	}
 	return false;

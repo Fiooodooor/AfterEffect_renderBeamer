@@ -205,8 +205,9 @@ ErrorCodesAE GF_Dumper::PrepareProject()
 		rbProj()->logg(L"PrepareProject", L"TmpPath", bps.beamerTmpPath);
 
 		suites.AppSuite6()->PF_DisposeAppProgressDialog(relinkerProg);
-		rbUtilities::toUTF16(L"Collect, relink and copy data...", dialogText, 128);
+		rbUtilities::toUTF16(L"Collecting scene info, assets and other data...", dialogText, 128);
 		ERROR_THROW_AE_MOD(suites.AppSuite6()->PF_CreateNewAppProgressDialog(dialogText, nullptr, FALSE, &relinkerProg))
+		GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, 0, 5))
 	ERROR_CATCH_END_RETURN(suites)
 }
 
@@ -216,15 +217,16 @@ ErrorCodesAE GF_Dumper::newBatchDumpProject(bool is_ui_caller)
 
 	relinker.RelinkerInitialize(bps, TRUE);
 
-	GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, 1, 4))
+	GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, 1, 5))
 	if(is_ui_caller)
 		ERROR_RETURN(DumpUiQueueItems(bps.bp.rqMainOutput))
 	else
 		ERROR_RETURN(DumpQueueItems(bps.bp.rqMainOutput))
-	GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, 2, 4))
+	GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, 2, 5))
 	ERROR_RETURN(newCopyCollectFonts())
-	GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, 3, 4))
+	GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, 3, 5))
 	ERROR_RETURN(newCollectEffectsInfo())
+	GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, 4, 5))
 	
 	AeGfsFileCreator::getInstance()->GenerateAndSaveDocument();
 	relinker.RelinkProject(rootProjH);
@@ -234,7 +236,12 @@ ErrorCodesAE GF_Dumper::newBatchDumpProject(bool is_ui_caller)
 		delete sc->renderFootageSortedList.back();
 		sc->renderFootageSortedList.pop_back();
 	}
+	GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, 5, 5))
 
+	suites.AppSuite6()->PF_DisposeAppProgressDialog(relinkerProg);
+	rbUtilities::toUTF16(L"Relinking scene and copying asset files...", dialogText, 128);
+	ERROR_THROW_AE_MOD(suites.AppSuite6()->PF_CreateNewAppProgressDialog(dialogText, nullptr, FALSE, &relinkerProg))
+	
 	AeBatchRelinker batchRelinker(sP, relinker.GetC4dLibloader(), *rbProj(), relinkerProg, bps.bp.relinkedSavePath, bps.bp.remoteFootagePath.parent_path());
 	ERROR_RETURN(batchRelinker.ParseAepxXmlDocument())
 	ERROR_RETURN(batchRelinker.CopyAndRelinkFiles(bps.bp.footageMainOutput, bps.bp.remoteFootagePath))

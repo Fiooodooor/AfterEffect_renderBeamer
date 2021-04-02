@@ -1,11 +1,32 @@
 #include "AeBatchRelinker.h"
 #include <clocale>
 
+AeBatchRelinker::AeBatchRelinker(SPBasicSuite* pb, PlatformLibLoader* c4dLoader, rbProjectClass& rbLogger, PF_AppProgressDialogP& progressD, const fs::path& aepxPath, const fs::path& aepxRemote)
+		: picaBasic(pb), libC4dPointer(c4dLoader)
+		, rbProjLogger(&rbLogger), progressDialog(progressD)
+		, aepxXmlDocumentPath(aepxPath.lexically_normal())
+		, aepxXmlDocumentRemotePath(aepxRemote.lexically_normal())
+		, unique_files_total_size(0)
+{
+}
+AeBatchRelinker::~AeBatchRelinker()
+{
+	while(!fileItemNodes.empty())
+	{
+		delete fileItemNodes.back();
+		fileItemNodes.pop_back();
+	}
+	while (!unique_file_nodes.empty())
+	{
+		delete unique_file_nodes.back();
+		unique_file_nodes.pop_back();
+	}
+}
 ErrorCodesAE AeBatchRelinker::ParseAepxXmlDocument()
 {
 	AEGP_SuiteHandler suites(picaBasic);
 	std::setlocale(LC_ALL, "en_US.utf8");
-	FileReferenceInterfaceHelper::GetUniqueFilesTotalSize() = 0;
+	unique_files_total_size = 0;
 	try {
 		if (aepxXmlDocument.LoadFile(aepxXmlDocumentPath.string().c_str()) != tinyxml2::XML_NO_ERROR)
 			return ErrorResult;
@@ -15,18 +36,18 @@ ErrorCodesAE AeBatchRelinker::ParseAepxXmlDocument()
 		
 		while (AepxXmlElement)
 		{
-			if (AepxXmlElement->Value() && !std::string(AepxXmlElement->Value()).compare("fileReference"))
+			if (AepxXmlElement->Value() && std::string(AepxXmlElement->Value()) == std::string("fileReference"))
 			{
-				if (AepxXmlElement->Parent() && AepxXmlElement->Parent()->Parent() && !std::string(AepxXmlElement->Parent()->Parent()->Value()).compare("Pin"))
+				if (AepxXmlElement->Parent() && AepxXmlElement->Parent()->Parent() && std::string(AepxXmlElement->Parent()->Parent()->Value()) == std::string("Pin"))
 				{
-					GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(progressDialog, 0, static_cast<A_long>(FileReferenceInterfaceHelper::GetUniqueFilesTotalSize())))
+					GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(progressDialog, 0, GetUniqueFilesTotalSizeA()))
 					rbProjLogger->logg("BatchAepxParser", "Path", AepxXmlElement->Attribute("fullpath"));
 					fileReference = CreateFileReference(AepxXmlElement);					
 
 					if (fileReference != nullptr)
 						fileItemNodes.push_back(fileReference);
 
-					GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(progressDialog, 0, static_cast<A_long>(FileReferenceInterfaceHelper::GetUniqueFilesTotalSize())))
+					GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(progressDialog, 0, GetUniqueFilesTotalSizeA()))
 				}
 			}
 			if (AepxXmlElement->FirstChildElement())
@@ -43,7 +64,7 @@ ErrorCodesAE AeBatchRelinker::ParseAepxXmlDocument()
 				else
 					break;
 			}
-			GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(progressDialog, 0, static_cast<A_long>(FileReferenceInterfaceHelper::GetUniqueFilesTotalSize())))
+			GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(progressDialog, 0, GetUniqueFilesTotalSizeA()))
 		}
 	}
 	catch (...) {
@@ -55,6 +76,7 @@ ErrorCodesAE AeBatchRelinker::ParseAepxXmlDocument()
 FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElement *fileReferencePt)
 {
 	FileReferenceInterface *fileRef = nullptr;
+	AeFileNodeID node_id = 0;
 	std::string fileUid = "00000000";
 	FS_ERROR_CODE(fileRefError)
     FS_ERROR_ASSIGN(fileRefError,100)
@@ -65,7 +87,7 @@ FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElemen
 		int ascendcount_target = fileReferencePt->IntAttribute("ascendcount_target");
 
 		try {			
-			fs::file_status FileBasePathStatus = status(FileBasePath);
+			const fs::file_status FileBasePathStatus = status(FileBasePath);
 			if (fs::status_known(FileBasePathStatus) ? !fs::exists(FileBasePathStatus) : !fs::exists(FileBasePath))
 				throw fs::filesystem_error("File does not exist! Trying to AE style path resolve ", fileRefError);
 			if (FileBasePathStatus.type() == FS_TYPE_UNKNOWN)
@@ -78,7 +100,7 @@ FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElemen
 			if (ascendcount_base > 0 && ascendcount_target > 0)
 			{
 				FileBasePath = aepxXmlDocumentPath;
-				fs::path FileBaseRelative = fs::absolute(fs::path(fileReferencePt->Attribute("fullpath"))).lexically_normal();
+				const fs::path FileBaseRelative = fs::absolute(fs::path(fileReferencePt->Attribute("fullpath"))).lexically_normal();
 
 				auto it = FileBaseRelative.end();
 
@@ -97,7 +119,7 @@ FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElemen
 		
 		if (fileReferencePt->Parent()->Parent()->Parent() && fileReferencePt->Parent()->Parent()->Parent()->FirstChildElement()) {
 			if (strcmp(fileReferencePt->Parent()->Parent()->Parent()->FirstChildElement()->Name(), "iide") == 0) {			
-				fileUid = std::to_string(FileReferenceInterfaceHelper::GetLongFilesUID(std::string(fileReferencePt->Parent()->Parent()->Parent()->FirstChildElement()->Attribute("bdata"))));	
+				fileUid = std::to_string(GetLongFilesUID(std::string(fileReferencePt->Parent()->Parent()->Parent()->FirstChildElement()->Attribute("bdata"))));	
 			}	
 		}
 
@@ -105,8 +127,7 @@ FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElemen
 		{
 			if (FileBasePath.has_filename())
 			{
-				fileRef = new SingleFileReference(fileUid, fileReferencePt);
-				dynamic_cast<SingleFileReference*>(fileRef)->AddFile(FileBasePath);
+				fileRef = new SingleFileReference(fileUid, fileReferencePt, FileBasePath);
 			}
 		}
 		else
@@ -116,23 +137,26 @@ FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElemen
 
 			if (fileReferenceSequence)
 			{
-				if (!std::string(fileReferenceSequence->Value()).compare("StVc"))
+				if (std::string(fileReferenceSequence->Value()) == std::string("StVc"))
 				{
 					fileReferenceSequence = fileReferenceSequence->FirstChildElement();
-					if (fileReferenceSequence && !std::string(fileReferenceSequence->Value()).compare("StVS"))
+					if (fileReferenceSequence && std::string(fileReferenceSequence->Value()) == std::string("StVS"))
 					{
-						fileRef = new SequenceListFileReference(fileUid, fileReferencePt);
-						fileRef->SetMainFilesPath(FileBasePath);
-						dynamic_cast<SequenceListFileReference*>(fileRef)->AddFile(fileReferenceSequence);				
+						fileRef = new SequenceListFileReference(fileUid, fileReferencePt, fileReferenceSequence);
 					}
 				}
-				else if (!std::string(fileReferenceSequence->Value()).compare("string") && fileReferenceSequence->NextSiblingElement() && !std::string(fileReferenceSequence->NextSiblingElement()->Value()).compare("string"))
+				else if (std::string(fileReferenceSequence->Value()) == std::string("string") && fileReferenceSequence->NextSiblingElement() && std::string(fileReferenceSequence->NextSiblingElement()->Value()) == std::string("string"))
 				{
-					fileRef = new SequenceMaskFileReference(fileUid, fileReferencePt);
-					fileRef->SetMainFilesPath(FileBasePath);
-					dynamic_cast<SequenceMaskFileReference*>(fileRef)->AddFilesByMask(fileReferenceSequence, fileReferenceSequence->NextSiblingElement());
+					fileRef = new SequenceMaskFileReference(fileUid, fileReferencePt, fileReferenceSequence, fileReferenceSequence->NextSiblingElement());
 				}
 			}
+		}
+		if(fileRef)
+		{
+			fileRef->SetMainFilesPath(FileBasePath);
+			auto* node_pt = fileRef->AddFiles();
+			node_id = PushUniqueFilePath(node_pt);
+			fileRef->SetNodeId(node_id);
 		}
 	}
 	catch (...) {
@@ -146,8 +170,11 @@ ErrorCodesAE AeBatchRelinker::CopyAndRelinkFiles(const fs::path &localAssetsPath
 	ErrorCodesAE _error = CopyUniqueFiles(localAssetsPath.lexically_normal(), remoteAssetsPath.lexically_normal());
 	if (_error == NoError)
 	{
-		for (auto pt : fileItemNodes)
-			pt->RelinkFiles();
+		AeFileNode* file_node;
+		for (auto* pt : fileItemNodes) {
+			file_node = GetUniqueFileNode(pt->GetNodeId());
+			pt->RelinkFiles(file_node);
+		}
 
 		_error = aepxXmlDocument.SaveFile(aepxXmlDocumentPath.string().c_str()) == tinyxml2::XML_NO_ERROR ? NoError : ErrorResult;
 	}
@@ -159,9 +186,9 @@ ErrorCodesAE AeBatchRelinker::CopyUniqueFiles(const fs::path &localCopyPath, con
 	AEGP_SuiteHandler suites(picaBasic);
 	FS_ERROR_CODE(copyError)
 	std::string relinkedFileName;
-	unsigned long long i, relinkedFilesSize = 0, totalFilesSize = (FileReferenceInterfaceHelper::GetUniqueFilesTotalSize() >> 10);
+	unsigned long long i, relinkedFilesSize = 0, totalFilesSize = (GetUniqueFilesTotalSize() >> 10);
 	
-	for (auto *node : FileReferenceInterfaceHelper::GetUniqueFilesContainer())
+	for (auto *node : unique_file_nodes)
 	{
 		node->SetFileCopyPath(localCopyPath);
 		node->SetFileRelinkPath(remoteCopyPath);
@@ -171,7 +198,7 @@ ErrorCodesAE AeBatchRelinker::CopyUniqueFiles(const fs::path &localCopyPath, con
 			auto pt = fs::path(node->GetFilenameCouple(i)->sourceFileName);
 			GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(progressDialog, static_cast<A_long>(relinkedFilesSize), static_cast<A_long>(totalFilesSize)))
 			
-			if(pt.has_extension() && pt.extension().compare(fs::path(".c4d")) == 0)
+			if(FileExtensionCheck(pt, ".c4d"))
 			{
 				if (GF_AEGP_Relinker::GFCopy_C4D_File(libC4dPointer, node->GetFileFullSourcePath(i), node->GetFileFullCopyPath(i), node->GetFileFullRelinkPath(i), node->GetFileNodeUid()) == NoError)
 					rbProjLogger->logg("BatchRelink::c4d", node->GetFileFullSourcePath(i).string().c_str(), node->GetFileFullCopyPath(i).string().c_str());
@@ -181,7 +208,7 @@ ErrorCodesAE AeBatchRelinker::CopyUniqueFiles(const fs::path &localCopyPath, con
 			else
 			{
                 fs::copy_file(node->GetFileFullSourcePath(i), node->GetFileFullCopyPath(i), FS_COPY_OPTIONS, copyError);
-                if(copyError.value() == 0)
+				if(copyError.value() == 0)
 				{
 					rbProjLogger->logg("BatchRelink", "Copy", node->GetFileFullSourcePath(i).string().c_str());
 				}
@@ -198,4 +225,75 @@ ErrorCodesAE AeBatchRelinker::CopyUniqueFiles(const fs::path &localCopyPath, con
 		}
 	}
 	return NoError;
+}
+bool AeBatchRelinker::FileExtensionCheck(const fs::path& path_to_check, const fs::path& extension) const
+{
+	if (!path_to_check.has_extension())
+		return false;
+	if (path_to_check.extension().string().size() != extension.string().size())
+		return false;
+	for(unsigned long long i=0; i < extension.string().size(); ++i)
+	{
+		if (std::tolower(path_to_check.extension().string().c_str()[i]) != std::tolower(extension.string().c_str()[i]))
+			return false;
+	}
+	return true;
+}
+
+AeFileNodeID AeBatchRelinker::PushUniqueFilePath(AeFileNode *node)
+{
+	unsigned long long i = 0;
+	if (node == nullptr)
+		return 0;
+	
+	while (i < unique_file_nodes.size())
+	{
+		if (node->operator==(*unique_file_nodes[i]))
+		{
+			delete node;
+			node = nullptr;
+			return i;
+		}
+		++i;
+	}
+	unique_files_total_size += node->GetNodeFilesSize();
+	unique_file_nodes.push_back(node);
+	return i;
+}
+AeFileNode *AeBatchRelinker::GetUniqueFileNode(AeFileNodeID nodeNr) const
+{
+	if (nodeNr < unique_file_nodes.size())
+		return unique_file_nodes[nodeNr];
+	return nullptr;
+}
+
+unsigned long long AeBatchRelinker::GetUniqueFilesTotalSize() const
+{
+	return unique_files_total_size;
+}
+A_long AeBatchRelinker::GetUniqueFilesTotalSizeA() const
+{
+	return static_cast<A_long>(GetUniqueFilesTotalSize());
+}
+
+void AeBatchRelinker::ListUniqueFiles() const
+{
+	unsigned long i = 0;
+	for (auto *pt : unique_file_nodes)
+	{
+		std::cout << i++ << ": ";
+		pt->ListNodeMainInfo();
+	}
+}
+long AeBatchRelinker::GetLongFilesUID(std::string uid) const
+{
+	if (uid.size() != 8)
+		return 0;
+	std::string tmp_uid;
+	for (auto it = uid.rbegin(); it != uid.rend(); ++it)
+	{
+		tmp_uid.push_back(*(it + 1));
+		tmp_uid.push_back(*(it++));
+	}
+	return strtol(tmp_uid.c_str(), nullptr, 16);
 }

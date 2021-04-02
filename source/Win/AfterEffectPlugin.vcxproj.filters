@@ -40,9 +40,6 @@
     <ClCompile Include="..\BatchRelinker\AeFileReferenceInterface.cpp">
       <Filter>BatchRelinker</Filter>
     </ClCompile>
-    <ClCompile Include="..\BatchRelinker\AeFileReferenceInterfaceHelper.cpp">
-      <Filter>BatchRelinker</Filter>
-    </ClCompile>
     <ClCompile Include="..\BatchRelinker\tinyXml2.cpp">
       <Filter>BatchRelinker</Filter>
     </ClCompile>
@@ -164,9 +161,6 @@
       <Filter>BatchRelinker</Filter>
     </ClInclude>
     <ClInclude Include="..\BatchRelinker\AeFileReferenceInterface.h">
-      <Filter>BatchRelinker</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BatchRelinker\AeFileReferenceInterfaceHelper.h">
       <Filter>BatchRelinker</Filter>
     </ClInclude>
     <ClInclude Include="..\BatchRelinker\tinyXml2.h">
