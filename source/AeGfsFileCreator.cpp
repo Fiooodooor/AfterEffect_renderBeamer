@@ -63,9 +63,9 @@ ErrorCodesAE AeGfsFileCreator::SaveDocument()
 	std::wfstream gfs_file_out_ptr;
 	std::locale locale_utf8;
 	tinyxml2::XMLPrinter gfs_out_printer;
-	
-	if (gfs_file_path.empty() || !fs::exists(gfs_file_path.parent_path()))
-		return GfsFileOpenError;
+    
+    if (gfs_file_path.empty() || !fs::exists(gfs_file_path.parent_path()))
+        return GfsFileOpenError;
 	try {
 		locale_utf8 = std::locale("en_US.UTF8");
 	}
@@ -73,7 +73,7 @@ ErrorCodesAE AeGfsFileCreator::SaveDocument()
 		locale_utf8 = std::locale(locale_utf8, "", std::locale::ctype);
 	}
 	gfs_file_out_ptr.imbue(locale_utf8);
-	gfs_file_out_ptr.open(gfs_file_path.wstring(), std::wfstream::out);
+    gfs_file_out_ptr.open(gfs_file_path.c_str(), std::wfstream::out);
 
 	if (!gfs_file_out_ptr.is_open())
 		return GfsFileOpenError;
