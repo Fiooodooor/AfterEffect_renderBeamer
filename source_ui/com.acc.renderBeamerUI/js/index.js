@@ -459,7 +459,7 @@ function submit(ar){
 	if(data_struct.data.length > 0) {
 		var csInterface = new CSInterface();		
 		csInterface.evalScript('initRenderbeamerHostRelinker(' + JSON.stringify( data_struct ) + ')', function(returned) {
-			window.close();
+			csInterface.closeExtension();
 		});		
 	}
 	else {

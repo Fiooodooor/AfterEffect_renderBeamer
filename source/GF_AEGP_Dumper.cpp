@@ -237,8 +237,8 @@ ErrorCodesAE GF_Dumper::newBatchDumpProject(bool is_ui_caller)
 		sc->renderFootageSortedList.pop_back();
 	}
 	GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, 5, 5))
-
 	suites.AppSuite6()->PF_DisposeAppProgressDialog(relinkerProg);
+	
 	rbUtilities::toUTF16(L"Relinking scene and copying asset files...", dialogText, 128);
 	ERROR_THROW_AE_MOD(suites.AppSuite6()->PF_CreateNewAppProgressDialog(dialogText, nullptr, FALSE, &relinkerProg))
 	
