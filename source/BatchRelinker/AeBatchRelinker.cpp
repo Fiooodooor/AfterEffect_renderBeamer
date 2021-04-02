@@ -170,12 +170,13 @@ ErrorCodesAE AeBatchRelinker::CopyAndRelinkFiles(const fs::path &localAssetsPath
 	ErrorCodesAE _error = CopyUniqueFiles(localAssetsPath.lexically_normal(), remoteAssetsPath.lexically_normal());
 	if (_error == NoError)
 	{
-		AeFileNode* file_node;
-		for (auto* pt : fileItemNodes) {
-			file_node = GetUniqueFileNode(pt->GetNodeId());
-			pt->RelinkFiles(file_node);
+		if (!fileItemNodes.empty())
+		{
+			for (auto* pt : fileItemNodes) {
+				AeFileNode* file_node = GetUniqueFileNode(pt->GetNodeId());
+				pt->RelinkFiles(file_node);
+			}
 		}
-
 		_error = aepxXmlDocument.SaveFile(aepxXmlDocumentPath.string().c_str()) == tinyxml2::XML_NO_ERROR ? NoError : ErrorResult;
 	}
 	return _error;
@@ -187,7 +188,9 @@ ErrorCodesAE AeBatchRelinker::CopyUniqueFiles(const fs::path &localCopyPath, con
 	FS_ERROR_CODE(copyError)
 	std::string relinkedFileName;
 	unsigned long long i, relinkedFilesSize = 0, totalFilesSize = (GetUniqueFilesTotalSize() >> 10);
-	
+
+	if (unique_file_nodes.empty())
+		return NoError;
 	for (auto *node : unique_file_nodes)
 	{
 		node->SetFileCopyPath(localCopyPath);
@@ -279,6 +282,8 @@ A_long AeBatchRelinker::GetUniqueFilesTotalSizeA() const
 void AeBatchRelinker::ListUniqueFiles() const
 {
 	unsigned long i = 0;
+	if (unique_file_nodes.empty())
+		return;
 	for (auto *pt : unique_file_nodes)
 	{
 		std::cout << i++ << ": ";
