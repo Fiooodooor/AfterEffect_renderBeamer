@@ -80,7 +80,7 @@ Component.prototype.createOperationsForArchive = function(archive)
 		{
 			var re = new RegExp("/", 'g');
 			path3 = UIpathDir.replace(re, '\\');
-			component.addOperation("Execute", ["cmd", "/C", "del", "/Q", "/S", "/F",path3, "UNDOEXECUTE", "cmd", "/C"]);
+			component.addOperation("Execute", ["cmd", "/C", "del", "/Q", "/S", "/F", path3, "UNDOEXECUTE", "cmd", "/C"]);
 		}
 		if (!installer.fileExists(UIpathDir))
 		{
@@ -94,6 +94,10 @@ Component.prototype.createOperationsForArchive = function(archive)
 	else if (systemInfo.kernelType === "darwin") 
 	{
 		component.addOperation("CopyDirectory", [QDesktopServices.storageLocation(QDesktopServices.HomeLocation)+ "/renderbeamer/uninstall/AfterEffects/data/renderBeamer.plugin", "/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/", "forceOverwrite"]);
+		if (installer.fileExists("/Library/Application Support/Adobe/CEP/extensions/renderBeamerUI"))
+		{
+			component.addOperation("Rmdir", "/Library/Application Support/Adobe/CEP/extensions/renderBeamerUI");
+		}
 		component.addOperation("Mkdir", "/Library/Application Support/Adobe/CEP/extensions/");
 		component.addOperation("CopyDirectory", [QDesktopServices.storageLocation(QDesktopServices.HomeLocation)+ "/renderbeamer/uninstall/AfterEffects/data/renderBeamerUI", "/Library/Application Support/Adobe/CEP/extensions/", "forceOverwrite"]);
 	}
