@@ -78,89 +78,95 @@ FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElemen
 	FileReferenceInterface *fileRef = nullptr;
 	AeFileNodeID node_id = 0;
 	std::string fileUid = "00000000";
+	fs::path FileBasePath;
 	FS_ERROR_CODE(fileRefError)
     FS_ERROR_ASSIGN(fileRefError,100)
 
-	try {		
-		fs::path FileBasePath = fs::absolute(fs::path(fileReferencePt->Attribute("fullpath"))).lexically_normal();
-		int ascendcount_base = fileReferencePt->IntAttribute("ascendcount_base");
-		int ascendcount_target = fileReferencePt->IntAttribute("ascendcount_target");
+	ERROR_CATCH_START
+	FileBasePath = fs::absolute(fs::path(fileReferencePt->Attribute("fullpath"))).lexically_normal();
+	int ascendcount_base = fileReferencePt->IntAttribute("ascendcount_base");
+	int ascendcount_target = fileReferencePt->IntAttribute("ascendcount_target");
 
-		try {			
-			const fs::file_status FileBasePathStatus = status(FileBasePath);
-			if (fs::status_known(FileBasePathStatus) ? !fs::exists(FileBasePathStatus) : !fs::exists(FileBasePath))
-				throw fs::filesystem_error("File does not exist! Trying to AE style path resolve ", fileRefError);
-			if (FileBasePathStatus.type() == FS_TYPE_UNKNOWN)
-				return nullptr;
-			if (fs::is_symlink(FileBasePath))
-				FileBasePath = fs::read_symlink(FileBasePath);
-		}
-		catch(fs::filesystem_error &e) {
-			rbProjLogger->loggErr("BatchAepxParser", "FullPath", e.what());			
-			if (ascendcount_base > 0 && ascendcount_target > 0)
-			{
-				FileBasePath = aepxXmlDocumentPath;
-				const fs::path FileBaseRelative = fs::absolute(fs::path(fileReferencePt->Attribute("fullpath"))).lexically_normal();
-
-				auto it = FileBaseRelative.end();
-
-				while (ascendcount_base-- && FileBasePath.has_parent_path())
-					FileBasePath = FileBasePath.parent_path();
-				while (it != FileBaseRelative.begin() && ascendcount_target--)
-					--it;
-
-				while (it != FileBaseRelative.end())
-					FileBasePath /= (it++)->string();
-				rbProjLogger->logg("BatchAepxParser", "ResolvedRelative", FileBasePath.string().c_str());
-			}
-			else
-				return nullptr;
-		}
-		
-		if (fileReferencePt->Parent()->Parent()->Parent() && fileReferencePt->Parent()->Parent()->Parent()->FirstChildElement()) {
-			if (strcmp(fileReferencePt->Parent()->Parent()->Parent()->FirstChildElement()->Name(), "iide") == 0) {			
-				fileUid = std::to_string(GetLongFilesUID(std::string(fileReferencePt->Parent()->Parent()->Parent()->FirstChildElement()->Attribute("bdata"))));	
-			}	
-		}
-
-		if (fileReferencePt->Attribute("target_is_folder", "0"))
+	try {			
+		const fs::file_status FileBasePathStatus = status(FileBasePath);
+		if (fs::status_known(FileBasePathStatus) ? !fs::exists(FileBasePathStatus) : !fs::exists(FileBasePath))
+			throw fs::filesystem_error("File does not exist! Trying to AE style path resolve ", fileRefError);
+		if (FileBasePathStatus.type() == FS_TYPE_UNKNOWN)
+			return nullptr;
+		if (fs::is_symlink(FileBasePath))
+			FileBasePath = fs::read_symlink(FileBasePath);
+	}
+	catch(fs::filesystem_error &e) {
+		rbProjLogger->loggErr("BatchAepxParser", "FullPath", e.what());			
+		if (ascendcount_base > 0 && ascendcount_target > 0)
 		{
-			if (FileBasePath.has_filename())
-			{
-				fileRef = new SingleFileReference(fileUid, fileReferencePt, FileBasePath);
-			}
+			FileBasePath = aepxXmlDocumentPath;
+			const fs::path FileBaseRelative = fs::absolute(fs::path(fileReferencePt->Attribute("fullpath"))).lexically_normal();
+
+			auto it = FileBaseRelative.end();
+
+			while (ascendcount_base-- && FileBasePath.has_parent_path())
+				FileBasePath = FileBasePath.parent_path();
+			while (it != FileBaseRelative.begin() && ascendcount_target--)
+				--it;
+
+			while (it != FileBaseRelative.end())
+				FileBasePath /= (it++)->string();
+			rbProjLogger->logg("BatchAepxParser", "ResolvedRelative", FileBasePath.string().c_str());
 		}
 		else
-		{
-			tinyxml2::XMLElement *fileReferenceSequence = fileReferencePt->Parent()->NextSiblingElement();
-			FileBasePath += fs::path::preferred_separator;
+			return nullptr;
+	}
+	
+	if (fileReferencePt->Parent()->Parent()->Parent() && fileReferencePt->Parent()->Parent()->Parent()->FirstChildElement()) {
+		if (strcmp(fileReferencePt->Parent()->Parent()->Parent()->FirstChildElement()->Name(), "iide") == 0) {			
+			fileUid = std::to_string(GetLongFilesUID(std::string(fileReferencePt->Parent()->Parent()->Parent()->FirstChildElement()->Attribute("bdata"))));	
+		}	
+	}
 
-			if (fileReferenceSequence)
+	if (fileReferencePt->Attribute("target_is_folder", "0"))
+	{
+		if (FileBasePath.has_filename())
+		{
+			fileRef = new SingleFileReference(fileUid, fileReferencePt, FileBasePath);
+		}
+	}
+	else
+	{
+		tinyxml2::XMLElement *fileReferenceSequence = fileReferencePt->Parent()->NextSiblingElement();
+		FileBasePath += fs::path::preferred_separator;
+
+		if (fileReferenceSequence)
+		{
+			if (std::string(fileReferenceSequence->Value()) == std::string("StVc"))
 			{
-				if (std::string(fileReferenceSequence->Value()) == std::string("StVc"))
+				fileReferenceSequence = fileReferenceSequence->FirstChildElement();
+				if (fileReferenceSequence && std::string(fileReferenceSequence->Value()) == std::string("StVS"))
 				{
-					fileReferenceSequence = fileReferenceSequence->FirstChildElement();
-					if (fileReferenceSequence && std::string(fileReferenceSequence->Value()) == std::string("StVS"))
-					{
-						fileRef = new SequenceListFileReference(fileUid, fileReferencePt, fileReferenceSequence);
-					}
-				}
-				else if (std::string(fileReferenceSequence->Value()) == std::string("string") && fileReferenceSequence->NextSiblingElement() && std::string(fileReferenceSequence->NextSiblingElement()->Value()) == std::string("string"))
-				{
-					fileRef = new SequenceMaskFileReference(fileUid, fileReferencePt, fileReferenceSequence, fileReferenceSequence->NextSiblingElement());
+					fileRef = new SequenceListFileReference(fileUid, fileReferencePt, fileReferenceSequence);
 				}
 			}
+			else if (std::string(fileReferenceSequence->Value()) == std::string("string") && fileReferenceSequence->NextSiblingElement() && std::string(fileReferenceSequence->NextSiblingElement()->Value()) == std::string("string"))
+			{
+				fileRef = new SequenceMaskFileReference(fileUid, fileReferencePt, fileReferenceSequence, fileReferenceSequence->NextSiblingElement());
+			}
 		}
-		if(fileRef)
+	}
+	ERROR_CATCH_END_NO_INFO
+	if (fileRef)
+	{
+		if (_ErrorCode == NoError)
 		{
 			fileRef->SetMainFilesPath(FileBasePath);
 			auto* node_pt = fileRef->AddFiles();
 			node_id = PushUniqueFilePath(node_pt);
 			fileRef->SetNodeId(node_id);
 		}
-	}
-	catch (...) {
-		return nullptr;
+		else
+		{
+			delete fileRef;
+			fileRef = nullptr;
+		}
 	}
 	return fileRef;
 }

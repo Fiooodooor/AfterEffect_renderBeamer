@@ -376,7 +376,7 @@ ErrorCodesAE GF_Dumper::newCollectEffectsInfo() const
 		auto *gfsEffect = new gfsEffectNode({ node->getKey(), node->getEffectName(), node->getEffectMatchN(), node->getEffectCategory() });
 		if(AeGfsFileCreator::getInstance()->PushEffectNode(gfsEffect) == NoError)
         {
-			rbProj()->loggA(9, "EffectCollector", "Name:", node->getEffectName(), "MatchName:", node->getEffectMatchN(), "Catgegory:", node->getEffectCategory(), ",  InstallKey:", std::to_string(static_cast<int>(node->getKey())).c_str());
+			rbProj()->loggA(9, "EffectCollector", "Name:", node->getEffectName(), "MatchName:", node->getEffectMatchN(), "Catgegory:", node->getEffectCategory(), "InstallKey:", std::to_string(static_cast<int>(node->getKey())).c_str());
         }
 	}
 	ERROR_CATCH_END_LOGGER_RETURN("EffectsCollecting")

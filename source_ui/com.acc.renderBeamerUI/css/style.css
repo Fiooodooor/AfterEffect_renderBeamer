@@ -1,3 +1,8 @@
+@font-face {
+	font-family: Roboto;
+	src:url("data/Roboto-Regular.ttf");
+}
+
 :root{
     --labelFontSize :  12px;
     --headerFontSize : 14px;
@@ -8,7 +13,6 @@
 }
 *{
     font-family: 'Roboto';
-
 }
 
 .hide{
@@ -84,8 +88,6 @@ body{
     padding-bottom: 15px;
     font-size: var(--headerFontSize);
     font-weight: 500;
-    
-   
 }
 
 .center{

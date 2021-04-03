@@ -60,29 +60,30 @@ ErrorCodesAE AeGfsFileCreator::GenerateAndSaveDocument()
 }
 ErrorCodesAE AeGfsFileCreator::SaveDocument()
 {
-	std::wfstream gfs_file_out_ptr;
-	std::locale locale_utf8;
-	tinyxml2::XMLPrinter gfs_out_printer;
-    
-    if (gfs_file_path.empty() || !fs::exists(gfs_file_path.parent_path()))
-        return GfsFileOpenError;
-	try {
-		locale_utf8 = std::locale("en_US.UTF8");
-	}
-	catch (std::runtime_error&) {
-		locale_utf8 = std::locale(locale_utf8, "", std::locale::ctype);
-	}
-	gfs_file_out_ptr.imbue(locale_utf8);
-    gfs_file_out_ptr.open(gfs_file_path.c_str(), std::wfstream::out);
+	ERROR_CATCH_START
+		std::fstream gfs_file_out_ptr;
+		std::locale locale_utf8;
+		tinyxml2::XMLPrinter gfs_out_printer;
 
-	if (!gfs_file_out_ptr.is_open())
-		return GfsFileOpenError;
-	gfs_document.Print(&gfs_out_printer);
-	gfs_file_out_ptr << gfs_out_printer.CStr();
-	gfs_file_out_ptr.flush();
-	gfs_file_out_ptr.close();
-	return NoError;
-	//if (gfs_document.SaveFile(gfs_file_path.string().c_str()) == tinyxml2::XML_NO_ERROR)
+		if (gfs_file_path.empty() || !fs::exists(gfs_file_path.parent_path())) {
+			return GfsFileOpenError;
+		}
+		try {
+			locale_utf8 = std::locale("en_US.UTF8");
+		}
+		catch (std::runtime_error&) {
+			locale_utf8 = std::locale(locale_utf8, "", std::locale::ctype);
+		}
+		gfs_file_out_ptr.imbue(locale_utf8);
+		gfs_file_out_ptr.open(gfs_file_path.c_str(), std::fstream::out);
+
+		if (!gfs_file_out_ptr.is_open())
+			return GfsFileOpenError;
+		gfs_document.Print(&gfs_out_printer);
+		gfs_file_out_ptr.write(gfs_out_printer.CStr(), gfs_out_printer.CStrSize()-1);
+		gfs_file_out_ptr.flush();
+		gfs_file_out_ptr.close();
+	ERROR_CATCH_END_NO_INFO_RETURN
 }
 ErrorCodesAE AeGfsFileCreator::GenerateRenderQueueItems()
 {
