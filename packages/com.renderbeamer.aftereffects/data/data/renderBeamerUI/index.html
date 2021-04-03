@@ -1,19 +1,20 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8">
-    <title>renderBeamer for After Effects v17</title>
-    <link rel="stylesheet" href="css/style.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>renderBeamer for After Effects v18</title>
+    <link href="css/style.css" type="text/css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    
-    
+	
+	<script type="text/javascript" src="js/libs/CSInterface.js"></script>    
+    <script type="text/javascript" src="js/index.js" language="javascript"></script>
+	
 </head>
-<body onload="initx()">
-
+<body onload="initRenderbeamerPanel()">
     <div class="base-container">
         <div class="headerx">
-            <div class = "headerTop">
+            <div class="headerTop">
                 <div class="menu">
                     <nav>
                         <ul>
@@ -26,11 +27,9 @@
                 <div class="logo">
                     <img src="res/GFlogo.png">
                 </div>
-                <div class="title">renderBeamer for After Effects v17</div>
+                <div class="title">renderBeamer for After Effects v18</div>
             </div>
-            <div class="headerShadow">
-                
-            </div>
+            <div class="headerShadow"></div>
         </div>
         <div id="cntr" class="center">
             <div id="settings" class="settings-container">
@@ -45,11 +44,9 @@
                     <div class="checkbox-conatiner cc">
                         <div class="c">ignore missing assets</div>
                         <input type="checkbox" id ="ignoreMissings" class="checkbox" name="missingsIgnored" checked>
-                    </div>
-                    
+                    </div>                    
                 </div>
-                <div class="composition-list">
-                    <br>
+                <div class="composition-list"><br>
                     <div class="label main">compositions list</div>
                     <div class="scrollable-list">
                         <table id="compositionList">
@@ -62,10 +59,8 @@
                         </table>
                     </div>                                       
                 </div>
-                <div class="settings">
-                    <br>
-                    <div class="label main">general</div>
-                    
+                <div class="settings"><br>
+                    <div class="label main">general</div>                    
                     <div class="grid-container">
                         <div class="text-field-container">
                             <div class="label">frame range</div>
@@ -74,40 +69,40 @@
                         <div class="dropdown-conatiner long">
                             <div class="label">extension</div>
                             <div class="dropdown long" >
-                                <div id="extensionValue" class="dropdown-value" >mp4</div>
-                                     
+                                <div id="extensionValue" class="dropdown-value" >mp4</div>                                     
                                     <div class="arrow down longItem">
                                 </div>
                                 <div id="dropdownContent" class="dropdown-content long">
                                     <span class="top-item">
                                         <p class="item">video</p>
                                         <div class="top-item-content video">
-                                            <p class="item" data-el="mp4" >MP4 MPEG-4(.mp4)</p>
-                                            <p class="item" data-el="mkv">Matroska(.mkv)</p>
-                                            <p class="item" data-el="mov">QuickTime(.mov)</p>
-                                            <p class="item" data-el="webm">WebM(.webm)</p>
-                                            <p class="item" data-el="mxf">Material Exchange Format(.mxf)</p>
+											<p class="item" data-el="mp4">MP4 MPEG-4(.mp4)</p>
+											<p class="item" data-el="mkv">Matroska(.mkv)</p>
+											<p class="item" data-el="mov">QuickTime(.mov)</p>
+											<p class="item" data-el="webm">WebM(.webm)</p>
+											<p class="item" data-el="mxf">Material Exchange Format(.mxf)</p>
                                         </div>
                                     </span>
 
                                     <span class="top-item">
                                         <p class="item">image sequence</p>
                                         <div class="top-item-content image-seq">
-                                            <p class="item" data-el="DPX 10bit">DPX 10bit</p>
-                                            <p class="item" data-el="IFF 8bit">IFF 8bit</p>
-                                            <p class="item" data-el="IFF 16bit">IFF 16bit</p>
-                                            <p class="item" data-el="EXR 16bit">EXR 16bit</p>
-                                            <p class="item" data-el="EXR 32bit">EXR 32bit</p>
-                                            <p class="item" data-el="PNG 8bit">PNG 8bit</p>
-                                            <p class="item" data-el="PNG 16bit">PNG 16bit</p>
-                                            <p class="item" data-el="PSD 8bit">PSD 8bit</p>
-                                            <p class="item" data-el="PSD 16bit">PSD 16bit</p>
-                                            <p class="item" data-el="PSD FP<t">PSD FP</p>
-                                            <p class="item" data-el="SGI 8bit">SGI 8bit</p>
-                                            <p class="item" data-el="SGI 16bit">SGI 16bit</p>
-                                            <p class="item" data-el="TIFF 8bit">TIFF 8bit</p>
-                                            <p class="item" data-el="TIFF 16bitt">TIFF 16bit</p>
-                                            <p class="item" data-el="TIFF FP">TIFF FP</p>
+                                            <p class="item" data-el="DPX 10bit"	>DPX 10bit</p>
+                                            <p class="item" data-el="IFF 8bit"	>IFF 8bit</p>
+                                            <p class="item" data-el="IFF 16bit"	>IFF 16bit</p>
+                                            <p class="item" data-el="EXR 16bit"	>EXR 16bit</p>
+                                            <p class="item" data-el="EXR 32bit"	>EXR 32bit</p>
+                                            <p class="item" data-el="PNG 8bit"	>PNG 8bit</p>
+                                            <p class="item" data-el="PNG 16bit"	>PNG 16bit</p>
+                                            <p class="item" data-el="PSD 8bit"	>PSD 8bit</p>
+                                            <p class="item" data-el="PSD 16bit"	>PSD 16bit</p>
+                                            <p class="item" data-el="PSD FP"	>PSD FP</p>
+                                            <p class="item" data-el="SGI 8bit"	>SGI 8bit</p>
+                                            <p class="item" data-el="SGI 16bit"	>SGI 16bit</p>
+                                            <p class="item" data-el="TIFF 8bit"	>TIFF 8bit</p>
+                                            <p class="item" data-el="TIFF 16bit">TIFF 16bit</p>
+                                            <p class="item" data-el="TIFF FP"	>TIFF FP</p>
+											
                                          </div>
                                     </span>
 
@@ -200,8 +195,7 @@
                             <div class="label ">profile</div>
                             <div class="dropdown">
                                 <div id="profile-value" class="dropdown-value">baseline</div>
-                                <div class="dropdownBtn">
-                                     
+                                <div class="dropdownBtn">                                     
                                     <div class="arrow down"></div>
                                 </div>
                                 <div id="dropdownContent" class="dropdown-content top-item-content dropdown-long">
@@ -240,7 +234,6 @@
                                     <p class="item" data-el="hap">hap</p>                                    <!--32  -->     
                                     <p class="item" data-el="hap_alpha">hap_alpha</p>                        <!--33  -->     
                                     <p class="item" data-el="hap_q">hap_q</p>                                <!--34  -->
-
                                 </div>
                             </div>  
                         </div>
@@ -265,10 +258,10 @@
                                     <div class="arrow down"></div>
                                 </div>
                                 <div id="dropdownContent" class="dropdown-content top-item-content sr">
-                                            <p class="item" data-el="44100">44,100 kHz</p>
-                                            <p class="item" data-el="48000">48,000 kHz</p>
-                                            <p class="item" data-el="88200">88,200 kHz</p>
-                                            <p class="item" data-el="96000">96,000 kHz</p>
+                                            <p class="item" data-el="44kHz">44,100 kHz</p>
+                                            <p class="item" data-el="48kHz">48,000 kHz</p>
+                                            <p class="item" data-el="88kHz">88,200 kHz</p>
+                                            <p class="item" data-el="96kHz">96,000 kHz</p>
                                 </div>
                             </div>  
                         </div>
@@ -276,14 +269,13 @@
                             <div class="label ">bit depth</div>
                             <div class="dropdown">
                                 <div id="bitDepth-value" class="dropdown-value">16 bit</div>
-                                <div class="dropdownBtn">
-                                     
+                                <div class="dropdownBtn">                                     
                                     <div class="arrow down"></div>
                                 </div>
                                 <div id="dropdownContent" class="dropdown-content top-item-content dropdown-short">
-                                            <p class="item" data-el="1">8 bit</p>
-                                            <p class="item" data-el="2">16 bit</p>
-                                            <p class="item" data-el="4">32 bit</p>
+                                            
+                                            <p class="item" data-el="16bit">16 bit</p>
+                                            <p class="item" data-el="32bit">32 bit</p>
                                 </div>
                             </div>  
                         </div>
@@ -297,11 +289,9 @@
                                 <div id="dropdownContent" class="dropdown-content top-item-content dropdown-short">
                                             <p class="item" data-el="1">mono</p>
                                             <p class="item" data-el="2">stereo</p>
-
                                 </div>
                             </div>  
                         </div>
-
                     </div>    
                     <br>
                     <br>
@@ -309,83 +299,6 @@
                 </div>
                 <br>
             </div>
-            <div id="assets" class="assets-container hide">
-                <div class="grid-container four-one-one">
-                    <div></div>
-                    <div><button class="navbtn wide">search directory</button></div>
-                    <div><button class="navbtn wide">delete not found</button></div>
-                </div>
-                <div class="composition-list">
-                    
-                    <div class="label main">assets</div>
-                    <div class="scrollable-list assetTracker">
-                        <table>
-                            <tr>
-                                <th>path</th>
-                                <th>name</th>
-                                <th>composition</th>
-                                <th>extension</th>
-                                <th>
-                                    <div class="double-cell">
-                                        <span>search</span>
-                                        <span>delete</span>
-                                    </div>
-                                </th>
-                            </tr>  
-                            <tr>
-                                <td>H:\SteamLibrary\steamapps\common\Mansions of Madness\Atlas_Main.png</td>
-                                <td>Atlas_Main.png</td>
-                                <td>main</td>
-                                <td>png</td>
-                                <td>
-                                    <div class="double-cell">
-                                        <i class="fas fa-search"></i>
-                                        <i class="fas fa-trash"></i>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>H:\SteamLibrary\steamapps\common\Mansions of Madness\Atlas_Main.png</td>
-                                <td>logo.jpg</td>
-                                <td>main</td>
-                                <td>png</td>
-                                <td>
-                                    <div class="double-cell">
-                                        <i class="fas fa-search"></i>
-                                        <i class="fas fa-trash"></i>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>H:\SteamLibrary\steamapps\common\Mansions of Madness\Atlas_Main.png</td>
-                                <td>logo.jpg</td>
-                                <td>main</td>
-                                <td>png</td>
-                                <td>
-                                    <div class="double-cell">
-                                        <i class="fas fa-search"></i>
-                                        <i class="fas fa-trash"></i>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>H:\SteamLibrary\steamapps\common\Mansions of Madness\Atlas_Main.png</td>
-                                <td>logo.jpg</td>
-                                <td>main</td>
-                                <td>png</td>
-                                <td>
-                                    <div class="double-cell">
-                                        <i class="fas fa-search"></i>
-                                        <i class="fas fa-trash"></i>
-                                    </div>
-                                </td>
-                            </tr>
-
-                        </table>
-                    </div>                                       
-                </div>
-            </div>
-            
         </div>
         <div class="footer">
             <div></div>
@@ -393,20 +306,6 @@
             <div id="sendButton" class="send-button">SEND<i class="fas fa-share"></i></div>
             <div></div>
         </div>
-    </div>
-    
-    <script src="js/libs/CSInterface.js"></script>
-    <script src="js/libs/jquery-2.0.2.min.js"></script>
-    
-    <script type="text/javascript" src="js/index.js"></script>
-
-    
-    
-    <script src="https://kit.fontawesome.com/63d92741b4.js" crossorigin="anonymous"></script>
-    <!--<script src="js/themeManager.js"></script>
-    <script src="js/main.js"></script>
-
-    -->
-    
+    </div> 
 </body>
 </html>

@@ -3,7 +3,7 @@
     <DisplayName>renderBeamer After Effects</DisplayName>
     <Description>Copy and install main application</Description>
     <Version>6.0.0.0</Version>
-    <ReleaseDate>2019-10-09</ReleaseDate>
+    <ReleaseDate>2021-03-04</ReleaseDate>
     <Script>installscript.js</Script>
 	<Name>com.renderbeamer.aftereffects</Name>
 	<ForcedInstallation>true</ForcedInstallation>
