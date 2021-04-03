@@ -12,7 +12,7 @@ TableString    g_strs[StrID_NUMTYPES] = {
 	{StrID_MenuVersion,			"renderBeamer Version"},
 	{StrID_MenuCost,				"renderBeamer CostCalc"},
 	{StrID_AboutMenu,				"renderBeamer about"},
-	{StrID_Description,			"renderBeamer, Copyright 2020 GarageFarm.NET. Render farm uploader plug-in."},
+	{StrID_Description,			"renderBeamer, Copyright 2020-2021 GarageFarm.NET. Render farm uploader plug-in."},
 	{StrID_LoadPluginError,		"There was an error in renderBeamer plugin load function. Contact support."},
 	{StrID_AboutDialogText,		GF_PLUGIN_VERSION( GF_PLUGIN_VERSION_MAJOR )	},
 	{StrID_CollectSmartWarning,	"Warning!\n Use \"Collect Smart\" carefully. It does not include compositions or footages dependencies inside scripts or expressions."},

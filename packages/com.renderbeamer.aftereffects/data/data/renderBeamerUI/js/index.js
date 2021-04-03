@@ -2,6 +2,15 @@ data_struct = "";
 parsed = "";
 currentRowId = "";
 
+function beamerExtensions() 
+{	
+	this.videoExt 		= ["mp4","mkv","mov","webm","mxf"];
+	this.videoExtended 	= ["MP4 MPEG-4 Part 14 (.mp4)", "Matroska (.mkv)", "MOV QuickTime (.mov)", "WebM (.webm)", "Material Exchange Format (.mxf)"];
+	this.imgSeqExt    	= ["DPX","IFF","EXR","PNG","PSD","SGI","TIFF"];
+	this.audioExt 		= ["wav"];
+}
+
+		
 function setPixelFormat(PFvalidIds) {
 	var pixelFormatParent = document.getElementById("pixelFormat-value").parentElement.getElementsByClassName("item");
 	
@@ -124,11 +133,8 @@ function setDropdownValue(args)
     var attribute ="";
     var dropdown = "";
     var topLabel ="";
-    
-	var videoExt = new Array("mp4","mkv","mov","webm","mxf");
-	var imgSeqExt = new Array("DPX","IFF","EXR","PNG","PSD","SGI","TIFF");
-	var audioExt = new Array("wav");
-	
+	var renderExtensions = new beamerExtensions();
+    	
     var extensionValue = document.getElementById("extensionValue");
         
     var encoderValue = document.getElementById("encoder-value");
@@ -205,13 +211,13 @@ function setDropdownValue(args)
 		dropdown = document.getElementById("extensionValue");
 		dropdown.classList.remove("dropdownClicked");	
 		
-		if(videoExt.includes(attribute.toLowerCase())){ 
+		if(renderExtensions.videoExt.includes(attribute.toLowerCase())){ 
 			topLabel = "video";
 		}
-		else if(imgSeqExt.includes(attribute.split(" ")[0].toUpperCase())){
+		else if(renderExtensions.imgSeqExt.includes(attribute.split(" ")[0].toUpperCase())){
 			topLabel = "image sequence";
 		}
-		else if(audioExt.includes(attribute.split(" ")[0].toLowerCase())){
+		else if(renderExtensions.audioExt.includes(attribute.split(" ")[0].toLowerCase())){
 			topLabel = "audio";		
 		}
 		sampleRateValue.innerHTML = parsed[args[3]-1].audio_sample_rate.slice(0, -3) + "kHz";
@@ -441,13 +447,19 @@ function smartCollectChecked(ar){
     }
     data_struct.smart_collect = smart_checked_val;
 }
-// filtering for queued compositions before submit
+
 function setObjectSubmit(){
+	var renderExtensions = new beamerExtensions();
     var reparsed = new Array();
     
     for(var x=0; x< parsed.length; x++){
-        if(parsed[x].renderable == 1){
-            reparsed.push(parsed[x]);
+        if(parsed[x].renderable == 1)
+		{
+			if(renderExtensions.videoExt.includes(parsed[x].file_ext_format.toLowerCase())) {
+				var index_number = renderExtensions.videoExt.indexOf(parsed[x].file_ext_format.toLowerCase());
+				parsed[x].file_ext_format = renderExtensions.videoExtended[index_number];		
+			}
+            reparsed.push(parsed[x]);			
         }
     }
     return reparsed;
@@ -508,17 +520,14 @@ function addEvents(){
 function initRenderbeamerPanel() 
 {    
     var csInterface = new CSInterface();
+	var renderExtensions = new beamerExtensions();
     document.getElementById("settingsBtn").classList.toggle("button-selected");
     document.getElementById("videoLabel").classList.add("hide");
-    document.styleSheets[0].insertRule("div#videoContainer { display: none;}", 0);
-
+	document.styleSheets[0].insertRule("div#videoContainer { display: none;}", 0);
+	
     csInterface.evalScript('initRenderbeamerHostCollect()', function(renderQueue_list)
 	{		
-		var jsonResult = renderQueue_list;
-		var videoExtensions = ["mp4","mkv","mov","webm","mxf"];
-		var imgSequences    = ["DPX","IFF","EXR","PNG","PSD","SGI","TIFF"];
-		var audioExtensions = ["wav"];
-		
+		var jsonResult = renderQueue_list;		
         var table = document.getElementById("compositionList");		
         data_struct = JSON.parse(jsonResult);	
         parsed = data_struct.data;
@@ -528,15 +537,15 @@ function initRenderbeamerPanel()
 			if(parsed[x].file_ext == "") {
 				parsed[x].file_ext = "PNG";
 			}
-			if(videoExtensions.includes(parsed[x].file_ext.toLowerCase())) {
+			if(renderExtensions.videoExt.includes(parsed[x].file_ext.toLowerCase())) {
 				parsed[x].file_ext_format = parsed[x].file_ext.toLowerCase();
 				parsed[x].out_is_sequence = 0;
 			}
-			else if(audioExtensions.includes(parsed[x].file_ext.toLowerCase())) {
+			else if(renderExtensions.audioExt.includes(parsed[x].file_ext.toLowerCase())) {
 				parsed[x].file_ext_format = "wav " + parsed[x].audio_sample_rate.slice(0, -3) + "kHz " + parseInt(parsed[x].audio_depth)*8 + "bit";
 				parsed[x].out_is_sequence = 0;
 			}
-			else if(imgSequences.includes(parsed[x].file_ext.toUpperCase()) != -1 ) {
+			else if(renderExtensions.imgSeqExt.includes(parsed[x].file_ext.toUpperCase())) {
 				parsed[x].file_ext = parsed[x].file_ext.toUpperCase();
 				parsed[x].file_ext_format = parsed[x].file_ext + " 16bit";
 				parsed[x].out_is_sequence = 1;

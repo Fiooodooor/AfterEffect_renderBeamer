@@ -39,6 +39,13 @@ function getObjectLength(object_to_check)
     return length;
 }
 
+function getCorrectedStringJSON(string_to_check)
+{
+	var checked = "";
+	
+	return checked;
+}
+
 function getStringifiedOutput(renderbeamerQueueArray, renderbeamerSettingsArray)
 {
     var data = renderbeamerQueueArray;
@@ -156,12 +163,10 @@ function initRenderbeamerHostCollect()
 
 function initRenderbeamerHostRelinker(renderqueue_list)
 {
-	var videoExt = 	["mp4","mkv","mov","webm","mxf"];
-	var videoExtF = ["MP4 MPEG-4 Part 14 (.mp4)", "Matroska (.mkv)", "MOV QuickTime (.mov)", "WebM (.webm)", "Material Exchange Format (.mxf)"];
     var parsed = renderqueue_list;
 	var rbid = app.findMenuCommandId("renderBeamer_ui_function");
     var sectionName = 'renderBeamer';
-	var indexOf = -1;
+	
 	app.preferences.savePrefAsString(sectionName , "rq_items", parsed.data.length);
 	app.preferences.savePrefAsString(sectionName , "ignore_missings", parsed.ignore_missings);
 	app.preferences.savePrefAsString(sectionName , "smart_collect", parsed.smart_collect);
@@ -170,12 +175,7 @@ function initRenderbeamerHostRelinker(renderqueue_list)
 	{
         for(var key in parsed.data[x])
 		{
-			if(key.toString() == "file_ext_format" && (indexOf=checkIndexOf(videoExt, parsed.data[x][key])) != -1) {
-				app.preferences.savePrefAsString(sectionName , key + "_" + x.toString(), videoExtF[indexOf]);   				
-			}
-			else {
-				app.preferences.savePrefAsString(sectionName , key + "_" + x.toString(), parsed.data[x][key]);
-			}   				
+			app.preferences.savePrefAsString(sectionName , key + "_" + x.toString(), parsed.data[x][key]);		
         }
     }	
     app.preferences.saveToDisk();
