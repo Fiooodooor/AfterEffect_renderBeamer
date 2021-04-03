@@ -429,7 +429,7 @@
 					"/usr/local/boost-1.72.0/include",
 				);
 				LIBRARY_SEARCH_PATHS = "/usr/local/boost-1.72.0/lib";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				ONLY_ACTIVE_ARCH = YES;
 				PRELINK_LIBS = "";
 				REZ_PREPROCESSOR_DEFINITIONS = __MACH__;
@@ -552,7 +552,7 @@
 					"/usr/local/boost-1.72.0/include",
 				);
 				LIBRARY_SEARCH_PATHS = "/usr/local/boost-1.72.0/lib";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				ONLY_ACTIVE_ARCH = YES;
 				PRELINK_LIBS = "";
 				REZ_PREPROCESSOR_DEFINITIONS = __MACH__;

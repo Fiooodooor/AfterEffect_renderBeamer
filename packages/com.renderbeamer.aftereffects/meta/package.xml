@@ -2,8 +2,8 @@
 <Package>
     <DisplayName>renderBeamer After Effects</DisplayName>
     <Description>Copy and install main application</Description>
-    <Version>6.0.0.0</Version>
-    <ReleaseDate>2021-03-04</ReleaseDate>
+    <Version>18.2.0.0</Version>
+    <ReleaseDate>2021-04-03</ReleaseDate>
     <Script>installscript.js</Script>
 	<Name>com.renderbeamer.aftereffects</Name>
 	<ForcedInstallation>true</ForcedInstallation>
