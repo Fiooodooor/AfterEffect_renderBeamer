@@ -41,9 +41,18 @@ function getObjectLength(object_to_check)
 
 function getCorrectedStringJSON(string_to_check)
 {
+    var begin = 0;
+    var end = string_to_check.length;
+    var it = 0;
 	var checked = "";
-	
-	return checked;
+    
+    do {
+        if(string_to_check[it] == '\\' || string_to_check[it] == '\"') {
+            checked = checked.concat(string_to_check.substring(begin, it), '\\');
+            begin = it;
+        }        
+    } while(++it < end)
+    return checked.concat(string_to_check.substring(begin, end));
 }
 
 function getStringifiedOutput(renderbeamerQueueArray, renderbeamerSettingsArray)
@@ -121,7 +130,7 @@ function initRenderbeamerHostCollect()
 		rq_out = rq.outputModule(rq_out_nr)        
 		rq_out_settings = rq_out.getSettings(GetSettingsFormat.NUMBER );			
 		
-		c.name = rq.comp.name;
+		c.name = getCorrectedStringJSON(rq.comp.name);
 		c.fps = rq_settings[rq_settings["Frame Rate"]];
 		c.frame_range = (Math.round((rq.timeSpanStart)*c.fps)).toString()+"to"+(Math.round((rq.timeSpanStart+rq.timeSpanDuration)*c.fps)-1).toString()+"s1";
 		
@@ -153,7 +162,7 @@ function initRenderbeamerHostCollect()
 			c.audio_depth = 2;
 		
 		var temp_ext = rq_out_settings["Output File Info"]["File Name"].split(".");      
-		c.file_ext = temp_ext[temp_ext.length-1];
+		c.file_ext = getCorrectedStringJSON(temp_ext[temp_ext.length-1]);
 		c.file_ext_format = c.file_ext;	
 		
 		renderBeamerQueueItemsList.push(c);	

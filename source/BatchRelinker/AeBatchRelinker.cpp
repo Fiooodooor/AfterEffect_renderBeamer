@@ -44,9 +44,11 @@ ErrorCodesAE AeBatchRelinker::ParseAepxXmlDocument()
 					rbProjLogger->logg("BatchAepxParser", "Path", AepxXmlElement->Attribute("fullpath"));
 					fileReference = CreateFileReference(AepxXmlElement);					
 
-					if (fileReference != nullptr)
+					if (fileReference != nullptr) 
 						fileItemNodes.push_back(fileReference);
-
+					else
+						rbProjLogger->loggErr("BatchAepxParser", "FileReferenceNullptr", "File parsing error! Returned nullptr while creating reference.");
+					
 					GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(progressDialog, 0, GetUniqueFilesTotalSizeA()))
 				}
 			}
@@ -86,15 +88,21 @@ FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElemen
 	FileBasePath = fs::absolute(fs::path(fileReferencePt->Attribute("fullpath"))).lexically_normal();
 	int ascendcount_base = fileReferencePt->IntAttribute("ascendcount_base");
 	int ascendcount_target = fileReferencePt->IntAttribute("ascendcount_target");
-
+	
 	try {			
 		const fs::file_status FileBasePathStatus = status(FileBasePath);
 		if (fs::status_known(FileBasePathStatus) ? !fs::exists(FileBasePathStatus) : !fs::exists(FileBasePath))
 			throw fs::filesystem_error("File does not exist! Trying to AE style path resolve ", fileRefError);
-		if (FileBasePathStatus.type() == FS_TYPE_UNKNOWN)
-			return nullptr;
-		if (fs::is_symlink(FileBasePath))
+		if (FileBasePathStatus.type() == FS_TYPE_UNKNOWN) {
+			rbProjLogger->loggErr("CreateFileReference", "FS_TYPE_UNKNOWN", "Path exists but is inaccessible. File will probably not success copy. Try running AE with admin rights.");
+		}
+		if (FileBasePathStatus.type() == FS_TYPE_NONE) {
+			rbProjLogger->loggErr("CreateFileReference", "FS_TYPE_NONE", "There was an error while resolving file status. File will probably not success copy.");
+		}
+		if (fs::is_symlink(FileBasePath)) {
+			rbProjLogger->logg("CreateFileReference", "FS_TYPE_SYMLINK", "Path exists and is a symlink. Resolving.");
 			FileBasePath = fs::read_symlink(FileBasePath);
+		}
 	}
 	catch(fs::filesystem_error &e) {
 		rbProjLogger->loggErr("BatchAepxParser", "FullPath", e.what());			
@@ -152,7 +160,7 @@ FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElemen
 			}
 		}
 	}
-	ERROR_CATCH_END_NO_INFO
+	ERROR_CATCH_END_LOGGER2("BatchRelinker", "CreateFileReference", rbProjLogger)
 	if (fileRef)
 	{
 		if (_ErrorCode == NoError)

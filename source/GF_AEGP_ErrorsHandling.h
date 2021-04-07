@@ -43,6 +43,7 @@
 #define ERROR_CATCH_END_NO_INFO_RETURN ERROR_CATCH_END_NO_INFO return _ErrorCode;
 
 #define ERROR_CATCH_END_LOGGER1(OBJECT,TYPE) ERROR_CATCH_END_CONSTRUCT(GF_Dumper::rbProj()->loggErr(OBJECT,TYPE,theErr.what());,GF_Dumper::rbProj()->loggErr(OBJECT,TYPE,PluginError::GetErrorStringA(UnknownError,GF_PLUGIN_LANGUAGE));,GF_Dumper::rbProj()->loggErr(OBJECT,TYPE,PluginError::GetErrorStringA(theErr,GF_PLUGIN_LANGUAGE));,&theErr)
+#define ERROR_CATCH_END_LOGGER2(OBJECT,TYPE,LOGGER) ERROR_CATCH_END_CONSTRUCT(LOGGER->loggErr(OBJECT,TYPE,theErr.what());,LOGGER->loggErr(OBJECT,TYPE,PluginError::GetErrorStringA(UnknownError,GF_PLUGIN_LANGUAGE));,LOGGER->loggErr(OBJECT,TYPE,PluginError::GetErrorStringA(theErr,GF_PLUGIN_LANGUAGE));,&theErr)
 #define ERROR_CATCH_END_LOGGER(ATYPE) ERROR_CATCH_END_LOGGER1(PluginError::GetCallerStringA(_ErrorCaller,GF_PLUGIN_LANGUAGE),ATYPE)
 #define ERROR_CATCH_END_LOGGER_RETURN(ATYPE) ERROR_CATCH_END_LOGGER1(PluginError::GetCallerStringA(_ErrorCaller,GF_PLUGIN_LANGUAGE),ATYPE) return _ErrorCode;
 

@@ -89,6 +89,7 @@ namespace fs = std::filesystem;
 #define FS_U8STRING(MY_PTH) MY_PTH.u8string()
 #define WOPEN(FILEH,FILEP,PARAMS) FILEH.open((FILEP).wstring().c_str(), PARAMS)
 #define FS_TYPE_UNKNOWN fs::file_type::unknown
+#define FS_TYPE_NONE fs::file_type::none
 #else
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #include <boost/filesystem.hpp>
@@ -101,6 +102,7 @@ namespace fs = boost::filesystem;
 #define FS_U8STRING(MY_PTH) MY_PTH.string()
 #define WOPEN(FILEH,FILEP,PARAMS) FILEH.open(FILEP.string().c_str(), PARAMS)
 #define FS_TYPE_UNKNOWN fs::file_type::type_unknown
+#define FS_TYPE_NONE fs::file_type::type_none
 #endif
 
 #include "AE_GeneralPlug.h"
