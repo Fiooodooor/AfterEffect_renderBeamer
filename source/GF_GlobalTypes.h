@@ -102,7 +102,7 @@ namespace fs = boost::filesystem;
 #define FS_U8STRING(MY_PTH) MY_PTH.string()
 #define WOPEN(FILEH,FILEP,PARAMS) FILEH.open(FILEP.string().c_str(), PARAMS)
 #define FS_TYPE_UNKNOWN fs::file_type::type_unknown
-#define FS_TYPE_NONE fs::file_type::type_none
+#define FS_TYPE_NONE fs::file_type::status_error
 #endif
 
 #include "AE_GeneralPlug.h"
