@@ -42,9 +42,12 @@ SingleFileReference::SingleFileReference(const std::string& theFilesUID, tinyxml
 
 AeFileNode* SingleFileReference::AddFiles()
 {
+	ERROR_CATCH_START
 	auto *node = new AeFileNode(false, filesUID, GetMainFilePath());
 	node->PushSourceFilename(new AeFileNode::FilenameCouple(false, 0, GetFilesReferencePointer(), file_name.filename().string()));
 	return node;
+	ERROR_CATCH_END_NO_INFO
+	return nullptr;
 }
 
 bool SingleFileReference::RelinkFiles(AeFileNode* node)
@@ -75,6 +78,7 @@ SequenceListFileReference::SequenceListFileReference(const std::string& theFiles
 
 AeFileNode* SequenceListFileReference::AddFiles()
 {
+	ERROR_CATCH_START
 	if (file_reference)
 	{
 		auto *node = new AeFileNode(true, filesUID, GetMainFilePath());
@@ -93,6 +97,7 @@ AeFileNode* SequenceListFileReference::AddFiles()
 		}
 		return node;
 	}
+	ERROR_CATCH_END_NO_INFO
 	return nullptr;
 }
 
@@ -140,7 +145,8 @@ AeFileNode* SequenceMaskFileReference::AddFiles()
 	FS_ERROR_CODE(fileRefError)
 
 	auto *node = new AeFileNode(true, filesUID, GetMainFilePath(), uStringMaskBase);
-	
+
+	ERROR_CATCH_START
 	for (auto p : fs::directory_iterator(GetMainFilePath()))
 	{
 		const fs::file_status entryStatus(p.status(fileRefError));
@@ -173,6 +179,9 @@ AeFileNode* SequenceMaskFileReference::AddFiles()
 		}
 	}
 	return node;
+	ERROR_CATCH_END_NO_INFO
+	delete node;
+	return nullptr;
 }
 
 bool SequenceMaskFileReference::RelinkFiles(AeFileNode* node)

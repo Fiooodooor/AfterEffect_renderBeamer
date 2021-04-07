@@ -176,10 +176,14 @@ FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElemen
 		{
 			fileRef->SetMainFilesPath(FileBasePath);
 			auto* node_pt = fileRef->AddFiles();
-			node_id = PushUniqueFilePath(node_pt);
-			fileRef->SetNodeId(node_id);
+			if (node_pt == nullptr)
+				_ErrorCode = NullPointerResult;
+			else {
+				node_id = PushUniqueFilePath(node_pt);
+				fileRef->SetNodeId(node_id);
+			}
 		}
-		else
+		if (_ErrorCode != NoError)
 		{
 			delete fileRef;
 			fileRef = nullptr;
