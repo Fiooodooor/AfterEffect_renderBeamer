@@ -1,5 +1,6 @@
 #include "AeBatchRelinker.h"
 #include <clocale>
+#include <algorithm>
 
 AeBatchRelinker::AeBatchRelinker(SPBasicSuite* pb, PlatformLibLoader* c4dLoader, rbProjectClass& rbLogger, PF_AppProgressDialogP& progressD, const fs::path& aepxPath, const fs::path& aepxRemote)
 		: picaBasic(pb), libC4dPointer(c4dLoader)
@@ -104,12 +105,20 @@ FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElemen
 			FileBasePath = fs::read_symlink(FileBasePath);
 		}
 	}
-	catch(fs::filesystem_error &e) {
-		rbProjLogger->loggErr("BatchAepxParser", "FullPath", e.what());			
+	catch(fs::filesystem_error &e) {		
+		rbProjLogger->loggErr("BatchAepxParser", "FullPath", e.what());
+		
 		if (ascendcount_base > 0 && ascendcount_target > 0)
 		{
 			FileBasePath = aepxXmlDocumentPath;
-			const fs::path FileBaseRelative = fs::absolute(fs::path(fileReferencePt->Attribute("fullpath"))).lexically_normal();
+			std::string stringBaseRelative = fileReferencePt->Attribute("fullpath");
+			#ifdef AE_OS_WIN
+				std::replace(stringBaseRelative.begin(), stringBaseRelative.end(), '/', '\\');
+			#else
+				std::replace(stringBaseRelative.begin(), stringBaseRelative.end(), '\\', '/');
+			#endif
+		
+			const fs::path FileBaseRelative = fs::absolute(fs::path(stringBaseRelative)).lexically_normal();
 
 			auto it = FileBaseRelative.end();
 

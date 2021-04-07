@@ -1,6 +1,8 @@
 #include "AeSceneCollector.h"
 #include <clocale>
 
+#define SMART_COLLECT_ON 1
+
 AeSceneCollector::AeSceneCollector(AEGP_PluginID PluginId, SPBasicSuite *Sp, AEGP_ProjectH ProjectH, AeSceneConteiner &theCt)
 	: ct(&theCt)
 	, sp(Sp)
@@ -27,10 +29,14 @@ ErrorCodesAE AeSceneCollector::AeSceneCollect(A_Boolean useUiExporter)
 			ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(pbh, "renderBeamer", "ignore_missings", 0, &continue_on_missing))
 			if (_ErrorCode == NoError)
 			{
-				//if(smart_collect == 0)			
+#ifdef SMART_COLLECT_ON
+				if(smart_collect == 0)			
 					ERROR_AE(AeNormalCollect(useUiExporter))
-					//else
-				//	ERROR_AE(AeSmartCollect(useUiExporter))
+				else
+					ERROR_AE(AeSmartCollect(useUiExporter))
+#else
+				ERROR_AE(AeNormalCollect(useUiExporter))
+#endif
 			}
 			suites.PersistentDataSuite4()->AEGP_DeleteEntry(pbh, "renderBeamer", "smart_collect");
 			suites.PersistentDataSuite4()->AEGP_DeleteEntry(pbh, "renderBeamer", "ignore_missings");
@@ -167,10 +173,12 @@ ErrorCodesAE AeSceneCollector::collectSceneUiRenderQueueItems()
 		ERROR_AEER(suites.OutputModuleSuite4()->AEGP_GetOutputModuleByIndex(rq_ItemRef, gfs_rq_node_out->indexNr - 1, &rq_ItemOutModuleRef))
 		ERROR_AEER(suites.OutputModuleSuite4()->AEGP_GetOutputFilePath(rq_ItemRef, rq_ItemOutModuleRef, &mem_handle))
 		ERROR_AEER(rbUtilities::copyMemhUTF16ToPath(sp, mem_handle, gfs_rq_node_out->outputFile))
-		
+
+#ifdef SMART_COLLECT_ON
 		if (gfs_rq_node->smart_collect != 0) {
-		//	ERROR_AEER(collectSceneRqItem(new AeObjectNode(pluginId, sp, rq_ItemH, 0)))
+			ERROR_AEER(collectSceneRqItem(new AeObjectNode(pluginId, sp, rq_ItemH, 0)))
 		}
+#endif
 		if (_ErrorCode == NoError)
 		{
 			gfs_rq_node->output_mods.push_back(gfs_rq_node_out);
@@ -287,15 +295,13 @@ ErrorCodesAE AeSceneCollector::smartCollectToRender()
 			++it;
 		}
 		if (it != end) {
-			auto *comp_node = new AeCompNode(node);
+			auto *comp_node = new AeCompNode(*it);			
 			compositionsSortedList.erase(it); 
 			comp_node->generateLayers();
 			renderCompositionPushBack(comp_node);
 			collectCompositionLayersToRender(comp_node);
 		}
-		else {
-			delete node;			
-		}		
+		delete node;
 		rqCompositionSortedList.pop_front();
 	}
 	return smartTrimProject();
