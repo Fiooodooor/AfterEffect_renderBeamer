@@ -218,10 +218,7 @@ ErrorCodesAE GF_Dumper::newBatchDumpProject(bool is_ui_caller)
 	relinker.RelinkerInitialize(bps, TRUE);
 
 	GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, 1, 5))
-//	if(is_ui_caller)
 	ERROR_RETURN(DumpUiQueueItems(bps.bp.rqMainOutput))
-//	else
-//		ERROR_RETURN(DumpQueueItems(bps.bp.rqMainOutput))
 	GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, 2, 5))
 	ERROR_RETURN(newCopyCollectFonts())
 	GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, 3, 5))
@@ -257,16 +254,8 @@ ErrorCodesAE GF_Dumper::newBatchDumpProject(bool is_ui_caller)
 	ERROR_CATCH_END_RETURN(suites)
 }
 
-ErrorCodesAE GF_Dumper::newDumpProject()
-{
-	ERROR_CATCH_START_MOD(CallerModuleName::ProjectDumperModule)
-	ERROR_CATCH_END_RETURN(suites)
-}
-ErrorCodesAE GF_Dumper::newCopyRelinkFootages()
-{
-	ERROR_CATCH_START
-	ERROR_CATCH_END_RETURN(suites)
-}
+ErrorCodesAE GF_Dumper::newDumpProject() {    return NoError; }
+ErrorCodesAE GF_Dumper::newCopyRelinkFootages() {    return NoError; }
 
 ErrorCodesAE GF_Dumper::newCopyCollectFonts()
 {
@@ -325,25 +314,14 @@ ErrorCodesAE GF_Dumper::DumpUiQueueItems(const fs::path& outputPath) const
 	ERROR_CATCH_END_LOGGER_RETURN("DumpUiQueueItems")
 }
 
-ErrorCodesAE GF_Dumper::DumpQueueItems(const fs::path& outputPath)
-{
-	ERROR_CATCH_START_MOD(CallerModuleName::QueueCollectModule)
-	ERROR_CATCH_END_RETURN(suites)
-}
-
-ErrorCodesAE GF_Dumper::DumpQueueItem(A_long itemIndex, const fs::path& outputPath)
-{
-	ERROR_CATCH_START_MOD(CallerModuleName::QueueCollectModule)
-	ERROR_CATCH_END_RETURN(suites)
-}
-
+ErrorCodesAE GF_Dumper::DumpQueueItems(const fs::path& outputPath) {    return NoError; }
+ErrorCodesAE GF_Dumper::DumpQueueItem(A_long itemIndex, const fs::path& outputPath) { return NoError; }
 ErrorCodesAE GF_Dumper::DumpOutputModules(AEGP_RQItemRefH &rq_ItemRef, A_long outModulesNumber, gfsRqItem *parentItem,  fs::path outputPath)
 {
 	ERROR_CATCH_START_MOD(CallerModuleName::OutputCollectModule)
 		if (!parentItem) throw NullPointerResult;
 
-		std::string memBuff1, memBuff2;	
-        AEGP_MemHandle memH1 = nullptr;
+		std::string memBuff1, memBuff2;
 		AEGP_OutputModuleRefH rq_ItemOutModuleRef = nullptr;
 		AEGP_OutputTypes outType = 0;				
 		gfsRqItemOutput* outNode = nullptr;
