@@ -26,7 +26,10 @@ AeBatchRelinker::~AeBatchRelinker()
 ErrorCodesAE AeBatchRelinker::ParseAepxXmlDocument()
 {
 	AEGP_SuiteHandler suites(picaBasic);
-	std::setlocale(LC_ALL, "en_US.utf8");
+	rbProjLogger->logg("BatchAepxParser", "Start", "Begin of parsing function.");
+	try { std::setlocale(LC_ALL, "en_US.utf8"); }
+	catch (...) {}
+	
 	unique_files_total_size = 0;
 	try {
 		if (aepxXmlDocument.LoadFile(aepxXmlDocumentPath.string().c_str()) != tinyxml2::XML_NO_ERROR)
@@ -71,8 +74,10 @@ ErrorCodesAE AeBatchRelinker::ParseAepxXmlDocument()
 		}
 	}
 	catch (...) {
+		rbProjLogger->loggErr("BatchAepxParser", "End", "End of parsing function - error occurred.");
 		return ErrorResult;
 	}
+	rbProjLogger->logg("BatchAepxParser", "End", "End of parsing function - no error return.");
 	return NoError;
 }
 
@@ -169,25 +174,21 @@ FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElemen
 			}
 		}
 	}
-	ERROR_CATCH_END_LOGGER2("BatchRelinker", "CreateFileReference", rbProjLogger)
 	if (fileRef)
 	{
-		if (_ErrorCode == NoError)
-		{
-			fileRef->SetMainFilesPath(FileBasePath);
-			auto* node_pt = fileRef->AddFiles();
-			if (node_pt == nullptr)
-				_ErrorCode = NullPointerResult;
-			else {
-				node_id = PushUniqueFilePath(node_pt);
-				fileRef->SetNodeId(node_id);
-			}
+		fileRef->SetMainFilesPath(FileBasePath);
+		auto* node_pt = fileRef->AddFiles();
+		if (node_pt != nullptr) {
+			node_id = PushUniqueFilePath(node_pt);
+			fileRef->SetNodeId(node_id);
 		}
-		if (_ErrorCode != NoError)
-		{
-			delete fileRef;
-			fileRef = nullptr;
-		}
+		else throw PluginError(NullPointerResult);
+	}
+	ERROR_CATCH_END_LOGGER2("BatchRelinker", "CreateFileReference", rbProjLogger)
+	if (fileRef && _ErrorCode != NoError)
+	{
+		delete fileRef;
+		fileRef = nullptr;
 	}
 	return fileRef;
 }

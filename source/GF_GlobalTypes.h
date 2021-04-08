@@ -6,7 +6,7 @@
 #include "entry.h"
 
 #define GF_PLUGIN_VERSION_MAJOR 18
-#define GF_PLUGIN_VERSION( VER_ARG ) "renderBeamer for After Effects v." #VER_ARG
+#define GF_PLUGIN_VERSION "renderBeamer for After Effects v.18"
 
 //#define GF_PLUGIN_VERSION_STRING(VER_STRING, VER_MAJOR, VER_MINOR) VER_STRING ## VER_MAJOR ## VER_MINOR
 // "renderBeamer for After Effects v.17",
@@ -29,7 +29,9 @@
 #include <string>
 
 #ifdef AE_OS_WIN
-#define BEAMER_SCRIPT L"renderbeamer\\renderbeamer.exe"
+#define BEAMER_SCRIPT L"renderbeamer\\renderbeamer.bat"
+//#define BEAMER_SCRIPT L"renderbeamer\\renderbeamer.exe"
+
 #define FONT_LIB_NAME L"\\libgf_font_converter.dll"
 #define C4D_LIB_NAME L"\\C4dRelinkerLibrary.dll"
 #define ENV_HOME_DIR "USERPROFILE"

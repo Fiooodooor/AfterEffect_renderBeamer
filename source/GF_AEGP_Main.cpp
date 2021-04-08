@@ -29,9 +29,10 @@ Renderbeamer::Renderbeamer(SPBasicSuite *pica_basicP, AEGP_PluginID pluginID)
     PT_ETX(i_sp.CommandSuite1()->AEGP_GetUniqueCommand(&beamerCostCalcCmd))
     PT_ETX(i_sp.CommandSuite1()->AEGP_GetUniqueCommand(&beamerUiBatchExport))
 
-    PT_ETX(i_sp.CommandSuite1()->AEGP_InsertMenuCommand(beamerEditCmd, GetStringPtr(StrID_MenuUiLocation), AEGP_Menu_COMPOSITION, AEGP_MENU_INSERT_AT_BOTTOM))
+    PT_ETX(i_sp.CommandSuite1()->AEGP_InsertMenuCommand(beamerEditCmd, GetStringPtr(StrID_MenuBatch), AEGP_Menu_COMPOSITION, AEGP_MENU_INSERT_AT_BOTTOM))
     PT_ETX(i_sp.CommandSuite1()->AEGP_InsertMenuCommand(beamerCostCalcCmd, GetStringPtr(StrID_MenuCost), AEGP_Menu_COMPOSITION, AEGP_MENU_INSERT_AT_BOTTOM))
-    PT_ETX(i_sp.CommandSuite1()->AEGP_InsertMenuCommand(beamerUiBatchExport, GetStringPtr(StrID_MenuUiCollect), AEGP_Menu_NONE, AEGP_MENU_INSERT_SORTED))
+    //PT_ETX(i_sp.CommandSuite1()->AEGP_InsertMenuCommand(beamerUiBatchExport, GetStringPtr(StrID_MenuUiCollect), AEGP_Menu_WINDOW, AEGP_MENU_INSERT_AT_BOTTOM))
+	PT_ETX(i_sp.CommandSuite1()->AEGP_SetMenuCommandName(beamerUiBatchExport, GetStringPtr(StrID_MenuUiCollect)))
 
     PT_ETX(i_sp.RegisterSuite5()->AEGP_RegisterCommandHook(pluginId, AEGP_HP_BeforeAE, beamerEditCmd, &Renderbeamer::SCommandHook, reinterpret_cast<AEGP_CommandRefcon>(this)))
     PT_ETX(i_sp.RegisterSuite5()->AEGP_RegisterCommandHook(pluginId, AEGP_HP_BeforeAE, beamerCostCalcCmd, &Renderbeamer::SCommandHook, reinterpret_cast<AEGP_CommandRefcon>(this)))
@@ -49,13 +50,16 @@ void Renderbeamer::CommandHook(
 	ERROR_CATCH_START//_MOD(MainCommandHookModule)
 		*handledPB = TRUE;		
 		if (command == beamerUiBatchExport) {		
-			DumpProject(TRUE);
+			DumpProject(TRUE);			
 		}	
 		else if(command == beamerCostCalcCmd) {
 			CostCalculator();
         }
-		else if (command != beamerEditCmd) {
-			*handledPB = FALSE;
+		else if (command == beamerEditCmd) {
+			DumpProject(FALSE);
+		}
+		else {
+			*handledPB = FALSE;		
 		}
 	ERROR_CATCH_END(i_sp)
 }
@@ -63,7 +67,7 @@ void Renderbeamer::CommandHook(
 void Renderbeamer::UpdateMenuHook(AEGP_WindowType active_window) const
 {
 	ERROR_CATCH_START
-		ERROR_AEER(i_sp.CommandSuite1()->AEGP_DisableCommand(beamerEditCmd))
+		ERROR_AEER(i_sp.CommandSuite1()->AEGP_EnableCommand(beamerEditCmd))
 		ERROR_AEER(i_sp.CommandSuite1()->AEGP_EnableCommand(beamerUiBatchExport))		
 		ERROR_AEER(i_sp.CommandSuite1()->AEGP_EnableCommand(beamerCostCalcCmd))
 	ERROR_CATCH_END(i_sp)

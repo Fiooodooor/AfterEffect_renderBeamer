@@ -11,7 +11,7 @@ AeSceneCollector::AeSceneCollector(AEGP_PluginID PluginId, SPBasicSuite *Sp, AEG
 	, pbh(nullptr)
 	, pbh_items_number(0)
 	, smart_collect(0)
-	, continue_on_missing(0)
+	, continue_on_missing(1)
 {
 	ERROR_CATCH_START
 	std::setlocale(LC_ALL, ".utf8");
@@ -20,28 +20,27 @@ AeSceneCollector::AeSceneCollector(AEGP_PluginID PluginId, SPBasicSuite *Sp, AEG
 ErrorCodesAE AeSceneCollector::AeSceneCollect(A_Boolean useUiExporter)
 {
 	AEGP_SuiteHandler suites(sp);
-	ERROR_CATCH_START
+	ERROR_CATCH_START		
 		ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetApplicationBlob(AEGP_PersistentType_MACHINE_SPECIFIC, &pbh))
 		ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(pbh, "renderBeamer", "rq_items", 0, &pbh_items_number))
-		if(_ErrorCode == NoError && pbh_items_number > 0)
+		if (_ErrorCode == NoError && pbh_items_number > 0)
 		{
+			//useUiExporter = TRUE;
 			ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(pbh, "renderBeamer", "smart_collect", 0, &smart_collect))
-			ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(pbh, "renderBeamer", "ignore_missings", 0, &continue_on_missing))
-			if (_ErrorCode == NoError)
-			{
-#ifdef SMART_COLLECT_ON
-				if(smart_collect == 0)			
-					ERROR_AE(AeNormalCollect(useUiExporter))
-				else
-					ERROR_AE(AeSmartCollect(useUiExporter))
-#else
-				ERROR_AE(AeNormalCollect(useUiExporter))
-#endif
-			}
+			ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(pbh, "renderBeamer", "ignore_missings", 1, &continue_on_missing))
+
 			suites.PersistentDataSuite4()->AEGP_DeleteEntry(pbh, "renderBeamer", "smart_collect");
 			suites.PersistentDataSuite4()->AEGP_DeleteEntry(pbh, "renderBeamer", "ignore_missings");
 			suites.PersistentDataSuite4()->AEGP_DeleteEntry(pbh, "renderBeamer", "rq_items");
 		}
+		if (_ErrorCode == NoError)
+		{
+			if (smart_collect == 0)
+				ERROR_AE(AeNormalCollect(useUiExporter))
+			else
+				ERROR_AE(AeSmartCollect(useUiExporter))
+		}
+		
 	ERROR_CATCH_END_RETURN(suites)
 }
 
@@ -51,9 +50,10 @@ ErrorCodesAE AeSceneCollector::AeNormalCollect(A_Boolean useUiExporter)
 	ERROR_CATCH_START
 		ERROR_AE(collectSceneItems())
 		ERROR_AE(collectToRender())
-		if (useUiExporter != 0) {
-			ERROR_AE(collectSceneUiRenderQueueItems())
-		}
+		if (useUiExporter != 0)
+			ERROR_AE(collectSceneUiRenderQueueItems())		
+		else
+			ERROR_AE(collectSceneRenderQueueItems())		
     ERROR_CATCH_END_RETURN(suites)
 }
 ErrorCodesAE AeSceneCollector::AeSmartCollect(A_Boolean useUiExporter)
@@ -89,15 +89,21 @@ ErrorCodesAE AeSceneCollector::collectSceneItems()
 
 ErrorCodesAE AeSceneCollector::collectSceneRenderQueueItems()
 {
+	gfsRqItem *gfs_rq_node = nullptr;
+	gfsRqItemOutput *gfs_rq_node_out = nullptr;
+	A_char frameScript[400];
 	AEGP_SuiteHandler suites(sp);
 	ErrorCodesAE _ErrorCode = NoError;
 	AEGP_RenderItemStatusType renderState = AEGP_RenderItemStatus_NONE;
 	AEGP_RQItemRefH rqItemH = nullptr;
+	AEGP_OutputModuleRefH rq_ItemOutModuleRef = nullptr;
+	AEGP_OutputTypes outType = 0;
 	AEGP_CompH compH = nullptr;
 	AEGP_ItemH itemH = nullptr;
+	AEGP_MemHandle memH1 = nullptr;	
 	A_long totalQueued = 0, i = 0, rqOutputs = 0, rqAdded = 0;
+	
 	ERROR_AEER(suites.RQItemSuite3()->AEGP_GetNumRQItems(&totalQueued))
-
 	while (i < totalQueued && _ErrorCode == NoError) {
 		ERROR_AEER(suites.RQItemSuite3()->AEGP_GetRQItemByIndex(i++, &rqItemH))
 		ERROR_AEER(suites.RQItemSuite3()->AEGP_GetRenderState(rqItemH, &renderState))
@@ -105,11 +111,57 @@ ErrorCodesAE AeSceneCollector::collectSceneRenderQueueItems()
 			ERROR_AEER(suites.RQItemSuite3()->AEGP_GetNumOutputModulesForRQItem(rqItemH, &rqOutputs))
 			if (rqOutputs > 0 && _ErrorCode == NoError)
 			{
+				gfs_rq_node = new gfsRqItem;
+				gfs_rq_node_out = new gfsRqItemOutput({ 1, "PNG", "PNG 16bit", "", "", "", "", 1, 0, 0, 0, {48000, AEGP_SoundEncoding_UNSIGNED_PCM, 2, 2}, "" });
+				if (!gfs_rq_node || !gfs_rq_node_out)
+					return AE_ErrAlloc;				
+				gfs_rq_node->smart_collect = static_cast<A_Boolean>(smart_collect);
+				gfs_rq_node->continue_on_missing = static_cast<A_Boolean>(continue_on_missing);
+				gfs_rq_node->indexNr = i;
+				
 				ERROR_AEER(suites.RQItemSuite3()->AEGP_GetCompFromRQItem(rqItemH, &compH))
-				ERROR_AEER(suites.CompSuite11()->AEGP_GetItemFromComp(compH, &itemH))
-				ERROR_AEER(collectSceneRqItem(new AeObjectNode(pluginId, sp, itemH, 0)))
-				if(_ErrorCode == NoError)
+				ERROR_AEER(suites.CompSuite11()->AEGP_GetItemFromComp(compH, &itemH))				
+
+				suites.ANSICallbacksSuite1()->sprintf(frameScript, "var rqItem=app.project.renderQueue.item(%d);var rqMod=rqItem.getSettings(GetSettingsFormat.STRING);var rqFps=parseFloat(rqMod[rqMod[\"Frame Rate\"]]);(Math.round(rqItem.timeSpanStart*rqFps)).toString()+\"to\"+(Math.round((rqItem.timeSpanStart+rqItem.timeSpanDuration)*rqFps)-1).toString()+\"s1\";", gfs_rq_node->indexNr);
+				ERROR_AE(rbUtilities::execScript(sp, pluginId, frameScript, gfs_rq_node->frame_string, 32))
+
+				suites.ANSICallbacksSuite1()->sprintf(frameScript, "var fpsRqMod=app.project.renderQueue.item(%d).getSettings(GetSettingsFormat.STRING);parseFloat(fpsRqMod[fpsRqMod[\"Frame Rate\"]]).toFixed(2);", gfs_rq_node->indexNr);
+				ERROR_AE(rbUtilities::execScript(sp, pluginId, frameScript, gfs_rq_node->fps, 32))
+
+				ERROR_AEER(suites.ItemSuite9()->AEGP_GetItemDimensions(itemH, &gfs_rq_node->width, &gfs_rq_node->height))
+				ERROR_AEER(suites.ItemSuite9()->AEGP_GetItemName(pluginId, itemH, &memH1))
+				ERROR_AEER(rbUtilities::copyMemhUTF16ToString(sp, memH1, gfs_rq_node->composition_name))	
+
+				ERROR_AEER(suites.OutputModuleSuite4()->AEGP_GetOutputModuleByIndex(rqItemH, gfs_rq_node_out->indexNr - 1, &rq_ItemOutModuleRef))
+				ERROR_AEER(suites.OutputModuleSuite4()->AEGP_GetEnabledOutputs(rqItemH, rq_ItemOutModuleRef, &outType))
+				ERROR_AEER(suites.OutputModuleSuite4()->AEGP_GetOutputFilePath(rqItemH, rq_ItemOutModuleRef, &memH1))
+				ERROR_AEER(rbUtilities::copyMemhUTF16ToPath(sp, memH1, gfs_rq_node_out->outputFile))
+				if (outType & AEGP_OutputType_AUDIO)
+				{
+					ERROR_AEER(suites.OutputModuleSuite4()->AEGP_GetSoundFormatInfo(rqItemH, rq_ItemOutModuleRef, &gfs_rq_node_out->soundFormat, &gfs_rq_node_out->outputAudioSetToUse))
+					if (_ErrorCode == NoError)
+					{
+						gfs_rq_node_out->outputAudioEnabled = true;
+						if (gfs_rq_node_out->outputAudioSetToUse > 0)
+							gfs_rq_node_out->outputAudioSetToUse = 1;
+						else
+							gfs_rq_node_out->outputAudioSetToUse = 0;
+					}
+				}
+				
+		#ifdef SMART_COLLECT_ON
+					if (gfs_rq_node->smart_collect != 0) {
+						ERROR_AEER(collectSceneRqItem(new AeObjectNode(pluginId, sp, itemH, 0)))
+					}
+		#endif
+				if (_ErrorCode == NoError)
+				{
+					gfs_rq_node->output_mods.push_back(gfs_rq_node_out);
+					ct->gfsRqItemsList.push_back(gfs_rq_node);
+					gfs_rq_node_out = nullptr;
+					gfs_rq_node = nullptr;					
 					rqAdded++;
+				}
 			}
 			_ErrorCode = NoError;
 		}

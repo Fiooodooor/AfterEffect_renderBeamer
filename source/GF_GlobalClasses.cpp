@@ -128,8 +128,8 @@ bool rbProjectClass::createLogger(const wchar_t* file, int mode)
 	catch (std::runtime_error&) {
 		locale_utf8 = std::locale(locale_utf8, "", std::locale::ctype);
 	}
-	logger.imbue(locale_utf8);
 	logger.open(logFilePathRenderBeamer, logFileMode);
+	logger.imbue(locale_utf8);
 	if (!logger.is_open())
 		return false;
 	logger.close();
@@ -523,7 +523,7 @@ ErrorCodesAE rbUtilities::execBeamerCmd(beamerParamsStruct bps, BeamerMasks mask
 ErrorCodesAE rbUtilities::exec_cmd(fs::path const &app, std::string const &args, fs::path const &out_file, wchar_t *buffer_w, unsigned long buffer_size)
 {
 	ErrorCodesAE _ErrorCode = NoError;
-	GF_Dumper::rbProj()->logg("HelperClass", "ExecCmd::Args", args.c_str());
+	GF_Dumper::rbProj()->logg("HelperClass::ExecCmd::Args", app.string().c_str(), args.c_str());
 #ifdef AE_OS_WIN
 	_ErrorCode = win_exec_cmd(app, args, out_file, buffer_w, buffer_size);
 #else
@@ -550,11 +550,16 @@ ErrorCodesAE rbUtilities::win_exec_cmd(fs::path const &app, std::string const &a
 	si.cb = sizeof(si);
 	si.dwFlags = STARTF_USESHOWWINDOW;
 	si.wShowWindow = SW_HIDE;
-
 	cmd.reserve(MAX_PATH);
-	cmd = L"\"" + app.filename().wstring() + L"\" " + std::wstring(args.cbegin(), args.cend());
-
-	if (!CreateProcessW(app.wstring().c_str(), &cmd[0], nullptr, nullptr, TRUE, CREATE_NO_WINDOW, nullptr, nullptr, &si, &pi))
+		
+	cmd = L"\"" + app.wstring() + L"\" " + std::wstring(args.cbegin(), args.cend());
+	std::size_t substr_pos = cmd.find(L" -f ");
+	if (substr_pos != std::wstring::npos) {
+		cmd.replace(substr_pos, 4, L"  > ");
+	}
+//	cmd = L"\"" + app.filename().wstring() + L"\" " + std::wstring(args.cbegin(), args.cend());
+//	if (!CreateProcessW(app.wstring().c_str(), &cmd[0], nullptr, nullptr, TRUE, CREATE_NO_WINDOW, nullptr, nullptr, &si, &pi))
+	if (!CreateProcessW(nullptr, &cmd[0], nullptr, nullptr, TRUE, CREATE_NO_WINDOW, nullptr, nullptr, &si, &pi))
 		throw PluginError(ExecCommandFailedToExec);
 
 	const DWORD fn_signaled_state = WaitForSingleObject(pi.hProcess, INFINITE);
@@ -565,12 +570,14 @@ ErrorCodesAE rbUtilities::win_exec_cmd(fs::path const &app, std::string const &a
 
 	if (fn_signaled_state != WAIT_OBJECT_0)
 		throw PluginError(ExecCommandFailedObjWait);
-	if (return_code != 0)
-		throw PluginError(ExecCommandFailed);
+	if (return_code != 0 && return_code != STILL_ACTIVE) {
+		GF_Dumper::rbProj()->loggErr("ExecCommandFailed::HelperClass", "Win_exec_cmd::Returned non zero code", std::to_string(static_cast<long long>(return_code)).c_str());
+		//throw PluginError(ExecCommandFailed);
+	}
 	_ErrorCode = read_file_buffer_w(out_file, buffer_w, buffer_size);
 	
 #endif
-	ERROR_CATCH_END_LOGGER_RETURN("WinExecCmd")
+	ERROR_CATCH_END_LOGGER_RETURN("WinExecCmd")		
 }
 ErrorCodesAE rbUtilities::mac_exec_cmd(fs::path const &app, std::string const &args, fs::path const &out_file, wchar_t *buffer_w, unsigned long buffer_size)
 {
