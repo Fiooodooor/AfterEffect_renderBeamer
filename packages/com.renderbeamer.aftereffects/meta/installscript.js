@@ -43,21 +43,17 @@ Component.prototype.createOperationsForArchive = function(archive)
 	component.addOperation("Extract", archive, QDesktopServices.storageLocation(QDesktopServices.HomeLocation)+ "/renderbeamer/uninstall/AfterEffects");
 	component.addOperation("Copy", QDesktopServices.storageLocation(QDesktopServices.HomeLocation)+ "/renderbeamer/uninstall/AfterEffects/data/AfterEffects", QDesktopServices.storageLocation(QDesktopServices.HomeLocation)+"/renderbeamer/plugins/AfterEffects");
 
-
 	if (systemInfo.kernelType === "winnt") 
-	{
-		
+	{		
 		lastPath = ""
 		fromPath = QDesktopServices.storageLocation(QDesktopServices.HomeLocation)+ "/renderbeamer/uninstall/AfterEffects/data/GF_AEGP_Renderbeamer.aex"
 		fromPath2 = QDesktopServices.storageLocation(QDesktopServices.HomeLocation)+ "/renderbeamer/uninstall/AfterEffects/data/C4dRelinkerLibrary.dll"
-		
 		
 		var keyName = "CommonPluginInstallPath";
 		var typeDat = "REG_SZ";
 		
 		for (i = 14; i < 18; i++) 
 		{
-			
 			var regPath = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Adobe\\After Effects\\" + i.toString() + ".0";
 			
 			var registryQueryResult = installer.execute("reg", new Array("QUERY", regPath, "/v", keyName, "/reg:64"))[0];
@@ -76,12 +72,20 @@ Component.prototype.createOperationsForArchive = function(archive)
 		
 		UIpath = QDesktopServices.storageLocation(QDesktopServices.HomeLocation)+ "/renderbeamer/uninstall/AfterEffects/data/renderBeamerUI";
 		UIpathDir = QDesktopServices.storageLocation(QDesktopServices.HomeLocation) +"/AppData/Roaming/Adobe/CEP/extensions/renderBeamerUI";
+		UIpathDir_old = QDesktopServices.storageLocation(QDesktopServices.HomeLocation) +"/AppData/Roaming/Adobe/CEP/extensions/com.acc.renderBeamerUI";
+		if (installer.fileExists(UIpathDir_old))
+		{
+			var re_old = new RegExp("/", 'g');
+			path3_old = UIpathDir_old.replace(re_old, '\\');
+			component.addOperation("Execute", ["cmd", "/C", "del", "/Q", "/S", "/F", path3_old, "UNDOEXECUTE", "cmd", "/C"]);
+		}
 		if (installer.fileExists(UIpathDir))
 		{
 			var re = new RegExp("/", 'g');
 			path3 = UIpathDir.replace(re, '\\');
 			component.addOperation("Execute", ["cmd", "/C", "del", "/Q", "/S", "/F", path3, "UNDOEXECUTE", "cmd", "/C"]);
 		}
+		
 		if (!installer.fileExists(UIpathDir))
 		{
 			component.addOperation("Mkdir", UIpathDir);
@@ -96,9 +100,16 @@ Component.prototype.createOperationsForArchive = function(archive)
 		component.addOperation("CopyDirectory", [QDesktopServices.storageLocation(QDesktopServices.HomeLocation)+ "/renderbeamer/uninstall/AfterEffects/data/renderBeamer.plugin", "/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/", "forceOverwrite"]);
 		if (installer.fileExists("/Library/Application Support/Adobe/CEP/extensions/renderBeamerUI"))
 		{
-			component.addOperation("Rmdir", "/Library/Application Support/Adobe/CEP/extensions/renderBeamerUI");
+			component.addElevatedOperation("Execute", ["rm", "-R", "/Library/Application Support/Adobe/CEP/extensions/renderBeamerUI/"])
 		}
-		component.addOperation("Mkdir", "/Library/Application Support/Adobe/CEP/extensions/");
+		if (installer.fileExists("/Library/Application Support/Adobe/CEP/extensions/com.acc.renderBeamerUI/"))
+		{
+			component.addElevatedOperation("Execute", ["rm", "-R", "/Library/Application Support/Adobe/CEP/extensions/com.acc.renderBeamerUI/"])
+		}
+		if (!installer.fileExists("/Library/Application Support/Adobe/CEP/extensions/renderBeamerUI/"))
+		{
+			component.addOperation("Mkdir", "/Library/Application Support/Adobe/CEP/extensions/renderBeamerUI/");
+		}		
 		component.addOperation("CopyDirectory", [QDesktopServices.storageLocation(QDesktopServices.HomeLocation)+ "/renderbeamer/uninstall/AfterEffects/data/renderBeamerUI", "/Library/Application Support/Adobe/CEP/extensions/", "forceOverwrite"]);
 	}
 		
