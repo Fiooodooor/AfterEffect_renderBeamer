@@ -32,11 +32,11 @@ ErrorCodesAE AeGfsFileCreator::GenerateAndSaveDocument()
 
 	// <Settings outFileExt="png" framestring="0to505s1" outFileName="AE_Mac_test_1_.aepx" outFilePath="AE_Mac_test_1K/AE_Mac_test_1K-renders" userOutput="/Users/soth/Desktop/AE_v17_mac_tests/AE_Mac_test_1_/Final_Comp_.png" >
 	doc_settings = gfs_document.NewElement("Settings");
-	doc_settings->SetAttribute("outFileExt", pt->output_mods.back()->file_ext);
+	doc_settings->SetAttribute("outFileExt", pt->output_mods.back()->file_ext_format);
 	doc_settings->SetAttribute("framestring", pt->frame_string);
 	doc_settings->SetAttribute("outFileName", outFileName.string().c_str());
 	doc_settings->SetAttribute("outFilePath", ("\\" + outFilePath.string()).c_str());
-	doc_settings->SetAttribute("userOutput", fs::path(pt->output_mods.back()->outputFile).replace_extension(".png").string().c_str());
+	doc_settings->SetAttribute("userOutput", pt->output_mods.back()->outputFile.string().c_str());
 	doc_root->InsertEndChild(doc_settings);
 
 	// <AfterEffects height="1080" width="1920" fontDir="AE_Mac_test_1K/data/fonts" >
