@@ -205,6 +205,7 @@ typedef struct {
         std::wstring        pluginPath;
         std::wstring        fontLibPath;
         std::wstring        c4d_LibPath;
+		A_UTF16Char			original_project[AEGP_MAX_PATH_SIZE];
         wchar_t             beamerTmpPath[AEGP_MAX_PATH_SIZE];
         fs::path            beamerScript;
         A_char              beamerExecScript[2048];

@@ -10,7 +10,9 @@ GF_Dumper::GF_Dumper(SPBasicSuite *basicSuite, AEGP_PluginID pI, beamerParamsStr
 	, relinkerProg(nullptr)
 	, relinker(basicSuite, pI)
     , bps(*GF_params)
+	, tmp_message("")
 	, sc(nullptr)
+	, smart_collect(0)
 {
     projectName[0] = '\0';
 }
@@ -18,15 +20,12 @@ GF_Dumper::GF_Dumper(SPBasicSuite *basicSuite, AEGP_PluginID pI, beamerParamsStr
 GF_Dumper::~GF_Dumper()
 {
     A_Err err = A_Err_NONE;
-	FS_ERROR_CODE(Error)
 
     if (relinkerProg)
         suites.AppSuite6()->PF_DisposeAppProgressDialog(relinkerProg);
 	
-    if (fs::exists(bps.bp.originalProject, Error)) {
-        A_UTF16Char OryginalProject[AEGP_MAX_PATH_SIZE];
-        rbUtilities::toUTF16(bps.bp.originalProject.wstring().c_str(), OryginalProject, AEGP_MAX_PATH_SIZE);
-        ERR(suites.ProjSuite6()->AEGP_OpenProjectFromPath(OryginalProject, &rootProjH));
+    if (smart_collect != 0) {       
+        ERR(suites.ProjSuite6()->AEGP_OpenProjectFromPath(bps.original_project, &rootProjH));
     }
 }
 
@@ -51,9 +50,10 @@ ErrorCodesAE GF_Dumper::PreCheckProject(SPBasicSuite *pb, AEGP_PluginID pluginId
 
 		if (projectDirty == TRUE || GF_params->projectPath.empty())
 		{
-			throw PluginError(_ErrorCaller, ErrorCodesAE::ProjectNotSaved);
+			throw PluginError(_ErrorCaller, ProjectNotSaved);
 		}
-        GF_params->bp.originalProject = fs::path(GF_params->projectPath).lexically_normal();		
+        GF_params->bp.originalProject = fs::path(GF_params->projectPath).lexically_normal();
+		rbUtilities::toUTF16(GF_params->projectPath.c_str(), GF_params->original_project, AEGP_MAX_PATH_SIZE);
 		GF_params->bp.projectFilenameCorrect = fs::path(GF_params->bp.originalProject.filename()).replace_extension(".aepx");
 		rbUtilities::pathStringFixIllegal(GF_params->bp.projectFilenameCorrect, false, false);
         rbUtilities::getTimeString(GF_params->timeString, 20, true);	       
@@ -153,7 +153,7 @@ ErrorCodesAE GF_Dumper::PrepareProject()
 
 		bps.bp.remote_renders_path = bps.bp.projectRootCorrect.c_str();
 		bps.bp.remote_renders_path /= bps.bp.projectRootCorrect.c_str();
-		bps.bp.remote_renders_path += "-renders";
+		bps.bp.remote_renders_path += "-Renders";
 		bps.bp.remoteFootagePath = "U:";
 		bps.bp.remoteFootagePath /= bps.rmtUser;
 		bps.bp.remoteFootagePath /= bps.bp.projectRootCorrect.c_str();
@@ -211,19 +211,21 @@ ErrorCodesAE GF_Dumper::PrepareProject()
 	ERROR_CATCH_END_RETURN(suites)
 }
 
-ErrorCodesAE GF_Dumper::newBatchDumpProject(bool is_ui_caller)
+ErrorCodesAE GF_Dumper::newBatchDumpProject()
 {
 	ERROR_CATCH_START_MOD(CallerModuleName::ProjectDumperModule)
 
 	relinker.RelinkerInitialize(bps, TRUE);
-
-	GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, 1, 5))
+	bps.currentItem = 0;
+	bps.colectedItems = 5 + static_cast<A_long>(sc->fontsList.size());
+	
+	GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, ++bps.currentItem, bps.colectedItems))
 	ERROR_RETURN(DumpUiQueueItems(bps.bp.rqMainOutput))
-	GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, 2, 5))
+	GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, ++bps.currentItem, bps.colectedItems))
 	ERROR_RETURN(newCopyCollectFonts())
-	GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, 3, 5))
+	GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, ++bps.currentItem, bps.colectedItems))
 	ERROR_RETURN(newCollectEffectsInfo())
-	GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, 4, 5))
+	GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, ++bps.currentItem, bps.colectedItems))
 	
 	AeGfsFileCreator::getInstance()->GenerateAndSaveDocument();
 	relinker.RelinkProject(rootProjH);
@@ -233,7 +235,7 @@ ErrorCodesAE GF_Dumper::newBatchDumpProject(bool is_ui_caller)
 		delete sc->renderFootageSortedList.back();
 		sc->renderFootageSortedList.pop_back();
 	}
-	GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, 5, 5))
+	GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(relinkerProg, ++bps.currentItem, bps.colectedItems))
 	suites.AppSuite6()->PF_DisposeAppProgressDialog(relinkerProg);
 	
 	rbUtilities::toUTF16(L"Relinking scene and copying asset files...", dialogText, 128);
@@ -253,9 +255,6 @@ ErrorCodesAE GF_Dumper::newBatchDumpProject(bool is_ui_caller)
 	fs::copy(bps.bp.tempLogPath, bps.bp.logsMainOutput, LogCoppyError);
 	ERROR_CATCH_END_RETURN(suites)
 }
-
-ErrorCodesAE GF_Dumper::newDumpProject() {    return NoError; }
-ErrorCodesAE GF_Dumper::newCopyRelinkFootages() {    return NoError; }
 
 ErrorCodesAE GF_Dumper::newCopyCollectFonts()
 {
@@ -297,7 +296,7 @@ ErrorCodesAE GF_Dumper::newCollectEffectsInfo() const
 		auto *gfsEffect = new gfsEffectNode({ node->getKey(), node->getEffectName(), node->getEffectMatchN(), node->getEffectCategory() });
 		if(AeGfsFileCreator::getInstance()->PushEffectNode(gfsEffect) == NoError)
         {
-			rbProj()->loggA(9, "EffectCollector", "Name:", node->getEffectName(), "MatchName:", node->getEffectMatchN(), "Catgegory:", node->getEffectCategory(), "InstallKey:", std::to_string(static_cast<int>(node->getKey())).c_str());
+			rbProj()->loggA(9, "EffectCollector", "Name:", node->getEffectName(), "MatchName:", node->getEffectMatchN(), "Category:", node->getEffectCategory(), "InstallKey:", std::to_string(static_cast<int>(node->getKey())).c_str());
         }
 	}
 	ERROR_CATCH_END_LOGGER_RETURN("EffectsCollecting")
@@ -314,42 +313,10 @@ ErrorCodesAE GF_Dumper::DumpUiQueueItems(const fs::path& outputPath) const
 	ERROR_CATCH_END_LOGGER_RETURN("DumpUiQueueItems")
 }
 
-ErrorCodesAE GF_Dumper::DumpQueueItems(const fs::path& outputPath) {    return NoError; }
-ErrorCodesAE GF_Dumper::DumpQueueItem(A_long itemIndex, const fs::path& outputPath) { return NoError; }
-ErrorCodesAE GF_Dumper::DumpOutputModules(AEGP_RQItemRefH &rq_ItemRef, A_long outModulesNumber, gfsRqItem *parentItem,  fs::path outputPath)
-{
-	ERROR_CATCH_START_MOD(CallerModuleName::OutputCollectModule)
-		if (!parentItem) throw NullPointerResult;
-
-		std::string memBuff1, memBuff2;
-		AEGP_OutputModuleRefH rq_ItemOutModuleRef = nullptr;
-		AEGP_OutputTypes outType = 0;				
-		gfsRqItemOutput* outNode = nullptr;
-
-		while (outModulesNumber > 0) 
-		{
-			if ((outNode = new gfsRqItemOutput({ 0, "", "", "", "", "", "", 0, 0, 0, 0, {48000, AEGP_SoundEncoding_UNSIGNED_PCM, 2, 2}, "" })) == nullptr)
-				_ErrorCode = AE_ErrAlloc;			
-			ERROR_AEER(suites.OutputModuleSuite4()->AEGP_GetOutputModuleByIndex(rq_ItemRef, --outModulesNumber, &rq_ItemOutModuleRef))
-			ERROR_AEER(suites.OutputModuleSuite4()->AEGP_GetEnabledOutputs(rq_ItemRef, rq_ItemOutModuleRef, &outType))
-			if (outType & AEGP_OutputType_AUDIO) 
-			{
-				ERROR_AEER(suites.OutputModuleSuite4()->AEGP_GetSoundFormatInfo(rq_ItemRef, rq_ItemOutModuleRef, &outNode->soundFormat, &outNode->outputAudioSetToUse))
-				if (_ErrorCode == NoError) 
-				{
-					outNode->outputAudioEnabled = true;
-					if (outNode->outputAudioSetToUse > 0)
-						outNode->outputAudioSetToUse = 1;
-					else
-						outNode->outputAudioSetToUse = 0;
-				}
-			}
-		}
-	ERROR_CATCH_END_LOGGER_RETURN("OutputItem")
-}
-
 ErrorCodesAE GF_Dumper::setConteiner(AeSceneConteiner &aesc)
 {
 	this->sc = &aesc;
-	return ErrorCodesAE::NoError;
+	if (!aesc.gfsRqItemsList.empty())
+		this->smart_collect = aesc.gfsRqItemsList.front()->smart_collect;
+	return NoError;
 }

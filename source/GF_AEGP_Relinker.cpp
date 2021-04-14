@@ -51,7 +51,8 @@ ErrorCodesAE GF_AEGP_Relinker::RelinkerInitialize(beamerParamsStruct &tmpBps, A_
 A_Err GF_AEGP_Relinker::RelinkProject(AEGP_ProjectH projectH)
 {
     PT_XTE_START{
-        PT_ETX(suites.ProjSuite6()->AEGP_SaveProjectAs(projectH, projectSavePath))
+     //   PT_ETX(suites.ProjSuite6()->AEGP_SaveProjectAs(projectH, projectSavePath))
+        PT_ETX(suites.ProjSuite6()->AEGP_SaveProjectToPath(projectH, projectSavePath))
     } PT_XTE_CATCH_RETURN_ERR
 }
 

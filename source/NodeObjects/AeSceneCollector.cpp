@@ -122,20 +122,25 @@ ErrorCodesAE AeSceneCollector::collectSceneRenderQueueItems()
 				ERROR_AEER(suites.RQItemSuite3()->AEGP_GetCompFromRQItem(rqItemH, &compH))
 				ERROR_AEER(suites.CompSuite11()->AEGP_GetItemFromComp(compH, &itemH))				
 
-				suites.ANSICallbacksSuite1()->sprintf(frameScript, "var rqItem=app.project.renderQueue.item(%d);var rqMod=rqItem.getSettings(GetSettingsFormat.STRING);var rqFps=parseFloat(rqMod[rqMod[\"Frame Rate\"]]);(Math.round(rqItem.timeSpanStart*rqFps)).toString()+\"to\"+(Math.round((rqItem.timeSpanStart+rqItem.timeSpanDuration)*rqFps)-1).toString()+\"s1\";", gfs_rq_node->indexNr);
+				suites.ANSICallbacksSuite1()->sprintf(frameScript, "var rqItem=app.project.renderQueue.item(%d);var rqFps=rqItem.getSettings(GetSettingsFormat.NUMBER)[rqItem.getSettings(GetSettingsFormat.STRING)[\"Frame Rate\"]];(Math.round(rqItem.timeSpanStart*rqFps)).toString()+\"to\"+(Math.round((rqItem.timeSpanStart+rqItem.timeSpanDuration)*rqFps)-1).toString()+\"s1\";", gfs_rq_node->indexNr);
 				ERROR_AE(rbUtilities::execScript(sp, pluginId, frameScript, gfs_rq_node->frame_string, 32))
 
-				suites.ANSICallbacksSuite1()->sprintf(frameScript, "var fpsRqMod=app.project.renderQueue.item(%d).getSettings(GetSettingsFormat.STRING);parseFloat(fpsRqMod[fpsRqMod[\"Frame Rate\"]]).toFixed(2);", gfs_rq_node->indexNr);
+				suites.ANSICallbacksSuite1()->sprintf(frameScript, "var rqItem=app.project.renderQueue.item(%d);rqItem.getSettings(GetSettingsFormat.NUMBER)[rqItem.getSettings(GetSettingsFormat.STRING)[\"Frame Rate\"]];", gfs_rq_node->indexNr);
 				ERROR_AE(rbUtilities::execScript(sp, pluginId, frameScript, gfs_rq_node->fps, 32))
 
 				ERROR_AEER(suites.ItemSuite9()->AEGP_GetItemDimensions(itemH, &gfs_rq_node->width, &gfs_rq_node->height))
 				ERROR_AEER(suites.ItemSuite9()->AEGP_GetItemName(pluginId, itemH, &memH1))
-				ERROR_AEER(rbUtilities::copyMemhUTF16ToString(sp, memH1, gfs_rq_node->composition_name))	
+				ERROR_AEER(rbUtilities::copyMemhUTF16ToString(sp, memH1, gfs_rq_node->composition_name))
+				if (gfs_rq_node->composition_name.size() < 3)
+					gfs_rq_node->composition_name = std::string("RQ_ITEM_NR_") + std::to_string(i);
 
 				ERROR_AEER(suites.OutputModuleSuite4()->AEGP_GetOutputModuleByIndex(rqItemH, gfs_rq_node_out->indexNr - 1, &rq_ItemOutModuleRef))
 				ERROR_AEER(suites.OutputModuleSuite4()->AEGP_GetEnabledOutputs(rqItemH, rq_ItemOutModuleRef, &outType))
 				ERROR_AEER(suites.OutputModuleSuite4()->AEGP_GetOutputFilePath(rqItemH, rq_ItemOutModuleRef, &memH1))
 				ERROR_AEER(rbUtilities::copyMemhUTF16ToPath(sp, memH1, gfs_rq_node_out->outputFile))
+				if (gfs_rq_node_out->outputFile.has_extension() && gfs_rq_node_out->outputFile.extension().string().size() < 7)
+					suites.ANSICallbacksSuite1()->sprintf(gfs_rq_node_out->file_ext, gfs_rq_node_out->outputFile.extension().string().c_str()+1);
+				
 				if (outType & AEGP_OutputType_AUDIO)
 				{
 					ERROR_AEER(suites.OutputModuleSuite4()->AEGP_GetSoundFormatInfo(rqItemH, rq_ItemOutModuleRef, &gfs_rq_node_out->soundFormat, &gfs_rq_node_out->outputAudioSetToUse))

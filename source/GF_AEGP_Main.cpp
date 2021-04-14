@@ -87,7 +87,7 @@ void Renderbeamer::DumpProject(A_Boolean useUiExporter) const
 				AeSceneCollector collector(pluginId, i_pica_basicP, project_dumper.rootProjH, scene_items_container);
 				ERROR_AE(collector.AeSceneCollect(useUiExporter))
 				ERROR_AE(project_dumper.setConteiner(scene_items_container))
-				ERROR_AE(project_dumper.newBatchDumpProject(useUiExporter))
+				ERROR_AE(project_dumper.newBatchDumpProject())
 				ERROR_AEER(i_sp.UtilitySuite6()->AEGP_ReportInfo(pluginId, GetStringPtr(StrID_ProjectSent)))
 			}
 		}
@@ -124,8 +124,12 @@ A_Err EntryPointFunction(
 	A_Err			err = A_Err_NONE;
 	AEGP_PluginID	pid = aegp_plugin_id;
 	SPBasicSuite	*pb = pica_basicP;
+	AEGP_SuiteHandler suites(pb);
+	AEGP_PersistentBlobH pbh;
 	
 	ERR(Renderbeamer::SNewRenderbeamer(global_refconP, pb, pid));
-    
+	
+	if(suites.PersistentDataSuite4()->AEGP_GetApplicationBlob(AEGP_PersistentType_MACHINE_SPECIFIC, &pbh) == A_Err_NONE)
+		suites.PersistentDataSuite4()->AEGP_DeleteEntry(pbh, "renderBeamer", "rq_items");
     return err;
 }

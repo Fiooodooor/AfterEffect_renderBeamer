@@ -31,6 +31,7 @@ public:
 			sh.UtilitySuite6()->AEGP_ReportInfo(pluginID, GetStringPtr(StrID_LoadPluginError));
 			return A_Err_ALLOC;
 		}
+		
 		return A_Err_NONE;
 	}
 
