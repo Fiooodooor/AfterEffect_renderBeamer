@@ -6,9 +6,14 @@
 #ifdef AE_OS_MAC
 #include "socket_interface.h"
 
-class platform_socket : public SocketClientInterface
+class platform_socket final : public SocketClientInterface
 {
 public:
+	platform_socket(platform_socket &p) = delete;
+	platform_socket(platform_socket &&p) = delete;
+	platform_socket& operator=(platform_socket &p) = delete;
+	platform_socket& operator=(platform_socket &&p) = delete;
+
 	platform_socket();
 	~platform_socket();
 	bool init_interface() override;
@@ -21,10 +26,10 @@ public:
 	unsigned long read(char *data, unsigned long max_length) override;
 
 protected:
-	void print_to_debug(const std::string &message, bool add_end_line=true) const override;
-	void print_error_string(const std::string &caller_name, int error_id) const override;
-	void print_error_string(int error_id) const override;
+	void print_to_debug(const std::string &message, const std::string &caller_name, bool error = true) const override;
+	void print_error_string(int error_id, const std::string &caller_name) const override;
 };
+
 #endif
 
 #endif

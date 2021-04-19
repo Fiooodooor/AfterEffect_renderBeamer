@@ -29,9 +29,8 @@ public:
 	virtual unsigned long read(char *data, unsigned long max_length) = 0;
 	
 protected:
-	virtual void print_to_debug(const std::string &message, bool add_endl) const = 0;
-	virtual void print_error_string(const std::string &caller_name, int error_id) const = 0;	
-	virtual void print_error_string(int error_id) const = 0;
+	virtual void print_to_debug(const std::string &message, const std::string &caller_name, bool error) const = 0;
+	virtual void print_error_string(int error_id, const std::string &caller_name) const = 0;
 	long long socket_descriptor_ = 0;
 	int socket_state_ = 0;
 };

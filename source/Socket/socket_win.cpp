@@ -4,7 +4,7 @@
 #ifdef AE_OS_WIN
 #include <WinSock2.h>
 #include <WS2tcpip.h>
-#include <iostream>
+#include "../GF_AEGP_Dumper.h"
 
 platform_socket::platform_socket() : SocketClientInterface()
 {
@@ -15,50 +15,59 @@ platform_socket::~platform_socket()
 }
 bool platform_socket::init_interface()
 {
+	print_to_debug("Initiating interface for socket. ", "platform_socket::init_interface", false);
 	WSAData wsa_data = { 0, 0, 0, 0, nullptr, { 0 }, { 0 } };
 	if (WSAStartup(MAKEWORD(2, 0), &wsa_data) != 0) {
-		print_to_debug("Error: WSAStartup failed!");
+		print_to_debug("Failed to init the interface!", "platform_socket::init_interface");
 		return false;
 	}
 	return true;
 }
 bool platform_socket::create_socket()
 {
-	if (init_interface() == false)
+	if (init_interface() == false) {
+		socket_state_ = Error;
 		return false;
-	
-	const auto socket = ::WSASocket(AF_INET, SOCK_STREAM, 0, nullptr, 0, 0);
+	}
 
-	if (socket == INVALID_SOCKET) {
+	print_to_debug("Creating socket.", "platform_socket::create_socket", false);
+	auto win_socket = ::socket(AF_INET, 0, IPPROTO_TCP);
+	
+	if (win_socket == INVALID_SOCKET) {
 		const auto err = WSAGetLastError();
-		print_error_string(err);
+		print_error_string(err, "::socket");
 		return false;
 	}
 	
-	socket_descriptor_ = static_cast<long long>(socket);
+	socket_descriptor_ = static_cast<long long>(win_socket);
 	socket_state_ = Unconnected;
 	return true;
 }
 void platform_socket::close_socket()
 {
+	print_to_debug("Closing socket.", "platform_socket::close_socket", false);
 	::closesocket(socket_descriptor_);
 	socket_state_ = Unconnected;
 }
 bool platform_socket::connect(const unsigned short port)
 {
+	print_to_debug("Connect called.", "platform_socket::connect", false);
+	DWORD socket_timeout_ms = 1500;
 	sockaddr_in socket_address_in_v4;
-	
 	memset(&socket_address_in_v4, 0, sizeof(sockaddr_in));
+	
 	socket_address_in_v4.sin_family = AF_INET;
-	WSAHtons(socket_descriptor_, port, &(socket_address_in_v4.sin_port));
-	WSAHtonl(socket_descriptor_, 2130706433, &(socket_address_in_v4.sin_addr.s_addr));
-	auto *socket_address_ptr = reinterpret_cast<struct sockaddr*>( &socket_address_in_v4);
+	socket_address_in_v4.sin_addr.s_addr = 16777343; // <==> inet_addr("127.0.0.1");
+	socket_address_in_v4.sin_port = htons(port);
+	auto *socket_address_ptr = reinterpret_cast<SOCKADDR*>(&socket_address_in_v4);
+	if (socket_address_ptr == nullptr)
+		return false;
 
-	const auto connection_result = ::WSAConnect(socket_descriptor_, socket_address_ptr, sizeof(sockaddr_in), nullptr, nullptr, nullptr, nullptr);
+	const auto connection_result = ::connect(socket_descriptor_, socket_address_ptr, sizeof(socket_address_in_v4));
 	if (connection_result == SOCKET_ERROR)
 	{
 		const auto err = WSAGetLastError();
-		print_error_string(err);
+		print_error_string(err, "::connect");
 		switch (err)
 		{
 			case WSANOTINITIALISED:
@@ -83,10 +92,20 @@ bool platform_socket::connect(const unsigned short port)
 				socket_state_ = Unconnected;
 				break;
 		}
-		if (socket_state_ != Connected)
+		if (socket_state_ != Connected) 
+		{
+			socket_state_ = Error;
 			return false;
+		}
 	}
 	
+	const auto set_result = setsockopt(socket_descriptor_, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<char*>(&socket_timeout_ms), sizeof(DWORD));
+	if (set_result == SOCKET_ERROR) {
+		print_error_string(WSAGetLastError(), "setsockopt");
+		return false;
+	}
+	print_to_debug("Set recive timeout success. SO_RCVTIMEO: ON", "setsockopt", false);
+
 	socket_state_ = Connected;
 	return true;
 }
@@ -97,12 +116,12 @@ bool platform_socket::is_connected() const
 
 unsigned long platform_socket::bytes_available() const
 {
+	print_to_debug("CHECK: Bytes available from renderbeamer.", "platform_socket::bytes_available", false);
 	unsigned long  bytes_to_read = 0;
 	unsigned long dummy = 0;
 	DWORD sizeWritten = 0;
 	if (::WSAIoctl(socket_descriptor_, FIONREAD, &dummy, sizeof(dummy), &bytes_to_read, sizeof(bytes_to_read), &sizeWritten, nullptr, nullptr) == SOCKET_ERROR) {
-		const auto err = WSAGetLastError();
-		print_error_string(err);
+		print_error_string(WSAGetLastError(), "::WSAIoctl");
 		return 0;
 	}
 
@@ -110,22 +129,17 @@ unsigned long platform_socket::bytes_available() const
 }
 unsigned long platform_socket::write(const char *data, const unsigned long data_length)
 {
+	print_to_debug("WRITE: Sending data to renderbeamer.", "platform_socket::write", false);
 	unsigned long data_sent = 0;
 	const unsigned long max_size = 49152;
 	auto bytes_to_send = data_length;
 
 	for (;;) {
-		WSABUF buffer;
-		buffer.buf = const_cast<char*>(data) + data_sent;
-		buffer.len = bytes_to_send;
-		const DWORD flags = 0;
-		DWORD bytes_written = 0;
-
-		const auto socket_return_code = ::WSASend(socket_descriptor_, &buffer, 1, &bytes_written, flags, nullptr, nullptr);
-		data_sent += bytes_written;
-
-
-		if (socket_return_code != SOCKET_ERROR) {
+		const auto socket_return_code = ::send(socket_descriptor_, data+ data_sent, bytes_to_send, 0);
+		
+		if (socket_return_code != SOCKET_ERROR) 
+		{
+			data_sent += socket_return_code;
 			if (data_sent == data_length)
 				break;
 			continue;
@@ -134,7 +148,7 @@ unsigned long platform_socket::write(const char *data, const unsigned long data_
 		if (err == WSAENOBUFS) { // max 49152 per call to WSASendTo
 		}
 		else {
-			print_error_string(err);
+			print_error_string(err, "::send");
 			switch (err) {
 				case WSAECONNRESET:
 				case WSAECONNABORTED:
@@ -146,112 +160,88 @@ unsigned long platform_socket::write(const char *data, const unsigned long data_
 			}
 			break;
 		}
-		// for next send:	
 		bytes_to_send = max_size <= (data_length - data_sent) ? max_size : (data_length - data_sent);
 	}
 	return data_sent;
 }
+
 unsigned long platform_socket::read(char *data, const unsigned long max_length)
 {
-	struct timeval tv = { 2, 0 };
-	fd_set fds;	
-	unsigned long bytes_read = 0;
-	WSABUF buffer;
-	buffer.buf = data;
-	buffer.len = max_length;
-	DWORD flags = 0;
-
-	memset(&fds, 0, sizeof(fd_set));
-	fds.fd_count = 1;
-	fds.fd_array[0] = socket_descriptor_;
-
-	if(select(0, &fds, nullptr, nullptr, &tv) == 0)
-	{
-		return 0;
-	}
+	print_to_debug("READ: Waiting for data from renderbeamer.", "platform_socket::read", false);
+	unsigned long bytes_read;
 	
-	if (::WSARecv(socket_descriptor_, &buffer, 1, &bytes_read, &flags, nullptr, nullptr) == SOCKET_ERROR)
-	{
-		const auto err = WSAGetLastError();
-		print_error_string(err);
-		switch (err) {
-			case WSAETIMEDOUT:
-			case WSAEWOULDBLOCK:
-			case WSAEBADF:
-			case WSAEINVAL:
-			case WSAECONNRESET:
-			case WSAECONNABORTED:		
-			default:
-				bytes_read = 0;
-				WSASetLastError(0);
-				break;
-		}
+	const auto return_val = ::recv(socket_descriptor_, data, static_cast<int>(max_length) - 1, 0);
+	if (return_val <= 0)
+	{		
+		print_error_string(WSAGetLastError(), "::recv");
+		bytes_read = -1;
+		WSASetLastError(0);
 	}
-
+	else {		
+		bytes_read = return_val;
+		data[bytes_read] = '\0';
+	}
 	return bytes_read;
 }
 
-void platform_socket::print_to_debug(const std::string &message, bool add_end_line) const
+void platform_socket::print_to_debug(const std::string &message, const std::string &caller_name, bool error) const
 {
-	std::cout << message << " ";
-	if (add_end_line)
-		std::cout << std::endl;
+	if(error)
+		GF_Dumper::rbProj()->loggErr("Socket", caller_name.c_str(), message.c_str());
+	else
+		GF_Dumper::rbProj()->logg("Socket", caller_name.c_str(), message.c_str());
 }
-void platform_socket::print_error_string(const std::string &caller_name, const int error_id) const
-{
-	print_to_debug(caller_name, false);
-	print_error_string(error_id);
-}
-void platform_socket::print_error_string(const int error_id) const
+
+void platform_socket::print_error_string(const int error_id, const std::string &caller_name) const
 {
 	switch (error_id)
 	{
-		case WSANOTINITIALISED: print_to_debug("WSA error : WSANOTINITIALISED"); break;
-		case WSAEINTR: print_to_debug("WSA error : WSAEINTR"); break;
-		case WSAEBADF: print_to_debug("WSA error : WSAEBADF"); break;
-		case WSAEACCES: print_to_debug("WSA error : WSAEACCES"); break;
-		case WSAEFAULT: print_to_debug("WSA error : WSAEFAULT"); break;
-		case WSAEINVAL: print_to_debug("WSA error : WSAEINVAL"); break;
-		case WSAEMFILE: print_to_debug("WSA error : WSAEMFILE"); break;
-		case WSAEWOULDBLOCK: print_to_debug("WSA error : WSAEWOULDBLOCK"); break;
-		case WSAEINPROGRESS: print_to_debug("WSA error : WSAEINPROGRESS"); break;
-		case WSAEALREADY: print_to_debug("WSA error : WSAEALREADY"); break;
-		case WSAENOTSOCK: print_to_debug("WSA error : WSAENOTSOCK"); break;
-		case WSAEDESTADDRREQ: print_to_debug("WSA error : WSAEDESTADDRREQ"); break;
-		case WSAEMSGSIZE: print_to_debug("WSA error : WSAEMSGSIZE"); break;
-		case WSAEPROTOTYPE: print_to_debug("WSA error : WSAEPROTOTYPE"); break;
-		case WSAENOPROTOOPT: print_to_debug("WSA error : WSAENOPROTOOPT"); break;
-		case WSAEPROTONOSUPPORT: print_to_debug("WSA error : WSAEPROTONOSUPPORT"); break;
-		case WSAESOCKTNOSUPPORT: print_to_debug("WSA error : WSAESOCKTNOSUPPORT"); break;
-		case WSAEOPNOTSUPP: print_to_debug("WSA error : WSAEOPNOTSUPP"); break;
-		case WSAEPFNOSUPPORT: print_to_debug("WSA error : WSAEPFNOSUPPORT"); break;
-		case WSAEAFNOSUPPORT: print_to_debug("WSA error : WSAEAFNOSUPPORT"); break;
-		case WSAEADDRINUSE: print_to_debug("WSA error : WSAEADDRINUSE"); break;
-		case WSAEADDRNOTAVAIL: print_to_debug("WSA error : WSAEADDRNOTAVAIL"); break;
-		case WSAENETDOWN: print_to_debug("WSA error : WSAENETDOWN"); break;
-		case WSAENETUNREACH: print_to_debug("WSA error : WSAENETUNREACH"); break;
-		case WSAENETRESET: print_to_debug("WSA error : WSAENETRESET"); break;
-		case WSAECONNABORTED: print_to_debug("WSA error : WSAECONNABORTED"); break;
-		case WSAECONNRESET: print_to_debug("WSA error : WSAECONNRESET"); break;
-		case WSAENOBUFS: print_to_debug("WSA error : WSAENOBUFS"); break;
-		case WSAEISCONN: print_to_debug("WSA error : WSAEISCONN"); break;
-		case WSAENOTCONN: print_to_debug("WSA error : WSAENOTCONN"); break;
-		case WSAESHUTDOWN: print_to_debug("WSA error : WSAESHUTDOWN"); break;
-		case WSAETOOMANYREFS: print_to_debug("WSA error : WSAETOOMANYREFS"); break;
-		case WSAETIMEDOUT: print_to_debug("WSA error : WSAETIMEDOUT"); break;
-		case WSAECONNREFUSED: print_to_debug("WSA error : WSAECONNREFUSED"); break;
-		case WSAELOOP: print_to_debug("WSA error : WSAELOOP"); break;
-		case WSAENAMETOOLONG: print_to_debug("WSA error : WSAENAMETOOLONG"); break;
-		case WSAEHOSTDOWN: print_to_debug("WSA error : WSAEHOSTDOWN"); break;
-		case WSAEHOSTUNREACH: print_to_debug("WSA error : WSAEHOSTUNREACH"); break;
-		case WSAENOTEMPTY: print_to_debug("WSA error : WSAENOTEMPTY"); break;
-		case WSAEPROCLIM: print_to_debug("WSA error : WSAEPROCLIM"); break;
-		case WSAEUSERS: print_to_debug("WSA error : WSAEUSERS"); break;
-		case WSAEDQUOT: print_to_debug("WSA error : WSAEDQUOT"); break;
-		case WSAESTALE: print_to_debug("WSA error : WSAESTALE"); break;
-		case WSAEREMOTE: print_to_debug("WSA error : WSAEREMOTE"); break;
-		case WSAEDISCON: print_to_debug("WSA error : WSAEDISCON"); break;
-		default: print_to_debug("WSA error : Unknown"); break;
+		case WSANOTINITIALISED: print_to_debug("WSA error : WSANOTINITIALISED", caller_name); break;
+		case WSAEINTR: print_to_debug("WSA error : WSAEINTR", caller_name); break;
+		case WSAEBADF: print_to_debug("WSA error : WSAEBADF", caller_name); break;
+		case WSAEACCES: print_to_debug("WSA error : WSAEACCES", caller_name); break;
+		case WSAEFAULT: print_to_debug("WSA error : WSAEFAULT", caller_name); break;
+		case WSAEINVAL: print_to_debug("WSA error : WSAEINVAL", caller_name); break;
+		case WSAEMFILE: print_to_debug("WSA error : WSAEMFILE", caller_name); break;
+		case WSAEWOULDBLOCK: print_to_debug("WSA error : WSAEWOULDBLOCK", caller_name); break;
+		case WSAEINPROGRESS: print_to_debug("WSA error : WSAEINPROGRESS", caller_name); break;
+		case WSAEALREADY: print_to_debug("WSA error : WSAEALREADY", caller_name); break;
+		case WSAENOTSOCK: print_to_debug("WSA error : WSAENOTSOCK", caller_name); break;
+		case WSAEDESTADDRREQ: print_to_debug("WSA error : WSAEDESTADDRREQ", caller_name); break;
+		case WSAEMSGSIZE: print_to_debug("WSA error : WSAEMSGSIZE", caller_name); break;
+		case WSAEPROTOTYPE: print_to_debug("WSA error : WSAEPROTOTYPE", caller_name); break;
+		case WSAENOPROTOOPT: print_to_debug("WSA error : WSAENOPROTOOPT", caller_name); break;
+		case WSAEPROTONOSUPPORT: print_to_debug("WSA error : WSAEPROTONOSUPPORT", caller_name); break;
+		case WSAESOCKTNOSUPPORT: print_to_debug("WSA error : WSAESOCKTNOSUPPORT", caller_name); break;
+		case WSAEOPNOTSUPP: print_to_debug("WSA error : WSAEOPNOTSUPP", caller_name); break;
+		case WSAEPFNOSUPPORT: print_to_debug("WSA error : WSAEPFNOSUPPORT", caller_name); break;
+		case WSAEAFNOSUPPORT: print_to_debug("WSA error : WSAEAFNOSUPPORT", caller_name); break;
+		case WSAEADDRINUSE: print_to_debug("WSA error : WSAEADDRINUSE", caller_name); break;
+		case WSAEADDRNOTAVAIL: print_to_debug("WSA error : WSAEADDRNOTAVAIL", caller_name); break;
+		case WSAENETDOWN: print_to_debug("WSA error : WSAENETDOWN", caller_name); break;
+		case WSAENETUNREACH: print_to_debug("WSA error : WSAENETUNREACH", caller_name); break;
+		case WSAENETRESET: print_to_debug("WSA error : WSAENETRESET", caller_name); break;
+		case WSAECONNABORTED: print_to_debug("WSA error : WSAECONNABORTED", caller_name); break;
+		case WSAECONNRESET: print_to_debug("WSA error : WSAECONNRESET", caller_name); break;
+		case WSAENOBUFS: print_to_debug("WSA error : WSAENOBUFS", caller_name); break;
+		case WSAEISCONN: print_to_debug("WSA error : WSAEISCONN", caller_name); break;
+		case WSAENOTCONN: print_to_debug("WSA error : WSAENOTCONN", caller_name); break;
+		case WSAESHUTDOWN: print_to_debug("WSA error : WSAESHUTDOWN", caller_name); break;
+		case WSAETOOMANYREFS: print_to_debug("WSA error : WSAETOOMANYREFS", caller_name); break;
+		case WSAETIMEDOUT: print_to_debug("WSA error : WSAETIMEDOUT", caller_name); break;
+		case WSAECONNREFUSED: print_to_debug("WSA error : WSAECONNREFUSED", caller_name); break;
+		case WSAELOOP: print_to_debug("WSA error : WSAELOOP", caller_name); break;
+		case WSAENAMETOOLONG: print_to_debug("WSA error : WSAENAMETOOLONG", caller_name); break;
+		case WSAEHOSTDOWN: print_to_debug("WSA error : WSAEHOSTDOWN", caller_name); break;
+		case WSAEHOSTUNREACH: print_to_debug("WSA error : WSAEHOSTUNREACH", caller_name); break;
+		case WSAENOTEMPTY: print_to_debug("WSA error : WSAENOTEMPTY", caller_name); break;
+		case WSAEPROCLIM: print_to_debug("WSA error : WSAEPROCLIM", caller_name); break;
+		case WSAEUSERS: print_to_debug("WSA error : WSAEUSERS", caller_name); break;
+		case WSAEDQUOT: print_to_debug("WSA error : WSAEDQUOT", caller_name); break;
+		case WSAESTALE: print_to_debug("WSA error : WSAESTALE", caller_name); break;
+		case WSAEREMOTE: print_to_debug("WSA error : WSAEREMOTE", caller_name); break;
+		case WSAEDISCON: print_to_debug("WSA error : WSAEDISCON", caller_name); break;
+		default: print_to_debug("WSA error : Unknown", caller_name); break;
 	}
 }
 
