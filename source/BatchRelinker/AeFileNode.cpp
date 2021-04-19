@@ -1,4 +1,5 @@
 #include "AeFileNode.h"
+#include "../GF_GlobalClasses.h"
 
 AeFileNode::AeFileNode(bool is_sequence, std::string node_uid, fs::path source_path, std::string mask_base)
 	: node_is_sequence(is_sequence)
@@ -69,7 +70,12 @@ void AeFileNode::PushSourceFilename(FilenameCouple* filename_couple)
 		catch(...) {
 			filename_couple->file_is_missing = true;
 		}
-		filename_couple->relinkedFileName = GetFileRelinkPrefix() + filename_couple->sourceFileName;
+
+		fs::path src_to_fix(filename_couple->sourceFileName);
+		rbUtilities::pathStringFixIllegal(src_to_fix, false, false);		
+		//filename_couple->relinkedFileName = GetFileRelinkPrefix() + filename_couple->sourceFileName;
+		
+		filename_couple->relinkedFileName = GetFileRelinkPrefix() + src_to_fix.string();
 		node_files_size += filename_couple->file_size;
 		file_names.push_back(filename_couple);
 	}

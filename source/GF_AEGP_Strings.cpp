@@ -6,7 +6,7 @@ TableString    g_strs[StrID_NUMTYPES] = {
 	{StrID_MenuEdit,				"renderBeamer Collect All"},
 	{StrID_MenuEditSmart,			"renderBeamer Collect Smart"},
 	{StrID_MenuBatch,				"renderBeamer Batch Relinker"},
-	{StrID_MenuUiCollect,			"renderBeamer_ui_function"},
+	{StrID_MenuUiCollect,			"renderBeamer UI"},
 	{StrID_MenuUiLocation,			"(Windows->Extensions->renderBeamer)"},
 	{StrID_MenuExport,				"renderBeamer"},
 	{StrID_MenuVersion,			"renderBeamer Version"},
@@ -30,7 +30,8 @@ TableString beamerMaskTable[_BeamerMask_ItemsN] = {
 	{BeamerMask_GetFontFamily, "app.project.item(%ld).layer(%ld).property(\"Source Text\").value.fontFamily"},
 	{BeamerMask_GetFontPath, "app.project.item(%ld).layer(%ld).property(\"Source Text\").value.fontLocation"},
 	{BeamerMask_SendTaskEncoded, "-app AfterEffects -a \"%hs\" -encoded -sn \"%ls\" -f \"%ls\""},
-	{BeamerMask_SendLogFile, "-log \"%ls\" -logSubject %ls AfterEffects -f \"%ls\""}
+	{BeamerMask_SendLogFile, "-log \"%ls\" -logSubject \"Critical error\" AfterEffects -f \"%ls\""},
+	{BeamerMask_GetLocalPort, "-setupPort -f \"%ls\""}
 };
 
 A_char *GetStringPtr(int strNum) { return g_strs[strNum].str; }

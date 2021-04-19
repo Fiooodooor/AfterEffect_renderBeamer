@@ -118,9 +118,21 @@ ErrorCodesAE GF_Dumper::PrepareProject()
 
 		if (rbUtilities::execBeamerCmd(bps, BeamerMask_GetUser, bps.rmtUser, 14) != NoError) {			
 			throw PluginError(_ErrorCaller, BeamerGetUserName);
+		}		
+		rbProj()->logg(L"PrepareProject", L"User", bps.rmtUser);
+	
+		if (rbUtilities::execBeamerCmd(bps, BeamerMask_GetLocalPort, bps.socketPort, 14) != NoError) {
+			throw PluginError(_ErrorCaller, ExecCommandFailed);
 		}
 	
-		rbProj()->logg(L"PrepareProject", L"User", bps.rmtUser);
+		bps.socketPort_long = wcstol(bps.socketPort, nullptr, 10);
+		rbProj()->logg(L"PrepareProject", L"LocalPortWide", bps.socketPort);
+		rbProj()->logg("PrepareProject", "LocalPortLong", std::to_string(bps.socketPort_long).c_str());
+		if(bps.socketPort_long <= 0)
+		{
+			bps.socketPort_long = 32784;
+			rbProj()->loggErr("PrepareProject", "LocalPort::ChangingToDefault", std::to_string(bps.socketPort_long).c_str());
+		}
 	
 		if (rbUtilities::execBeamerCmd(bps, BeamerMask_GetTemp, bps.beamerTmpPath, AEGP_MAX_PATH_SIZE) != NoError) {
             bps.bp.tempPrefix = bps.bp.originalProject.parent_path().lexically_normal().c_str();

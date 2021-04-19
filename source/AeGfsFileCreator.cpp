@@ -39,7 +39,6 @@ ErrorCodesAE AeGfsFileCreator::GenerateAndSaveDocument()
 	doc_settings->SetAttribute("userOutput", fs::path(pt->output_mods.back()->outputFile).remove_filename().string().c_str());
 	doc_root->InsertEndChild(doc_settings);
 
-	// <AfterEffects height="1080" width="1920" fontDir="AE_Mac_test_1K/data/fonts" >
 	doc_aftereffects = gfs_document.NewElement("AfterEffects");
 	if(pt->continue_on_missing == 1)
 		doc_aftereffects->SetAttribute("continueOnMissingAssets", "true");

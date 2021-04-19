@@ -493,6 +493,12 @@ ErrorCodesAE rbUtilities::execBeamerCmd(beamerParamsStruct bps, BeamerMasks mask
 	case BeamerMask_SendTaskEncoded:
 		RB_SPRINTF(bps.beamerExecScript, 2048, GetBeamerMaskA(BeamerMask_SendTaskEncoded), base64_encode( FS_U8STRING(bps.bp.relinkedSceneRoot.lexically_normal())).c_str(), bps.bp.remoteProjectPath.lexically_normal().wstring().c_str(), bps.beamerTmpFile.lexically_normal().wstring().c_str());
 		break;
+	case BeamerMask_SendLogFile:
+		RB_SPRINTF(bps.beamerExecScript, 2048, GetBeamerMaskA(BeamerMask_SendLogFile), bps.bp.tempLogPath.lexically_normal().wstring().c_str(), bps.beamerTmpFile.lexically_normal().wstring().c_str());
+		break;
+	case BeamerMask_GetLocalPort:
+		RB_SPRINTF(bps.beamerExecScript, 2048, GetBeamerMaskA(BeamerMask_GetLocalPort), bps.beamerTmpFile.lexically_normal().wstring().c_str());
+		break;
 	default:
 		return ErrorResult;
 	}

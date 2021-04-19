@@ -47,6 +47,12 @@
       <Filter>BatchRelinker</Filter>
     </ClCompile>
     <ClCompile Include="..\AeGfsFileCreator.cpp" />
+    <ClCompile Include="..\Socket\socket_win.cpp">
+      <Filter>Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Socket\socket_macos.cpp">
+      <Filter>Socket</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(AdobeAE_SDK)\Headers\AE_GeneralPlugOld.h">
@@ -175,6 +181,15 @@
     <ClInclude Include="..\AeGfsFileCreatorStructures.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="..\Socket\socket_win.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Socket\socket_interface.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Socket\socket_macos.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
@@ -188,6 +203,9 @@
     </Filter>
     <Filter Include="BatchRelinker">
       <UniqueIdentifier>{3345e0e9-b984-4ef2-a770-5d19e0765076}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Socket">
+      <UniqueIdentifier>{1d4b3cde-dd43-488e-bc1d-9ef71774b8b0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

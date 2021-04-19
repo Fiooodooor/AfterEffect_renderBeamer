@@ -18,7 +18,7 @@ public:
 		bool file_is_missing;
 		uintmax_t file_size;
 		tinyxml2::XMLElement *xmlFileReference;
-		std::string sourceFileName;
+		std::string sourceFileName;	
 		std::string relinkedFileName;
 	};
 

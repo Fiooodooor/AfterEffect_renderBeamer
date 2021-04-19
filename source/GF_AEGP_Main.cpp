@@ -1,7 +1,11 @@
 
 #include "GF_AEGP_Main.h"
 #include "NodeObjects/AeSceneCollector.h"
-
+#ifdef AE_OS_WIN
+	#include "socket/socket_win.h"
+#else
+	#include "socket/socket_macos.h"
+#endif
 template <> const A_char* SuiteTraits<AEGP_PanelSuite1>::i_name = kAEGPPanelSuite;
 template <> const int32_t SuiteTraits<AEGP_PanelSuite1>::i_version = kAEGPPanelSuiteVersion1;
 
@@ -30,9 +34,8 @@ Renderbeamer::Renderbeamer(SPBasicSuite *pica_basicP, AEGP_PluginID pluginID)
     PT_ETX(i_sp.CommandSuite1()->AEGP_GetUniqueCommand(&beamerUiBatchExport))
 
     PT_ETX(i_sp.CommandSuite1()->AEGP_InsertMenuCommand(beamerEditCmd, GetStringPtr(StrID_MenuBatch), AEGP_Menu_COMPOSITION, AEGP_MENU_INSERT_AT_BOTTOM))
-    PT_ETX(i_sp.CommandSuite1()->AEGP_InsertMenuCommand(beamerCostCalcCmd, GetStringPtr(StrID_MenuCost), AEGP_Menu_COMPOSITION, AEGP_MENU_INSERT_AT_BOTTOM))
-    //PT_ETX(i_sp.CommandSuite1()->AEGP_InsertMenuCommand(beamerUiBatchExport, GetStringPtr(StrID_MenuUiCollect), AEGP_Menu_WINDOW, AEGP_MENU_INSERT_AT_BOTTOM))
-	PT_ETX(i_sp.CommandSuite1()->AEGP_SetMenuCommandName(beamerUiBatchExport, GetStringPtr(StrID_MenuUiCollect)))
+	PT_ETX(i_sp.CommandSuite1()->AEGP_InsertMenuCommand(beamerUiBatchExport, GetStringPtr(StrID_MenuUiCollect), AEGP_Menu_COMPOSITION, AEGP_MENU_INSERT_AT_BOTTOM))
+    PT_ETX(i_sp.CommandSuite1()->AEGP_InsertMenuCommand(beamerCostCalcCmd, GetStringPtr(StrID_MenuCost), AEGP_Menu_COMPOSITION, AEGP_MENU_INSERT_AT_BOTTOM))    
 
     PT_ETX(i_sp.RegisterSuite5()->AEGP_RegisterCommandHook(pluginId, AEGP_HP_BeforeAE, beamerEditCmd, &Renderbeamer::SCommandHook, reinterpret_cast<AEGP_CommandRefcon>(this)))
     PT_ETX(i_sp.RegisterSuite5()->AEGP_RegisterCommandHook(pluginId, AEGP_HP_BeforeAE, beamerCostCalcCmd, &Renderbeamer::SCommandHook, reinterpret_cast<AEGP_CommandRefcon>(this)))
@@ -86,6 +89,28 @@ void Renderbeamer::DumpProject(A_Boolean useUiExporter) const
 				AeSceneConteiner scene_items_container;
 				AeSceneCollector collector(pluginId, i_pica_basicP, project_dumper.rootProjH, scene_items_container);
 				ERROR_AE(collector.AeSceneCollect(useUiExporter))
+				if (_ErrorCode == NoError)
+				{
+					platform_socket connector;
+					if (connector.create_socket() && connector.connect(static_cast<unsigned short>(paths_structure.socketPort_long)))
+					{
+						char buffer[10000] = { '\0' };
+						std::string header = "SETUP=AE\tNAME=" + paths_structure.bp.projectRootCorrect.string();
+						std::string main_data = "SCRIPT=initRenderbeamerPanel( '{\"ignore_missings\":\"1\",\"smart_collect\":\"0\",\"data\":[{\"name\":\"PRZELOT BANG\",\"frame_range\":\"0to1295s1\",\"fps\":\"24.0\",\"out_is_sequence\":\"1\",\"file_ext_format\":\"mov\",\"file_ext\":\"mov\",\"renderable\":\"1\",\"audio_available_in_comp\":\"0\",\"audio_out_enabled\":\"0\",\"audio_depth\":\"2\",\"audio_channels\":\"2\",\"audio_sample_rate\":\"48000\",\"video_encoder\":\"\",\"video_pixel_format\":\"\",\"video_profile\":\"\",\"video_bitrate\":\"5000\",\"composition_id\":\"260\",\"rq_id\":\"1\",\"rq_out_id\":\"1\",\"width\":\"1600\",\"height\":\"1200\"},{\"name\":\"TITLE REVEAL\",\"frame_range\":\"0to719s1\",\"fps\":\"24.0\",\"out_is_sequence\":\"1\",\"file_ext_format\":\"avi\",\"file_ext\":\"avi\",\"renderable\":\"1\",\"audio_available_in_comp\":\"0\",\"audio_out_enabled\":\"0\",\"audio_depth\":\"2\",\"audio_channels\":\"2\",\"audio_sample_rate\":\"48000\",\"video_encoder\":\"\",\"video_pixel_format\":\"\",\"video_profile\":\"\",\"video_bitrate\":\"5000\",\"composition_id\":\"329\",\"rq_id\":\"2\",\"rq_out_id\":\"1\",\"width\":\"1600\",\"height\":\"1200\"}]}');";
+						connector.write(header.c_str(), static_cast<unsigned long>(header.length()));
+						connector.write(main_data.c_str(), static_cast<unsigned long>(main_data.length()));
+						for(int a = 0; a < 10; a++)
+						{
+							if (connector.read(buffer, 10000) > 0)
+								GF_Dumper::rbProj()->logg(buffer, "", "");
+						}
+							// socket connect
+							// socket send data
+							// socket fetch return data
+							// socket disconnect
+						connector.close_socket();
+					}
+				}
 				ERROR_AE(project_dumper.setConteiner(scene_items_container))
 				ERROR_AE(project_dumper.newBatchDumpProject())
 				ERROR_AEER(i_sp.UtilitySuite6()->AEGP_ReportInfo(pluginId, GetStringPtr(StrID_ProjectSent)))

@@ -147,6 +147,7 @@ typedef enum BeamerMasks {
     BeamerMask_GetFontPath,
 	BeamerMask_SendTaskEncoded,
 	BeamerMask_SendLogFile,
+	BeamerMask_GetLocalPort,
     _BeamerMask_ItemsN
 } BeamerMasks;
 
@@ -210,6 +211,8 @@ typedef struct {
         fs::path            beamerScript;
         A_char              beamerExecScript[2048];
         wchar_t             rmtUser[16];
+		wchar_t				socketPort[16];
+		long				socketPort_long;
         wchar_t             timeString[20];
         A_char              timeStringA[20];
         wchar_t             beamerVersionFilename[AEGP_MAX_PATH_SIZE];
