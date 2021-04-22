@@ -473,36 +473,38 @@ ErrorCodesAE rbUtilities::getEnvVariable(std::string const &env_variable, fs::pa
 	return ErrorResult;
 }
 
-ErrorCodesAE rbUtilities::execBeamerCmd(beamerParamsStruct bps, BeamerMasks mask, wchar_t *buffer, A_long buffer_size)
+ErrorCodesAE rbUtilities::execBeamerCmd(beamerParamsStruct const *bps, BeamerMasks mask, wchar_t *buffer, A_long buffer_size)
 {
 	ERROR_CATCH_START
-	switch (mask)
+	char exec_script_buffer[2048] = { '\0' };
+
+		switch (mask)
 	{
 	case BeamerMask_GetUser:
-        RB_SPRINTF(bps.beamerExecScript, 2048, GetBeamerMaskA(BeamerMask_GetUser), bps.beamerTmpFile.lexically_normal().wstring().c_str());
+        RB_SPRINTF(exec_script_buffer, 2048, GetBeamerMaskA(BeamerMask_GetUser), bps->beamerTmpFile.lexically_normal().wstring().c_str());
 		break;
 	case BeamerMask_GetTemp:
-		RB_SPRINTF(bps.beamerExecScript, 2048, GetBeamerMaskA(BeamerMask_GetTemp), bps.beamerTmpFile.lexically_normal().wstring().c_str());
+		RB_SPRINTF(exec_script_buffer, 2048, GetBeamerMaskA(BeamerMask_GetTemp), bps->beamerTmpFile.lexically_normal().wstring().c_str());
 		break;
 	case BeamerMask_CheckScene:
-		RB_SPRINTF(bps.beamerExecScript, 2048, GetBeamerMaskA(BeamerMask_CheckScene), bps.bp.remoteProjectPath.lexically_normal().wstring().c_str(), bps.rmtUser, bps.beamerTmpFile.lexically_normal().wstring().c_str());
+		RB_SPRINTF(exec_script_buffer, 2048, GetBeamerMaskA(BeamerMask_CheckScene), bps->bp.remoteProjectPath.lexically_normal().wstring().c_str(), bps->rmtUser, bps->beamerTmpFile.lexically_normal().wstring().c_str());
 		break;
 	case BeamerMask_SendTask:
-		RB_SPRINTF(bps.beamerExecScript, 2048, GetBeamerMaskA(BeamerMask_SendTask), bps.bp.relinkedSceneRoot.lexically_normal().wstring().c_str(), bps.bp.remoteProjectPath.lexically_normal().wstring().c_str(), bps.beamerTmpFile.lexically_normal().wstring().c_str());
+		RB_SPRINTF(exec_script_buffer, 2048, GetBeamerMaskA(BeamerMask_SendTask), bps->bp.relinkedSceneRoot.lexically_normal().wstring().c_str(), bps->bp.remoteProjectPath.lexically_normal().wstring().c_str(), bps->beamerTmpFile.lexically_normal().wstring().c_str());
 		break;
 	case BeamerMask_SendTaskEncoded:
-		RB_SPRINTF(bps.beamerExecScript, 2048, GetBeamerMaskA(BeamerMask_SendTaskEncoded), base64_encode( FS_U8STRING(bps.bp.relinkedSceneRoot.lexically_normal())).c_str(), bps.bp.remoteProjectPath.lexically_normal().wstring().c_str(), bps.beamerTmpFile.lexically_normal().wstring().c_str());
+		RB_SPRINTF(exec_script_buffer, 2048, GetBeamerMaskA(BeamerMask_SendTaskEncoded), base64_encode( FS_U8STRING(bps->bp.relinkedSceneRoot.lexically_normal())).c_str(), bps->bp.remoteProjectPath.lexically_normal().wstring().c_str(), bps->beamerTmpFile.lexically_normal().wstring().c_str());
 		break;
 	case BeamerMask_SendLogFile:
-		RB_SPRINTF(bps.beamerExecScript, 2048, GetBeamerMaskA(BeamerMask_SendLogFile), bps.bp.tempLogPath.lexically_normal().wstring().c_str(), bps.beamerTmpFile.lexically_normal().wstring().c_str());
+		RB_SPRINTF(exec_script_buffer, 2048, GetBeamerMaskA(BeamerMask_SendLogFile), bps->bp.tempLogPath.lexically_normal().wstring().c_str(), bps->beamerTmpFile.lexically_normal().wstring().c_str());
 		break;
 	case BeamerMask_GetLocalPort:
-		RB_SPRINTF(bps.beamerExecScript, 2048, GetBeamerMaskA(BeamerMask_GetLocalPort), bps.beamerTmpFile.lexically_normal().wstring().c_str());
+		RB_SPRINTF(exec_script_buffer, 2048, GetBeamerMaskA(BeamerMask_GetLocalPort), bps->beamerTmpFile.lexically_normal().wstring().c_str());
 		break;
 	default:
 		return ErrorResult;
 	}
-	_ErrorCode = exec_cmd(fs::path(bps.beamerScript), std::string(bps.beamerExecScript), bps.beamerTmpFile.lexically_normal(), buffer, buffer_size);
+	_ErrorCode = exec_cmd(fs::path(bps->beamerScript), std::string(exec_script_buffer), bps->beamerTmpFile.lexically_normal(), buffer, buffer_size);
 	
 	if (_ErrorCode == NoError)
 	{

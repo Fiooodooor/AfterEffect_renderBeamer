@@ -234,12 +234,13 @@ cl /D "MSWindows" /EP $(IntDir)%(Filename).rrc &gt;               "$(ProjectDir)
     <ClInclude Include="..\NodeObjects\AeCompNode.h" />
     <ClInclude Include="..\NodeObjects\AeConteiner.h" />
     <ClInclude Include="..\NodeObjects\AeFooNode.h" />
+    <ClInclude Include="..\NodeObjects\AeNodesConteiner.h" />
     <ClInclude Include="..\NodeObjects\AeObjectNode.h" />
     <ClInclude Include="..\NodeObjects\AeSceneCollector.h" />
+    <ClInclude Include="..\Socket\gfs_rq_node_wrapper.h" />
     <ClInclude Include="..\Socket\socket_interface.h" />
     <ClInclude Include="..\Socket\socket_macos.h" />
     <ClInclude Include="..\Socket\socket_win.h" />
-    <ClInclude Include="AeNodesConteiner.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(AdobeAE_SDK)\Util\AEGP_SuiteHandler.cpp" />
@@ -261,11 +262,12 @@ cl /D "MSWindows" /EP $(IntDir)%(Filename).rrc &gt;               "$(ProjectDir)
     <ClCompile Include="..\NodeObjects\AeCompNode.cpp" />
     <ClCompile Include="..\NodeObjects\AeConteiner.cpp" />
     <ClCompile Include="..\NodeObjects\AeFooNode.cpp" />
+    <ClCompile Include="..\NodeObjects\AeNodesConteiner.cpp" />
     <ClCompile Include="..\NodeObjects\AeObjectNode.cpp" />
     <ClCompile Include="..\NodeObjects\AeSceneCollector.cpp" />
+    <ClCompile Include="..\Socket\gfs_rq_node_wrapper.cpp" />
     <ClCompile Include="..\Socket\socket_macos.cpp" />
     <ClCompile Include="..\Socket\socket_win.cpp" />
-    <ClCompile Include="AeNodesConteiner.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

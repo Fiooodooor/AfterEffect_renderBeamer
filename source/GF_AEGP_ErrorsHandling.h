@@ -47,8 +47,11 @@
 #define ERROR_CATCH_END_LOGGER(ATYPE) ERROR_CATCH_END_LOGGER1(PluginError::GetCallerStringA(_ErrorCaller,GF_PLUGIN_LANGUAGE),ATYPE)
 #define ERROR_CATCH_END_LOGGER_RETURN(ATYPE) ERROR_CATCH_END_LOGGER1(PluginError::GetCallerStringA(_ErrorCaller,GF_PLUGIN_LANGUAGE),ATYPE) return _ErrorCode;
 
+#define ERROR_CHECK(EXPR) { if(_ErrorCode == NoError) ( EXPR ); }
 #define ERROR_AE(EXPR) { if(_ErrorCode == NoError) _ErrorCode=(EXPR); }
 #define ERROR_AEER(EXPR) ERROR_AE(aErrToRb(EXPR))
+#define ERROR_LONG_ERR(EXPR) ERROR_AE(static_cast<ErrorCodesAE>(EXPR))
+#define ERROR_BOOL_ERR(EXPR) { if(_ErrorCode == NoError) _ErrorCode=(( EXPR ) == true ? NoError : ErrorResult); }
 #define ERROR_RETURN(EXPR) { _ErrorCode = EXPR; if(_ErrorCode != NoError) { return _ErrorCode; } }
 #define ERROR_THROW(EXPR) { ErrorCodesAE tmp = (EXPR); if(tmp != NoError) throw PluginError(tmp); }
 #define ERROR_THROW_MOD(EXPR) { ErrorCodesAE tmp = (EXPR); if(tmp != NoError) throw PluginError(_ErrorCaller, tmp); }
@@ -56,6 +59,9 @@
 #define ERROR_THROW_AE_MOD(EXPR) { A_Err tmp = (EXPR); if(tmp != A_Err_NONE) throw PluginError(_ErrorCaller, tmp); }
 
 #define GF_PROGRESS(EXPR) { PF_Err PT_res = (EXPR); if(PT_res == PF_Interrupt_CANCEL) return ErrorCodesAE::UserDialogCancel;}
+#define MAIN_PROGRESS(PROGRESS, COUNT, TOTAL) { if( _ErrorCode != NoError) { } else if( PROGRESS ) { PF_Err PT_res = suites.AppSuite6()->PF_AppProgressDialogUpdate(( PROGRESS ), ( COUNT ), ( TOTAL )); if(PT_res == PF_Interrupt_CANCEL) { suites.AppSuite6()->PF_DisposeAppProgressDialog( PROGRESS ); ( PROGRESS ) = nullptr; _ErrorCode = ErrorCodesAE::UserDialogCancel; } } else { _ErrorCode = ErrorCodesAE::AE_ErrGeneric; } }
+#define MAIN_PROGRESS_THROW(EXPR) { if(pf_err_dialog_ == PF_Err_NONE) pf_err_dialog_ = (EXPR); if(pf_err_dialog_ == PF_Interrupt_CANCEL) { suites_.AppSuite6()->PF_DisposeAppProgressDialog(pf_dialog_main_); throw UserDialogCancel; } }
+#define MAIN_PROGRESS_NOTHROW(EXPR, THE_ERR) { if(pf_err_dialog_ == PF_Err_NONE) pf_err_dialog_ = (EXPR); if(pf_err_dialog_ == PF_Interrupt_CANCEL) { suites_.AppSuite6()->PF_DisposeAppProgressDialog(pf_dialog_main_); ( THE_ERR ) = UserDialogCancel; } }
 
 typedef struct {
     const long    index;

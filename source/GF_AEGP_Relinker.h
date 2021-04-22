@@ -16,7 +16,7 @@ public:
 	GF_AEGP_Relinker(SPBasicSuite *basicSuite, AEGP_PluginID pluginId);
 	~GF_AEGP_Relinker();
 	
-	ErrorCodesAE RelinkerInitialize(beamerParamsStruct &tmpBps, A_Boolean batchRelink = FALSE);
+	ErrorCodesAE RelinkerInitialize(beamerParamsStruct *tmpBps, A_Boolean batchRelink = FALSE);
 
 	A_Err RelinkProject(AEGP_ProjectH projectH);
 	ErrorCodesAE newRelinkFootage(AeFootageNode *node);

@@ -19,10 +19,11 @@ public:
 
 	SocketClientInterface() = default;
 	virtual ~SocketClientInterface() = default;
+	virtual long start_session(long port, const std::string &scene_name) = 0;
 	virtual bool init_interface() = 0;
 	virtual bool create_socket() = 0;
-	virtual void close_socket() = 0;
-	virtual bool connect(unsigned short port) = 0;
+	virtual long close_socket() = 0;
+	virtual bool connect_socket(unsigned short port) = 0;
 	virtual bool is_connected() const = 0;
 	[[nodiscard]] virtual unsigned long bytes_available() const = 0;
 	virtual unsigned long write(const char *data, unsigned long data_length) = 0;

@@ -23,7 +23,6 @@ public:
 protected:
 	ErrorCodesAE collectSceneItems();
 	ErrorCodesAE collectSceneRenderQueueItems();
-	ErrorCodesAE collectSceneUiRenderQueueItems();
 	ErrorCodesAE collectSceneItem(AeObjectNode *node);
 	ErrorCodesAE collectSceneRqItem(AeObjectNode *node);
 	ErrorCodesAE collectToRender();

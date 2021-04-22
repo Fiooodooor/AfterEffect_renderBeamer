@@ -16,10 +16,11 @@ public:
 
 	platform_socket();
 	~platform_socket();
+	long start_session(unsigned short port, const std::string &scene_name) override;
 	bool init_interface() override;
 	bool create_socket() override;
 	void close_socket() override;
-	bool connect(unsigned short port) override;
+	bool connect_socket(unsigned short port) override;
 	[[nodiscard]] bool is_connected() const override;
 	[[nodiscard]] unsigned long bytes_available() const override;
 	unsigned long write(const char *data, unsigned long data_length) override;

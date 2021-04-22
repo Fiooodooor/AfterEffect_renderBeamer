@@ -27,9 +27,6 @@
       <Filter>NodeObjects</Filter>
     </ClCompile>
     <ClCompile Include="..\NodeObjects\AeSceneCollector.cpp" />
-    <ClCompile Include="AeNodesConteiner.cpp">
-      <Filter>NodeObjects</Filter>
-    </ClCompile>
     <ClCompile Include="..\base64.cpp">
       <Filter>AE_Helpers</Filter>
     </ClCompile>
@@ -52,6 +49,12 @@
     </ClCompile>
     <ClCompile Include="..\Socket\socket_macos.cpp">
       <Filter>Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Socket\gfs_rq_node_wrapper.cpp">
+      <Filter>Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NodeObjects\AeNodesConteiner.cpp">
+      <Filter>NodeObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -154,9 +157,6 @@
     <ClInclude Include="..\NodeObjects\AeSceneCollector.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="AeNodesConteiner.h">
-      <Filter>NodeObjects</Filter>
-    </ClInclude>
     <ClInclude Include="..\base64.h">
       <Filter>AE_Helpers</Filter>
     </ClInclude>
@@ -189,6 +189,12 @@
     </ClInclude>
     <ClInclude Include="..\Socket\socket_macos.h">
       <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Socket\gfs_rq_node_wrapper.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NodeObjects\AeNodesConteiner.h">
+      <Filter>NodeObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

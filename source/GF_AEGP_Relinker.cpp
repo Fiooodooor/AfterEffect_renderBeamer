@@ -19,19 +19,19 @@ GF_AEGP_Relinker::~GF_AEGP_Relinker()
 	delete fonts_interface;
 }
 
-ErrorCodesAE GF_AEGP_Relinker::RelinkerInitialize(beamerParamsStruct &tmpBps, A_Boolean batchRelink)
+ErrorCodesAE GF_AEGP_Relinker::RelinkerInitialize(beamerParamsStruct *tmpBps, A_Boolean batchRelink)
 {
 	ERROR_CATCH_START
-		setPathsStruct(&tmpBps);	
+		setPathsStruct(tmpBps);	
 		if (batchRelink == TRUE)
 		{
-			if (tmpBps.bp.relinkedSavePath.has_extension())
-				tmpBps.bp.relinkedSavePath.replace_extension(".aepx");
+			if (tmpBps->bp.relinkedSavePath.has_extension())
+				tmpBps->bp.relinkedSavePath.replace_extension(".aepx");
 			else
-				tmpBps.bp.relinkedSavePath += ".aepx";
+				tmpBps->bp.relinkedSavePath += ".aepx";
 			
 		}
-		rbUtilities::toUTF16(tmpBps.bp.relinkedSavePath.wstring().c_str(), projectSavePath, AEGP_MAX_PATH_SIZE);
+		rbUtilities::toUTF16(tmpBps->bp.relinkedSavePath.wstring().c_str(), projectSavePath, AEGP_MAX_PATH_SIZE);
 		
 
 		c4d_interface = new PlatformLibLoader();

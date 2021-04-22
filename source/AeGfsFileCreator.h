@@ -11,7 +11,7 @@ public:
 	~AeGfsFileCreator();
 
 	static AeGfsFileCreator* getInstance();
-	ErrorCodesAE InitGfsFileBuilder(beamerParamsStruct const &theBps);
+	ErrorCodesAE InitGfsFileBuilder(beamerParamsStruct const *theBps);
 	ErrorCodesAE InitGfsFileCreator(fs::path const &gfsFilePath, fs::path const &fileName, fs::path const &outPath, fs::path const &fontsDir, A_char const *version);
 	ErrorCodesAE ClearGfsFileCreator();
 	ErrorCodesAE GenerateAndSaveDocument();

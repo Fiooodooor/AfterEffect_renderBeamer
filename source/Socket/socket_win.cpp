@@ -9,33 +9,48 @@
 platform_socket::platform_socket() : SocketClientInterface()
 {
 }
+
 platform_socket::~platform_socket()
 {
 	WSACleanup();
 }
+
+long platform_socket::start_session(long port, const std::string &scene_name)
+{
+	ERROR_CATCH_START
+		ERROR_BOOL_ERR(init_interface())
+		ERROR_BOOL_ERR(create_socket())
+		ERROR_BOOL_ERR(connect_socket(static_cast<unsigned short>(port)))
+		if(_ErrorCode == NoError && is_connected())
+		{
+			const auto welcome_header = "SETUP=AE\tNAME=" + scene_name + "\n";
+			ERROR_BOOL_ERR( write(welcome_header.c_str(), static_cast<unsigned long>(welcome_header.length())) > 0 )
+		}
+		else
+			close_socket();
+	ERROR_CATCH_END_NO_INFO_RETURN
+}
+
 bool platform_socket::init_interface()
 {
 	print_to_debug("Initiating interface for socket. ", "platform_socket::init_interface", false);
 	WSAData wsa_data = { 0, 0, 0, 0, nullptr, { 0 }, { 0 } };
 	if (WSAStartup(MAKEWORD(2, 0), &wsa_data) != 0) {
 		print_to_debug("Failed to init the interface!", "platform_socket::init_interface");
+		socket_state_ = Error;
 		return false;
 	}
+	socket_descriptor_ = INVALID_SOCKET;
 	return true;
 }
 bool platform_socket::create_socket()
 {
-	if (init_interface() == false) {
-		socket_state_ = Error;
-		return false;
-	}
-
 	print_to_debug("Creating socket.", "platform_socket::create_socket", false);
-	auto win_socket = ::socket(AF_INET, 0, IPPROTO_TCP);
+	const auto win_socket = ::socket(AF_INET, 0, IPPROTO_TCP);
 	
 	if (win_socket == INVALID_SOCKET) {
-		const auto err = WSAGetLastError();
-		print_error_string(err, "::socket");
+		print_error_string(WSAGetLastError(), "::socket");
+		socket_state_ = Error;
 		return false;
 	}
 	
@@ -43,21 +58,25 @@ bool platform_socket::create_socket()
 	socket_state_ = Unconnected;
 	return true;
 }
-void platform_socket::close_socket()
+long platform_socket::close_socket()
 {
 	print_to_debug("Closing socket.", "platform_socket::close_socket", false);
-	::closesocket(socket_descriptor_);
+	if(::closesocket(socket_descriptor_) == SOCKET_ERROR)
+		print_error_string(WSAGetLastError(), "::closesocket");
+
+	socket_descriptor_ = INVALID_SOCKET;
 	socket_state_ = Unconnected;
+	return 0;
 }
-bool platform_socket::connect(const unsigned short port)
+bool platform_socket::connect_socket(const unsigned short port)
 {
 	print_to_debug("Connect called.", "platform_socket::connect", false);
 	DWORD socket_timeout_ms = 1500;
-	sockaddr_in socket_address_in_v4;
+	sockaddr_in socket_address_in_v4{};
 	memset(&socket_address_in_v4, 0, sizeof(sockaddr_in));
 	
 	socket_address_in_v4.sin_family = AF_INET;
-	socket_address_in_v4.sin_addr.s_addr = 16777343; // <==> inet_addr("127.0.0.1");
+	socket_address_in_v4.sin_addr.s_addr = inet_addr("127.0.0.1");  // 16777343
 	socket_address_in_v4.sin_port = htons(port);
 	auto *socket_address_ptr = reinterpret_cast<SOCKADDR*>(&socket_address_in_v4);
 	if (socket_address_ptr == nullptr)
@@ -117,6 +136,8 @@ bool platform_socket::is_connected() const
 unsigned long platform_socket::bytes_available() const
 {
 	print_to_debug("CHECK: Bytes available from renderbeamer.", "platform_socket::bytes_available", false);
+	if (!is_connected())
+		return 0;
 	unsigned long  bytes_to_read = 0;
 	unsigned long dummy = 0;
 	DWORD sizeWritten = 0;
@@ -133,6 +154,9 @@ unsigned long platform_socket::write(const char *data, const unsigned long data_
 	unsigned long data_sent = 0;
 	const unsigned long max_size = 49152;
 	auto bytes_to_send = data_length;
+
+	if (!is_connected())
+		return 0;
 
 	for (;;) {
 		const auto socket_return_code = ::send(socket_descriptor_, data+ data_sent, bytes_to_send, 0);
@@ -152,7 +176,7 @@ unsigned long platform_socket::write(const char *data, const unsigned long data_
 			switch (err) {
 				case WSAECONNRESET:
 				case WSAECONNABORTED:
-					data_sent = -1;					
+					data_sent = 0;					
 					close_socket();
 					break;
 				default:
@@ -168,13 +192,15 @@ unsigned long platform_socket::write(const char *data, const unsigned long data_
 unsigned long platform_socket::read(char *data, const unsigned long max_length)
 {
 	print_to_debug("READ: Waiting for data from renderbeamer.", "platform_socket::read", false);
-	unsigned long bytes_read;
+	unsigned long bytes_read = 0;
+	if (!is_connected())
+		return 0;
 	
 	const auto return_val = ::recv(socket_descriptor_, data, static_cast<int>(max_length) - 1, 0);
 	if (return_val <= 0)
 	{		
 		print_error_string(WSAGetLastError(), "::recv");
-		bytes_read = -1;
+		bytes_read = 0;
 		WSASetLastError(0);
 	}
 	else {		

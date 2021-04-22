@@ -26,6 +26,7 @@ AeBatchRelinker::~AeBatchRelinker()
 ErrorCodesAE AeBatchRelinker::ParseAepxXmlDocument()
 {
 	AEGP_SuiteHandler suites(picaBasic);
+	ErrorCodesAE _ErrorCode = NoError;
 	rbProjLogger->logg("BatchAepxParser", "Start", "Begin of parsing function.");
 	try { std::setlocale(LC_ALL, "en_US.utf8"); }
 	catch (...) {}
@@ -44,7 +45,8 @@ ErrorCodesAE AeBatchRelinker::ParseAepxXmlDocument()
 			{
 				if (AepxXmlElement->Parent() && AepxXmlElement->Parent()->Parent() && std::string(AepxXmlElement->Parent()->Parent()->Value()) == std::string("Pin"))
 				{
-					GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(progressDialog, 0, GetUniqueFilesTotalSizeA()))
+					MAIN_PROGRESS(progressDialog, 0, GetUniqueFilesTotalSizeA())
+					if (_ErrorCode != NoError) return _ErrorCode;
 					rbProjLogger->logg("BatchAepxParser", "Path", AepxXmlElement->Attribute("fullpath"));
 					fileReference = CreateFileReference(AepxXmlElement);					
 
@@ -53,7 +55,8 @@ ErrorCodesAE AeBatchRelinker::ParseAepxXmlDocument()
 					else
 						rbProjLogger->loggErr("BatchAepxParser", "FileReferenceNullptr", "File parsing error! Returned nullptr while creating reference.");
 					
-					GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(progressDialog, 0, GetUniqueFilesTotalSizeA()))
+					MAIN_PROGRESS(progressDialog, 0, GetUniqueFilesTotalSizeA())
+					if (_ErrorCode != NoError) return _ErrorCode;
 				}
 			}
 			if (AepxXmlElement->FirstChildElement())
@@ -70,7 +73,8 @@ ErrorCodesAE AeBatchRelinker::ParseAepxXmlDocument()
 				else
 					break;
 			}
-			GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(progressDialog, 0, GetUniqueFilesTotalSizeA()))
+			MAIN_PROGRESS(progressDialog, 0, GetUniqueFilesTotalSizeA())
+			if (_ErrorCode != NoError) return _ErrorCode;
 		}
 	}
 	catch (...) {
@@ -214,6 +218,7 @@ ErrorCodesAE AeBatchRelinker::CopyUniqueFiles(const fs::path &localCopyPath, con
 {
 	AEGP_SuiteHandler suites(picaBasic);
 	FS_ERROR_CODE(copyError)
+	ErrorCodesAE _ErrorCode = NoError;
 	std::string relinkedFileName;
 	unsigned long long i, relinkedFilesSize = 0, totalFilesSize = (GetUniqueFilesTotalSize() >> 10);
 
@@ -227,7 +232,8 @@ ErrorCodesAE AeBatchRelinker::CopyUniqueFiles(const fs::path &localCopyPath, con
 		for(i=0; i < node->GetFilenamesNumber(); ++i)
 		{
 			auto pt = fs::path(node->GetFilenameCouple(i)->sourceFileName);
-			GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(progressDialog, static_cast<A_long>(relinkedFilesSize), static_cast<A_long>(totalFilesSize)))
+			MAIN_PROGRESS(progressDialog, static_cast<A_long>(relinkedFilesSize), static_cast<A_long>(totalFilesSize))
+			if (_ErrorCode != NoError) return _ErrorCode;
 			
 			if(FileExtensionCheck(pt, ".c4d"))
 			{

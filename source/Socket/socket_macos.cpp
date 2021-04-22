@@ -13,21 +13,38 @@
 #include <sys/types.h>     
 #include <sys/socket.h>
 
-platform_socket::platform_socket() : SocketClientInterface() { }
-platform_socket::~platform_socket() { }
+platform_socket::platform_socket()
+	: SocketClientInterface()
+{
+}
+platform_socket::~platform_socket()
+{
+}
+
+long platform_socket::start_session(unsigned short port, const std::string &scene_name)
+{
+	ERROR_CATCH_START
+		ERROR_BOOL_ERR(init_interface())
+		ERROR_BOOL_ERR(create_socket())
+		ERROR_BOOL_ERR(connect_socket(port))
+		if (_ErrorCode == NoError && is_connected())
+		{
+			const auto welcome_header = "SETUP=AE\tNAME=" + scene_name + "\n";
+			ERROR_BOOL_ERR(write(welcome_header.c_str(), static_cast<unsigned long>(welcome_header.length())) > 0)
+		}
+		else
+			close_socket();
+	ERROR_CATCH_END_NO_INFO_RETURN
+}
 
 bool platform_socket::init_interface()
 {
 	print_to_debug("Initiating interface for socket. ", "platform_socket::init_interface", false);
+	socket_descriptor_ = INVALID_SOCKET;
 	return true;
 }
 bool platform_socket::create_socket()
-{
-	if(init_interface() == false) {
-		socket_state_ = Error;
-		return false;
-	}
-	
+{	
 	print_to_debug("Creating socket.", "platform_socket::create_socket", false);
 	auto mac_socket = ::socket(AF_INET, 0, IPPROTO_TCP);
 
@@ -71,7 +88,7 @@ void platform_socket::close_socket()
 	socket_state_ = Unconnected;
 }
 
-bool platform_socket::connect(unsigned short port)
+bool platform_socket::connect_socket(unsigned short port)
 {
 	print_to_debug("Connect called.", "platform_socket::connect", false);
 
@@ -106,19 +123,6 @@ bool platform_socket::connect(unsigned short port)
 			case EALREADY:				
 				socket_state_ = Connecting;
 				break;
-			case ECONNREFUSED:
-			case EINVAL:
-			case ETIMEDOUT:
-			case EHOSTUNREACH:
-			case ENETUNREACH:
-			case EADDRINUSE:
-			case EAGAIN:
-			case EACCES:
-			case EPERM:
-			case EAFNOSUPPORT:
-			case EBADF:
-			case EFAULT:
-			case ENOTSOCK:
 			default:
 				socket_state_ = Unconnected;
 				break;

@@ -33,7 +33,7 @@ public:
     static void getTimeString(wchar_t *buff, A_long buffSize, bool path=false);
 	static ErrorCodesAE getEnvVariable(std::string const &env_variable, fs::path &result_path);
 
-    static ErrorCodesAE execBeamerCmd(beamerParamsStruct bps, BeamerMasks mask, wchar_t *buffer_w =nullptr, A_long buffer_size =0);
+    static ErrorCodesAE execBeamerCmd(beamerParamsStruct const *bps, BeamerMasks mask, wchar_t *buffer_w =nullptr, A_long buffer_size =0);
 	static ErrorCodesAE exec_cmd(fs::path const &app, std::string const &args, fs::path const &out_file, wchar_t *buffer_w, unsigned long buffer_size);
 
 	
