@@ -143,13 +143,13 @@ ErrorCodesAE gfs_rq_node_wrapper::gfs_node_deserialize(const picojson::value::ob
 			for (auto i = in_object.begin(); i != in_object.end(); ++i)
 			{
 				if (i->first == "renderable") {
-					node->renderable = strtol(i->second.to_str().c_str(), nullptr, 10);
+					node->renderable = static_cast<int>(strtol(i->second.to_str().c_str(), nullptr, 10));
 				}
 				else if (i->first == "width") {
-					node->width = strtol(i->second.to_str().c_str(), nullptr, 10);
+					node->width = static_cast<int>(strtol(i->second.to_str().c_str(), nullptr, 10));
 				}
 				else if (i->first == "height") {
-					node->height = strtol(i->second.to_str().c_str(), nullptr, 10);
+					node->height = static_cast<int>(strtol(i->second.to_str().c_str(), nullptr, 10));
 				}
 				else if (i->first == "frame_range") {
 					ASTRNCPY(node->frame_range, i->second.to_str().c_str(), sizeof(gfsRqItem::frame_range) - 1)
@@ -228,13 +228,13 @@ ErrorCodesAE gfs_rq_node_wrapper::gfs_node_outputs_deserialize(const picojson::v
 							node->soundFormat.sample_rateF = strtol(pt->second.to_str().c_str(), nullptr, 10);
 						}
 						else if (pt->first == "audio_aegp_encoding") {
-							node->soundFormat.encoding = strtol(pt->second.to_str().c_str(), nullptr, 10);
+							node->soundFormat.encoding = static_cast<int>(strtol(pt->second.to_str().c_str(), nullptr, 10));
 						}
 						else if (pt->first == "audio_depth") {
-							node->soundFormat.bytes_per_sampleL = strtol(pt->second.to_str().c_str(), nullptr, 10);
+							node->soundFormat.bytes_per_sampleL = static_cast<int>(strtol(pt->second.to_str().c_str(), nullptr, 10));
 						}
 						else if (pt->first == "audio_channels") {
-							node->soundFormat.num_channelsL = strtol(pt->second.to_str().c_str(), nullptr, 10);
+							node->soundFormat.num_channelsL = static_cast<int>(strtol(pt->second.to_str().c_str(), nullptr, 10));
 						}
 					}
 				}
