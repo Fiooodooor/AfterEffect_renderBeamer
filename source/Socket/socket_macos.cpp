@@ -1,14 +1,14 @@
 #include "socket_macos.h"
 
 #ifdef AE_OS_MAC
-#include <time.h>
+//#include <time.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <net/if.h>
+//#include <net/if.h>
 #include <arpa/inet.h>
-#include <ctype.h>
-#include <netinet/tcp.h>
-#include <iostream>
+//#include <ctype.h>
+//#include <netinet/in.h>
+//#include <iostream>
 #include "../GF_AEGP_Dumper.h"
 #include <sys/types.h>     
 #include <sys/socket.h>
@@ -19,7 +19,8 @@ platform_socket::platform_socket() : SocketClientInterface()
 }
 platform_socket::~platform_socket()
 {
-	close_socket();
+    if (is_connected())
+        close_socket();
 }
 
 long platform_socket::start_session(long port, const std::string &scene_name)
@@ -47,7 +48,7 @@ bool platform_socket::init_interface()
 bool platform_socket::create_socket()
 {	
 	print_to_debug("Creating socket.", "platform_socket::create_socket", false);
-	auto mac_socket = ::socket(AF_INET, 0, IPPROTO_TCP);
+	auto mac_socket = ::socket(AF_INET, SOCK_STREAM, 0);
 
 	if (mac_socket <= 0)
 	{
