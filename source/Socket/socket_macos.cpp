@@ -13,20 +13,20 @@
 #include <sys/types.h>     
 #include <sys/socket.h>
 
-platform_socket::platform_socket()
-	: SocketClientInterface()
+platform_socket::platform_socket() : SocketClientInterface()
 {
 }
 platform_socket::~platform_socket()
 {
+	close_socket();
 }
 
-long platform_socket::start_session(unsigned short port, const std::string &scene_name)
+long platform_socket::start_session(long port, const std::string &scene_name)
 {
 	ERROR_CATCH_START
 		ERROR_BOOL_ERR(init_interface())
 		ERROR_BOOL_ERR(create_socket())
-		ERROR_BOOL_ERR(connect_socket(port))
+		ERROR_BOOL_ERR(connect_socket(static_cast<unsigned short>(port)))
 		if (_ErrorCode == NoError && is_connected())
 		{
 			const auto welcome_header = "SETUP=AE\tNAME=" + scene_name + "\n";
@@ -83,18 +83,22 @@ bool platform_socket::create_socket()
 void platform_socket::close_socket()
 {
 	print_to_debug("Closing socket.", "platform_socket::close_socket", false);
+	const std::string quit_msg = "QUIT\n";
+	write(quit_msg.c_str(), static_cast<unsigned long>(quit_msg.length()));
 	if(socket_descriptor_)
 		::closesocket(socket_descriptor_);
+	
+	socket_descriptor_ = INVALID_SOCKET;
 	socket_state_ = Unconnected;
+	return 0;
 }
 
 bool platform_socket::connect_socket(unsigned short port)
 {
 	print_to_debug("Connect called.", "platform_socket::connect", false);
 
-	int socket_timeout_sec = 2;
 	struct timeval tv;
-	tv.tv_sec = socket_timeout_sec;
+	tv.tv_usec = Socket_Read_Timeout;
 	
 	sockaddr_in socket_address_in_v4;
 	memset(&socket_address_in_v4, 0, sizeof(sockaddr_in));
@@ -168,13 +172,16 @@ unsigned long platform_socket::write(const char *data, const unsigned long data_
 {
 	print_to_debug("WRITE: Sending data to renderbeamer.", "platform_socket::write", false);
 	ssize_t data_sent = 0;
+	if (!is_connected())
+		return 0;
+	
 	do {
         data_sent = write(socket_descriptor_, data, data_length);
     } while (data_sent == -1 && errno == EINTR)
 
 	if (data_sent < 0)
 	{
-		data_sent = -1;
+		data_sent = 0;
 		print_error_string(errno, "Socket Write");
 		switch (errno)
 		{			
@@ -194,19 +201,23 @@ unsigned long platform_socket::write(const char *data, const unsigned long data_
 
 unsigned long platform_socket::read(char *data, const unsigned long max_length)
 {
-	print_to_debug("READ: Waiting for data from renderbeamer.", "platform_socket::read", false);	
-	ssize_t bytes_read;
+	ssize_t bytes_read = 0;
+	if (!is_connected())
+		return 0;
+	
 	do {
 		bytes_read = read(socket_descriptor_, data, max_length-1);
 	} while (bytes_read == -1 && errno == EINTR)
 
 	if (bytes_read < 0)
 	{
-		bytes_read = -1;
-		print_error_string(errno, "read");
+		bytes_read = 0;
+		if(errno != ETIMEDOUT)
+			print_error_string(errno, "read");
 	}
 	else
 	{
+		print_to_debug("READ: Waiting for data from renderbeamer.", "platform_socket::read", false);
 		data[bytes_read] = '\0';
 	}
 	return static_cast<unsigned long>(bytes_read);
