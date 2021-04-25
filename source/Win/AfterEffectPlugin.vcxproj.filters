@@ -196,6 +196,9 @@
     <ClInclude Include="..\NodeObjects\AeNodesConteiner.h">
       <Filter>NodeObjects</Filter>
     </ClInclude>
+    <ClInclude Include="..\Socket\pico_json.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">

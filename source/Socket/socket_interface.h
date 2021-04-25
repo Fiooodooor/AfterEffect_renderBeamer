@@ -2,6 +2,7 @@
 #define SOCKETCLIENTINTERFACE_HPP
 #include <string>
 
+#define Socket_Read_Timeout 500;
 enum SocketState {
 	Error=-1,
 	Unconnected,

@@ -3,7 +3,7 @@
 
 #define SMART_COLLECT_ON 1
 
-AeSceneCollector::AeSceneCollector(AEGP_PluginID PluginId, SPBasicSuite *Sp, AEGP_ProjectH ProjectH, AeSceneConteiner &theCt)
+AeSceneCollector::AeSceneCollector(AEGP_PluginID PluginId, SPBasicSuite *Sp, AEGP_ProjectH ProjectH, AeSceneContainer &theCt)
 	: ct(&theCt)
 	, sp(Sp)
 	, pluginId(PluginId)

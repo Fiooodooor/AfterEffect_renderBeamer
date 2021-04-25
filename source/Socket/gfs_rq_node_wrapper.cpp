@@ -4,18 +4,21 @@
 #define CHAR_FIELD(  FIELD, VALUE ) std::string("\\\"" #FIELD "\\\":\\\"") + std::string( VALUE ) + "\\\""
 #define STRING_FIELD(  FIELD, VALUE ) std::string("\\\"" #FIELD "\\\":\\\"") + ( VALUE ) + "\\\""
 
-
-
-ErrorCodesAE gfs_rq_node_wrapper::serialize(AeSceneConteiner &scene_items_container, std::string &out_serialized_buffer)
+ErrorCodesAE gfs_rq_node_wrapper::serialize(AeSceneContainer &scene_items_container, std::string &out_serialized_buffer)
 {
+	ERROR_CATCH_START
+	auto counter = scene_items_container.gfsRqItemsList.size();
 	out_serialized_buffer.reserve(16000);
-	out_serialized_buffer = "SCRIPT=initRenderbeamerPanel( '{" + NUMBER_FIELD( ignore_missings, 1 );
-	out_serialized_buffer += ',' + NUMBER_FIELD( smart_collect, 0 );
-	out_serialized_buffer += ",\\\"data\\\":[";
-	gfs_node_serialize(scene_items_container.gfsRqItemsList.back(), out_serialized_buffer);
+	out_serialized_buffer = "SCRIPT=initRenderbeamerPanel( '{" + NUMBER_FIELD( ignore_missings, scene_items_container.ignore_missings_assets );
+	out_serialized_buffer += ',' + NUMBER_FIELD( smart_collect, scene_items_container.smart_collect );
+	out_serialized_buffer += R"(,\"data\":[)";
+	for (auto *it : scene_items_container.gfsRqItemsList) {
+		gfs_node_serialize(it, out_serialized_buffer);
+		if (--counter) out_serialized_buffer += ',';
+	}
 	out_serialized_buffer += "]} ');\n";
 
-	return NoError;
+	ERROR_CATCH_END_NO_INFO_RETURN
 }
 
 ErrorCodesAE gfs_rq_node_wrapper::gfs_node_serialize(gfsRqItem *in, std::string &out)
@@ -24,7 +27,6 @@ ErrorCodesAE gfs_rq_node_wrapper::gfs_node_serialize(gfsRqItem *in, std::string 
 		return NullPointerResult;
 
 	std::string gfs_out_buffer;
-	gfs_out_buffer.reserve(4096);
 	
 	out += '{' + NUMBER_FIELD( rq_id, in->rq_id);
 	out += ',' + NUMBER_FIELD( rq_out_modules_n, in->rq_out_modules_n);
@@ -35,7 +37,7 @@ ErrorCodesAE gfs_rq_node_wrapper::gfs_node_serialize(gfsRqItem *in, std::string 
 	out += ',' + STRING_FIELD( name, in->name);
 	out += ',' + CHAR_FIELD( frame_range, in->frame_range);
 	out += ',' + CHAR_FIELD( fps, in->fps);
-	out += ", \\\"out_modules\\\":[";
+	out += R"(, \"out_modules\":[)";
 	if (gfs_node_outputs_serialize(in->output_mods, gfs_out_buffer) == NoError)
 		out += gfs_out_buffer;
 	out += "]}" ;
@@ -45,7 +47,7 @@ ErrorCodesAE gfs_rq_node_wrapper::gfs_node_serialize(gfsRqItem *in, std::string 
 
 ErrorCodesAE gfs_rq_node_wrapper::gfs_node_outputs_serialize(std::vector<gfsRqItemOutput*> &in_list, std::string &out_buffer)
 {
-	int it = 0;
+	const int it = 0;
 	gfsRqItemOutput *in = nullptr;
 	
 	if (in_list.empty())
@@ -75,6 +77,167 @@ ErrorCodesAE gfs_rq_node_wrapper::gfs_node_outputs_serialize(std::vector<gfsRqIt
 	out_buffer += '}';
 
 	return NoError;
+}
+
+
+ErrorCodesAE gfs_rq_node_wrapper::deserialize(AeSceneContainer &scene_items_container, std::string &in_string_buffer)
+{
+	ERROR_CATCH_START
+	picojson::value main_value;
+
+	const auto conversion_err = picojson::parse(main_value, in_string_buffer);
+	if (!conversion_err.empty()) {
+		return ErrorResult;
+	}
+	if (!main_value.is<picojson::object>()) {
+		return NullResult;	// add parsing_error
+	}
+
+	const auto& parsed_obj = main_value.get<picojson::object>();
+	for (auto i = parsed_obj.begin(); i != parsed_obj.end(); ++i)
+	{
+		if (i->first == "data")
+		{
+			if (i->second.is<picojson::array>())
+			{
+				const auto& rq_items_array = i->second.get<picojson::array>();
+				for (auto rq_item : rq_items_array)
+				{
+					gfs_node_deserialize(rq_item.get<picojson::object>(), scene_items_container.gfsRqItemsList);
+				}
+			}
+		}
+		else if (i->first == "ignore_missings")
+		{
+			scene_items_container.ignore_missings_assets = static_cast<A_Boolean>(strtol(i->second.to_str().c_str(), nullptr, 10));
+		}
+		else if (i->first == "smart_collect")
+		{
+			scene_items_container.smart_collect = static_cast<A_Boolean>(strtol(i->second.to_str().c_str(), nullptr, 10));
+		}
+	}
+	ERROR_CATCH_END_NO_INFO_RETURN
+}
+ErrorCodesAE gfs_rq_node_wrapper::gfs_node_deserialize(const picojson::value::object &in_object, std::list<gfsRqItem*> &in_items_list)
+{
+	ERROR_CATCH_START
+		const auto rq_id_key = in_object.find("rq_id");
+	if (rq_id_key != in_object.end())
+	{
+		gfsRqItem* node = nullptr;
+		const auto rq_id = strtol(rq_id_key->second.to_str().c_str(), nullptr, 10);
+
+		for (auto *it : in_items_list)
+		{
+			if (it->rq_id == rq_id)
+			{
+				node = it;
+				break;
+			}
+		}
+		if (node != nullptr)
+		{
+			for (auto i = in_object.begin(); i != in_object.end(); ++i)
+			{
+				if (i->first == "renderable") {
+					node->renderable = strtol(i->second.to_str().c_str(), nullptr, 10);
+				}
+				else if (i->first == "width") {
+					node->width = strtol(i->second.to_str().c_str(), nullptr, 10);
+				}
+				else if (i->first == "height") {
+					node->height = strtol(i->second.to_str().c_str(), nullptr, 10);
+				}
+				else if (i->first == "frame_range") {
+					ASTRNCPY(node->frame_range, i->second.to_str().c_str(), sizeof(gfsRqItem::frame_range) - 1)
+				}
+				else if (i->first == "fps") {
+					ASTRNCPY(node->fps, i->second.to_str().c_str(), sizeof(gfsRqItem::fps) - 1)
+				}
+				else if (i->first == "out_modules") {
+					gfs_node_outputs_deserialize(i->second.get<picojson::array>(), node->output_mods);
+				}
+			}
+		}
+	}
+	else
+	{
+		//std::cout << "error not found! " << std::endl;
+	}
+
+	ERROR_CATCH_END_NO_INFO_RETURN
+}
+ErrorCodesAE gfs_rq_node_wrapper::gfs_node_outputs_deserialize(const picojson::value::array& in_array, std::vector<gfsRqItemOutput*> &in_items_vector)
+{
+	ERROR_CATCH_START
+		for (auto out_it : in_array)
+		{
+			auto rq_out = out_it.get<picojson::object>();
+			const auto rq_out_id_key = rq_out.find("rq_out_id");
+			if (rq_out_id_key != rq_out.end())
+			{
+				gfsRqItemOutput* node = nullptr;
+				const auto rq_out_id = strtol(rq_out_id_key->second.to_str().c_str(), nullptr, 10);
+
+				for (auto *it : in_items_vector)
+				{
+					if (it->rq_out_id == rq_out_id)
+					{
+						node = it;
+						break;
+					}
+				}
+				if (node != nullptr)
+				{
+					for (auto pt = rq_out.begin(); pt != rq_out.end(); ++pt)
+					{
+						if (pt->first == "is_out_file_sequence") {
+							node->is_out_file_sequence = static_cast<A_Boolean>(strtol(pt->second.to_str().c_str(), nullptr, 10));
+						}
+						else if (pt->first == "is_out_file_multi_frame") {
+							node->is_out_file_multi_frame = static_cast<A_Boolean>(strtol(pt->second.to_str().c_str(), nullptr, 10));
+						}
+						else if (pt->first == "file_ext") {
+							ASTRNCPY(node->file_ext, pt->second.to_str().c_str(), sizeof(gfsRqItemOutput::file_ext) - 1)
+						}
+						else if (pt->first == "file_ext_format") {
+							ASTRNCPY(node->file_ext_format, pt->second.to_str().c_str(), sizeof(gfsRqItemOutput::file_ext_format) - 1)
+						}
+						else if (pt->first == "video_encoder") {
+							ASTRNCPY(node->video_encoder, pt->second.to_str().c_str(), sizeof(gfsRqItemOutput::video_encoder) - 1)
+						}
+						else if (pt->first == "video_pixel_format") {
+							ASTRNCPY(node->video_pixel_format, pt->second.to_str().c_str(), sizeof(gfsRqItemOutput::video_pixel_format) - 1)
+						}
+						else if (pt->first == "video_profile") {
+							ASTRNCPY(node->video_profile, pt->second.to_str().c_str(), sizeof(gfsRqItemOutput::video_profile) - 1)
+						}
+						else if (pt->first == "video_bit_rate") {
+							ASTRNCPY(node->video_bit_rate, pt->second.to_str().c_str(), sizeof(gfsRqItemOutput::video_bit_rate) - 1)
+						}
+						else if (pt->first == "audio_available_in_comp") {
+							node->audio_available_in_comp = static_cast<A_Boolean>(strtol(pt->second.to_str().c_str(), nullptr, 10));
+						}
+						else if (pt->first == "audio_out_enabled") {
+							node->audio_out_enabled = static_cast<A_Boolean>(strtol(pt->second.to_str().c_str(), nullptr, 10));
+						}
+						else if (pt->first == "audio_sample_rate") {
+							node->soundFormat.sample_rateF = strtol(pt->second.to_str().c_str(), nullptr, 10);
+						}
+						else if (pt->first == "audio_aegp_encoding") {
+							node->soundFormat.encoding = strtol(pt->second.to_str().c_str(), nullptr, 10);
+						}
+						else if (pt->first == "audio_depth") {
+							node->soundFormat.bytes_per_sampleL = strtol(pt->second.to_str().c_str(), nullptr, 10);
+						}
+						else if (pt->first == "audio_channels") {
+							node->soundFormat.num_channelsL = strtol(pt->second.to_str().c_str(), nullptr, 10);
+						}
+					}
+				}
+			}
+		}
+	ERROR_CATCH_END_NO_INFO_RETURN
 }
 /*
 A_long rq_id;										<=>		rq_id = "1";

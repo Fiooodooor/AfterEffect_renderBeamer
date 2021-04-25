@@ -8,10 +8,10 @@
 #include "AeFooNode.h"
 #include "../AeGfsFileCreatorStructures.h"
 
-class AeSceneConteiner
+class AeSceneContainer
 {
 public:
-	AeSceneConteiner();
+	AeSceneContainer();
 	void countCollectedNr();
 	A_long getCollectedNr() const;
 	
@@ -23,6 +23,8 @@ public:
 	std::list<AeEffectNode*> effectsList;
 	std::list<AeFontNode*> fontsList;
 	std::list<gfsRqItem*> gfsRqItemsList;
+	A_Boolean ignore_missings_assets = 1;
+	A_Boolean smart_collect = 0;
 
 private:
 	A_long nrOfCollectedItems;

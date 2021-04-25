@@ -317,10 +317,12 @@ ErrorCodesAE GF_Dumper::DumpUiQueueItems(const fs::path& outputPath) const
 			AeGfsFileCreator::getInstance()->PushRenderQueueItem(sc->gfsRqItemsList.back());
 			sc->gfsRqItemsList.pop_back();
 		}
+	AeGfsFileCreator::getInstance()->ignore_missings_assets = sc->ignore_missings_assets;
+	AeGfsFileCreator::getInstance()->smart_collect = sc->smart_collect;
 	ERROR_CATCH_END_LOGGER_RETURN("DumpUiQueueItems")
 }
 
-ErrorCodesAE GF_Dumper::setConteiner(AeSceneConteiner &aesc)
+ErrorCodesAE GF_Dumper::setConteiner(AeSceneContainer &aesc)
 {
 	this->sc = &aesc;
 	if (!aesc.gfsRqItemsList.empty())

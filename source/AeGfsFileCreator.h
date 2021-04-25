@@ -26,6 +26,8 @@ public:
 	ErrorCodesAE SetFontsDirPath(fs::path const &fontsDir);
 	ErrorCodesAE SetAeVersionString(A_char const *version);
 
+	A_Boolean ignore_missings_assets = 1;
+	A_Boolean smart_collect = 0;
 protected:
 	AeGfsFileCreator();
 	ErrorCodesAE SaveDocument();

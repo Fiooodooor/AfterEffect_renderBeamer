@@ -70,8 +70,8 @@ function setVideoSettings(args){
     var encoderValue = document.getElementById("encoder-value");
 	var dropdownName = "";
     if(args[2] == true){
-        if(parsed[args[3]-1].video_encoder != ""){
-            encoderValue.innerHTML = parsed[args[3]-1].video_encoder;
+        if(parsed[args[3]-1].out_modules[0].video_encoder != ""){
+            encoderValue.innerHTML = parsed[args[3]-1].out_modules[0].video_encoder;
         }      
     }
     else{        
@@ -182,22 +182,22 @@ function setDropdownValue(args)
         // set object pproperties
         var dropName  = dropdown.parentElement.getElementsByClassName("label")[0].innerHTML;        
         if(dropName == "encoder"){
-           parsed[rowId].video_encoder = attribute;
+           parsed[rowId].out_modules[0].video_encoder = attribute;
         }
         if(dropName == "pixel format"){
-           parsed[rowId].video_pixel_format = attribute;
+           parsed[rowId].out_modules[0].video_pixel_format = attribute;
         }
         if(dropName == "profile"){
-           parsed[rowId].video_profile = attribute;
+           parsed[rowId].out_modules[0].video_profile = attribute;
         }
         if(dropName == "sample rate"){			
-            parsed[rowId].audio_sample_rate = attribute.slice(0, -3) + "000";
+            parsed[rowId].out_modules[0].audio_sample_rate = attribute.slice(0, -3) + "000";
         }
         if(dropName == "bit depth"){  
-			parsed[rowId].audio_depth = parseInt(attribute.slice(0, -3))/8;
+			parsed[rowId].out_modules[0].audio_depth = parseInt(attribute.slice(0, -3))/8;
         }
         if(dropName == "channels"){   
-			parsed[rowId].audio_channels = attribute;		
+			parsed[rowId].out_modules[0].audio_channels = attribute;		
 			if(attribute == 1) {
 				channelsValue.innerHTML = "mono";
 			}
@@ -206,19 +206,19 @@ function setDropdownValue(args)
 			}
         }
         if(dropName == "extension"){
-			parsed[rowId].file_ext = "";
-			parsed[rowId].video_encoder =  "";
-            parsed[rowId].video_pixel_format = "";
-            parsed[rowId].video_profile = "";
+			parsed[rowId].out_modules[0].file_ext = "";
+			parsed[rowId].out_modules[0].video_encoder =  "";
+            parsed[rowId].out_modules[0].video_pixel_format = "";
+            parsed[rowId].out_modules[0].video_profile = "";
 			if(topLabel == "audio") {
-				parsed[rowId].audio_sample_rate = "";
-				parsed[rowId].audio_depth = "";
+				parsed[rowId].out_modules[0].audio_sample_rate = "";
+				parsed[rowId].out_modules[0].audio_depth = "";
 			}
-            parsed[rowId].file_ext_format = attribute;
+            parsed[rowId].out_modules[0].file_ext_format = attribute;
         }
 	}
 	else {	 // compoListCalling == true 
-		attribute = args[1];  //	args[1]  ==>  parsed[rowId].file_ext_format
+		attribute = args[1];  //	args[1]  ==>  parsed[rowId].out_modules[0].file_ext_format
 		if(attribute == "") {
 			return;
 		}	
@@ -227,19 +227,19 @@ function setDropdownValue(args)
 				
 		topLabel = checkRenderExtension(attribute.split(" ")[0]);
 
-		sampleRateValue.innerHTML = parsed[rowId].audio_sample_rate.slice(0, -3) + "kHz";
-		bitDepthValue.innerHTML = (parsed[rowId].audio_depth*8).toString() + "bit";
+		sampleRateValue.innerHTML = parsed[rowId].out_modules[0].audio_sample_rate.slice(0, -3) + "kHz";
+		bitDepthValue.innerHTML = (parsed[rowId].out_modules[0].audio_depth*8).toString() + "bit";
 		
-		if(parsed[rowId].audio_channels == ""){
-			parsed[rowId].audio_channels = 2;
+		if(parsed[rowId].out_modules[0].audio_channels == ""){
+			parsed[rowId].out_modules[0].audio_channels = 2;
 		}
-		if(parsed[rowId].audio_channels == 1) {
+		if(parsed[rowId].out_modules[0].audio_channels == 1) {
 			channelsValue.innerHTML = "mono";
 		}
 		else {
 			channelsValue.innerHTML = "stereo";
 		}
-		extensionValue.innerHTML = parsed[rowId].file_ext_format;
+		extensionValue.innerHTML = parsed[rowId].out_modules[0].file_ext_format;
 	}
 	if(topLabel=="video") {
             // show video settings container
@@ -328,28 +328,28 @@ function setDropdownValue(args)
 		var bitrate = document.getElementById("bitrate"); 
 		
 		//video settings		
-		if(parsed[rowId].video_encoder == "" ){
-			parsed[rowId].video_encoder = encoderValue.innerHTML;
+		if(parsed[rowId].out_modules[0].video_encoder == "" ){
+			parsed[rowId].out_modules[0].video_encoder = encoderValue.innerHTML;
 		}
-		if(parsed[rowId].video_pixel_format == "" ){
-			parsed[rowId].video_pixel_format = pixelFormatValue.innerHTML;
+		if(parsed[rowId].out_modules[0].video_pixel_format == "" ){
+			parsed[rowId].out_modules[0].video_pixel_format = pixelFormatValue.innerHTML;
 		}
-		if(parsed[rowId].video_profile == ""){
-			parsed[rowId].video_profile = profileValue.innerHTML;
+		if(parsed[rowId].out_modules[0].video_profile == ""){
+			parsed[rowId].out_modules[0].video_profile = profileValue.innerHTML;
 		}
 		if(parsed[rowId].fps == ""){ 
 			parsed[rowId].fps = framerate.value;
 		}			
-		if(parsed[rowId].video_bitrate == "") {
-			parsed[rowId].video_bitrate = bitrate.value; 
+		if(parsed[rowId].out_modules[0].video_bit_rate == "") {
+			parsed[rowId].out_modules[0].video_bit_rate = bitrate.value; 
 		}
-		parsed[rowId].file_ext = attribute;
-		parsed[rowId].out_is_sequence = 0;
+		parsed[rowId].out_modules[0].file_ext = attribute;
+		parsed[rowId].out_modules[0].is_out_file_sequence = 0;
 		
-		encoderValue.innerHTML = parsed[rowId].video_encoder;
-		pixelFormatValue.innerHTML = parsed[rowId].video_pixel_format;
-		profileValue.innerHTML = parsed[rowId].video_profile;
-		bitrate.value = parsed[rowId].video_bitrate;
+		encoderValue.innerHTML = parsed[rowId].out_modules[0].video_encoder;
+		pixelFormatValue.innerHTML = parsed[rowId].out_modules[0].video_pixel_format;
+		profileValue.innerHTML = parsed[rowId].out_modules[0].video_profile;
+		bitrate.value = parsed[rowId].out_modules[0].video_bit_rate;
 		framerate.value = parsed[rowId].fps;
 	}
 	else if(topLabel=="image sequence") {
@@ -360,8 +360,8 @@ function setDropdownValue(args)
 			document.getElementById("videoLine").classList.add("hide");
 			document.styleSheets[0].insertRule("div#videoContainer { display: none;}", 0);
 		}
-		parsed[rowId].file_ext = attribute.split(" ")[0];
-		parsed[rowId].out_is_sequence = 1;
+		parsed[rowId].out_modules[0].file_ext = attribute.split(" ")[0];
+		parsed[rowId].out_modules[0].is_out_file_sequence = 1;
 	}
     else if(topLabel=="audio") {             
 		if(document.getElementById("videoLabel").classList.contains("hide")==false) {
@@ -371,19 +371,19 @@ function setDropdownValue(args)
 			document.styleSheets[0].insertRule("div#videoContainer { display: none;}", 0);
 		}
 		
-		if(parsed[rowId].audio_sample_rate == "" && parsed[rowId].audio_depth == "") {
-			parsed[rowId].audio_sample_rate = parsed[rowId].file_ext_format.split(" ")[1].slice(0, -3) + "000";
-			parsed[rowId].audio_depth = parseInt(parsed[rowId].file_ext_format.split(" ")[2].slice(0, -3))/8;
-			sampleRateValue.innerHTML = parsed[rowId].file_ext_format.split(" ")[1];			
-			bitDepthValue.innerHTML = parsed[rowId].file_ext_format.split(" ")[2];
-			parsed[rowId].file_ext = "WAV";
-			parsed[rowId].out_is_sequence = 0;
+		if(parsed[rowId].out_modules[0].audio_sample_rate == "" && parsed[rowId].out_modules[0].audio_depth == "") {
+			parsed[rowId].out_modules[0].audio_sample_rate = parsed[rowId].out_modules[0].file_ext_format.split(" ")[1].slice(0, -3) + "000";
+			parsed[rowId].out_modules[0].audio_depth = parseInt(parsed[rowId].out_modules[0].file_ext_format.split(" ")[2].slice(0, -3))/8;
+			sampleRateValue.innerHTML = parsed[rowId].out_modules[0].file_ext_format.split(" ")[1];			
+			bitDepthValue.innerHTML = parsed[rowId].out_modules[0].file_ext_format.split(" ")[2];
+			parsed[rowId].out_modules[0].file_ext = "WAV";
+			parsed[rowId].out_modules[0].is_out_file_sequence = 0;
 		}
-		parsed[rowId].file_ext_format = "WAV " +  sampleRateValue.innerHTML + " " + bitDepthValue.innerHTML;
-		extensionValue.innerHTML = parsed[rowId].file_ext_format;
+		parsed[rowId].out_modules[0].file_ext_format = "WAV " +  sampleRateValue.innerHTML + " " + bitDepthValue.innerHTML;
+		extensionValue.innerHTML = parsed[rowId].out_modules[0].file_ext_format;
 	}
 	
-	curentRow.getElementsByTagName("td")[2].innerHTML = parsed[rowId].file_ext_format;
+	curentRow.getElementsByTagName("td")[2].innerHTML = parsed[rowId].out_modules[0].file_ext_format;
 	setVideoSettings(args);  
 }
 
@@ -402,19 +402,19 @@ function compoListClicked(ar){
     }
   
     document.getElementById("frameRange").value = parsed[currentRowId-1].frame_range;
-    document.getElementById("extensionValue").innerHTML = parsed[currentRowId-1].file_ext_format;
+    document.getElementById("extensionValue").innerHTML = parsed[currentRowId-1].out_modules[0].file_ext_format;
 
 	if(parsed[currentRowId-1].fps == ""){
 		parsed[currentRowId-1].fps = "25";
 	}
-	if(parsed[currentRowId-1].video_bitrate == ""){
-		parsed[currentRowId-1].video_bitrate = "5000"
+	if(parsed[currentRowId-1].out_modules[0].video_bit_rate == ""){
+		parsed[currentRowId-1].out_modules[0].video_bit_rate = "5000"
 	}
 	
     document.getElementById("framerate").value = parsed[currentRowId-1].fps;
-	document.getElementById("bitrate").value = parsed[currentRowId-1].video_bitrate;
+	document.getElementById("bitrate").value = parsed[currentRowId-1].out_modules[0].video_bit_rate;
 
-	var args = new Array("", parsed[currentRowId-1].file_ext_format, true, currentRowId);   
+	var args = new Array("", parsed[currentRowId-1].out_modules[0].file_ext_format, true, currentRowId);   
     setDropdownValue(args);  
 }
 // events functions for text fields and compo list checkbox
@@ -430,7 +430,7 @@ function framerateChanged(ar){
     parsed[currentRowId-1].fps = ar.value;
 }
 function bitrateChanged(ar){
-    parsed[currentRowId-1].video_bitrate = ar.value;
+    parsed[currentRowId-1].out_modules[0].video_bit_rate = ar.value;
 }
 function renderableChecked(ar){
 	var the_row = ar.getAttribute("data-el");
@@ -463,14 +463,11 @@ function setObjectSubmit(){
     var reparsed = new Array();
     
     for(var x=0; x< parsed.length; x++){
-        if(parsed[x].renderable == 1)
-		{
-			if(renderExtensions.videoExt.includes(parsed[x].file_ext_format.toLowerCase())) {
-				var index_number = renderExtensions.videoExt.indexOf(parsed[x].file_ext_format.toLowerCase());
-				parsed[x].file_ext_format = renderExtensions.videoExtended[index_number];		
-			}
-            reparsed.push(parsed[x]);			
-        }
+		if(renderExtensions.videoExt.includes(parsed[x].out_modules[0].file_ext_format.toLowerCase())) {
+			var index_number = renderExtensions.videoExt.indexOf(parsed[x].out_modules[0].file_ext_format.toLowerCase());
+			parsed[x].out_modules[0].file_ext_format = renderExtensions.videoExtended[index_number];		
+		}
+		reparsed.push(parsed[x]);
     }
     return reparsed;
 }
@@ -519,65 +516,89 @@ function addEvents(){
 
     window.addEventListener('resize', windowResize());
 }
-// execute function with the same name in hostscript.jsx
+
 function initRenderbeamerPanel( renderQueue_list ) 
 {
-	var renderExtensions = new beamerExtensions();
     document.getElementById("settingsBtn").classList.toggle("button-selected");
     document.getElementById("videoLabel").classList.add("hide");
     document.getElementById("videoBreak").classList.add("hide");
 	document.getElementById("videoLine").classList.add("hide");
-//	document.getElementById("scroll").classList.add("hide");
-	console.log(document.styleSheets[0])
 	document.styleSheets[0].insertRule("div#videoContainer { display: none;}", 0);
-	/* const styleSheet = document.createElement('style');
-	document.head.appendChild(styleSheet);
-	styleSheet.textContent = "div#videoContainer { display: none;}" */
+	
+	var renderExtensions = new beamerExtensions();
+	var table = document.getElementById("compositionList");	
+	var jsonResult = renderQueue_list;
+	var total_rows = 1;
+	
+	if(typeof jsonResult === 'undefined') {
+		console.log("RenderQueue list is empty or undefined!");
+		return 1;
+	}
+	try {
+		data_struct = JSON.parse(jsonResult);
+		console.log(data_struct);
+	} catch(e) {
+		console.log(jsonResult);
+		console.log("Error while parsing! " + e);
+		return 2;
+	}
 
-	var jsonResult = renderQueue_list;		
-	var table = document.getElementById("compositionList");		
-	data_struct = JSON.parse(jsonResult);	
-	console.log(data_struct.data);
 	parsed = data_struct.data;
-	for(var x=0; x < parsed.length; x++)
+	if(typeof parsed === 'undefined') {
+		console.log("RenderQueue data element is empty or undefined!");
+		return 3;
+	}
+	
+	for(var x=0; x < parsed.length; ++x)
 	{
-		if(parsed[x].file_ext == "") {
-			parsed[x].file_ext = "PNG";
+		if(typeof parsed[x].out_modules === 'undefined' || parsed[x].out_modules.length < 1) {
+			console.log("Element nr " + x.toString() + " got no out modules!");
+			continue;
 		}
-		if(renderExtensions.videoExt.includes(parsed[x].file_ext.toLowerCase())) {
-			parsed[x].file_ext_format = parsed[x].file_ext.toLowerCase();
-			parsed[x].out_is_sequence = 0;
-		}
-		else if(renderExtensions.audioExt.includes(parsed[x].file_ext.toLowerCase())) {
-			parsed[x].file_ext_format = "wav " + parsed[x].audio_sample_rate.slice(0, -3) + "kHz " + parseInt(parsed[x].audio_depth)*8 + "bit";
-			parsed[x].out_is_sequence = 0;
-		}
-		else if(renderExtensions.imgSeqExt.includes(parsed[x].file_ext.toUpperCase())) {
-			parsed[x].file_ext = parsed[x].file_ext.toUpperCase();
-			parsed[x].file_ext_format = parsed[x].file_ext + " 16bit";
-			parsed[x].out_is_sequence = 1;
-		}
-		else {
-			parsed[x].file_ext = "PNG";
-			parsed[x].file_ext_format = "PNG 16bit"
-			parsed[x].out_is_sequence = 1;
-		}
-		var row = table.insertRow(x+1);
-		var cell1 = row.insertCell(0);
-		var cell2 = row.insertCell(1);
-		var cell3 = row.insertCell(2);
-		var cell4 = row.insertCell(3);
-
-		// Add some text to the new cells:
-		cell1.innerHTML = parsed[x].name;
-		cell2.innerHTML = parsed[x].frame_range;
-		cell3.innerHTML = parsed[x].file_ext_format;
-		var is_cell_checked = '" >'
-		if(parsed[x].renderable == 1) {
-			is_cell_checked = '" checked >';
-		}
-		cell4.innerHTML = '<input type="checkbox" class="myinput" name="scales" data-el="' + (x+1).toString() + is_cell_checked;
-		compoListClicked(row);
+		var out_mods_number = parsed[x].rq_out_modules_n;
+		var out_mods_length = parsed[x].out_modules.length;
+		
+		for(var out_mod=0; out_mod < 1; ++out_mod)
+		{
+			if(parsed[x].out_modules[out_mod].file_ext == "") {
+				parsed[x].out_modules[out_mod].file_ext = "PNG";
+			}
+			if(renderExtensions.videoExt.includes(parsed[x].out_modules[out_mod].file_ext.toLowerCase())) {
+				parsed[x].out_modules[out_mod].file_ext_format = parsed[x].out_modules[out_mod].file_ext.toLowerCase();
+				parsed[x].out_modules[out_mod].is_out_file_sequence = 0;
+			}
+			else if(renderExtensions.audioExt.includes(parsed[x].out_modules[out_mod].file_ext.toLowerCase())) {
+				parsed[x].out_modules[out_mod].file_ext_format = "wav " + parsed[x].out_modules[out_mod].audio_sample_rate.slice(0, -3) + "kHz " + parseInt(parsed[x].out_modules[out_mod].audio_depth)*8 + "bit";
+				parsed[x].out_modules[out_mod].is_out_file_sequence = 0;
+			}
+			else if(renderExtensions.imgSeqExt.includes(parsed[x].out_modules[out_mod].file_ext.toUpperCase())) {
+				parsed[x].out_modules[out_mod].file_ext = parsed[x].out_modules[out_mod].file_ext.toUpperCase();
+				parsed[x].out_modules[out_mod].file_ext_format = parsed[x].out_modules[out_mod].file_ext + " 16bit";
+				parsed[x].out_modules[out_mod].is_out_file_sequence = 1;
+			}
+			else {
+				parsed[x].out_modules[out_mod].file_ext = "PNG";
+				parsed[x].out_modules[out_mod].file_ext_format = "PNG 16bit"
+				parsed[x].out_modules[out_mod].is_out_file_sequence = 1;
+			}
+			
+			var row = table.insertRow(total_rows);
+			var cell1 = row.insertCell(0);
+			var cell2 = row.insertCell(1);
+			var cell3 = row.insertCell(2);
+			var cell4 = row.insertCell(3);
+			
+			cell1.innerHTML = parsed[x].name;
+			cell2.innerHTML = parsed[x].frame_range;
+			cell3.innerHTML = parsed[x].out_modules[out_mod].file_ext_format;
+			var is_cell_checked = '" >'
+			if(parsed[x].renderable == 1) {
+				is_cell_checked = '" checked >';
+			}
+			cell4.innerHTML = '<input type="checkbox" class="myinput" name="scales" data-el="' + (total_rows).toString() + is_cell_checked;
+			compoListClicked(row);
+			++total_rows;
+		}		
 	}
 	currentRowId = 1;
 	var rows = table.getElementsByTagName("tr");
@@ -594,3 +615,44 @@ function initRenderbeamerPanel( renderQueue_list )
 }
 
 // Add the sticky class to the header when you reach its scroll position. Remove "sticky" when you leave the scroll position
+
+/* 
+	****** ****** 
+	****** RENDER_QUEUE_ITEM ******
+	****** ****** 
+
+A_long rq_id;										<=>		rq_id = "1";
+A_long rq_out_modules_n;							<=>		rq_out_modules_n = "1";
+A_long renderable;									<=>		renderable = "0";
+A_long composition_id;								<=>		composition_id = "0";
+A_long width;										<=>		width = "0";
+A_long height;										<=>		height = "0";
+std::string name;									<=>		name = "Composition_Name";
+A_char frame_range[AEGP_MAX_ITEM_NAME_SIZE];		<=>		frame_range = "1to10s1";
+A_char fps[AEGP_MAX_ITEM_NAME_SIZE];				<=>		fps = "29.97";
+std::vector<gfsRqItemOutput*> output_mods;			<=>		[array] 
+
+	****** ****** ****** 
+	****** RENDER_QUEUE_ITEM ******
+	****** ****** ****** 
+ 
+A_long rq_out_id;								<=>		rq_out_id = "0";
+A_Boolean is_out_file_sequence;					<=>		is_out_file_sequence = "1";
+A_Boolean is_out_file_multi_frame;				<=>		is_out_file_multi_frame = "0";
+A_char file_ext[8];								<=>		file_ext = "png";
+A_char file_ext_format[32];						<=>		file_ext_format = "png 16bit";
+A_char video_encoder[32];						<=>		video_encoder = "";
+A_char video_pixel_format[32];					<=>		video_pixel_format = "";
+A_char video_profile[32];						<=>		video_profile = "";
+A_char video_bit_rate[32];						<=>		video_bit_rate = "5000";
+A_Boolean audio_available_in_comp;				<=>		audio_available_in_comp = "0";
+A_Boolean audio_out_enabled;					<=>		audio_out_enabled = "0";
+AEGP_SoundDataFormat soundFormat;
+	A_FpLong			sample_rateF;			<=>		audio_sample_rate = "48000";
+	AEGP_SoundEncoding	encoding;				<=>		audio_aegp_encoding = "3"
+	A_long				bytes_per_sampleL;		<=>		audio_depth = "4";
+	A_long				num_channelsL;			<=>		audio_channels = "2";
+fs::path outputFile;							<=>
+
+
+*/

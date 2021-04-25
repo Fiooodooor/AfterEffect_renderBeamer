@@ -93,21 +93,21 @@ void Renderbeamer::DumpProject(A_Boolean useUiExporter)
 	ERROR_CATCH_START
 		GF_Dumper project_dumper(p_basic_, pluginId);
 		PF_AppProgressDialogP *dlg_ptr = project_dumper.get_progress_dialog(true, true, 0);
-		MAIN_PROGRESS(*dlg_ptr, 1, 10)
+		MAIN_PROGRESS_THROW(*dlg_ptr, 1, 10)
 		
 		platform_socket connector;	
 		beamerParamsStruct paths_structure;
-		AeSceneConteiner scene_items_container;
+		AeSceneContainer scene_items_container;
 	
-		MAIN_PROGRESS(*dlg_ptr, 2, 10)
-		ERROR_AE(GF_Dumper::PreCheckProject(p_basic_, pluginId, paths_structure))
-		ERROR_AE(project_dumper.setPathsStruct(paths_structure));
-		MAIN_PROGRESS(*dlg_ptr, 3, 10)
-		ERROR_AE(project_dumper.PrepareProject())
+		MAIN_PROGRESS_THROW(*dlg_ptr, 2, 10)
+		ERROR_THROW(GF_Dumper::PreCheckProject(p_basic_, pluginId, paths_structure))
+		ERROR_THROW(project_dumper.setPathsStruct(paths_structure))
+		MAIN_PROGRESS_THROW(*dlg_ptr, 3, 10)
+		ERROR_THROW(project_dumper.PrepareProject())
 	
 		AeSceneCollector collector(pluginId, p_basic_, project_dumper.rootProjH, scene_items_container);
-		ERROR_AE(collector.AeSceneCollect(useUiExporter))
-		MAIN_PROGRESS(*dlg_ptr, 9, 10)
+		ERROR_THROW(collector.AeSceneCollect(useUiExporter))
+		MAIN_PROGRESS_THROW(*dlg_ptr, 9, 10)
 
 		ERROR_LONG_ERR(connector.start_session(paths_structure.socketPort_long, paths_structure.bp.projectRootCorrect.string()))
 	
@@ -116,27 +116,22 @@ void Renderbeamer::DumpProject(A_Boolean useUiExporter)
 		gfs_rq_node_wrapper::serialize(scene_items_container, send_buffer);
 		connector.write(send_buffer.c_str(), static_cast<unsigned long>(send_buffer.length()));
 	
-		MAIN_PROGRESS(*dlg_ptr, 10, 20)
+		MAIN_PROGRESS_THROW(*dlg_ptr, 10, 20)
 		while(connector.is_connected() && _ErrorCode == NoError)
 		{						
 			if (connector.read(read_buffer, 10000 - 1) > 0) {
 				GF_Dumper::rbProj()->logg("read the buffer", "success", read_buffer);
 				break;
 			}
-			MAIN_PROGRESS(*dlg_ptr, 11, 20)
+			MAIN_PROGRESS_THROW(*dlg_ptr, 11, 20)
 		}
 		ERROR_LONG_ERR(connector.close_socket())
 	
-		ERROR_AE(project_dumper.setConteiner(scene_items_container))
-		MAIN_PROGRESS(*dlg_ptr, 12, 20)
-		ERROR_AE(project_dumper.newBatchDumpProject())
+		ERROR_THROW(project_dumper.setConteiner(scene_items_container))
+		MAIN_PROGRESS_THROW(*dlg_ptr, 12, 20)
+		ERROR_THROW(project_dumper.newBatchDumpProject())
 		ERROR_AEER(suites.UtilitySuite6()->AEGP_ReportInfo(pluginId, GetStringPtr(StrID_ProjectSent)))		
-		
-		if (_ErrorCode != NoError)
-		{
-			suites.UtilitySuite6()->AEGP_ReportInfo(pluginId, PluginError::GetErrorStringA(_ErrorCode, UserLanguage::UserEnglish));
-		}				
-	ERROR_CATCH_END_NO_INFO
+	ERROR_CATCH_END(suites)
 }
 
 void Renderbeamer::PluginVersion() 

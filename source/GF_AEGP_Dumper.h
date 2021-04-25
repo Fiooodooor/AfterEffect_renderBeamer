@@ -26,7 +26,7 @@ public:
 	ErrorCodesAE DumpUiQueueItems(const fs::path& outputPath) const;
 
 	ErrorCodesAE setPathsStruct(beamerParamsStruct &globals_and_paths);
-	ErrorCodesAE setConteiner(AeSceneConteiner &aesc);
+	ErrorCodesAE setConteiner(AeSceneContainer &aesc);
 
 	static rbProjectClass *rbProj() {
 		static rbProjectClass rbProjIt;
@@ -50,7 +50,7 @@ private:
 
 	beamerParamsStruct *bps;
 	A_char tmp_message[512];
-	AeSceneConteiner* sc;
+	AeSceneContainer* sc;
 	A_Boolean smart_collect;
 };
 #endif 

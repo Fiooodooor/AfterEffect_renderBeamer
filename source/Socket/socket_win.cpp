@@ -71,7 +71,7 @@ long platform_socket::close_socket()
 bool platform_socket::connect_socket(const unsigned short port)
 {
 	print_to_debug("Connect called.", "platform_socket::connect", false);
-	DWORD socket_timeout_ms = 1500;
+	DWORD socket_timeout_ms = Socket_Read_Timeout;
 	sockaddr_in socket_address_in_v4{};
 	memset(&socket_address_in_v4, 0, sizeof(sockaddr_in));
 	
@@ -198,10 +198,13 @@ unsigned long platform_socket::read(char *data, const unsigned long max_length)
 	
 	const auto return_val = ::recv(socket_descriptor_, data, static_cast<int>(max_length) - 1, 0);
 	if (return_val <= 0)
-	{		
-		print_error_string(WSAGetLastError(), "::recv");
+	{
+		const auto err_nr = WSAGetLastError();
 		bytes_read = 0;
 		WSASetLastError(0);
+		if (err_nr != WSAETIMEDOUT) {
+			print_error_string(err_nr, "::recv");
+		}
 	}
 	else {		
 		bytes_read = return_val;

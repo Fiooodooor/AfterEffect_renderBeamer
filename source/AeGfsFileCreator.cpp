@@ -40,10 +40,10 @@ ErrorCodesAE AeGfsFileCreator::GenerateAndSaveDocument()
 	doc_root->InsertEndChild(doc_settings);
 
 	doc_aftereffects = gfs_document.NewElement("AfterEffects");
-	//if(pt->continue_on_missing == 1)
+	if(ignore_missings_assets == 1)
 		doc_aftereffects->SetAttribute("continueOnMissingAssets", "true");
-	//else
-	//	doc_aftereffects->SetAttribute("continueOnMissingAssets", "false");
+	else
+		doc_aftereffects->SetAttribute("continueOnMissingAssets", "false");
 	doc_aftereffects->SetAttribute("height", pt->height);
 	doc_aftereffects->SetAttribute("width", pt->width);
 	doc_aftereffects->SetAttribute("fontDir", ("\\" + outFontsDir.string()).c_str());

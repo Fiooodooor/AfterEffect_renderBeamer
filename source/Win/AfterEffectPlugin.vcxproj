@@ -238,6 +238,7 @@ cl /D "MSWindows" /EP $(IntDir)%(Filename).rrc &gt;               "$(ProjectDir)
     <ClInclude Include="..\NodeObjects\AeObjectNode.h" />
     <ClInclude Include="..\NodeObjects\AeSceneCollector.h" />
     <ClInclude Include="..\Socket\gfs_rq_node_wrapper.h" />
+    <ClInclude Include="..\Socket\pico_json.h" />
     <ClInclude Include="..\Socket\socket_interface.h" />
     <ClInclude Include="..\Socket\socket_macos.h" />
     <ClInclude Include="..\Socket\socket_win.h" />

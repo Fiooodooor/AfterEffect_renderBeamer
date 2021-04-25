@@ -60,7 +60,9 @@
 
 #define GF_PROGRESS(EXPR) { PF_Err PT_res = (EXPR); if(PT_res == PF_Interrupt_CANCEL) return ErrorCodesAE::UserDialogCancel;}
 #define MAIN_PROGRESS(PROGRESS, COUNT, TOTAL) { if( _ErrorCode != NoError) { } else if( PROGRESS ) { PF_Err PT_res = suites.AppSuite6()->PF_AppProgressDialogUpdate(( PROGRESS ), ( COUNT ), ( TOTAL )); if(PT_res == PF_Interrupt_CANCEL) { suites.AppSuite6()->PF_DisposeAppProgressDialog( PROGRESS ); ( PROGRESS ) = nullptr; _ErrorCode = ErrorCodesAE::UserDialogCancel; } } else { _ErrorCode = ErrorCodesAE::AE_ErrGeneric; } }
-#define MAIN_PROGRESS_THROW(EXPR) { if(pf_err_dialog_ == PF_Err_NONE) pf_err_dialog_ = (EXPR); if(pf_err_dialog_ == PF_Interrupt_CANCEL) { suites_.AppSuite6()->PF_DisposeAppProgressDialog(pf_dialog_main_); throw UserDialogCancel; } }
+#define MAIN_PROGRESS_THROW(PROGRESS, COUNT, TOTAL) { MAIN_PROGRESS(PROGRESS, COUNT, TOTAL) if( _ErrorCode != NoError) { throw PluginError(_ErrorCode); } }
+
+//#define MAIN_PROGRESS_THROW(EXPR) { if(pf_err_dialog_ == PF_Err_NONE) pf_err_dialog_ = (EXPR); if(pf_err_dialog_ == PF_Interrupt_CANCEL) { suites_.AppSuite6()->PF_DisposeAppProgressDialog(pf_dialog_main_); throw UserDialogCancel; } }
 #define MAIN_PROGRESS_NOTHROW(EXPR, THE_ERR) { if(pf_err_dialog_ == PF_Err_NONE) pf_err_dialog_ = (EXPR); if(pf_err_dialog_ == PF_Interrupt_CANCEL) { suites_.AppSuite6()->PF_DisposeAppProgressDialog(pf_dialog_main_); ( THE_ERR ) = UserDialogCancel; } }
 
 typedef struct {
