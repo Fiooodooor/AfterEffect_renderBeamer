@@ -24,7 +24,8 @@ public:
 	static ErrorCodesAE PreCheckProject(SPBasicSuite *pb, AEGP_PluginID pluginId, beamerParamsStruct &globals_and_paths);
 	ErrorCodesAE PrepareProject();
 	ErrorCodesAE DumpUiQueueItems(const fs::path& outputPath) const;
-
+	ErrorCodesAE SetupUiQueueItems();
+	
 	ErrorCodesAE setPathsStruct(beamerParamsStruct &globals_and_paths);
 	ErrorCodesAE setConteiner(AeSceneContainer &aesc);
 

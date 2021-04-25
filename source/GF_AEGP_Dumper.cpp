@@ -1,5 +1,10 @@
 #include "GF_AEGP_Dumper.h"
-
+#ifdef AE_OS_WIN
+#include "Socket/socket_win.h"
+#else
+#include "Socket/socket_macos.h"
+#endif
+#include "Socket/gfs_rq_node_wrapper.h"
 
 GF_Dumper::GF_Dumper(SPBasicSuite *basic_suite, AEGP_PluginID plugin_aegp_id)
 	: rootProjH(nullptr)
@@ -221,20 +226,19 @@ ErrorCodesAE GF_Dumper::newBatchDumpProject()
 {
 	ERROR_CATCH_START_MOD(CallerModuleName::ProjectDumperModule)
 	PF_AppProgressDialogP *dlg_ptr = get_progress_dialog(true, false, 1);
-	MAIN_PROGRESS(*dlg_ptr, 0, 5)
-	GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(dumper_progressbar_, 0, 5))
+	MAIN_PROGRESS_THROW(*dlg_ptr, 0, 5)
 
 	relinker.RelinkerInitialize(bps, TRUE);
 	bps->currentItem = 0;
 	bps->colectedItems = 5 + static_cast<A_long>(sc->fontsList.size());
 	
-	MAIN_PROGRESS(dumper_progressbar_, ++bps->currentItem, bps->colectedItems)
+	MAIN_PROGRESS_THROW(dumper_progressbar_, ++bps->currentItem, bps->colectedItems)
 	ERROR_RETURN(DumpUiQueueItems(bps->bp.rqMainOutput))
-	MAIN_PROGRESS(dumper_progressbar_, ++bps->currentItem, bps->colectedItems)
+	MAIN_PROGRESS_THROW(dumper_progressbar_, ++bps->currentItem, bps->colectedItems)
 	ERROR_RETURN(newCopyCollectFonts())
-	MAIN_PROGRESS(dumper_progressbar_, ++bps->currentItem, bps->colectedItems)
+	MAIN_PROGRESS_THROW(dumper_progressbar_, ++bps->currentItem, bps->colectedItems)
 	ERROR_RETURN(newCollectEffectsInfo())
-	MAIN_PROGRESS(dumper_progressbar_, ++bps->currentItem, bps->colectedItems)
+	MAIN_PROGRESS_THROW(dumper_progressbar_, ++bps->currentItem, bps->colectedItems)
 	
 	AeGfsFileCreator::getInstance()->GenerateAndSaveDocument();
 	relinker.RelinkProject(rootProjH);
@@ -244,9 +248,9 @@ ErrorCodesAE GF_Dumper::newBatchDumpProject()
 		delete sc->renderFootageSortedList.back();
 		sc->renderFootageSortedList.pop_back();
 	}
-	MAIN_PROGRESS(dumper_progressbar_, ++bps->currentItem, bps->colectedItems)
+	MAIN_PROGRESS_THROW(dumper_progressbar_, ++bps->currentItem, bps->colectedItems)
 	dlg_ptr = get_progress_dialog(true, false, 2);
-	MAIN_PROGRESS(*dlg_ptr, 0, 5)
+	MAIN_PROGRESS_THROW(*dlg_ptr, 0, 5)
 	
 	AeBatchRelinker batchRelinker(sP, relinker.GetC4dLibloader(), *rbProj(), dumper_progressbar_, bps->bp.relinkedSavePath, bps->bp.remoteFootagePath.parent_path());
 	ERROR_RETURN(batchRelinker.ParseAepxXmlDocument())
@@ -269,13 +273,12 @@ ErrorCodesAE GF_Dumper::newCopyCollectFonts()
 	
 	if (sc->fontsList.empty())
 		return NoError;
-	
+	A_long it = 0;
 	for (auto *node : sc->fontsList)
 	{
 		rbProj()->loggA(6, "Processing font name", node->getFont(), "Family", node->getFamily(), "File", node->getLocation());
-		A_long it = 0;
 		std::vector<std::string> fontsContainer;
-		GF_PROGRESS(suites.AppSuite6()->PF_AppProgressDialogUpdate(dumper_progressbar_, ++bps->currentItem, bps->colectedItems))
+		MAIN_PROGRESS_THROW(dumper_progressbar_, ++bps->currentItem, bps->colectedItems)
 		if (relinker.CopyFont(node, it++, fontsContainer) == NoError) 
 		{
 			for (unsigned long long i = 0; i < fontsContainer.size(); i++) 
@@ -308,13 +311,45 @@ ErrorCodesAE GF_Dumper::newCollectEffectsInfo() const
 	}
 	ERROR_CATCH_END_LOGGER_RETURN("EffectsCollecting")
 }
+ErrorCodesAE GF_Dumper::SetupUiQueueItems()
+{
+	ERROR_CATCH_START_MOD(CallerModuleName::QueueCollectModule)
+	platform_socket connector;
+	ERROR_LONG_ERR(connector.start_session(bps->socketPort_long, bps->bp.projectRootCorrect.string()))
+	if (_ErrorCode == NoError)
+	{
+		std::string send_buffer;
+		char read_buffer[49151];
+		ERROR_AE(gfs_rq_node_wrapper::serialize(*sc, send_buffer))
+		ERROR_AE(connector.write(send_buffer.c_str(), static_cast<unsigned long>(send_buffer.length())) > 0 ? NoError : ErrorResult)
 
+		MAIN_PROGRESS_THROW(dumper_progressbar_, 10, 20)
+		while (connector.is_connected() && _ErrorCode == NoError)
+		{
+			if (connector.read(read_buffer, 49150) > 0) {
+				std::string data_read(read_buffer);
+				gfs_rq_node_wrapper::deserialize(*sc, data_read);
+				rbProj()->logg("connector.read", "success", read_buffer);
+				break;
+			}
+			MAIN_PROGRESS_THROW(dumper_progressbar_, 11, 20)
+		}
+	}
+	if(_ErrorCode == NoError) this->smart_collect = sc->smart_collect;
+	ERROR_LONG_ERR(connector.close_socket())	
+	ERROR_CATCH_END_LOGGER_RETURN("SetupUiQueueItems")
+}
 ErrorCodesAE GF_Dumper::DumpUiQueueItems(const fs::path& outputPath) const
 {
 	ERROR_CATCH_START_MOD(CallerModuleName::QueueCollectModule)
 		while (!sc->gfsRqItemsList.empty())
-		{	
-			AeGfsFileCreator::getInstance()->PushRenderQueueItem(sc->gfsRqItemsList.back());
+		{
+			if (sc->gfsRqItemsList.back()->renderable != 0) {
+				AeGfsFileCreator::getInstance()->PushRenderQueueItem(sc->gfsRqItemsList.back());
+			}
+			else {
+				delete sc->gfsRqItemsList.back();
+			}
 			sc->gfsRqItemsList.pop_back();
 		}
 	AeGfsFileCreator::getInstance()->ignore_missings_assets = sc->ignore_missings_assets;
@@ -324,9 +359,7 @@ ErrorCodesAE GF_Dumper::DumpUiQueueItems(const fs::path& outputPath) const
 
 ErrorCodesAE GF_Dumper::setConteiner(AeSceneContainer &aesc)
 {
-	this->sc = &aesc;
-	if (!aesc.gfsRqItemsList.empty())
-		this->smart_collect = 0;
+	this->sc = &aesc;	
 	return NoError;
 }
 

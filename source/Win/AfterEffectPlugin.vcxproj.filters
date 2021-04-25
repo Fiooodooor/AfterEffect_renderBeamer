@@ -30,7 +30,6 @@
     <ClCompile Include="..\base64.cpp">
       <Filter>AE_Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="..\GF_AEGP_MainUI.cpp" />
     <ClCompile Include="..\BatchRelinker\AeBatchRelinker.cpp">
       <Filter>BatchRelinker</Filter>
     </ClCompile>
@@ -159,9 +158,6 @@
     </ClInclude>
     <ClInclude Include="..\base64.h">
       <Filter>AE_Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\GF_AEGP_MainUI.h">
-      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\BatchRelinker\AeBatchRelinker.h">
       <Filter>BatchRelinker</Filter>

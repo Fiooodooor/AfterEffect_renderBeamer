@@ -5,11 +5,7 @@
 #include "AEConfig.h"
 #include "entry.h"
 
-#define GF_PLUGIN_VERSION_MAJOR 18
-#define GF_PLUGIN_VERSION "renderBeamer for After Effects v.18"
-
-//#define GF_PLUGIN_VERSION_STRING(VER_STRING, VER_MAJOR, VER_MINOR) VER_STRING ## VER_MAJOR ## VER_MINOR
-// "renderBeamer for After Effects v.17",
+#define GF_PLUGIN_VERSION_MAJOR "19"
 
 #define GF_PLUGIN_LANGUAGE UserLanguage::UserEnglish
 #define GF_PLUGIN_BUILD_GARAGEFARM 1    // If not, the copernicus build will be compiled
@@ -119,13 +115,7 @@ namespace fs = boost::filesystem;
 typedef enum StrIDType {
     StrID_NONE=0,
     StrID_Name,
-    StrID_MenuEdit,
-	StrID_MenuEditSmart,
 	StrID_MenuBatch,
-	StrID_MenuUiCollect,
-	StrID_MenuUiLocation,
-    StrID_MenuExport,
-    StrID_MenuVersion,
     StrID_MenuCost,
     StrID_AboutMenu,
     StrID_Description,

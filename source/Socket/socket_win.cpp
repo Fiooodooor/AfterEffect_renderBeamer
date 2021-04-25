@@ -12,6 +12,7 @@ platform_socket::platform_socket() : SocketClientInterface()
 
 platform_socket::~platform_socket()
 {
+	close_socket();
 	WSACleanup();
 }
 
@@ -61,6 +62,8 @@ bool platform_socket::create_socket()
 long platform_socket::close_socket()
 {
 	print_to_debug("Closing socket.", "platform_socket::close_socket", false);
+	const std::string quit_msg = "QUIT\n";
+	write(quit_msg.c_str(), static_cast<unsigned long>(quit_msg.length()));
 	if(::closesocket(socket_descriptor_) == SOCKET_ERROR)
 		print_error_string(WSAGetLastError(), "::closesocket");
 
@@ -191,7 +194,6 @@ unsigned long platform_socket::write(const char *data, const unsigned long data_
 
 unsigned long platform_socket::read(char *data, const unsigned long max_length)
 {
-	print_to_debug("READ: Waiting for data from renderbeamer.", "platform_socket::read", false);
 	unsigned long bytes_read = 0;
 	if (!is_connected())
 		return 0;
@@ -206,7 +208,8 @@ unsigned long platform_socket::read(char *data, const unsigned long max_length)
 			print_error_string(err_nr, "::recv");
 		}
 	}
-	else {		
+	else {
+		print_to_debug("READ: Waiting for data from renderbeamer.", "platform_socket::read", false);
 		bytes_read = return_val;
 		data[bytes_read] = '\0';
 	}

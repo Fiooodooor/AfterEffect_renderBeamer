@@ -98,20 +98,6 @@ ErrorCodesAE GF_AEGP_Relinker::newRelinkFootage(AeFootageNode *node)
 
 	if (fs::exists(node->pathRelinked, err))
 	{
-		/*if (useSymlinksFlag) {
-			A_Time itemDuration;
-			A_long itemWidth = 0L, itemHeight = 0L;
-
-			ERROR_THROW_AE(suites.ItemSuite8()->AEGP_GetItemDuration(node->getItemH(), &itemDuration))
-			ERROR_THROW_AE(suites.ItemSuite8()->AEGP_GetItemDimensions(node->getItemH(), &itemWidth, &itemHeight))
-
-			wchar_t buffer[AEGP_MAX_PATH_SIZE] = { '\0' };
-			RB_SWPRINTF(buffer, AEGP_MAX_PATH_SIZE, L"%ls%ls", bps->bp.remoteFootagePath.wstring().c_str(), node->pathRelinked.filename().wstring().c_str());
-			rbUtilities::copyConvertStringLiteralIntoUTF16(buffer, node->relinkedPath, AEGP_MAX_PATH_SIZE);
-
-			ERROR_THROW_AE(suites.FootageSuite5()->AEGP_NewPlaceholderFootageWithPath(pluginId, node->relinkedPath, AEGP_Platform_WIN, AEIO_FileType_GENERIC, itemWidth, itemHeight, &itemDuration, &node->newFooH));
-		}
-		else {*/
 		rbUtilities::copyConvertStringLiteralIntoUTF16(node->pathRelinked.wstring().c_str(), node->relinkedPath, AEGP_MAX_PATH_SIZE);                
         ERROR_THROW_AE(suites.FootageSuite5()->AEGP_NewFootage(pluginId, node->relinkedPath, &node->layerKey, &node->seqImpOptions, AEGP_InterpretationStyle_NO_DIALOG_NO_GUESS, NULL, &node->newFooH))
 		ERROR_THROW_AE(suites.FootageSuite5()->AEGP_ReplaceItemMainFootage(node->newFooH, node->getItemH()))

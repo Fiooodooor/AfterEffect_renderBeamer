@@ -207,7 +207,6 @@ cl /D "MSWindows" /EP $(IntDir)%(Filename).rrc &gt;               "$(ProjectDir)
     <ClInclude Include="..\GF_AEGP_ErrorsHandling.h" />
     <ClInclude Include="..\GF_AEGP_LibraryLoader.h" />
     <ClInclude Include="..\GF_AEGP_Main.h" />
-    <ClInclude Include="..\GF_AEGP_MainUI.h" />
     <ClInclude Include="..\GF_AEGP_Relinker.h" />
     <ClInclude Include="..\GF_AEGP_Strings.h" />
     <ClInclude Include="$(AdobeAE_SDK)\Headers\A.h" />
@@ -255,7 +254,6 @@ cl /D "MSWindows" /EP $(IntDir)%(Filename).rrc &gt;               "$(ProjectDir)
     <ClCompile Include="..\GF_AEGP_ErrorsHandling.cpp" />
     <ClCompile Include="..\GF_AEGP_LibraryLoader.cpp" />
     <ClCompile Include="..\GF_AEGP_Main.cpp" />
-    <ClCompile Include="..\GF_AEGP_MainUI.cpp" />
     <ClCompile Include="..\GF_AEGP_Relinker.cpp" />
     <ClCompile Include="..\GF_AEGP_Strings.cpp" />
     <ClCompile Include="..\GF_AEGP_Dumper.cpp" />

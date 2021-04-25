@@ -53,6 +53,7 @@
 #define ERROR_LONG_ERR(EXPR) ERROR_AE(static_cast<ErrorCodesAE>(EXPR))
 #define ERROR_BOOL_ERR(EXPR) { if(_ErrorCode == NoError) _ErrorCode=(( EXPR ) == true ? NoError : ErrorResult); }
 #define ERROR_RETURN(EXPR) { _ErrorCode = EXPR; if(_ErrorCode != NoError) { return _ErrorCode; } }
+#define ERROR_RETURN_VOID(EXPR) { if(_ErrorCode == NoError) _ErrorCode = ( EXPR ); if(_ErrorCode != NoError) { return; } }
 #define ERROR_THROW(EXPR) { ErrorCodesAE tmp = (EXPR); if(tmp != NoError) throw PluginError(tmp); }
 #define ERROR_THROW_MOD(EXPR) { ErrorCodesAE tmp = (EXPR); if(tmp != NoError) throw PluginError(_ErrorCaller, tmp); }
 #define ERROR_THROW_AE(EXPR) { A_Err tmp = (EXPR); if(tmp != A_Err_NONE) throw PluginError(tmp); }
@@ -197,9 +198,9 @@ public:
 	}
 	~PluginError() = default;
     
-    virtual const char *what() const noexcept { return message_ptr; }
-	const ErrorCodesAE theCode() const { return errCode; }
-	const A_Err theAeCode() const { return aeCode; }
+    const char *what() const noexcept override { return message_ptr; }
+	ErrorCodesAE theCode() const { return errCode; }
+	A_Err theAeCode() const { return aeCode; }
 
 	static const char *GetCallerStringA(const CallerModuleName& caller, const UserLanguage &lang_number) noexcept;
 	

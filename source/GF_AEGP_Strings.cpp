@@ -1,20 +1,17 @@
 #include "GF_AEGP_Strings.h"
 
+#define GF_PLUGIN_FULL_VERSION_STRING "renderBeamer for After Effects v." GF_PLUGIN_VERSION_MAJOR
+#define GF_PLUGIN_MENU_VERSION_STRING "renderBeamer v." GF_PLUGIN_VERSION_MAJOR " Batch Relinker"
+
 TableString    g_strs[StrID_NUMTYPES] = {
 	{StrID_NONE,					""},
-	{StrID_Name,					GF_PLUGIN_VERSION },
-	{StrID_MenuEdit,				"renderBeamer Collect All"},
-	{StrID_MenuEditSmart,			"renderBeamer Collect Smart"},
-	{StrID_MenuBatch,				"renderBeamer Batch Relinker"},
-	{StrID_MenuUiCollect,			"renderBeamer UI"},
-	{StrID_MenuUiLocation,			"(Windows->Extensions->renderBeamer)"},
-	{StrID_MenuExport,				"renderBeamer"},
-	{StrID_MenuVersion,			"renderBeamer Version"},
+	{StrID_Name,					GF_PLUGIN_FULL_VERSION_STRING },
+	{StrID_MenuBatch,				GF_PLUGIN_MENU_VERSION_STRING },
 	{StrID_MenuCost,				"renderBeamer CostCalc"},
 	{StrID_AboutMenu,				"renderBeamer about"},
 	{StrID_Description,			"renderBeamer, Copyright 2020-2021 GarageFarm.NET. Render farm uploader plug-in."},
 	{StrID_LoadPluginError,		"There was an error in renderBeamer plugin load function. Contact support."},
-	{StrID_AboutDialogText,		GF_PLUGIN_VERSION	},
+	{StrID_AboutDialogText,		GF_PLUGIN_FULL_VERSION_STRING	},
 	{StrID_CollectSmartWarning,	"Warning!\n Use \"Collect Smart\" carefully. It does not include compositions or footages dependencies inside scripts or expressions."},
 	{StrID_OutputFormatPNGWarning,	"Warning!\n Your project will be rendered to PNG frames and converted to video after complete rendering."},
 	{StrID_ProjectSent,			"Your project has been succesfuly forwarded to renderBeamer."}

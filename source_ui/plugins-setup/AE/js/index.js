@@ -461,14 +461,20 @@ function windowResize(){
 function setObjectSubmit(){
 	var renderExtensions = new beamerExtensions();
     var reparsed = new Array();
+	var renderable_nr = 0;
     
     for(var x=0; x< parsed.length; x++){
+		if(parsed[x].renderable)
+			renderable_nr++;
 		if(renderExtensions.videoExt.includes(parsed[x].out_modules[0].file_ext_format.toLowerCase())) {
 			var index_number = renderExtensions.videoExt.indexOf(parsed[x].out_modules[0].file_ext_format.toLowerCase());
 			parsed[x].out_modules[0].file_ext_format = renderExtensions.videoExtended[index_number];		
 		}
 		reparsed.push(parsed[x]);
     }
+	if(renderable_nr == 0)
+		return null;
+	
     return reparsed;
 }
 

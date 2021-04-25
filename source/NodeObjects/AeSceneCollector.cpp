@@ -20,48 +20,44 @@ AeSceneCollector::AeSceneCollector(AEGP_PluginID PluginId, SPBasicSuite *Sp, AEG
 ErrorCodesAE AeSceneCollector::AeSceneCollect(A_Boolean useUiExporter)
 {
 	AEGP_SuiteHandler suites(sp);
-	ERROR_CATCH_START		
-		ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetApplicationBlob(AEGP_PersistentType_MACHINE_SPECIFIC, &pbh))
-		ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(pbh, "renderBeamer", "rq_items", 0, &pbh_items_number))
-		if (_ErrorCode == NoError && pbh_items_number > 0)
-		{
-			//useUiExporter = TRUE;
-			ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(pbh, "renderBeamer", "smart_collect", 0, &smart_collect))
-			ERROR_AEER(suites.PersistentDataSuite4()->AEGP_GetLong(pbh, "renderBeamer", "ignore_missings", 1, &continue_on_missing))
-
-			suites.PersistentDataSuite4()->AEGP_DeleteEntry(pbh, "renderBeamer", "smart_collect");
-			suites.PersistentDataSuite4()->AEGP_DeleteEntry(pbh, "renderBeamer", "ignore_missings");
-			suites.PersistentDataSuite4()->AEGP_DeleteEntry(pbh, "renderBeamer", "rq_items");
-		}
-		if (_ErrorCode == NoError)
-		{
-			if (smart_collect == 0)
-				ERROR_AE(AeNormalCollect(useUiExporter))
-			else
-				ERROR_AE(AeSmartCollect(useUiExporter))
-		}
-		
-	ERROR_CATCH_END_RETURN(suites)
+	ERROR_CATCH_START
+		if(ct->smart_collect == 0)
+			ERROR_AE(AeNormalCollect(useUiExporter))		
+		else
+			ERROR_AE(AeSmartCollect(useUiExporter))
+	ERROR_CATCH_END_NO_INFO_RETURN
 }
 
 ErrorCodesAE AeSceneCollector::AeNormalCollect(A_Boolean useUiExporter)
 {
-	AEGP_SuiteHandler suites(sp);
 	ERROR_CATCH_START
+		AEGP_SuiteHandler suites(sp);
 		ERROR_AE(collectSceneItems())
 		ERROR_AE(collectToRender())
-		ERROR_AE(collectSceneRenderQueueItems())		
-    ERROR_CATCH_END_RETURN(suites)
+	ERROR_CATCH_END_NO_INFO_RETURN
 }
 ErrorCodesAE AeSceneCollector::AeSmartCollect(A_Boolean useUiExporter)
 {
-	AEGP_SuiteHandler suites(sp);
 	ERROR_CATCH_START
+		AEGP_SuiteHandler suites(sp);
 		ERROR_AE(collectSceneItems())
-		ERROR_AE(collectSceneRenderQueueItems())		
+		for(auto *pt : ct->gfsRqItemsList)
+		{
+			if(pt->renderable != 0)
+			{
+				AEGP_RQItemRefH rq_item = nullptr;
+				AEGP_CompH comp_item = nullptr;
+				AEGP_ItemH item = nullptr;
+				ERROR_AEER(suites.RQItemSuite3()->AEGP_GetRQItemByIndex(pt->rq_id - 1, &rq_item));
+				ERROR_AEER(suites.RQItemSuite3()->AEGP_GetCompFromRQItem(rq_item, &comp_item))
+				ERROR_AEER(suites.CompSuite11()->AEGP_GetItemFromComp(comp_item, &item))
+				ERROR_AEER(collectSceneRqItem(new AeObjectNode(pluginId, sp, item, 0)))
+			}
+			_ErrorCode = NoError;
+		}		
 		ERROR_AE(smartCollectToRender())
 		ERROR_AE(generateDebugItemsInfo())
-	ERROR_CATCH_END_RETURN(suites)
+	ERROR_CATCH_END_NO_INFO_RETURN
 }
 
 ErrorCodesAE AeSceneCollector::collectSceneItems()
@@ -81,11 +77,11 @@ ErrorCodesAE AeSceneCollector::collectSceneItems()
 
 ErrorCodesAE AeSceneCollector::collectSceneRenderQueueItems()
 {
+	ERROR_CATCH_START
 	gfsRqItem *gfs_rq_node = nullptr;
 	gfsRqItemOutput *gfs_rq_node_out = nullptr;
 	A_char frameScript[400];
-	AEGP_SuiteHandler suites(sp);
-	ErrorCodesAE _ErrorCode = NoError;
+	AEGP_SuiteHandler suites(sp);	
 	AEGP_RenderItemStatusType renderState = AEGP_RenderItemStatus_NONE;
 	AEGP_RQItemRefH rqItemH = nullptr;
 	AEGP_OutputModuleRefH rq_ItemOutModuleRef = nullptr;
@@ -113,7 +109,7 @@ ErrorCodesAE AeSceneCollector::collectSceneRenderQueueItems()
 				gfs_rq_node->renderable = (renderState == AEGP_RenderItemStatus_QUEUED);
 				
 				ERROR_AEER(suites.RQItemSuite3()->AEGP_GetCompFromRQItem(rqItemH, &compH))
-				ERROR_AEER(suites.CompSuite11()->AEGP_GetItemFromComp(compH, &itemH))				
+				ERROR_AEER(suites.CompSuite11()->AEGP_GetItemFromComp(compH, &itemH))
 				ERROR_AEER(suites.ItemSuite9()->AEGP_GetItemID(itemH, &gfs_rq_node->composition_id))
 
 				suites.ANSICallbacksSuite1()->sprintf(frameScript, "var rqItem=app.project.renderQueue.item(%d);var rqFps=rqItem.getSettings(GetSettingsFormat.NUMBER)[rqItem.getSettings(GetSettingsFormat.STRING)[\"Frame Rate\"]];(Math.round(rqItem.timeSpanStart*rqFps)).toString()+\"to\"+(Math.round((rqItem.timeSpanStart+rqItem.timeSpanDuration)*rqFps)-1).toString()+\"s1\";", gfs_rq_node->rq_id);
@@ -153,11 +149,6 @@ ErrorCodesAE AeSceneCollector::collectSceneRenderQueueItems()
 					}
 				}
 				
-		#ifdef SMART_COLLECT_ON
-					if (smart_collect != 0) {
-						ERROR_AEER(collectSceneRqItem(new AeObjectNode(pluginId, sp, itemH, 0)))
-					}
-		#endif
 				if (_ErrorCode == NoError)
 				{
 					gfs_rq_node->output_mods.push_back(gfs_rq_node_out);
@@ -171,7 +162,7 @@ ErrorCodesAE AeSceneCollector::collectSceneRenderQueueItems()
 		}
 	}
 	ERROR_AE(rqAdded > 0 ? NoError : NoValidRqItems)
-    return _ErrorCode;
+	ERROR_CATCH_END_NO_INFO_RETURN
 }
 //AEGP_ObjectType_AV
 ErrorCodesAE AeSceneCollector::collectSceneItem(AeObjectNode *node)

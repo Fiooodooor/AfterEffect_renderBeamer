@@ -1,4 +1,10 @@
-﻿/Win/x64/Release/*
+﻿/Win/Font/*
+/Win/Font/
+/Win/CMap/*
+/Win/CMap/
+/Win/CIDFont/*
+/Win/CIDFont/
+/Win/x64/Release/*
 /Win/x64/Release/
 /Win/x64/Debug/*
 /Win/x64/Debug/

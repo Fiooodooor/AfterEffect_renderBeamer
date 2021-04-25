@@ -7,6 +7,9 @@
 ErrorCodesAE gfs_rq_node_wrapper::serialize(AeSceneContainer &scene_items_container, std::string &out_serialized_buffer)
 {
 	ERROR_CATCH_START
+	if (scene_items_container.gfsRqItemsList.empty())
+		return NullResult;
+	
 	auto counter = scene_items_container.gfsRqItemsList.size();
 	out_serialized_buffer.reserve(16000);
 	out_serialized_buffer = "SCRIPT=initRenderbeamerPanel( '{" + NUMBER_FIELD( ignore_missings, scene_items_container.ignore_missings_assets );
@@ -84,8 +87,8 @@ ErrorCodesAE gfs_rq_node_wrapper::deserialize(AeSceneContainer &scene_items_cont
 {
 	ERROR_CATCH_START
 	picojson::value main_value;
-
-	const auto conversion_err = picojson::parse(main_value, in_string_buffer);
+	
+	const auto conversion_err = picojson::parse(main_value, in_string_buffer.c_str()+5);
 	if (!conversion_err.empty()) {
 		return ErrorResult;
 	}
