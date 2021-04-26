@@ -48,7 +48,8 @@ ErrorCodesAE AeBatchRelinker::ParseAepxXmlDocument()
 					MAIN_PROGRESS(progressDialog, 0, GetUniqueFilesTotalSizeA())
 					if (_ErrorCode != NoError) return _ErrorCode;
 					rbProjLogger->logg("BatchAepxParser", "Path", AepxXmlElement->Attribute("fullpath"));
-					fileReference = CreateFileReference(AepxXmlElement);					
+					tinyxml2::XMLElement *tmpElement = AepxXmlElement;
+					fileReference = CreateFileReference(tmpElement);
 
 					if (fileReference != nullptr) 
 						fileItemNodes.push_back(fileReference);
@@ -114,7 +115,7 @@ FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElemen
 			FileBasePath = fs::read_symlink(FileBasePath);
 		}
 	}
-	catch(fs::filesystem_error &e) {		
+	catch(fs::filesystem_error &e) {
 		rbProjLogger->loggErr("BatchAepxParser", "FullPath", e.what());
 		
 		if (ascendcount_base > 0 && ascendcount_target > 0)

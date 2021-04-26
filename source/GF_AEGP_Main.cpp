@@ -49,31 +49,38 @@ void Renderbeamer::DumpProject(A_Boolean useUiExporter) const
 {
 	ERROR_CATCH_START
 		GF_Dumper project_dumper(p_basic_, pluginId);
-		PF_AppProgressDialogP *dlg_ptr = project_dumper.get_progress_dialog(true, true, 0);
-		MAIN_PROGRESS_THROW(*dlg_ptr, 1, 10)
-		
 		beamerParamsStruct paths_structure;
 		AeSceneContainer scene_items_container;
+		PF_AppProgressDialogP *dlg_ptr = nullptr;
 	
-		MAIN_PROGRESS_THROW(*dlg_ptr, 2, 10)
-		ERROR_RETURN_VOID(GF_Dumper::PreCheckProject(p_basic_, pluginId, paths_structure))
-		ERROR_THROW(project_dumper.setPathsStruct(paths_structure))
+		static std::mutex io_mutex;
+		{
+			std::lock_guard<std::mutex> lck(io_mutex);
+		}
+		{			
+			std::scoped_lock<std::mutex, std::mutex> lock(paths_structure.m, scene_items_container.m);
+			dlg_ptr = project_dumper.get_progress_dialog(true, true, 0);
+			MAIN_PROGRESS_THROW(*dlg_ptr, 2, 10)
 
-		MAIN_PROGRESS_THROW(*dlg_ptr, 3, 10)
-		ERROR_RETURN_VOID(project_dumper.PrepareProject())
-	
-		AeSceneCollector collector(pluginId, p_basic_, project_dumper.rootProjH, scene_items_container);
-		ERROR_THROW(collector.collectSceneRenderQueueItems())
-		MAIN_PROGRESS_THROW(*dlg_ptr, 9, 10)
-		ERROR_THROW(project_dumper.setConteiner(scene_items_container))
+			ERROR_RETURN_VOID(GF_Dumper::PreCheckProject(p_basic_, pluginId, paths_structure))
+			ERROR_THROW(project_dumper.setPathsStruct(paths_structure))
 
-		if (project_dumper.SetupUiQueueItems() == UserDialogCancel)
-			throw PluginError(UserDialogCancel);
-		ERROR_THROW(collector.AeSceneCollect(useUiExporter))
-		
-		MAIN_PROGRESS_THROW(*dlg_ptr, 12, 20)
-		ERROR_RETURN_VOID(project_dumper.newBatchDumpProject())
-		ERROR_AEER(suites.UtilitySuite6()->AEGP_ReportInfo(pluginId, GetStringPtr(StrID_ProjectSent)))		
+			MAIN_PROGRESS_THROW(*dlg_ptr, 3, 10)
+			ERROR_RETURN_VOID(project_dumper.PrepareProject())
+
+			AeSceneCollector collector(pluginId, p_basic_, project_dumper.rootProjH, scene_items_container);
+			ERROR_THROW(collector.collectSceneRenderQueueItems())
+			MAIN_PROGRESS_THROW(*dlg_ptr, 9, 10)
+			ERROR_THROW(project_dumper.setConteiner(scene_items_container))
+
+			if (project_dumper.SetupUiQueueItems() == UserDialogCancel)
+				throw PluginError(UserDialogCancel);
+			ERROR_THROW(collector.AeSceneCollect(useUiExporter))
+
+			MAIN_PROGRESS_THROW(*dlg_ptr, 12, 20)
+			ERROR_RETURN_VOID(project_dumper.newBatchDumpProject())
+			ERROR_AEER(suites.UtilitySuite6()->AEGP_ReportInfo(pluginId, GetStringPtr(StrID_ProjectSent)))
+		}
 	ERROR_CATCH_END(suites)
 }
 

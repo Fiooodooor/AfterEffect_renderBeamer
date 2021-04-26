@@ -22,6 +22,7 @@
 #include <cstdio>
 #include <cwchar>
 #include <fstream>
+#include <mutex>
 #include <string>
 
 #ifdef AE_OS_WIN
@@ -190,6 +191,7 @@ typedef struct {
 #else
  */
     typedef struct {
+		std::mutex			m;
         A_char              versionStr[32];       
         fs::path            beamerTmpFile;
         std::wstring        projectPath;

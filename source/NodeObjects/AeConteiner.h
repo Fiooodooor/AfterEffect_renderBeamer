@@ -25,6 +25,7 @@ public:
 	std::list<gfsRqItem*> gfsRqItemsList;
 	A_Boolean ignore_missings_assets = 1;
 	A_Boolean smart_collect = 0;
+	std::mutex m;
 
 private:
 	A_long nrOfCollectedItems;
