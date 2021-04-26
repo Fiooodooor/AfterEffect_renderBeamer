@@ -26,9 +26,10 @@ public:
 	virtual long close_socket() = 0;
 	virtual bool connect_socket(unsigned short port) = 0;
 	virtual bool is_connected() const = 0;
-	[[nodiscard]] virtual unsigned long bytes_available() const = 0;
+	[[nodiscard]] virtual unsigned long bytes_available() = 0;
 	virtual unsigned long write(const char *data, unsigned long data_length) = 0;
 	virtual unsigned long read(char *data, unsigned long max_length) = 0;
+	std::mutex m;
 	
 protected:
 	virtual void print_to_debug(const std::string &message, const std::string &caller_name, bool error) const = 0;

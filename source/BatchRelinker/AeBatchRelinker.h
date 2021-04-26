@@ -38,6 +38,7 @@ protected:
 
 	unsigned long long unique_files_total_size;
 	std::vector<AeFileNode*> unique_file_nodes;
+	std::mutex m;
 };
 
 #endif

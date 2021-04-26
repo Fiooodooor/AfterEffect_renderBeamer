@@ -11,8 +11,7 @@ rbProjectClass::rbProjectClass()
 	, logFileMode(0)
 	, timeString{ 0 }
 	, timeStringA{ 0 }
-{
-	
+{	
 }
 rbProjectClass::~rbProjectClass()
 {
@@ -47,48 +46,53 @@ bool rbProjectClass::appendLogger()
 
 void rbProjectClass::loggErr(const char* object, const char* type, const char* message, bool nLine)
 {
+	const std::lock_guard<std::mutex> lock(m);
 	if (appendLogger() == false)
 		return;
 	getTimeStringA();
-	logger << timeStringA << "::ERROR::" << object << "::" << type << "::" << message;
+	logger << timeStringA << ":" << std::this_thread::get_id() << "::ERROR::" << object << "::" << type << "::" << message;
 	if (nLine)
 		logger << std::endl;
 
 }
 void rbProjectClass::loggErr(const wchar_t* object, const wchar_t* type, const wchar_t* message, bool nLine)
 {
+	const std::lock_guard<std::mutex> lock(m);
 	if (appendLogger() == false)
 		return;
 	getTimeString();
-    logger << timeString << "::ERROR::" << rbUtilities::toUtf8(object).c_str() << "::" << rbUtilities::toUtf8(type).c_str() << "::" << rbUtilities::toUtf8(message).c_str();
+    logger << timeString << ":" << std::this_thread::get_id() << "::ERROR::" << rbUtilities::toUtf8(object).c_str() << "::" << rbUtilities::toUtf8(type).c_str() << "::" << rbUtilities::toUtf8(message).c_str();
 	if (nLine)
 		logger << std::endl;
 }
 void rbProjectClass::logg(const char* object, const char* type, const char* message, bool nLine)
 {
+	const std::lock_guard<std::mutex> lock(m);
 	if (appendLogger() == false)
 		return;
 	getTimeStringA();
-	logger << timeStringA << "::INFO::" << object << "::" << type << "::" << message;
+	logger << timeStringA << ":" << std::this_thread::get_id() << "::INFO::" << object << "::" << type << "::" << message;
 	if (nLine)
 		logger << std::endl;
 }
 void rbProjectClass::logg(const wchar_t* object, const wchar_t* type, const wchar_t* message, bool nLine)
 {
+	const std::lock_guard<std::mutex> lock(m);
 	if (appendLogger() == false)
 		return;
 	getTimeStringA();
 
-    logger << timeStringA << "::INFO::" << rbUtilities::toUtf8(object).c_str() << "::" << rbUtilities::toUtf8(type).c_str() << "::" << rbUtilities::toUtf8(message).c_str();
+    logger << timeStringA << ":" << std::this_thread::get_id() << "::INFO::" << rbUtilities::toUtf8(object).c_str() << "::" << rbUtilities::toUtf8(type).c_str() << "::" << rbUtilities::toUtf8(message).c_str();
     if (nLine)
         logger << std::endl;
 }
 void rbProjectClass::loggA(int objectN, ...)
 {
+	const std::lock_guard<std::mutex> lock(m);
     if (appendLogger() == false)
         return;
     getTimeStringA();
-    logger << timeStringA << "::INFO";
+    logger << timeStringA << ":" << std::this_thread::get_id() << "::INFO";
     va_list aMsg;
     va_start(aMsg, objectN);
     for(int it=0; it<objectN; it++) {
@@ -99,10 +103,11 @@ void rbProjectClass::loggA(int objectN, ...)
 }
 void rbProjectClass::loggW(int objectN, ...)
 {
+	const std::lock_guard<std::mutex> lock(m);
     if (appendLogger() == false)
         return;
     getTimeStringA();
-    logger << timeStringA << "::INFO";
+    logger << timeStringA << ":" << std::this_thread::get_id() << "::INFO";
     va_list wMsg;
     va_start(wMsg, objectN);
     for(int it=0; it<objectN; it++) {
@@ -115,6 +120,7 @@ void rbProjectClass::loggW(int objectN, ...)
 // std::fstream::app | std::fstream::out 
 bool rbProjectClass::createLogger(const wchar_t* file, int mode)
 {
+	const std::lock_guard<std::mutex> lock(m);
 	logFileMode = mode;
 #ifndef AE_OS_MAC
 	wcsncpy_s(logFilePathRenderBeamer, AEGP_MAX_PATH_SIZE, file, AEGP_MAX_PATH_SIZE - 1);//logFilePathRenderBeamer logFilePathProject

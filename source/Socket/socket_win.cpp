@@ -19,16 +19,14 @@ platform_socket::~platform_socket()
 long platform_socket::start_session(long port, const std::string &scene_name)
 {
 	ERROR_CATCH_START
-		ERROR_BOOL_ERR(init_interface())
-		ERROR_BOOL_ERR(create_socket())
-		ERROR_BOOL_ERR(connect_socket(static_cast<unsigned short>(port)))
-		if(_ErrorCode == NoError && is_connected())
+		const auto welcome_header = "SETUP=AE\tNAME=" + scene_name + "\n";
 		{
-			const auto welcome_header = "SETUP=AE\tNAME=" + scene_name + "\n";
-			ERROR_BOOL_ERR( write(welcome_header.c_str(), static_cast<unsigned long>(welcome_header.length())) > 0 )
+			const std::lock_guard<std::mutex> lock(m);
+			ERROR_BOOL_ERR(init_interface())
+			ERROR_BOOL_ERR(create_socket())
+			ERROR_BOOL_ERR(connect_socket(static_cast<unsigned short>(port)))
 		}
-		else
-			close_socket();
+		ERROR_BOOL_ERR(this->write(welcome_header.c_str(), static_cast<unsigned long>(welcome_header.length())) > 0)
 	ERROR_CATCH_END_NO_INFO_RETURN
 }
 
@@ -136,8 +134,9 @@ bool platform_socket::is_connected() const
 	return socket_state_ == Connected;
 }
 
-unsigned long platform_socket::bytes_available() const
+unsigned long platform_socket::bytes_available()
 {
+	const std::lock_guard<std::mutex> lock(m);
 	print_to_debug("CHECK: Bytes available from renderbeamer.", "platform_socket::bytes_available", false);
 	if (!is_connected())
 		return 0;
@@ -153,6 +152,7 @@ unsigned long platform_socket::bytes_available() const
 }
 unsigned long platform_socket::write(const char *data, const unsigned long data_length)
 {
+	const std::lock_guard<std::mutex> lock(m);
 	print_to_debug("WRITE: Sending data to renderbeamer.", "platform_socket::write", false);
 	unsigned long data_sent = 0;
 	const unsigned long max_size = 49152;
@@ -194,6 +194,7 @@ unsigned long platform_socket::write(const char *data, const unsigned long data_
 
 unsigned long platform_socket::read(char *data, const unsigned long max_length)
 {
+	const std::lock_guard<std::mutex> lock(m);
 	unsigned long bytes_read = 0;
 	if (!is_connected())
 		return 0;

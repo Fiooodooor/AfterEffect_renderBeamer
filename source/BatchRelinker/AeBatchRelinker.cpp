@@ -30,59 +30,61 @@ ErrorCodesAE AeBatchRelinker::ParseAepxXmlDocument()
 	rbProjLogger->logg("BatchAepxParser", "Start", "Begin of parsing function.");
 	try { std::setlocale(LC_ALL, "en_US.utf8"); }
 	catch (...) {}
-	
-	unique_files_total_size = 0;
-	try {
-		if (aepxXmlDocument.LoadFile(aepxXmlDocumentPath.string().c_str()) != tinyxml2::XML_NO_ERROR)
-			return ErrorResult;
+	{
+		const std::lock_guard<std::mutex> lock(m);
+		unique_files_total_size = 0;
+		try {
+			if (aepxXmlDocument.LoadFile(aepxXmlDocumentPath.string().c_str()) != tinyxml2::XML_NO_ERROR)
+				return ErrorResult;
 
-		tinyxml2::XMLElement *AepxXmlElement = aepxXmlDocument.FirstChildElement();
-		FileReferenceInterface *fileReference;
-		
-		while (AepxXmlElement)
-		{
-			if (AepxXmlElement->Value() && std::string(AepxXmlElement->Value()) == std::string("fileReference"))
+			tinyxml2::XMLElement *AepxXmlElement = aepxXmlDocument.FirstChildElement();
+			FileReferenceInterface *fileReference;
+
+			while (AepxXmlElement)
 			{
-				if (AepxXmlElement->Parent() && AepxXmlElement->Parent()->Parent() && std::string(AepxXmlElement->Parent()->Parent()->Value()) == std::string("Pin"))
+				if (AepxXmlElement->Value() && std::string(AepxXmlElement->Value()) == std::string("fileReference"))
 				{
-					//MAIN_PROGRESS(progressDialog, 0, GetUniqueFilesTotalSizeA())
-					if (_ErrorCode != NoError) return _ErrorCode;
-					rbProjLogger->logg("BatchAepxParser", "Path", AepxXmlElement->Attribute("fullpath"));
-					tinyxml2::XMLElement *tmpElement = AepxXmlElement;
-					fileReference = CreateFileReference(tmpElement);
+					if (AepxXmlElement->Parent() && AepxXmlElement->Parent()->Parent() && std::string(AepxXmlElement->Parent()->Parent()->Value()) == std::string("Pin"))
+					{
+						//MAIN_PROGRESS(progressDialog, 0, GetUniqueFilesTotalSizeA())
+						if (_ErrorCode != NoError) return _ErrorCode;
+						rbProjLogger->logg("BatchAepxParser", "Path", AepxXmlElement->Attribute("fullpath"));
+						tinyxml2::XMLElement *tmpElement = AepxXmlElement;
+						fileReference = CreateFileReference(tmpElement);
 
-					if (fileReference != nullptr) 
-						fileItemNodes.push_back(fileReference);
-					else
-						rbProjLogger->loggErr("BatchAepxParser", "FileReferenceNullptr", "File parsing error! Returned nullptr while creating reference.");
-					
-					//MAIN_PROGRESS(progressDialog, 0, GetUniqueFilesTotalSizeA())
-					if (_ErrorCode != NoError) return _ErrorCode;
+						if (fileReference != nullptr)
+							fileItemNodes.push_back(fileReference);
+						else
+							rbProjLogger->loggErr("BatchAepxParser", "FileReferenceNullptr", "File parsing error! Returned nullptr while creating reference.");
+
+						//MAIN_PROGRESS(progressDialog, 0, GetUniqueFilesTotalSizeA())
+						if (_ErrorCode != NoError) return _ErrorCode;
+					}
 				}
-			}
-			if (AepxXmlElement->FirstChildElement())
-				AepxXmlElement = AepxXmlElement->FirstChildElement();
-			else if (AepxXmlElement->NextSiblingElement())
-				AepxXmlElement = AepxXmlElement->NextSiblingElement();
-			else
-			{
-				while (AepxXmlElement->Parent()->ToElement() && !AepxXmlElement->Parent()->NextSiblingElement())
-					AepxXmlElement = AepxXmlElement->Parent()->ToElement();
-
-				if (AepxXmlElement->Parent()->ToElement() && AepxXmlElement->Parent()->NextSiblingElement())
-					AepxXmlElement = AepxXmlElement->Parent()->NextSiblingElement();
+				if (AepxXmlElement->FirstChildElement())
+					AepxXmlElement = AepxXmlElement->FirstChildElement();
+				else if (AepxXmlElement->NextSiblingElement())
+					AepxXmlElement = AepxXmlElement->NextSiblingElement();
 				else
-					break;
+				{
+					while (AepxXmlElement->Parent()->ToElement() && !AepxXmlElement->Parent()->NextSiblingElement())
+						AepxXmlElement = AepxXmlElement->Parent()->ToElement();
+
+					if (AepxXmlElement->Parent()->ToElement() && AepxXmlElement->Parent()->NextSiblingElement())
+						AepxXmlElement = AepxXmlElement->Parent()->NextSiblingElement();
+					else
+						break;
+				}
+				//MAIN_PROGRESS(progressDialog, 0, GetUniqueFilesTotalSizeA())
+				if (_ErrorCode != NoError) return _ErrorCode;
 			}
-			//MAIN_PROGRESS(progressDialog, 0, GetUniqueFilesTotalSizeA())
-			if (_ErrorCode != NoError) return _ErrorCode;
 		}
+		catch (...) {
+			rbProjLogger->loggErr("BatchAepxParser", "End", "End of parsing function - error occurred.");
+			return ErrorResult;
+		}
+		rbProjLogger->logg("BatchAepxParser", "End", "End of parsing function - no error return.");
 	}
-	catch (...) {
-		rbProjLogger->loggErr("BatchAepxParser", "End", "End of parsing function - error occurred.");
-		return ErrorResult;
-	}
-	rbProjLogger->logg("BatchAepxParser", "End", "End of parsing function - no error return.");
 	return NoError;
 }
 

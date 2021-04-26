@@ -22,7 +22,7 @@ public:
     long close_socket() override;
     bool connect_socket(unsigned short port) override;
     [[nodiscard]] bool is_connected() const override;
-    [[nodiscard]] unsigned long bytes_available() const override;
+    [[nodiscard]] unsigned long bytes_available() override;
     unsigned long write(const char *data, unsigned long data_length) override;
     unsigned long read(char *data, unsigned long max_length) override;
 

@@ -1,4 +1,3 @@
-#pragma once
 #ifndef GF_GLOBAL_CLASSES
 #define GF_GLOBAL_CLASSES
 
@@ -78,6 +77,7 @@ private:
     void getTimeStringA() { rbUtilities::getTimeString(timeStringA, 25); }
     wchar_t timeString[25];
 	char timeStringA[25];
+	std::mutex m;
 };
 
 #endif
