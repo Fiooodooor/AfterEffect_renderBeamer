@@ -9,7 +9,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>renderBeamer for After Effects v.18</string>
+	<string>renderBeamer for After Effects v.19</string>
 	<key>CFBundlePackageType</key>
 	<string>AEgx</string>
 	<key>CFBundleSignature</key>
@@ -19,6 +19,6 @@
 	<key>NSAppleScriptEnabled</key>
 	<string>No</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>© 2010 - 2021 GarageFarm.NET All rights reserved.</string>
+	<string>© 2020 - 2021 GarageFarm.NET All rights reserved.</string>
 </dict>
 </plist>

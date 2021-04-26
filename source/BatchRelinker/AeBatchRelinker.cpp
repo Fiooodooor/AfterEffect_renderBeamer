@@ -45,7 +45,7 @@ ErrorCodesAE AeBatchRelinker::ParseAepxXmlDocument()
 			{
 				if (AepxXmlElement->Parent() && AepxXmlElement->Parent()->Parent() && std::string(AepxXmlElement->Parent()->Parent()->Value()) == std::string("Pin"))
 				{
-					MAIN_PROGRESS(progressDialog, 0, GetUniqueFilesTotalSizeA())
+					//MAIN_PROGRESS(progressDialog, 0, GetUniqueFilesTotalSizeA())
 					if (_ErrorCode != NoError) return _ErrorCode;
 					rbProjLogger->logg("BatchAepxParser", "Path", AepxXmlElement->Attribute("fullpath"));
 					tinyxml2::XMLElement *tmpElement = AepxXmlElement;
@@ -56,7 +56,7 @@ ErrorCodesAE AeBatchRelinker::ParseAepxXmlDocument()
 					else
 						rbProjLogger->loggErr("BatchAepxParser", "FileReferenceNullptr", "File parsing error! Returned nullptr while creating reference.");
 					
-					MAIN_PROGRESS(progressDialog, 0, GetUniqueFilesTotalSizeA())
+					//MAIN_PROGRESS(progressDialog, 0, GetUniqueFilesTotalSizeA())
 					if (_ErrorCode != NoError) return _ErrorCode;
 				}
 			}
@@ -74,7 +74,7 @@ ErrorCodesAE AeBatchRelinker::ParseAepxXmlDocument()
 				else
 					break;
 			}
-			MAIN_PROGRESS(progressDialog, 0, GetUniqueFilesTotalSizeA())
+			//MAIN_PROGRESS(progressDialog, 0, GetUniqueFilesTotalSizeA())
 			if (_ErrorCode != NoError) return _ErrorCode;
 		}
 	}
@@ -151,34 +151,34 @@ FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElemen
 		}	
 	}
 
-	if (fileReferencePt->Attribute("target_is_folder", "0"))
-	{
-		if (FileBasePath.has_filename())
-		{
-			fileRef = new SingleFileReference(fileUid, fileReferencePt, FileBasePath);
-		}
-	}
-	else
-	{
-		tinyxml2::XMLElement *fileReferenceSequence = fileReferencePt->Parent()->NextSiblingElement();
-		FileBasePath += fs::path::preferred_separator;
+    if (fileReferencePt->Attribute("target_is_folder", "0"))
+    {
+        if (FileBasePath.has_filename())
+        {
+            fileRef = new SingleFileReference(fileUid, fileReferencePt, FileBasePath);
+        }
+    }
+    else
+    {
+        tinyxml2::XMLElement *fileReferenceSequence = fileReferencePt->Parent()->NextSiblingElement();
+        FileBasePath += fs::path::preferred_separator;
 
-		if (fileReferenceSequence)
-		{
-			if (std::string(fileReferenceSequence->Value()) == std::string("StVc"))
-			{
-				fileReferenceSequence = fileReferenceSequence->FirstChildElement();
-				if (fileReferenceSequence && std::string(fileReferenceSequence->Value()) == std::string("StVS"))
-				{
-					fileRef = new SequenceListFileReference(fileUid, fileReferencePt, fileReferenceSequence);
-				}
-			}
-			else if (std::string(fileReferenceSequence->Value()) == std::string("string") && fileReferenceSequence->NextSiblingElement() && std::string(fileReferenceSequence->NextSiblingElement()->Value()) == std::string("string"))
-			{
-				fileRef = new SequenceMaskFileReference(fileUid, fileReferencePt, fileReferenceSequence, fileReferenceSequence->NextSiblingElement());
-			}
-		}
-	}
+        if (fileReferenceSequence)
+        {
+            if (std::string(fileReferenceSequence->Value()) == std::string("StVc"))
+            {
+                fileReferenceSequence = fileReferenceSequence->FirstChildElement();
+                if (fileReferenceSequence && std::string(fileReferenceSequence->Value()) == std::string("StVS"))
+                {
+                    fileRef = new SequenceListFileReference(fileUid, fileReferencePt, fileReferenceSequence);
+                }
+            }
+            else if (std::string(fileReferenceSequence->Value()) == std::string("string") && fileReferenceSequence->NextSiblingElement() && std::string(fileReferenceSequence->NextSiblingElement()->Value()) == std::string("string"))
+            {
+                fileRef = new SequenceMaskFileReference(fileUid, fileReferencePt, fileReferenceSequence, fileReferenceSequence->NextSiblingElement());
+            }
+        }
+    }
 	if (fileRef)
 	{
 		fileRef->SetMainFilesPath(FileBasePath);

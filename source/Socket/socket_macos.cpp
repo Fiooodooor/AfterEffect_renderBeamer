@@ -1,24 +1,26 @@
 #include "socket_macos.h"
 
 #ifdef AE_OS_MAC
-#include <time.h>
+//#include <time.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <net/if.h>
+//#include <net/if.h>
 #include <arpa/inet.h>
-#include <ctype.h>
-#include <netinet/tcp.h>
-#include <iostream>
+//#include <ctype.h>
+//#include <netinet/in.h>
+//#include <iostream>
 #include "../GF_AEGP_Dumper.h"
 #include <sys/types.h>     
 #include <sys/socket.h>
-
+#include <sys/ioctl.h>
+#define INVALID_SOCKET 0
 platform_socket::platform_socket() : SocketClientInterface()
 {
 }
 platform_socket::~platform_socket()
 {
-	close_socket();
+    if (is_connected())
+        close_socket();
 }
 
 long platform_socket::start_session(long port, const std::string &scene_name)
@@ -46,31 +48,11 @@ bool platform_socket::init_interface()
 bool platform_socket::create_socket()
 {	
 	print_to_debug("Creating socket.", "platform_socket::create_socket", false);
-	auto mac_socket = ::socket(AF_INET, 0, IPPROTO_TCP);
+	auto mac_socket = ::socket(AF_INET, SOCK_STREAM, 0);
 
 	if (mac_socket <= 0)
 	{
 		print_error_string(errno, "::socket");
-		switch (errno)
-		{
-			case EPROTONOSUPPORT:
-			case EAFNOSUPPORT:
-			case EINVAL:
-				print_error_string(ProtocolUnsupportedErrorString);
-				break;
-			case ENFILE:
-			case EMFILE:
-			case ENOBUFS:
-			case ENOMEM:
-				print_error_string(ResourceErrorString);
-				break;
-			case EACCES:
-				print_error_string(AccessErrorString);
-				break;
-			default:
-				print_error_string(UnknownSocketErrorString);
-				break;
-		}
 		socket_state_ = Error;
 		return false;
 	}
@@ -80,13 +62,13 @@ bool platform_socket::create_socket()
 	return true;
 }
 
-void platform_socket::close_socket()
+long platform_socket::close_socket()
 {
 	print_to_debug("Closing socket.", "platform_socket::close_socket", false);
 	const std::string quit_msg = "QUIT\n";
 	write(quit_msg.c_str(), static_cast<unsigned long>(quit_msg.length()));
 	if(socket_descriptor_)
-		::closesocket(socket_descriptor_);
+		::close(static_cast<int>(socket_descriptor_));
 	
 	socket_descriptor_ = INVALID_SOCKET;
 	socket_state_ = Unconnected;
@@ -106,14 +88,14 @@ bool platform_socket::connect_socket(unsigned short port)
 	socket_address_in_v4.sin_family = AF_INET;
 	socket_address_in_v4.sin_addr.s_addr = inet_addr("127.0.0.1"); // <==> inet_addr("127.0.0.1");
 	socket_address_in_v4.sin_port = htons(port);
-	auto *socket_address_ptr = reinterpret_cast<SOCKADDR*>(&socket_address_in_v4);
+	auto *socket_address_ptr = reinterpret_cast<sockaddr*>(&socket_address_in_v4);
 	if (socket_address_ptr == nullptr)
 		return false;
 	
 	int connectResult;	
 	do {
-		connectResult = ::connect(socket_descriptor_, socket_address_ptr, sizeof(sockaddr_in))
-	} while (connectResult == -1 && errno == EINTR)
+        connectResult = ::connect(static_cast<int>(socket_descriptor_), socket_address_ptr, sizeof(sockaddr_in));
+    } while (connectResult == -1 && errno == EINTR);
 	
 	if (connectResult == -1)
 	{
@@ -138,8 +120,8 @@ bool platform_socket::connect_socket(unsigned short port)
 		}
 	}
 	
-	const auto set_result = setsockopt(socket_descriptor_, SOL_SOCKET, SO_RCVTIMEO, (struct timeval *)&tv, sizeof(struct timeval));
-	if (set_result == SOCKET_ERROR) {
+	const auto set_result = setsockopt(static_cast<int>(socket_descriptor_), SOL_SOCKET, SO_RCVTIMEO, (struct timeval *)&tv, sizeof(struct timeval));
+	if (set_result == -1) {
 		print_error_string(errno, "setsockopt");
 		return false;
 	}
@@ -159,8 +141,8 @@ unsigned long platform_socket::bytes_available() const
 	print_to_debug("CHECK: Bytes available from renderbeamer.", "platform_socket::bytes_available", false);
 	int nbytes = 0;
 	unsigned long available = 0;	
-	if (::ioctl(socket_descriptor_, FIONREAD, (char *) &nbytes) >= 0)
-		available = (qint64) nbytes;
+	if (::ioctl(static_cast<int>(socket_descriptor_), FIONREAD, (char *) &nbytes) >= 0)
+		available = nbytes;
 	else {
 		print_error_string(errno, "::ioctl");
 		return 0;
@@ -176,8 +158,8 @@ unsigned long platform_socket::write(const char *data, const unsigned long data_
 		return 0;
 	
 	do {
-        data_sent = write(socket_descriptor_, data, data_length);
-    } while (data_sent == -1 && errno == EINTR)
+        data_sent = ::write(static_cast<int>(socket_descriptor_), data, data_length);
+    } while (data_sent == -1 && errno == EINTR);
 
 	if (data_sent < 0)
 	{
@@ -206,8 +188,8 @@ unsigned long platform_socket::read(char *data, const unsigned long max_length)
 		return 0;
 	
 	do {
-		bytes_read = read(socket_descriptor_, data, max_length-1);
-	} while (bytes_read == -1 && errno == EINTR)
+		bytes_read = ::read(static_cast<int>(socket_descriptor_), data, max_length-1);
+    } while (bytes_read == -1 && errno == EINTR);
 
 	if (bytes_read < 0)
 	{
@@ -223,7 +205,7 @@ unsigned long platform_socket::read(char *data, const unsigned long max_length)
 	return static_cast<unsigned long>(bytes_read);
 }
 
-vvoid platform_socket::print_to_debug(const std::string &message, const std::string &caller_name, bool error) const
+void platform_socket::print_to_debug(const std::string &message, const std::string &caller_name, bool error) const
 {
 	if (error)
 		GF_Dumper::rbProj()->loggErr("Socket", caller_name.c_str(), message.c_str());
@@ -260,7 +242,6 @@ void platform_socket::print_error_string(const int error_id, const std::string &
 		case ECONNRESET: print_to_debug("Socket error: ECONNRESET", caller_name); break;
 		case EMSGSIZE: print_to_debug("Socket error: EMSGSIZE", caller_name); break;
 		case EIO: print_to_debug("Socket error: EIO", caller_name); break;
-		case EAGAIN: print_to_debug("Socket error: EAGAIN", caller_name); break;
 		default: print_to_debug("Socket error: UNKNOWN", caller_name); break;	  
 	}
 }
