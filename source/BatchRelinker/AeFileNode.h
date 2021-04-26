@@ -59,6 +59,8 @@ public:
 	void ListNodeMainInfo();
 	void ListNodeFilenames();
 	void ListNodeFullPathFiles();
+
+	std::mutex m;
 	
 protected:
 	bool node_is_sequence;

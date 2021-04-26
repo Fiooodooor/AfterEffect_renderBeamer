@@ -12,6 +12,7 @@ class AeSceneContainer
 {
 public:
 	AeSceneContainer();
+	~AeSceneContainer();
 	void countCollectedNr();
 	A_long getCollectedNr() const;
 	
@@ -28,6 +29,7 @@ public:
 	std::mutex m;
 
 private:
+	void clear();
 	A_long nrOfCollectedItems;
 };
 

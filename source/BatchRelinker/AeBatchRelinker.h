@@ -29,7 +29,7 @@ protected:
 	SPBasicSuite *picaBasic;	
 	PlatformLibLoader* libC4dPointer;
 	rbProjectClass *rbProjLogger;
-	PF_AppProgressDialogP progressDialog;
+	PF_AppProgressDialogP *progressDialog;
 	
 	tinyxml2::XMLDocument aepxXmlDocument;
 	fs::path aepxXmlDocumentPath;

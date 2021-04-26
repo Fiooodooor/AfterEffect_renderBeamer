@@ -22,7 +22,7 @@ public:
 
 	static A_Err getFontFromLayer(SPBasicSuite *pb, AEGP_PluginID pluginId, A_long itemNr, A_long layerNr, A_char* font, A_char* family, A_char* location);
 
-    static void pathStringFixIllegal(fs::path &path, bool dissalowed=true, bool cut_extension=false);
+    static ErrorCodesAE pathStringFixIllegal(fs::path &path, bool dissalowed=true, bool cut_extension=false);
     static void replaceDisallowedOnly(wchar_t *sourceStr);
     static void replaceDisallowedOnly(A_char *sourceStr);
     static void leaveAllowedOnly(A_char *sourceStr);

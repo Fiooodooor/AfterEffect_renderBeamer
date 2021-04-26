@@ -47,11 +47,19 @@ ErrorCodesAE GF_AEGP_Relinker::RelinkerInitialize(beamerParamsStruct *tmpBps, A_
         } 
 	ERROR_CATCH_END_RETURN(suites)
 }
-
+ErrorCodesAE GF_AEGP_Relinker::unloadFontLibrary()
+{
+	ERROR_CATCH_START
+	if(fonts_interface)
+	{
+		delete fonts_interface;
+		fonts_interface = nullptr;
+	}
+	ERROR_CATCH_END_NO_INFO_RETURN
+}
 A_Err GF_AEGP_Relinker::RelinkProject(AEGP_ProjectH projectH)
 {
     PT_XTE_START{
-     //   PT_ETX(suites.ProjSuite6()->AEGP_SaveProjectAs(projectH, projectSavePath))
         PT_ETX(suites.ProjSuite6()->AEGP_SaveProjectToPath(projectH, projectSavePath))
     } PT_XTE_CATCH_RETURN_ERR
 }

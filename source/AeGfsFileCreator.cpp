@@ -1,12 +1,6 @@
 
 #include "AeGfsFileCreator.h"
 
-AeGfsFileCreator* AeGfsFileCreator::getInstance()
-{	
-	static AeGfsFileCreator instance;
-	return &instance;
-}
-
 AeGfsFileCreator::AeGfsFileCreator()
 	: document_declaration(nullptr), doc_root(nullptr), doc_settings(nullptr), doc_aftereffects(nullptr), rq_item(nullptr), font_item(nullptr), effect_item(nullptr)
 {
@@ -161,8 +155,6 @@ ErrorCodesAE AeGfsFileCreator::PushEffectNode(gfsEffectNode* node_pt)
 {
 	for (auto *it : effectsList) {
 		if (it->installKey == node_pt->installKey) {
-			delete node_pt;
-			node_pt = nullptr;
 			return NullResult;
 		}
 	}

@@ -14,15 +14,15 @@ void Renderbeamer::ValuesConstructor()
 
 		PT_ETX(suites.CommandSuite1()->AEGP_GetUniqueCommand(&beamerEditCmd))
 		PT_ETX(suites.CommandSuite1()->AEGP_InsertMenuCommand(beamerEditCmd, GetStringPtr(StrID_MenuBatch), AEGP_Menu_COMPOSITION, AEGP_MENU_INSERT_AT_BOTTOM))
-		PT_ETX(suites.RegisterSuite5()->AEGP_RegisterCommandHook(pluginId, AEGP_HP_BeforeAE, beamerEditCmd, &Renderbeamer::SCommandHook, reinterpret_cast<AEGP_CommandRefcon>(this)))
-		PT_ETX(suites.RegisterSuite5()->AEGP_RegisterUpdateMenuHook(pluginId, &Renderbeamer::SUpdateMenuHook, NULL))
 
 		PT_ETX(suites.CommandSuite1()->AEGP_GetUniqueCommand(&beamerCostCalcCmd))
 		PT_ETX(suites.CommandSuite1()->AEGP_InsertMenuCommand(beamerCostCalcCmd, GetStringPtr(StrID_MenuCost), AEGP_Menu_COMPOSITION, AEGP_MENU_INSERT_AT_BOTTOM))
-		PT_ETX(suites.RegisterSuite5()->AEGP_RegisterCommandHook(pluginId, AEGP_HP_BeforeAE, beamerCostCalcCmd, &Renderbeamer::SCommandHook, reinterpret_cast<AEGP_CommandRefcon>(this)))
+	
+		PT_ETX(suites.RegisterSuite5()->AEGP_RegisterCommandHook(pluginId, AEGP_HP_BeforeAE, AEGP_Command_ALL, &Renderbeamer::SCommandHook, nullptr))
+		PT_ETX(suites.RegisterSuite5()->AEGP_RegisterUpdateMenuHook(pluginId, &Renderbeamer::SUpdateMenuHook, nullptr))
 	ERROR_CATCH_END_NO_INFO
 }
-void Renderbeamer::CommandHook(AEGP_Command command, AEGP_HookPriority hook_priority, A_Boolean already_handledB, A_Boolean *handledPB) const
+void Renderbeamer::CommandHook(AEGP_Command command, AEGP_HookPriority hook_priority, A_Boolean already_handledB, A_Boolean *handledPB)
 {
 	ERROR_CATCH_START//_MOD(MainCommandHookModule)
 		*handledPB = TRUE;		
@@ -45,23 +45,20 @@ void Renderbeamer::UpdateMenuHook(AEGP_WindowType active_window) const
 		ERROR_AEER(suites.CommandSuite1()->AEGP_EnableCommand(beamerCostCalcCmd))
 	ERROR_CATCH_END(suites)
 }
-void Renderbeamer::DumpProject(A_Boolean useUiExporter) const
+void Renderbeamer::DumpProject(A_Boolean useUiExporter)
 {
 	ERROR_CATCH_START
 		GF_Dumper project_dumper(p_basic_, pluginId);
 		beamerParamsStruct paths_structure;
 		AeSceneContainer scene_items_container;
-		PF_AppProgressDialogP *dlg_ptr = nullptr;
-	
-		static std::mutex io_mutex;
 		{
-			std::lock_guard<std::mutex> lck(io_mutex);
+			std::lock_guard<std::mutex> lock(main_mutex);
 		}
 		{			
 			std::scoped_lock<std::mutex, std::mutex> lock(paths_structure.m, scene_items_container.m);
-			dlg_ptr = project_dumper.get_progress_dialog(true, true, 0);
+			auto *dlg_ptr = project_dumper.get_progress_dialog(true, true, 0);
 			MAIN_PROGRESS_THROW(*dlg_ptr, 2, 10)
-
+				
 			ERROR_RETURN_VOID(GF_Dumper::PreCheckProject(p_basic_, pluginId, paths_structure))
 			ERROR_THROW(project_dumper.setPathsStruct(paths_structure))
 
@@ -102,7 +99,7 @@ A_Err Renderbeamer::SCommandHook(AEGP_GlobalRefcon plugin_refconP, AEGP_CommandR
 {
 	*handledPB = FALSE;
 	PT_XTE_START{
-		reinterpret_cast<Renderbeamer*>(refcon_pt)->CommandHook(command, hook_priority, already_handledB, handledPB);
+		reinterpret_cast<Renderbeamer*>(plugin_refconP)->CommandHook(command, hook_priority, already_handledB, handledPB);
 	} PT_XTE_CATCH_RETURN_ERR
 }
 A_Err Renderbeamer::SNewRenderbeamer(AEGP_GlobalRefcon *global_refconP, SPBasicSuite *pica_basicP, AEGP_PluginID pluginID)

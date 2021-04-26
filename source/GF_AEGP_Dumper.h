@@ -36,7 +36,6 @@ public:
 	AEGP_ProjectH rootProjH;
 
 	PF_AppProgressDialogP *get_progress_dialog(bool force_new=false, bool indeterminate=true, int dialog_text_nr=0);
-	
 
 private:
 	SPBasicSuite *sP;
@@ -44,10 +43,10 @@ private:
 	AEGP_PluginID pluginId;
 	PF_AppProgressDialogP dumper_progressbar_;
 	GF_AEGP_Relinker relinker;
+	AeGfsFileCreator *gfs_creator = nullptr;
 
 	A_UTF16Char progress_dialog_text[128];
 	A_char projectName[AEGP_MAX_PROJ_NAME_SIZE]{};
-
 
 	beamerParamsStruct *bps;
 	A_char tmp_message[512];

@@ -329,9 +329,9 @@ void rbUtilities::copyConvertStringLiteralIntoUTF16(const wchar_t* inputString, 
 #endif
 }
 
-void rbUtilities::pathStringFixIllegal(fs::path &path, bool dissalowed, bool cut_extension)
+ErrorCodesAE rbUtilities::pathStringFixIllegal(fs::path &path, bool dissalowed, bool cut_extension)
 {
-    unsigned long long length;
+	ERROR_CATCH_START
 	fs::path extension;
     fs::path tempPath = path.c_str();
 	if (tempPath.has_extension()) {
@@ -339,8 +339,8 @@ void rbUtilities::pathStringFixIllegal(fs::path &path, bool dissalowed, bool cut
 		tempPath.replace_extension();
 	}
     
-    length = TSTRLEN(tempPath.TSTRING().c_str()) + 1;
-    TCHAR *tmp_str = new TCHAR[length];
+	const auto length = TSTRLEN(tempPath.TSTRING().c_str()) + 1;
+    auto *tmp_str = new TCHAR[length];
 
     if (tmp_str)
     {
@@ -362,6 +362,7 @@ void rbUtilities::pathStringFixIllegal(fs::path &path, bool dissalowed, bool cut
 		}
         delete[] tmp_str;
     }
+	ERROR_CATCH_END_NO_INFO_RETURN
 }
 
 void rbUtilities::replaceDisallowedOnly(wchar_t *sourceStr)

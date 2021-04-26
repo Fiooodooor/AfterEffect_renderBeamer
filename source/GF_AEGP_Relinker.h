@@ -31,6 +31,7 @@ public:
 
 	void setPathsStruct(beamerParamsStruct *beamerParamsS);
 	PlatformLibLoader *GetC4dLibloader();
+	ErrorCodesAE unloadFontLibrary();
 	
 private:
 	SPBasicSuite *sP;

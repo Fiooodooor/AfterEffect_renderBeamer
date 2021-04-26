@@ -9,8 +9,7 @@ class AeGfsFileCreator
 {
 public:
 	~AeGfsFileCreator();
-
-	static AeGfsFileCreator* getInstance();
+	AeGfsFileCreator();
 	ErrorCodesAE InitGfsFileBuilder(beamerParamsStruct const *theBps);
 	ErrorCodesAE InitGfsFileCreator(fs::path const &gfsFilePath, fs::path const &fileName, fs::path const &outPath, fs::path const &fontsDir, A_char const *version);
 	ErrorCodesAE ClearGfsFileCreator();
@@ -29,7 +28,7 @@ public:
 	A_Boolean ignore_missings_assets = 1;
 	A_Boolean smart_collect = 0;
 protected:
-	AeGfsFileCreator();
+
 	ErrorCodesAE SaveDocument();
 	ErrorCodesAE GenerateRenderQueueItems();
 	ErrorCodesAE GenerateFontItems();

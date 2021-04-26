@@ -25,6 +25,7 @@ GF_Dumper::GF_Dumper(SPBasicSuite *basic_suite, AEGP_PluginID plugin_aegp_id)
 GF_Dumper::~GF_Dumper()
 {
     A_Err err = A_Err_NONE;
+	delete gfs_creator;
 
     if (dumper_progressbar_)
         suites.AppSuite6()->PF_DisposeAppProgressDialog(dumper_progressbar_);
@@ -212,7 +213,6 @@ ErrorCodesAE GF_Dumper::PrepareProject()
 		rbUtilities::getVersionString(tmp_message, 512);
 		rbProj()->logg("PrepareProject", "VersionString", tmp_message);
 		MAIN_PROGRESS(dumper_progressbar_, 9, 10)
-		ERROR_THROW_AE_MOD(AeGfsFileCreator::getInstance()->InitGfsFileBuilder(bps))
 			
 		rbProj()->logg("PrepareProject", "ProjectName", projectName);
 		rbProj()->logg(L"PrepareProject", L"SourcePath", bps->bp.originalProject.lexically_normal().wstring().c_str());
@@ -229,6 +229,8 @@ ErrorCodesAE GF_Dumper::newBatchDumpProject()
 	MAIN_PROGRESS_THROW(*dlg_ptr, 0, 5)
 
 	relinker.RelinkerInitialize(bps, TRUE);
+	gfs_creator = new AeGfsFileCreator();
+	gfs_creator->InitGfsFileBuilder(bps);
 	bps->currentItem = 0;
 	bps->colectedItems = 5 + static_cast<A_long>(sc->fontsList.size());
 	
@@ -239,8 +241,9 @@ ErrorCodesAE GF_Dumper::newBatchDumpProject()
 	MAIN_PROGRESS_THROW(dumper_progressbar_, ++bps->currentItem, bps->colectedItems)
 	ERROR_RETURN(newCollectEffectsInfo())
 	MAIN_PROGRESS_THROW(dumper_progressbar_, ++bps->currentItem, bps->colectedItems)
-	
-	AeGfsFileCreator::getInstance()->GenerateAndSaveDocument();
+
+	relinker.unloadFontLibrary();
+	gfs_creator->GenerateAndSaveDocument();
 	relinker.RelinkProject(rootProjH);
 
 	while(!sc->renderFootageSortedList.empty())
@@ -284,7 +287,7 @@ ErrorCodesAE GF_Dumper::newCopyCollectFonts()
 			for (unsigned long long i = 0; i < fontsContainer.size(); i++) 
 			{				
                 auto *gfsNode = new gfsFontNode({ i, std::string(node->getFont()), fontsContainer.at(i) });
-				if(AeGfsFileCreator::getInstance()->PushFontNode(gfsNode) == NoError)
+				if(gfs_creator->PushFontNode(gfsNode) == NoError)
 					rbProj()->loggA(6, "Collected font", std::to_string(i).c_str(), node->getFont(), node->getFamily(), node->getLocation(), FS_U8STRING(node->path.filename()).c_str());
 			}
 		}
@@ -304,7 +307,7 @@ ErrorCodesAE GF_Dumper::newCollectEffectsInfo() const
 	for (auto *node : sc->effectsList)
 	{
 		auto *gfsEffect = new gfsEffectNode({ node->getKey(), node->getEffectName(), node->getEffectMatchN(), node->getEffectCategory() });
-		if(AeGfsFileCreator::getInstance()->PushEffectNode(gfsEffect) == NoError)
+		if(gfs_creator->PushEffectNode(gfsEffect) == NoError)
         {
 			rbProj()->loggA(9, "EffectCollector", "Name:", node->getEffectName(), "MatchName:", node->getEffectMatchN(), "Category:", node->getEffectCategory(), "InstallKey:", std::to_string(static_cast<int>(node->getKey())).c_str());
         }
@@ -345,15 +348,15 @@ ErrorCodesAE GF_Dumper::DumpUiQueueItems(const fs::path& outputPath) const
 		while (!sc->gfsRqItemsList.empty())
 		{
 			if (sc->gfsRqItemsList.back()->renderable != 0) {
-				AeGfsFileCreator::getInstance()->PushRenderQueueItem(sc->gfsRqItemsList.back());
+				gfs_creator->PushRenderQueueItem(sc->gfsRqItemsList.back());
 			}
 			else {
 				delete sc->gfsRqItemsList.back();
 			}
 			sc->gfsRqItemsList.pop_back();
 		}
-	AeGfsFileCreator::getInstance()->ignore_missings_assets = sc->ignore_missings_assets;
-	AeGfsFileCreator::getInstance()->smart_collect = sc->smart_collect;
+	gfs_creator->ignore_missings_assets = sc->ignore_missings_assets;
+	gfs_creator->smart_collect = sc->smart_collect;
 	ERROR_CATCH_END_LOGGER_RETURN("DumpUiQueueItems")
 }
 

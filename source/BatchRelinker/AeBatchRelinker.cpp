@@ -4,7 +4,7 @@
 
 AeBatchRelinker::AeBatchRelinker(SPBasicSuite* pb, PlatformLibLoader* c4dLoader, rbProjectClass& rbLogger, PF_AppProgressDialogP& progressD, const fs::path& aepxPath, const fs::path& aepxRemote)
 		: picaBasic(pb), libC4dPointer(c4dLoader)
-		, rbProjLogger(&rbLogger), progressDialog(progressD)
+		, rbProjLogger(&rbLogger), progressDialog(&progressD)
 		, aepxXmlDocumentPath(aepxPath.lexically_normal())
 		, aepxXmlDocumentRemotePath(aepxRemote.lexically_normal())
 		, unique_files_total_size(0)
@@ -25,8 +25,8 @@ AeBatchRelinker::~AeBatchRelinker()
 }
 ErrorCodesAE AeBatchRelinker::ParseAepxXmlDocument()
 {
+	ERROR_CATCH_START
 	AEGP_SuiteHandler suites(picaBasic);
-	ErrorCodesAE _ErrorCode = NoError;
 	rbProjLogger->logg("BatchAepxParser", "Start", "Begin of parsing function.");
 	try { std::setlocale(LC_ALL, "en_US.utf8"); }
 	catch (...) {}
@@ -46,8 +46,8 @@ ErrorCodesAE AeBatchRelinker::ParseAepxXmlDocument()
 				{
 					if (AepxXmlElement->Parent() && AepxXmlElement->Parent()->Parent() && std::string(AepxXmlElement->Parent()->Parent()->Value()) == std::string("Pin"))
 					{
-						//MAIN_PROGRESS(progressDialog, 0, GetUniqueFilesTotalSizeA())
-						if (_ErrorCode != NoError) return _ErrorCode;
+						MAIN_PROGRESS_THROW(*progressDialog, 0, 5)
+						
 						rbProjLogger->logg("BatchAepxParser", "Path", AepxXmlElement->Attribute("fullpath"));
 						tinyxml2::XMLElement *tmpElement = AepxXmlElement;
 						fileReference = CreateFileReference(tmpElement);
@@ -57,8 +57,7 @@ ErrorCodesAE AeBatchRelinker::ParseAepxXmlDocument()
 						else
 							rbProjLogger->loggErr("BatchAepxParser", "FileReferenceNullptr", "File parsing error! Returned nullptr while creating reference.");
 
-						//MAIN_PROGRESS(progressDialog, 0, GetUniqueFilesTotalSizeA())
-						if (_ErrorCode != NoError) return _ErrorCode;
+						MAIN_PROGRESS_THROW(*progressDialog, 0, 5)						
 					}
 				}
 				if (AepxXmlElement->FirstChildElement())
@@ -75,8 +74,7 @@ ErrorCodesAE AeBatchRelinker::ParseAepxXmlDocument()
 					else
 						break;
 				}
-				//MAIN_PROGRESS(progressDialog, 0, GetUniqueFilesTotalSizeA())
-				if (_ErrorCode != NoError) return _ErrorCode;
+				MAIN_PROGRESS_THROW(*progressDialog, 0, GetUniqueFilesTotalSizeA())
 			}
 		}
 		catch (...) {
@@ -85,7 +83,7 @@ ErrorCodesAE AeBatchRelinker::ParseAepxXmlDocument()
 		}
 		rbProjLogger->logg("BatchAepxParser", "End", "End of parsing function - no error return.");
 	}
-	return NoError;
+	ERROR_CATCH_END_NO_INFO_RETURN
 }
 
 FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElement *fileReferencePt)
@@ -235,7 +233,7 @@ ErrorCodesAE AeBatchRelinker::CopyUniqueFiles(const fs::path &localCopyPath, con
 		for(i=0; i < node->GetFilenamesNumber(); ++i)
 		{
 			auto pt = fs::path(node->GetFilenameCouple(i)->sourceFileName);
-			MAIN_PROGRESS(progressDialog, static_cast<A_long>(relinkedFilesSize), static_cast<A_long>(totalFilesSize))
+			MAIN_PROGRESS(*progressDialog, static_cast<A_long>(relinkedFilesSize), static_cast<A_long>(totalFilesSize))
 			if (_ErrorCode != NoError) return _ErrorCode;
 			
 			if(FileExtensionCheck(pt, ".c4d"))

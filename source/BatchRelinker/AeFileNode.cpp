@@ -49,6 +49,7 @@ bool AeFileNode::operator ==(const AeFileNode &right) const
 
 void AeFileNode::PushSourceFilename(FilenameCouple* filename_couple)
 {
+	std::lock_guard<std::mutex> lock(m);
 	if (filename_couple != nullptr)
 	{
 		fs::path full_path(GetFileSourcePath() / filename_couple->sourceFileName);
