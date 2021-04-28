@@ -7,7 +7,7 @@
 
 #define GF_PLUGIN_VERSION_MAJOR "19"
 
-#define GF_PLUGIN_LANGUAGE UserLanguage::UserEnglish
+#define GF_PLUGIN_LANGUAGE UserEnglish
 #define GF_PLUGIN_BUILD_GARAGEFARM 1    // If not, the copernicus build will be compiled
 #define ALLOWED_CHARACTERSA  "_-0123456789ABCDEFGHIJKLMNOPQRSTUWVXYZabcdefghijklmnopqrstuwvxyz/\\[]:!"
 #define ALLOWED_CHARACTERSW L"_-0123456789ABCDEFGHIJKLMNOPQRSTUWVXYZabcdefghijklmnopqrstuwvxyz/\\[]:!"
@@ -112,7 +112,7 @@ namespace fs = boost::filesystem;
 #include "GF_AEGP_ErrorsHandling.h"
 #include "AE_GeneralPlugPanels.h"
 #include "SuiteHelper.h"
-
+namespace RenderBeamer {
 typedef enum StrIDType {
     StrID_NONE=0,
     StrID_Name,
@@ -213,4 +213,6 @@ typedef struct {
         beamerPaths         bp;
     } beamerParamsStruct;
 //#endif
+
+} // namespace RenderBeamer
 #endif

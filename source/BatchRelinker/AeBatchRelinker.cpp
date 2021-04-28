@@ -2,13 +2,16 @@
 #include <clocale>
 #include <algorithm>
 
-AeBatchRelinker::AeBatchRelinker(SPBasicSuite* pb, PlatformLibLoader* c4dLoader, rbProjectClass& rbLogger, PF_AppProgressDialogP& progressD, const fs::path& aepxPath, const fs::path& aepxRemote)
-		: picaBasic(pb), libC4dPointer(c4dLoader)
-		, rbProjLogger(&rbLogger), progressDialog(&progressD)
+namespace RenderBeamer {
+AeBatchRelinker::AeBatchRelinker(SPBasicSuite* pb, PlatformLibLoader* c4dLoader, rbProjectClass* rbLogger, PF_AppProgressDialogP* progressD, const fs::path& aepxPath)
+		: picaBasic(pb)
+        , libC4dPointer(c4dLoader)
+		, rbProjLogger(rbLogger)
+        , progressDialog(progressD)
 		, aepxXmlDocumentPath(aepxPath.lexically_normal())
-		, aepxXmlDocumentRemotePath(aepxRemote.lexically_normal())
 		, unique_files_total_size(0)
 {
+    
 }
 AeBatchRelinker::~AeBatchRelinker()
 {
@@ -27,67 +30,57 @@ ErrorCodesAE AeBatchRelinker::ParseAepxXmlDocument()
 {
 	ERROR_CATCH_START
 	AEGP_SuiteHandler suites(picaBasic);
-	rbProjLogger->logg("BatchAepxParser", "Start", "Begin of parsing function.");
-	try { std::setlocale(LC_ALL, "en_US.utf8"); }
-	catch (...) {}
+	rbProjLogger->logg("AeBatchRelinker", "ParseAepxXmlDocument", "Starting scene batch parsing function.");
+	
+	unique_files_total_size = 0;
+	if (aepxXmlDocument.LoadFile(aepxXmlDocumentPath.string().c_str()) != tinyxml2::XML_NO_ERROR)
+		return ErrorResult;
+    
+	tinyxml2::XMLElement *AepxXmlElement = aepxXmlDocument.FirstChildElement();
+	FileReferenceInterface *fileReference;
+	while (AepxXmlElement)
 	{
-		const std::lock_guard<std::mutex> lock(m);
-		unique_files_total_size = 0;
-		try {
-			if (aepxXmlDocument.LoadFile(aepxXmlDocumentPath.string().c_str()) != tinyxml2::XML_NO_ERROR)
-				return ErrorResult;
-
-			tinyxml2::XMLElement *AepxXmlElement = aepxXmlDocument.FirstChildElement();
-			FileReferenceInterface *fileReference;
-
-			while (AepxXmlElement)
+        MAIN_PROGRESS_THROW(*progressDialog, 0, 10)
+		if (AepxXmlElement->Value() && std::string(AepxXmlElement->Value()) == std::string("fileReference"))
+		{
+			if (AepxXmlElement->Parent() && AepxXmlElement->Parent()->Parent() && std::string(AepxXmlElement->Parent()->Parent()->Value()) == std::string("Pin"))
 			{
-				if (AepxXmlElement->Value() && std::string(AepxXmlElement->Value()) == std::string("fileReference"))
-				{
-					if (AepxXmlElement->Parent() && AepxXmlElement->Parent()->Parent() && std::string(AepxXmlElement->Parent()->Parent()->Value()) == std::string("Pin"))
-					{
-						MAIN_PROGRESS_THROW(*progressDialog, 0, 5)
-						
-						rbProjLogger->logg("BatchAepxParser", "Path", AepxXmlElement->Attribute("fullpath"));
-						tinyxml2::XMLElement *tmpElement = AepxXmlElement;
-						fileReference = CreateFileReference(tmpElement);
-
-						if (fileReference != nullptr)
-							fileItemNodes.push_back(fileReference);
-						else
-							rbProjLogger->loggErr("BatchAepxParser", "FileReferenceNullptr", "File parsing error! Returned nullptr while creating reference.");
-
-						MAIN_PROGRESS_THROW(*progressDialog, 0, 5)						
-					}
-				}
-				if (AepxXmlElement->FirstChildElement())
-					AepxXmlElement = AepxXmlElement->FirstChildElement();
-				else if (AepxXmlElement->NextSiblingElement())
-					AepxXmlElement = AepxXmlElement->NextSiblingElement();
+				MAIN_PROGRESS_THROW(*progressDialog, 0, 10)
+	
+				rbProjLogger->logg("BatchAepxParser", "Path", AepxXmlElement->Attribute("fullpath"));
+				fileReference = CreateFileReference(AepxXmlElement);
+    
+				if (fileReference != nullptr)
+					fileItemNodes.push_back(fileReference);
 				else
-				{
-					while (AepxXmlElement->Parent()->ToElement() && !AepxXmlElement->Parent()->NextSiblingElement())
-						AepxXmlElement = AepxXmlElement->Parent()->ToElement();
-
-					if (AepxXmlElement->Parent()->ToElement() && AepxXmlElement->Parent()->NextSiblingElement())
-						AepxXmlElement = AepxXmlElement->Parent()->NextSiblingElement();
-					else
-						break;
-				}
-				MAIN_PROGRESS_THROW(*progressDialog, 0, GetUniqueFilesTotalSizeA())
+					rbProjLogger->loggErr("BatchAepxParser", "FileReferenceNullptr", "File parsing error! Returned nullptr while creating reference.");
+				MAIN_PROGRESS_THROW(*progressDialog, 0, 10)
 			}
 		}
-		catch (...) {
-			rbProjLogger->loggErr("BatchAepxParser", "End", "End of parsing function - error occurred.");
-			return ErrorResult;
+		if (AepxXmlElement->FirstChildElement())
+			AepxXmlElement = AepxXmlElement->FirstChildElement();
+		else if (AepxXmlElement->NextSiblingElement())
+			AepxXmlElement = AepxXmlElement->NextSiblingElement();
+		else
+		{
+            while (AepxXmlElement->Parent()->ToElement() && !AepxXmlElement->Parent()->NextSiblingElement())
+				AepxXmlElement = AepxXmlElement->Parent()->ToElement();
+    
+			if (AepxXmlElement->Parent()->ToElement() && AepxXmlElement->Parent()->NextSiblingElement())
+				AepxXmlElement = AepxXmlElement->Parent()->NextSiblingElement();
+			else
+				break;
 		}
-		rbProjLogger->logg("BatchAepxParser", "End", "End of parsing function - no error return.");
-	}
-	ERROR_CATCH_END_NO_INFO_RETURN
+    }
+    rbProjLogger->logg("BatchAepxParser", "End", "End of parsing function - no error return.");
+    
+	ERROR_CATCH_END_LOGGER2("AeBatchRelinker", "ParseAepxXmlDocument", rbProjLogger)
+    return _ErrorCode;
 }
 
 FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElement *fileReferencePt)
 {
+    const std::lock_guard<std::mutex> lock(m);
 	FileReferenceInterface *fileRef = nullptr;
 	AeFileNodeID node_id = 0;
 	std::string fileUid = "00000000";
@@ -151,29 +144,24 @@ FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElemen
 		}	
 	}
 
-    if (fileReferencePt->Attribute("target_is_folder", "0"))
-    {
-        if (FileBasePath.has_filename())
-        {
-            fileRef = new SingleFileReference(fileUid, fileReferencePt, FileBasePath);
-        }
+    if (fileReferencePt->Attribute("target_is_folder", "0")) {
+        fileRef = new SingleFileReference(fileUid, fileReferencePt, FileBasePath);
     }
-    else
-    {
+    else {
         tinyxml2::XMLElement *fileReferenceSequence = fileReferencePt->Parent()->NextSiblingElement();
         FileBasePath += fs::path::preferred_separator;
 
         if (fileReferenceSequence)
         {
-            if (std::string(fileReferenceSequence->Value()) == std::string("StVc"))
+            if (std::string(fileReferenceSequence->Value()) == "StVc")
             {
                 fileReferenceSequence = fileReferenceSequence->FirstChildElement();
-                if (fileReferenceSequence && std::string(fileReferenceSequence->Value()) == std::string("StVS"))
+                if (fileReferenceSequence && std::string(fileReferenceSequence->Value()) == "StVS")
                 {
                     fileRef = new SequenceListFileReference(fileUid, fileReferencePt, fileReferenceSequence);
                 }
             }
-            else if (std::string(fileReferenceSequence->Value()) == std::string("string") && fileReferenceSequence->NextSiblingElement() && std::string(fileReferenceSequence->NextSiblingElement()->Value()) == std::string("string"))
+            else if (std::string(fileReferenceSequence->Value()) == "string" && fileReferenceSequence->NextSiblingElement() && std::string(fileReferenceSequence->NextSiblingElement()->Value()) == "string")
             {
                 fileRef = new SequenceMaskFileReference(fileUid, fileReferencePt, fileReferenceSequence, fileReferenceSequence->NextSiblingElement());
             }
@@ -187,7 +175,9 @@ FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElemen
 			node_id = PushUniqueFilePath(node_pt);
 			fileRef->SetNodeId(node_id);
 		}
-		else throw PluginError(NullPointerResult);
+        else {
+            throw PluginError(GF_PLUGIN_LANGUAGE, NullPointerResult);
+        }
 	}
 	ERROR_CATCH_END_LOGGER2("BatchRelinker", "CreateFileReference", rbProjLogger)
 	if (fileRef && _ErrorCode != NoError)
@@ -233,8 +223,7 @@ ErrorCodesAE AeBatchRelinker::CopyUniqueFiles(const fs::path &localCopyPath, con
 		for(i=0; i < node->GetFilenamesNumber(); ++i)
 		{
 			auto pt = fs::path(node->GetFilenameCouple(i)->sourceFileName);
-			MAIN_PROGRESS(*progressDialog, static_cast<A_long>(relinkedFilesSize), static_cast<A_long>(totalFilesSize))
-			if (_ErrorCode != NoError) return _ErrorCode;
+			MAIN_PROGRESS_RETURN(*progressDialog, static_cast<A_long>(relinkedFilesSize), static_cast<A_long>(totalFilesSize))
 			
 			if(FileExtensionCheck(pt, ".c4d"))
 			{
@@ -337,3 +326,4 @@ long AeBatchRelinker::GetLongFilesUID(std::string uid) const
 	}
 	return strtol(tmp_uid.c_str(), nullptr, 16);
 }
+} // namespace RenderBeamer

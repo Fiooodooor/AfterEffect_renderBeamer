@@ -1,6 +1,7 @@
 
 #include "GF_AEGP_Relinker.h"
 #include "GF_AEGP_Dumper.h"
+namespace RenderBeamer {
 
 GF_AEGP_Relinker::GF_AEGP_Relinker(SPBasicSuite *basicSuite, AEGP_PluginID pI)
     : sP(basicSuite)
@@ -72,7 +73,7 @@ ErrorCodesAE GF_AEGP_Relinker::newRelinkFootage(AeFootageNode *node)
 	AEGP_FootageInterp newInterpret;
 
 	if (!node->isFooFile())
-		return ErrorCodesAE::NoError;
+		return NoError;
 	
 	if (node->copyOf == -1)
 	{
@@ -118,7 +119,7 @@ ErrorCodesAE GF_AEGP_Relinker::newRelinkFootage(AeFootageNode *node)
 		ERROR_THROW_AE(suites.FootageSuite5()->AEGP_SetFootageInterpretation(node->getItemH(), FALSE, &newInterpret))
 	}
 	else
-		return ErrorCodesAE::ErrorResult;
+		return ErrorResult;
 	ERROR_CATCH_END_NO_INFO_RETURN
 }
 
@@ -365,3 +366,5 @@ PlatformLibLoader *GF_AEGP_Relinker::GetC4dLibloader()
 {
 	return c4d_interface;
 }
+
+} // namespace RenderBeamer

@@ -4,6 +4,7 @@
 
 #include <list>
 #include "../GF_GlobalTypes.h"
+namespace RenderBeamer {
 
 class ObjectCount 
 {
@@ -67,5 +68,5 @@ protected:
 
 typedef std::list<AeObjectNode*> aeObjNodes;
 typedef aeObjNodes::const_iterator aeObjNodesIt;
-
+} // namespace RenderBeamer
 #endif 

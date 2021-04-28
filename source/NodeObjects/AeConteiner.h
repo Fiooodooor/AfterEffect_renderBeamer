@@ -1,4 +1,3 @@
-#pragma once
 #ifndef AESCENECONTEINER_H
 #define AESCENECONTEINER_H
 
@@ -7,7 +6,7 @@
 #include "AeCompNode.h"
 #include "AeFooNode.h"
 #include "../AeGfsFileCreatorStructures.h"
-
+namespace RenderBeamer {
 class AeSceneContainer
 {
 public:
@@ -32,5 +31,5 @@ private:
 	void clear();
 	A_long nrOfCollectedItems;
 };
-
+} // namespace RenderBeamer
 #endif

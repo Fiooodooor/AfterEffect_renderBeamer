@@ -1,9 +1,12 @@
-#pragma once
+#ifndef AEFILENODE_HPP
+#define AEFILENODE_HPP
 
 #include <iostream>
 #include <vector>
 #include "../GF_GlobalTypes.h"
 #include "tinyXml2.h"
+
+namespace RenderBeamer {
 
 class AeFileNode
 {
@@ -77,3 +80,5 @@ protected:
 	std::string GetFileRelinkPrefix() const;
 
 };
+} // namespace RenderBeamer
+#endif

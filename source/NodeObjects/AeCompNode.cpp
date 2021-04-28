@@ -1,5 +1,5 @@
 #include "AeCompNode.h"
-
+namespace RenderBeamer {
 AeFontNode::AeFontNode(A_long theItemNr, A_long theLayerNr)
 {
 	font[0] = '\0';
@@ -226,3 +226,4 @@ long AeCompNode::pushUniqueFont(AeFontNode* font_node)
 	font_node = nullptr;
 	return 2;
 }
+} // namespace RenderBeamer

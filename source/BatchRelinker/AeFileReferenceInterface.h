@@ -1,4 +1,5 @@
-#pragma once
+#ifndef AEFILEREFERENCEINTERFACE_HPP
+#define AEFILEREFERENCEINTERFACE_HPP
 
 //#include "tinyXml2.h"
 #include "AeFileNode.h"
@@ -9,6 +10,7 @@
     #define PATHPLATFORM "MacPOSIX"
 #endif
 
+namespace RenderBeamer {
 typedef unsigned long long AeFileNodeID;
 
 class FileReferenceInterface
@@ -93,3 +95,5 @@ protected:
 	tinyxml2::XMLElement *files_mask_base;
 	tinyxml2::XMLElement *files_mask_extension;
 };
+}
+#endif

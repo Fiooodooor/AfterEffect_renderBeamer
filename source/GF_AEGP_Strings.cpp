@@ -3,6 +3,8 @@
 #define GF_PLUGIN_FULL_VERSION_STRING "renderBeamer for After Effects v." GF_PLUGIN_VERSION_MAJOR
 #define GF_PLUGIN_MENU_VERSION_STRING "renderBeamer v." GF_PLUGIN_VERSION_MAJOR " Batch Relinker"
 
+namespace RenderBeamer {
+
 TableString    g_strs[StrID_NUMTYPES] = {
 	{StrID_NONE,					""},
 	{StrID_Name,					GF_PLUGIN_FULL_VERSION_STRING },
@@ -44,3 +46,4 @@ const wchar_t *GetBeamerMaskW(int strNum)
 #endif
     return data;
 }
+} // namespace RenderBeamer

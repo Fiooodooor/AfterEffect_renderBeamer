@@ -1,4 +1,6 @@
 #include "AeFooNode.h"
+
+namespace RenderBeamer {
 //AEGP_FootageSignature_MISSING
 AeFootageNode::AeFootageNode(AeObjectNode* objNode) : AeObjectNode(objNode)
 {
@@ -53,3 +55,4 @@ long AeFootageNode::generateFootData()
 	}
 	return 0;
 }
+} // namespace RenderBeamer

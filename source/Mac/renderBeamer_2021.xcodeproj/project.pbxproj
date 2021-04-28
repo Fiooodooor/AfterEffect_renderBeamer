@@ -1,0 +1,691 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4A3D131B23F4B49E00517E24 /* GF_GlobalClasses.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A3D131623F4B49D00517E24 /* GF_GlobalClasses.cpp */; };
+		4A3D131C23F4B49E00517E24 /* GF_AEGP_Relinker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A3D131723F4B49D00517E24 /* GF_AEGP_Relinker.cpp */; };
+		4A3D131D23F4B49E00517E24 /* GF_AEGP_Dumper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A3D131923F4B49D00517E24 /* GF_AEGP_Dumper.cpp */; };
+		4A53E137245331DB00339C9D /* AeObjectNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A651297243F331100C32C49 /* AeObjectNode.cpp */; };
+		4A56C61024B5152400961F0D /* base64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A56C60F24B5152400961F0D /* base64.cpp */; };
+		4A61F283263608B900EF519F /* AeNodesConteiner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A61F281263608B900EF519F /* AeNodesConteiner.cpp */; };
+		4A61F28D263608F400EF519F /* socket_macos.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A61F285263608F300EF519F /* socket_macos.cpp */; };
+		4A61F28E263608F400EF519F /* gfs_rq_node_wrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A61F289263608F400EF519F /* gfs_rq_node_wrapper.cpp */; };
+		4A61F28F263608F400EF519F /* socket_win.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A61F28A263608F400EF519F /* socket_win.cpp */; };
+		4A62B51E25FD8696006D7923 /* AEGP_SuiteHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A62B51C25FD8695006D7923 /* AEGP_SuiteHandler.cpp */; };
+		4A62B52025FD86D1006D7923 /* MissingSuiteError.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A62B51F25FD86D1006D7923 /* MissingSuiteError.cpp */; };
+		4A6512A1243F331800C32C49 /* AeCompNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A65129C243F331500C32C49 /* AeCompNode.cpp */; };
+		4A6512A2243F331800C32C49 /* AeFooNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A65129D243F331500C32C49 /* AeFooNode.cpp */; };
+		4A6512A3243F331800C32C49 /* AeSceneCollector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A65129E243F331600C32C49 /* AeSceneCollector.cpp */; };
+		4A6512A4243F331800C32C49 /* AeConteiner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A65129F243F331700C32C49 /* AeConteiner.cpp */; };
+		4A69B21325DBABAA002D94B9 /* AeFileNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A69B21125DBABA9002D94B9 /* AeFileNode.cpp */; };
+		4A6DD6232425B587001AB42D /* GF_AEGP_ErrorsHandling.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A6DD6222425B587001AB42D /* GF_AEGP_ErrorsHandling.cpp */; };
+		4A6DD6292428E024001AB42D /* GF_AEGP_LibraryLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A6DD6282428E024001AB42D /* GF_AEGP_LibraryLoader.cpp */; };
+		4A6DD649242942D1001AB42D /* libbz2.1.0.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DD63C242942CD001AB42D /* libbz2.1.0.dylib */; };
+		4A6DD65924294370001AB42D /* libfontforge.4.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DD64A24294368001AB42D /* libfontforge.4.dylib */; };
+		4A6DD65A24294370001AB42D /* libxml2.2.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DD64B24294369001AB42D /* libxml2.2.dylib */; };
+		4A6DD65B24294370001AB42D /* libpng16.16.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DD64C24294369001AB42D /* libpng16.16.dylib */; };
+		4A6DD65C24294370001AB42D /* libz.1.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DD64D24294369001AB42D /* libz.1.dylib */; };
+		4A6DD65D24294370001AB42D /* libgmodule-2.0.0.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DD64E2429436A001AB42D /* libgmodule-2.0.0.dylib */; };
+		4A6DD65E24294370001AB42D /* libpcre.1.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DD64F2429436A001AB42D /* libpcre.1.dylib */; };
+		4A6DD65F24294370001AB42D /* libgf_font_converter.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DD6502429436B001AB42D /* libgf_font_converter.dylib */; };
+		4A6DD66024294370001AB42D /* libglib-2.0.0.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DD6512429436B001AB42D /* libglib-2.0.0.dylib */; };
+		4A6DD66124294370001AB42D /* libffi.6.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DD6522429436C001AB42D /* libffi.6.dylib */; };
+		4A6DD66224294370001AB42D /* libgio-2.0.0.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DD6532429436C001AB42D /* libgio-2.0.0.dylib */; };
+		4A6DD66324294370001AB42D /* libfreetype.6.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DD6542429436D001AB42D /* libfreetype.6.dylib */; };
+		4A6DD66424294370001AB42D /* libiconv.2.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DD6552429436D001AB42D /* libiconv.2.dylib */; };
+		4A6DD66524294370001AB42D /* libgobject-2.0.0.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DD6562429436E001AB42D /* libgobject-2.0.0.dylib */; };
+		4A6DD66624294370001AB42D /* libintl.8.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DD6572429436F001AB42D /* libintl.8.dylib */; };
+		4A6DD66724294370001AB42D /* libresolv.9.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DD6582429436F001AB42D /* libresolv.9.dylib */; };
+		4A6DD6A62429B9B6001AB42D /* libC4dRelinkerLibrary.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4A6DD6A52429B9B6001AB42D /* libC4dRelinkerLibrary.dylib */; };
+		4A7F21A025D2C834003CD8DD /* AeFileReferenceInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A7F219925D2C833003CD8DD /* AeFileReferenceInterface.cpp */; };
+		4A7F21A225D2C834003CD8DD /* AeBatchRelinker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A7F219C25D2C833003CD8DD /* AeBatchRelinker.cpp */; };
+		4A7F21A325D2C834003CD8DD /* tinyXml2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A7F219D25D2C833003CD8DD /* tinyXml2.cpp */; };
+		4ACA0647263825BE006F1C06 /* renderBeamer.plugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = C4E618CC095A3CE80012CA3F /* renderBeamer.plugin */; };
+		4AFCCBAB25E3779F009B9124 /* AeGfsFileCreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AFCCBAA25E3779F009B9124 /* AeGfsFileCreator.cpp */; };
+		7EF36FB716F29701002A3CB3 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EF36FB616F29701002A3CB3 /* Cocoa.framework */; };
+		D0FE575F0993C4E900139A60 /* GF_AEGP_Strings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0FE575A0993C4E900139A60 /* GF_AEGP_Strings.cpp */; };
+		D0FE57600993C4E900139A60 /* GF_AEGP_Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0FE575C0993C4E900139A60 /* GF_AEGP_Main.cpp */; };
+		D0FE57610993C4E900139A60 /* GF_AEGP_MainPiPL.r in Rez */ = {isa = PBXBuildFile; fileRef = D0FE575E0993C4E900139A60 /* GF_AEGP_MainPiPL.r */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4ACA064626382598006F1C06 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore";
+			dstSubfolderSpec = 0;
+			files = (
+				4ACA0647263825BE006F1C06 /* renderBeamer.plugin in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		4A3D131523F4B49D00517E24 /* GF_AEGP_Relinker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GF_AEGP_Relinker.h; path = ../GF_AEGP_Relinker.h; sourceTree = "<group>"; };
+		4A3D131623F4B49D00517E24 /* GF_GlobalClasses.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GF_GlobalClasses.cpp; path = ../GF_GlobalClasses.cpp; sourceTree = "<group>"; };
+		4A3D131723F4B49D00517E24 /* GF_AEGP_Relinker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GF_AEGP_Relinker.cpp; path = ../GF_AEGP_Relinker.cpp; sourceTree = "<group>"; };
+		4A3D131923F4B49D00517E24 /* GF_AEGP_Dumper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GF_AEGP_Dumper.cpp; path = ../GF_AEGP_Dumper.cpp; sourceTree = "<group>"; };
+		4A3D131A23F4B49E00517E24 /* GF_GlobalClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GF_GlobalClasses.h; path = ../GF_GlobalClasses.h; sourceTree = "<group>"; };
+		4A56C60F24B5152400961F0D /* base64.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = base64.cpp; path = ../base64.cpp; sourceTree = "<group>"; };
+		4A56C61124B5153000961F0D /* base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = base64.h; path = ../base64.h; sourceTree = "<group>"; };
+		4A61F281263608B900EF519F /* AeNodesConteiner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AeNodesConteiner.cpp; path = ../NodeObjects/AeNodesConteiner.cpp; sourceTree = "<group>"; };
+		4A61F282263608B900EF519F /* AeNodesConteiner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeNodesConteiner.h; path = ../NodeObjects/AeNodesConteiner.h; sourceTree = "<group>"; };
+		4A61F285263608F300EF519F /* socket_macos.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = socket_macos.cpp; path = ../Socket/socket_macos.cpp; sourceTree = "<group>"; };
+		4A61F286263608F300EF519F /* pico_json.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pico_json.h; path = ../Socket/pico_json.h; sourceTree = "<group>"; };
+		4A61F287263608F300EF519F /* socket_interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = socket_interface.h; path = ../Socket/socket_interface.h; sourceTree = "<group>"; };
+		4A61F288263608F400EF519F /* socket_win.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = socket_win.h; path = ../Socket/socket_win.h; sourceTree = "<group>"; };
+		4A61F289263608F400EF519F /* gfs_rq_node_wrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gfs_rq_node_wrapper.cpp; path = ../Socket/gfs_rq_node_wrapper.cpp; sourceTree = "<group>"; };
+		4A61F28A263608F400EF519F /* socket_win.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = socket_win.cpp; path = ../Socket/socket_win.cpp; sourceTree = "<group>"; };
+		4A61F28B263608F400EF519F /* socket_macos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = socket_macos.h; path = ../Socket/socket_macos.h; sourceTree = "<group>"; };
+		4A61F28C263608F400EF519F /* gfs_rq_node_wrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gfs_rq_node_wrapper.h; path = ../Socket/gfs_rq_node_wrapper.h; sourceTree = "<group>"; };
+		4A62B51C25FD8695006D7923 /* AEGP_SuiteHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AEGP_SuiteHandler.cpp; path = ../../../../AfterEffectsSDK/Examples/Util/AEGP_SuiteHandler.cpp; sourceTree = "<group>"; };
+		4A62B51D25FD8695006D7923 /* AEGP_SuiteHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AEGP_SuiteHandler.h; path = ../../../../AfterEffectsSDK/Examples/Util/AEGP_SuiteHandler.h; sourceTree = "<group>"; };
+		4A62B51F25FD86D1006D7923 /* MissingSuiteError.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MissingSuiteError.cpp; path = ../../../../AfterEffectsSDK/Examples/Util/MissingSuiteError.cpp; sourceTree = "<group>"; };
+		4A62B52125FD86FB006D7923 /* AE_PluginData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AE_PluginData.h; path = ../../../../AfterEffectsSDK/Examples/Headers/AE_PluginData.h; sourceTree = "<group>"; };
+		4A651296243F331000C32C49 /* AeFooNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeFooNode.h; path = ../NodeObjects/AeFooNode.h; sourceTree = "<group>"; };
+		4A651297243F331100C32C49 /* AeObjectNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AeObjectNode.cpp; path = ../NodeObjects/AeObjectNode.cpp; sourceTree = "<group>"; };
+		4A651298243F331200C32C49 /* AeConteiner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeConteiner.h; path = ../NodeObjects/AeConteiner.h; sourceTree = "<group>"; };
+		4A651299243F331300C32C49 /* AeObjectNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeObjectNode.h; path = ../NodeObjects/AeObjectNode.h; sourceTree = "<group>"; };
+		4A65129A243F331400C32C49 /* AeCompNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeCompNode.h; path = ../NodeObjects/AeCompNode.h; sourceTree = "<group>"; };
+		4A65129B243F331400C32C49 /* AeSceneCollector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeSceneCollector.h; path = ../NodeObjects/AeSceneCollector.h; sourceTree = "<group>"; };
+		4A65129C243F331500C32C49 /* AeCompNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AeCompNode.cpp; path = ../NodeObjects/AeCompNode.cpp; sourceTree = "<group>"; };
+		4A65129D243F331500C32C49 /* AeFooNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AeFooNode.cpp; path = ../NodeObjects/AeFooNode.cpp; sourceTree = "<group>"; };
+		4A65129E243F331600C32C49 /* AeSceneCollector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AeSceneCollector.cpp; path = ../NodeObjects/AeSceneCollector.cpp; sourceTree = "<group>"; };
+		4A65129F243F331700C32C49 /* AeConteiner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AeConteiner.cpp; path = ../NodeObjects/AeConteiner.cpp; sourceTree = "<group>"; };
+		4A69B21125DBABA9002D94B9 /* AeFileNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AeFileNode.cpp; path = ../BatchRelinker/AeFileNode.cpp; sourceTree = "<group>"; };
+		4A69B21225DBABA9002D94B9 /* AeFileNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeFileNode.h; path = ../BatchRelinker/AeFileNode.h; sourceTree = "<group>"; };
+		4A6DD6222425B587001AB42D /* GF_AEGP_ErrorsHandling.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GF_AEGP_ErrorsHandling.cpp; path = ../GF_AEGP_ErrorsHandling.cpp; sourceTree = "<group>"; };
+		4A6DD6242425B5AF001AB42D /* GF_AEGP_ErrorsHandling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GF_AEGP_ErrorsHandling.h; path = ../GF_AEGP_ErrorsHandling.h; sourceTree = "<group>"; };
+		4A6DD6252425D852001AB42D /* GF_LIBS_C4D_Relinker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GF_LIBS_C4D_Relinker.h; path = ../GF_LIBS_C4D_Relinker.h; sourceTree = "<group>"; };
+		4A6DD6262425DEEB001AB42D /* GF_AEGP_Dumper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GF_AEGP_Dumper.h; path = ../GF_AEGP_Dumper.h; sourceTree = "<group>"; };
+		4A6DD6272428E024001AB42D /* GF_AEGP_LibraryLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GF_AEGP_LibraryLoader.h; path = ../GF_AEGP_LibraryLoader.h; sourceTree = "<group>"; };
+		4A6DD6282428E024001AB42D /* GF_AEGP_LibraryLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GF_AEGP_LibraryLoader.cpp; path = ../GF_AEGP_LibraryLoader.cpp; sourceTree = "<group>"; };
+		4A6DD62F2428F030001AB42D /* GF_LIBS_FontConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GF_LIBS_FontConverter.h; path = ../GF_LIBS_FontConverter.h; sourceTree = "<group>"; };
+		4A6DD63C242942CD001AB42D /* libbz2.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libbz2.1.0.dylib; sourceTree = "<group>"; };
+		4A6DD64A24294368001AB42D /* libfontforge.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libfontforge.4.dylib; sourceTree = "<group>"; };
+		4A6DD64B24294369001AB42D /* libxml2.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libxml2.2.dylib; sourceTree = "<group>"; };
+		4A6DD64C24294369001AB42D /* libpng16.16.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libpng16.16.dylib; sourceTree = "<group>"; };
+		4A6DD64D24294369001AB42D /* libz.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libz.1.dylib; sourceTree = "<group>"; };
+		4A6DD64E2429436A001AB42D /* libgmodule-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libgmodule-2.0.0.dylib"; sourceTree = "<group>"; };
+		4A6DD64F2429436A001AB42D /* libpcre.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libpcre.1.dylib; sourceTree = "<group>"; };
+		4A6DD6502429436B001AB42D /* libgf_font_converter.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libgf_font_converter.dylib; sourceTree = "<group>"; };
+		4A6DD6512429436B001AB42D /* libglib-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libglib-2.0.0.dylib"; sourceTree = "<group>"; };
+		4A6DD6522429436C001AB42D /* libffi.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libffi.6.dylib; sourceTree = "<group>"; };
+		4A6DD6532429436C001AB42D /* libgio-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libgio-2.0.0.dylib"; sourceTree = "<group>"; };
+		4A6DD6542429436D001AB42D /* libfreetype.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libfreetype.6.dylib; sourceTree = "<group>"; };
+		4A6DD6552429436D001AB42D /* libiconv.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libiconv.2.dylib; sourceTree = "<group>"; };
+		4A6DD6562429436E001AB42D /* libgobject-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libgobject-2.0.0.dylib"; sourceTree = "<group>"; };
+		4A6DD6572429436F001AB42D /* libintl.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libintl.8.dylib; sourceTree = "<group>"; };
+		4A6DD6582429436F001AB42D /* libresolv.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libresolv.9.dylib; sourceTree = "<group>"; };
+		4A6DD6A52429B9B6001AB42D /* libC4dRelinkerLibrary.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libC4dRelinkerLibrary.dylib; sourceTree = "<group>"; };
+		4A7F219825D2C833003CD8DD /* tinyXml2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tinyXml2.h; path = ../BatchRelinker/tinyXml2.h; sourceTree = "<group>"; };
+		4A7F219925D2C833003CD8DD /* AeFileReferenceInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AeFileReferenceInterface.cpp; path = ../BatchRelinker/AeFileReferenceInterface.cpp; sourceTree = "<group>"; };
+		4A7F219C25D2C833003CD8DD /* AeBatchRelinker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AeBatchRelinker.cpp; path = ../BatchRelinker/AeBatchRelinker.cpp; sourceTree = "<group>"; };
+		4A7F219D25D2C833003CD8DD /* tinyXml2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyXml2.cpp; path = ../BatchRelinker/tinyXml2.cpp; sourceTree = "<group>"; };
+		4A7F219E25D2C834003CD8DD /* AeBatchRelinker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeBatchRelinker.h; path = ../BatchRelinker/AeBatchRelinker.h; sourceTree = "<group>"; };
+		4A7F219F25D2C834003CD8DD /* AeFileReferenceInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeFileReferenceInterface.h; path = ../BatchRelinker/AeFileReferenceInterface.h; sourceTree = "<group>"; };
+		4AD4FA2B23F4049B009C7189 /* GF_GlobalTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GF_GlobalTypes.h; path = ../GF_GlobalTypes.h; sourceTree = "<group>"; };
+		4AFCCBA825E3779E009B9124 /* AeGfsFileCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeGfsFileCreator.h; path = ../AeGfsFileCreator.h; sourceTree = "<group>"; };
+		4AFCCBA925E3779E009B9124 /* AeGfsFileCreatorStructures.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeGfsFileCreatorStructures.h; path = ../AeGfsFileCreatorStructures.h; sourceTree = "<group>"; };
+		4AFCCBAA25E3779F009B9124 /* AeGfsFileCreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AeGfsFileCreator.cpp; path = ../AeGfsFileCreator.cpp; sourceTree = "<group>"; };
+		7EF36FB616F29701002A3CB3 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		7EF36FB816F29807002A3CB3 /* GF_AEGP_Main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GF_AEGP_Main.h; path = ../GF_AEGP_Main.h; sourceTree = "<group>"; };
+		C4E618CC095A3CE80012CA3F /* renderBeamer.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = renderBeamer.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0FE575A0993C4E900139A60 /* GF_AEGP_Strings.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = GF_AEGP_Strings.cpp; path = ../GF_AEGP_Strings.cpp; sourceTree = SOURCE_ROOT; };
+		D0FE575B0993C4E900139A60 /* GF_AEGP_Strings.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = GF_AEGP_Strings.h; path = ../GF_AEGP_Strings.h; sourceTree = SOURCE_ROOT; };
+		D0FE575C0993C4E900139A60 /* GF_AEGP_Main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = GF_AEGP_Main.cpp; path = ../GF_AEGP_Main.cpp; sourceTree = SOURCE_ROOT; };
+		D0FE575E0993C4E900139A60 /* GF_AEGP_MainPiPL.r */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.rez; name = GF_AEGP_MainPiPL.r; path = ../GF_AEGP_MainPiPL.r; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C4E618CA095A3CE80012CA3F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7EF36FB716F29701002A3CB3 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4A61F284263608CF00EF519F /* Socket */ = {
+			isa = PBXGroup;
+			children = (
+				4A61F289263608F400EF519F /* gfs_rq_node_wrapper.cpp */,
+				4A61F28C263608F400EF519F /* gfs_rq_node_wrapper.h */,
+				4A61F286263608F300EF519F /* pico_json.h */,
+				4A61F287263608F300EF519F /* socket_interface.h */,
+				4A61F285263608F300EF519F /* socket_macos.cpp */,
+				4A61F28B263608F400EF519F /* socket_macos.h */,
+				4A61F28A263608F400EF519F /* socket_win.cpp */,
+				4A61F288263608F400EF519F /* socket_win.h */,
+			);
+			name = Socket;
+			sourceTree = "<group>";
+		};
+		4A6DD6212425B4CB001AB42D /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+				4A6DD62F2428F030001AB42D /* GF_LIBS_FontConverter.h */,
+				4A6DD6272428E024001AB42D /* GF_AEGP_LibraryLoader.h */,
+				4A6DD6262425DEEB001AB42D /* GF_AEGP_Dumper.h */,
+				4A6DD6252425D852001AB42D /* GF_LIBS_C4D_Relinker.h */,
+				4A3D131523F4B49D00517E24 /* GF_AEGP_Relinker.h */,
+				4A6DD6242425B5AF001AB42D /* GF_AEGP_ErrorsHandling.h */,
+				4A3D131A23F4B49E00517E24 /* GF_GlobalClasses.h */,
+				4AD4FA2B23F4049B009C7189 /* GF_GlobalTypes.h */,
+				7EF36FB816F29807002A3CB3 /* GF_AEGP_Main.h */,
+				D0FE575B0993C4E900139A60 /* GF_AEGP_Strings.h */,
+			);
+			name = Headers;
+			sourceTree = "<group>";
+		};
+		4A7F218B25D2C637003CD8DD /* BatchRelinker */ = {
+			isa = PBXGroup;
+			children = (
+				4A69B21125DBABA9002D94B9 /* AeFileNode.cpp */,
+				4A69B21225DBABA9002D94B9 /* AeFileNode.h */,
+				4A7F219C25D2C833003CD8DD /* AeBatchRelinker.cpp */,
+				4A7F219E25D2C834003CD8DD /* AeBatchRelinker.h */,
+				4A7F219925D2C833003CD8DD /* AeFileReferenceInterface.cpp */,
+				4A7F219F25D2C834003CD8DD /* AeFileReferenceInterface.h */,
+				4A7F219D25D2C833003CD8DD /* tinyXml2.cpp */,
+				4A7F219825D2C833003CD8DD /* tinyXml2.h */,
+			);
+			name = BatchRelinker;
+			sourceTree = "<group>";
+		};
+		4A7F21A425D2D182003CD8DD /* NodeObjects */ = {
+			isa = PBXGroup;
+			children = (
+				4A61F281263608B900EF519F /* AeNodesConteiner.cpp */,
+				4A61F282263608B900EF519F /* AeNodesConteiner.h */,
+				4A65129D243F331500C32C49 /* AeFooNode.cpp */,
+				4A651296243F331000C32C49 /* AeFooNode.h */,
+				4A651297243F331100C32C49 /* AeObjectNode.cpp */,
+				4A651299243F331300C32C49 /* AeObjectNode.h */,
+				4A65129C243F331500C32C49 /* AeCompNode.cpp */,
+				4A65129A243F331400C32C49 /* AeCompNode.h */,
+				4A65129F243F331700C32C49 /* AeConteiner.cpp */,
+				4A651298243F331200C32C49 /* AeConteiner.h */,
+			);
+			name = NodeObjects;
+			sourceTree = "<group>";
+		};
+		4AC2E6D924168B7F00786233 /* Libs_groyp */ = {
+			isa = PBXGroup;
+			children = (
+				4A6DD6A52429B9B6001AB42D /* libC4dRelinkerLibrary.dylib */,
+				4A6DD6522429436C001AB42D /* libffi.6.dylib */,
+				4A6DD64A24294368001AB42D /* libfontforge.4.dylib */,
+				4A6DD6542429436D001AB42D /* libfreetype.6.dylib */,
+				4A6DD6502429436B001AB42D /* libgf_font_converter.dylib */,
+				4A6DD6532429436C001AB42D /* libgio-2.0.0.dylib */,
+				4A6DD6512429436B001AB42D /* libglib-2.0.0.dylib */,
+				4A6DD64E2429436A001AB42D /* libgmodule-2.0.0.dylib */,
+				4A6DD6562429436E001AB42D /* libgobject-2.0.0.dylib */,
+				4A6DD6552429436D001AB42D /* libiconv.2.dylib */,
+				4A6DD6572429436F001AB42D /* libintl.8.dylib */,
+				4A6DD64F2429436A001AB42D /* libpcre.1.dylib */,
+				4A6DD6582429436F001AB42D /* libresolv.9.dylib */,
+				4A6DD64B24294369001AB42D /* libxml2.2.dylib */,
+				4A6DD64D24294369001AB42D /* libz.1.dylib */,
+				4A6DD64C24294369001AB42D /* libpng16.16.dylib */,
+				4A6DD63C242942CD001AB42D /* libbz2.1.0.dylib */,
+			);
+			path = Libs_groyp;
+			sourceTree = "<group>";
+		};
+		C4E6187C095A3C800012CA3F = {
+			isa = PBXGroup;
+			children = (
+				4A61F284263608CF00EF519F /* Socket */,
+				4A7F21A425D2D182003CD8DD /* NodeObjects */,
+				4A7F218B25D2C637003CD8DD /* BatchRelinker */,
+				4A56C61124B5153000961F0D /* base64.h */,
+				4A56C60F24B5152400961F0D /* base64.cpp */,
+				4AC2E6D924168B7F00786233 /* Libs_groyp */,
+				4A6DD6212425B4CB001AB42D /* Headers */,
+				4A3D131723F4B49D00517E24 /* GF_AEGP_Relinker.cpp */,
+				4A6DD6282428E024001AB42D /* GF_AEGP_LibraryLoader.cpp */,
+				4A3D131923F4B49D00517E24 /* GF_AEGP_Dumper.cpp */,
+				4A65129E243F331600C32C49 /* AeSceneCollector.cpp */,
+				4A65129B243F331400C32C49 /* AeSceneCollector.h */,
+				4AFCCBAA25E3779F009B9124 /* AeGfsFileCreator.cpp */,
+				4AFCCBA825E3779E009B9124 /* AeGfsFileCreator.h */,
+				4AFCCBA925E3779E009B9124 /* AeGfsFileCreatorStructures.h */,
+				4A3D131623F4B49D00517E24 /* GF_GlobalClasses.cpp */,
+				4A6DD6222425B587001AB42D /* GF_AEGP_ErrorsHandling.cpp */,
+				D0FE575C0993C4E900139A60 /* GF_AEGP_Main.cpp */,
+				D0FE575A0993C4E900139A60 /* GF_AEGP_Strings.cpp */,
+				D0FE57630993C4FD00139A60 /* Supporting Code */,
+				7EF36FB616F29701002A3CB3 /* Cocoa.framework */,
+				C4E6188C095A3C800012CA3F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C4E6188C095A3C800012CA3F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C4E618CC095A3CE80012CA3F /* renderBeamer.plugin */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D0FE57630993C4FD00139A60 /* Supporting Code */ = {
+			isa = PBXGroup;
+			children = (
+				4A62B52125FD86FB006D7923 /* AE_PluginData.h */,
+				4A62B51F25FD86D1006D7923 /* MissingSuiteError.cpp */,
+				4A62B51C25FD8695006D7923 /* AEGP_SuiteHandler.cpp */,
+				4A62B51D25FD8695006D7923 /* AEGP_SuiteHandler.h */,
+				D0FE575E0993C4E900139A60 /* GF_AEGP_MainPiPL.r */,
+			);
+			name = "Supporting Code";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C4E618CB095A3CE80012CA3F /* renderBeamer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C4E618CE095A3CE90012CA3F /* Build configuration list for PBXNativeTarget "renderBeamer" */;
+			buildPhases = (
+				C4E618C8095A3CE80012CA3F /* Resources */,
+				C4E618C9095A3CE80012CA3F /* Sources */,
+				C4E618CA095A3CE80012CA3F /* Frameworks */,
+				C4E618EA095A3E040012CA3F /* Rez */,
+				4ACA064626382598006F1C06 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = renderBeamer;
+			productName = Skeleton.plugin;
+			productReference = C4E618CC095A3CE80012CA3F /* renderBeamer.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C4E6187E095A3C800012CA3F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1140;
+				ORGANIZATIONNAME = "";
+				TargetAttributes = {
+					C4E618CB095A3CE80012CA3F = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = C4E6187F095A3C800012CA3F /* Build configuration list for PBXProject "renderBeamer_2021" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = C4E6187C095A3C800012CA3F;
+			productRefGroup = C4E6188C095A3C800012CA3F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C4E618CB095A3CE80012CA3F /* renderBeamer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C4E618C8095A3CE80012CA3F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A6DD6A62429B9B6001AB42D /* libC4dRelinkerLibrary.dylib in Resources */,
+				4A6DD65924294370001AB42D /* libfontforge.4.dylib in Resources */,
+				4A6DD65A24294370001AB42D /* libxml2.2.dylib in Resources */,
+				4A6DD65B24294370001AB42D /* libpng16.16.dylib in Resources */,
+				4A6DD65C24294370001AB42D /* libz.1.dylib in Resources */,
+				4A6DD65D24294370001AB42D /* libgmodule-2.0.0.dylib in Resources */,
+				4A6DD65E24294370001AB42D /* libpcre.1.dylib in Resources */,
+				4A6DD65F24294370001AB42D /* libgf_font_converter.dylib in Resources */,
+				4A6DD66024294370001AB42D /* libglib-2.0.0.dylib in Resources */,
+				4A6DD66124294370001AB42D /* libffi.6.dylib in Resources */,
+				4A6DD66224294370001AB42D /* libgio-2.0.0.dylib in Resources */,
+				4A6DD66324294370001AB42D /* libfreetype.6.dylib in Resources */,
+				4A6DD66424294370001AB42D /* libiconv.2.dylib in Resources */,
+				4A6DD66524294370001AB42D /* libgobject-2.0.0.dylib in Resources */,
+				4A6DD66624294370001AB42D /* libintl.8.dylib in Resources */,
+				4A6DD66724294370001AB42D /* libresolv.9.dylib in Resources */,
+				4A6DD649242942D1001AB42D /* libbz2.1.0.dylib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXRezBuildPhase section */
+		C4E618EA095A3E040012CA3F /* Rez */ = {
+			isa = PBXRezBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D0FE57610993C4E900139A60 /* GF_AEGP_MainPiPL.r in Rez */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXRezBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C4E618C9095A3CE80012CA3F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A56C61024B5152400961F0D /* base64.cpp in Sources */,
+				D0FE575F0993C4E900139A60 /* GF_AEGP_Strings.cpp in Sources */,
+				4A61F283263608B900EF519F /* AeNodesConteiner.cpp in Sources */,
+				D0FE57600993C4E900139A60 /* GF_AEGP_Main.cpp in Sources */,
+				4A53E137245331DB00339C9D /* AeObjectNode.cpp in Sources */,
+				4A61F28F263608F400EF519F /* socket_win.cpp in Sources */,
+				4A7F21A225D2C834003CD8DD /* AeBatchRelinker.cpp in Sources */,
+				4A6512A2243F331800C32C49 /* AeFooNode.cpp in Sources */,
+				4A3D131D23F4B49E00517E24 /* GF_AEGP_Dumper.cpp in Sources */,
+				4AFCCBAB25E3779F009B9124 /* AeGfsFileCreator.cpp in Sources */,
+				4A61F28E263608F400EF519F /* gfs_rq_node_wrapper.cpp in Sources */,
+				4A69B21325DBABAA002D94B9 /* AeFileNode.cpp in Sources */,
+				4A6512A3243F331800C32C49 /* AeSceneCollector.cpp in Sources */,
+				4A62B51E25FD8696006D7923 /* AEGP_SuiteHandler.cpp in Sources */,
+				4A6512A1243F331800C32C49 /* AeCompNode.cpp in Sources */,
+				4A3D131C23F4B49E00517E24 /* GF_AEGP_Relinker.cpp in Sources */,
+				4A61F28D263608F400EF519F /* socket_macos.cpp in Sources */,
+				4A6DD6232425B587001AB42D /* GF_AEGP_ErrorsHandling.cpp in Sources */,
+				4A7F21A025D2C834003CD8DD /* AeFileReferenceInterface.cpp in Sources */,
+				4A6DD6292428E024001AB42D /* GF_AEGP_LibraryLoader.cpp in Sources */,
+				4A3D131B23F4B49E00517E24 /* GF_GlobalClasses.cpp in Sources */,
+				4A62B52025FD86D1006D7923 /* MissingSuiteError.cpp in Sources */,
+				4A6512A4243F331800C32C49 /* AeConteiner.cpp in Sources */,
+				4A7F21A325D2C834003CD8DD /* tinyXml2.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		4A36D2B124AD93260044DC28 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Development: milosz.lin@gmail.com (V23TFFKAXF)";
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = "/Users/ccc/Downloads/AE_GF_Builds/$(PROJECT_NAME).dst";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_MODEL_TUNING = "";
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Cocoa.framework/Headers/Cocoa.h";
+				GCC_REUSE_STRINGS = NO;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_THREADSAFE_STATICS = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_EFFECTIVE_CPLUSPLUS_VIOLATIONS = NO;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_SHADOW = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNKNOWN_PRAGMAS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"/Users/ccc/Downloads/AfterEffectsSDK/Examples/Headers/**",
+					"/Users/ccc/Downloads/AfterEffectsSDK/Examples/Util/**",
+					"/Users/ccc/Downloads/AfterEffectsSDK/Examples/Headers/SP/**",
+					"/Users/ccc/Downloads/AfterEffectsSDK/Examples/Resources/**",
+					"/usr/local/boost-1.72.0/include",
+				);
+				LIBRARY_SEARCH_PATHS = "/usr/local/boost-1.72.0/lib";
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				ONLY_ACTIVE_ARCH = YES;
+				PRELINK_LIBS = "";
+				REZ_PREPROCESSOR_DEFINITIONS = __MACH__;
+				SDKROOT = macosx;
+				STRIP_INSTALLED_PRODUCT = NO;
+				VALID_ARCHS = x86_64;
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
+		4A36D2B224AD93260044DC28 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_PRAGMA_PACK = NO;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
+				CURRENT_PROJECT_VERSION = 19;
+				DEVELOPMENT_TEAM = 87N4927WRD;
+				GCC_MODEL_TUNING = G5;
+				GENERATE_PKGINFO_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/Headers,
+					/Users/ccc/Downloads/AfterEffectsSDK/Examples/Util,
+					/Users/ccc/Downloads/AfterEffectsSDK/Examples/Headers/SP,
+					/Users/ccc/Downloads/AfterEffectsSDK/Examples/Resources,
+					/Users/ccc/Downloads/boost_1_72_0,
+				);
+				INFOPLIST_FILE = "renderBeamer.plugin-Info.plist";
+				INSTALL_PATH = "/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/";
+				LD_GENERATE_MAP_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = "\"/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/renderBeamer.plugin/Contents/Resources/\"";
+				LIBRARY_SEARCH_PATHS = (
+					/Users/ccc/Downloads/boost_1_72_0/stage/lib/,
+					"$(PROJECT_DIR)/Libs_groyp",
+				);
+				MACH_O_TYPE = mh_dylib;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MARKETING_VERSION = 19;
+				OTHER_CODE_SIGN_FLAGS = "";
+				OTHER_LDFLAGS = (
+					"-Wl",
+					"-Bstatic",
+					"$(PROJECT_DIR)/Libs_groyp/libboost_filesystem.a",
+					"-Wl",
+					"-Bshared",
+					"$(PROJECT_DIR)/Libs_groyp/libgf_font_converter.dylib",
+				);
+				PRELINK_LIBS = "\"libC4dRelinkerLibrary.dylib\" \"libgf_font_converter.dylib\"";
+				PRODUCT_BUNDLE_IDENTIFIER = com.adobe.AfterEffects.renderBeamer;
+				PRODUCT_NAME = renderBeamer;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+				VALID_ARCHS = x86_64;
+				VERSIONING_SYSTEM = "";
+				VERSION_INFO_PREFIX = "";
+				VERSION_INFO_SUFFIX = "";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		C4E61880095A3C800012CA3F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Development: milosz.lin@gmail.com (V23TFFKAXF)";
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = "/Users/ccc/Downloads/AE_GF_Builds/$(PROJECT_NAME).dst";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_MODEL_TUNING = "";
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Cocoa.framework/Headers/Cocoa.h";
+				GCC_REUSE_STRINGS = NO;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_THREADSAFE_STATICS = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_EFFECTIVE_CPLUSPLUS_VIOLATIONS = NO;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_SHADOW = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNKNOWN_PRAGMAS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"/Users/ccc/Downloads/AfterEffectsSDK/Examples/Headers/**",
+					"/Users/ccc/Downloads/AfterEffectsSDK/Examples/Util/**",
+					"/Users/ccc/Downloads/AfterEffectsSDK/Examples/Headers/SP/**",
+					"/Users/ccc/Downloads/AfterEffectsSDK/Examples/Resources/**",
+					"/usr/local/boost-1.72.0/include",
+				);
+				LIBRARY_SEARCH_PATHS = "/usr/local/boost-1.72.0/lib";
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				ONLY_ACTIVE_ARCH = YES;
+				PRELINK_LIBS = "";
+				REZ_PREPROCESSOR_DEFINITIONS = __MACH__;
+				SDKROOT = macosx;
+				STRIP_INSTALLED_PRODUCT = NO;
+				VALID_ARCHS = x86_64;
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		C4E618CF095A3CE90012CA3F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_PRAGMA_PACK = NO;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
+				CURRENT_PROJECT_VERSION = 19;
+				DEVELOPMENT_TEAM = 87N4927WRD;
+				GCC_MODEL_TUNING = G5;
+				GENERATE_PKGINFO_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/Headers,
+					/Users/ccc/Downloads/AfterEffectsSDK/Examples/Util,
+					/Users/ccc/Downloads/AfterEffectsSDK/Examples/Headers/SP,
+					/Users/ccc/Downloads/AfterEffectsSDK/Examples/Resources,
+					/Users/ccc/Downloads/boost_1_72_0,
+				);
+				INFOPLIST_FILE = "renderBeamer.plugin-Info.plist";
+				INSTALL_PATH = "/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/";
+				LD_GENERATE_MAP_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = "\"/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/renderBeamer.plugin/Contents/Resources/\"";
+				LIBRARY_SEARCH_PATHS = (
+					/Users/ccc/Downloads/boost_1_72_0/stage/lib/,
+					"$(PROJECT_DIR)/Libs_groyp",
+				);
+				MACH_O_TYPE = mh_dylib;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MARKETING_VERSION = 19;
+				OTHER_CODE_SIGN_FLAGS = "";
+				OTHER_LDFLAGS = (
+					"-Wl",
+					"-Bstatic",
+					"$(PROJECT_DIR)/Libs_groyp/libboost_filesystem.a",
+					"-Wl",
+					"-Bshared",
+					"$(PROJECT_DIR)/Libs_groyp/libgf_font_converter.dylib",
+				);
+				PRELINK_LIBS = "\"libC4dRelinkerLibrary.dylib\" \"libgf_font_converter.dylib\"";
+				PRODUCT_BUNDLE_IDENTIFIER = com.adobe.AfterEffects.renderBeamer;
+				PRODUCT_NAME = renderBeamer;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+				VALID_ARCHS = x86_64;
+				VERSIONING_SYSTEM = "";
+				VERSION_INFO_PREFIX = "";
+				VERSION_INFO_SUFFIX = "";
+				ZERO_LINK = NO;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C4E6187F095A3C800012CA3F /* Build configuration list for PBXProject "renderBeamer_2021" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C4E61880095A3C800012CA3F /* Debug */,
+				4A36D2B124AD93260044DC28 /* Release */,
+			);
+			defaultConfigurationIsVisible = 1;
+			defaultConfigurationName = Debug;
+		};
+		C4E618CE095A3CE90012CA3F /* Build configuration list for PBXNativeTarget "renderBeamer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C4E618CF095A3CE90012CA3F /* Debug */,
+				4A36D2B224AD93260044DC28 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C4E6187E095A3C800012CA3F /* Project object */;
+}

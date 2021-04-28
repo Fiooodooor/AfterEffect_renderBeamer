@@ -1,10 +1,11 @@
 #include "GF_AEGP_Dumper.h"
 #ifdef AE_OS_WIN
-#include "Socket/socket_win.h"
+    #include "Socket/socket_win.h"
 #else
-#include "Socket/socket_macos.h"
+    #include "Socket/socket_macos.h"
 #endif
 #include "Socket/gfs_rq_node_wrapper.h"
+namespace RenderBeamer {
 
 GF_Dumper::GF_Dumper(SPBasicSuite *basic_suite, AEGP_PluginID plugin_aegp_id)
 	: rootProjH(nullptr)
@@ -25,7 +26,8 @@ GF_Dumper::GF_Dumper(SPBasicSuite *basic_suite, AEGP_PluginID plugin_aegp_id)
 GF_Dumper::~GF_Dumper()
 {
     A_Err err = A_Err_NONE;
-	delete gfs_creator;
+    if(gfs_creator)
+        delete gfs_creator;
 
     if (dumper_progressbar_)
         suites.AppSuite6()->PF_DisposeAppProgressDialog(dumper_progressbar_);
@@ -38,7 +40,7 @@ GF_Dumper::~GF_Dumper()
 ErrorCodesAE GF_Dumper::PreCheckProject(SPBasicSuite *pb, AEGP_PluginID pluginId, beamerParamsStruct &globals_and_paths)
 {
 	AEGP_SuiteHandler suites(pb);
-	ERROR_CATCH_START_MOD(CallerModuleName::PreCheckModule)
+	ERROR_CATCH_START_MOD(PreCheckModule)
 		A_Boolean projectDirty = TRUE;
 		AEGP_ProjectH rootProjH = nullptr;
 		AEGP_MemHandle memoryH = nullptr;
@@ -47,7 +49,7 @@ ErrorCodesAE GF_Dumper::PreCheckProject(SPBasicSuite *pb, AEGP_PluginID pluginId
 
 		ERROR_THROW_AE_MOD(suites.ProjSuite6()->AEGP_GetNumProjects(&numberOfProjects))
 
-		if (numberOfProjects < 1) { throw PluginError(_ErrorCaller, ErrorCodesAE::ProjectNotOpened); }
+		if (numberOfProjects < 1) { throw PluginError(_ErrorCaller, ProjectNotOpened); }
 
 		ERROR_THROW_AE_MOD(suites.ProjSuite6()->AEGP_GetProjectByIndex(0, &rootProjH))
 		ERROR_THROW_AE_MOD(suites.ProjSuite6()->AEGP_ProjectIsDirty(rootProjH, &projectDirty))
@@ -68,7 +70,7 @@ ErrorCodesAE GF_Dumper::PreCheckProject(SPBasicSuite *pb, AEGP_PluginID pluginId
 		globals_and_paths.beamerScript /= BEAMER_SCRIPT;
 	
 		if (!fs::exists(globals_and_paths.beamerScript)) {
-			throw PluginError(_ErrorCaller, ErrorCodesAE::GetLocalBeamerPath);
+			throw PluginError(_ErrorCaller, GetLocalBeamerPath);
 		}
 		fs::create_directories(globals_and_paths.bp.tempLogPath, LogCreateError);
 		globals_and_paths.bp.tempLogFile = "Log_AE_renderBeamer_";
@@ -88,7 +90,7 @@ ErrorCodesAE GF_Dumper::PreCheckProject(SPBasicSuite *pb, AEGP_PluginID pluginId
 
 ErrorCodesAE GF_Dumper::PrepareProject()
 {
-	ERROR_CATCH_START_MOD(CallerModuleName::PrePreparationModule)
+	ERROR_CATCH_START_MOD(PrePreparationModule)
 		rbProj()->logg("PrepareProject", "Info", "Prepare project method start. ");
 		AEGP_MemHandle memoryH = nullptr;
 		FS_ERROR_CODE(fsError)		
@@ -114,7 +116,7 @@ ErrorCodesAE GF_Dumper::PrepareProject()
 		
 		ERROR_THROW_AE_MOD(suites.ProjSuite6()->AEGP_GetProjectByIndex(0, &rootProjH))
 		ERROR_THROW_AE_MOD(suites.ProjSuite6()->AEGP_GetProjectName(rootProjH, &projectName[0]))
-		ERROR_THROW_AE_MOD(rbUtilities::execScript(sP, pluginId, "app.version", bps->versionStr, 32))
+		ERROR_THROW_MOD(rbUtilities::execScript(sP, pluginId, "app.version", bps->versionStr, 32))
 
 		MAIN_PROGRESS(dumper_progressbar_, 5, 10)
 		bps->bp.projectRootCorrect = bps->bp.originalProject.filename().c_str();
@@ -224,7 +226,7 @@ ErrorCodesAE GF_Dumper::PrepareProject()
 
 ErrorCodesAE GF_Dumper::newBatchDumpProject()
 {
-	ERROR_CATCH_START_MOD(CallerModuleName::ProjectDumperModule)
+	ERROR_CATCH_START_MOD(ProjectDumperModule)
 	PF_AppProgressDialogP *dlg_ptr = get_progress_dialog(true, false, 1);
 	MAIN_PROGRESS_THROW(*dlg_ptr, 0, 5)
 
@@ -244,18 +246,13 @@ ErrorCodesAE GF_Dumper::newBatchDumpProject()
 
 	relinker.unloadFontLibrary();
 	gfs_creator->GenerateAndSaveDocument();
+    MAIN_PROGRESS_THROW(dumper_progressbar_, ++bps->currentItem, bps->colectedItems)
 	relinker.RelinkProject(rootProjH);
 
-	while(!sc->renderFootageSortedList.empty())
-	{
-		delete sc->renderFootageSortedList.back();
-		sc->renderFootageSortedList.pop_back();
-	}
 	MAIN_PROGRESS_THROW(dumper_progressbar_, ++bps->currentItem, bps->colectedItems)
 	dlg_ptr = get_progress_dialog(true, false, 2);
-	MAIN_PROGRESS_THROW(*dlg_ptr, 0, 5)
 	
-	AeBatchRelinker batchRelinker(sP, relinker.GetC4dLibloader(), *rbProj(), dumper_progressbar_, bps->bp.relinkedSavePath, bps->bp.remoteFootagePath.parent_path());
+	AeBatchRelinker batchRelinker(sP, relinker.GetC4dLibloader(), rbProj(), dlg_ptr, bps->bp.relinkedSavePath);
 	ERROR_RETURN(batchRelinker.ParseAepxXmlDocument())
 	ERROR_RETURN(batchRelinker.CopyAndRelinkFiles(bps->bp.footageMainOutput, bps->bp.remoteFootagePath))
 		
@@ -272,7 +269,7 @@ ErrorCodesAE GF_Dumper::newBatchDumpProject()
 
 ErrorCodesAE GF_Dumper::newCopyCollectFonts()
 {
-	ERROR_CATCH_START_MOD(CallerModuleName::CopyCollectFontsModule)
+	ERROR_CATCH_START_MOD(CopyCollectFontsModule)
 	
 	if (sc->fontsList.empty())
 		return NoError;
@@ -299,7 +296,7 @@ ErrorCodesAE GF_Dumper::newCopyCollectFonts()
 }
 ErrorCodesAE GF_Dumper::newCollectEffectsInfo() const
 {
-	ERROR_CATCH_START_MOD(CallerModuleName::CollectEffectsModule)
+	ERROR_CATCH_START_MOD(CollectEffectsModule)
 	
 	if (sc->effectsList.empty())
 		return NoError;
@@ -316,7 +313,7 @@ ErrorCodesAE GF_Dumper::newCollectEffectsInfo() const
 }
 ErrorCodesAE GF_Dumper::SetupUiQueueItems()
 {
-	ERROR_CATCH_START_MOD(CallerModuleName::QueueCollectModule)
+	ERROR_CATCH_START_MOD(QueueCollectModule)
 	platform_socket connector;
 	ERROR_LONG_ERR(connector.start_session(bps->socketPort_long, bps->bp.projectRootCorrect.string()))
 	if (_ErrorCode == NoError)
@@ -339,12 +336,12 @@ ErrorCodesAE GF_Dumper::SetupUiQueueItems()
 		}
 	}
 	if(_ErrorCode == NoError) this->smart_collect = sc->smart_collect;
-	ERROR_LONG_ERR(connector.close_socket())	
+    ERROR_LONG_ERR(connector.close_socket())	//vfnprintf();
 	ERROR_CATCH_END_LOGGER_RETURN("SetupUiQueueItems")
 }
 ErrorCodesAE GF_Dumper::DumpUiQueueItems(const fs::path& outputPath) const
 {
-	ERROR_CATCH_START_MOD(CallerModuleName::QueueCollectModule)
+	ERROR_CATCH_START_MOD(QueueCollectModule)
 		while (!sc->gfsRqItemsList.empty())
 		{
 			if (sc->gfsRqItemsList.back()->renderable != 0) {
@@ -392,4 +389,6 @@ PF_AppProgressDialogP *GF_Dumper::get_progress_dialog(bool force_new, bool indet
 	}
 
 	return Err == PF_Err_NONE ? &dumper_progressbar_ : nullptr;
+}
+
 }

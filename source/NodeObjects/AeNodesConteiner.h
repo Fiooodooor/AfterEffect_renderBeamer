@@ -1,6 +1,6 @@
 #pragma once
 #include <list>
-
+namespace RenderBeamer {
 template<typename T> 
 class AeNodesConteiner : public std::list<T>
 {
@@ -21,7 +21,7 @@ private:
 	aeConstIter beg, end;
 
 };
-
+} // namespace RenderBeamer
 /* 
 using aeLst = typename std::list<T>;
 using aeIter = typename aeLst::iterator;

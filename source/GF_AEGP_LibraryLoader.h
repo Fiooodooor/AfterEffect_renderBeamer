@@ -1,9 +1,9 @@
-
-#pragma once
 #ifndef GF_AEGP_LIBRARYLOADER_H
 #define GF_AEGP_LIBRARYLOADER_H
 
 #include "GF_GlobalTypes.h"
+
+namespace RenderBeamer {
 
 class LibLoaderInterface
 {
@@ -39,4 +39,5 @@ public:
     
 };
 
+} // namespace RenderBeamer
 #endif

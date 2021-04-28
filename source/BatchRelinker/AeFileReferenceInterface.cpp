@@ -1,6 +1,7 @@
 #include "AeFileReferenceInterface.h"
 
 #include <utility>
+namespace RenderBeamer {
 
 //------------------------------------------------------------------------------------------------
 //
@@ -43,9 +44,9 @@ SingleFileReference::SingleFileReference(const std::string& theFilesUID, tinyxml
 AeFileNode* SingleFileReference::AddFiles()
 {
 	ERROR_CATCH_START
-	auto *node = new AeFileNode(false, filesUID, GetMainFilePath());
-	node->PushSourceFilename(new AeFileNode::FilenameCouple(false, 0, GetFilesReferencePointer(), file_name.filename().string()));
-	return node;
+        auto *node = new AeFileNode(false, filesUID, GetMainFilePath());
+        node->PushSourceFilename(new AeFileNode::FilenameCouple(false, 0, GetFilesReferencePointer(), file_name.filename().string()));
+        return node;
 	ERROR_CATCH_END_NO_INFO
 	return nullptr;
 }
@@ -83,15 +84,15 @@ AeFileNode* SequenceListFileReference::AddFiles()
 	{
 		auto *node = new AeFileNode(true, filesUID, GetMainFilePath());
 		auto filesToLookFor = std::strtol(file_reference->Attribute("bdata"), nullptr, 16);
-		if (filesToLookFor > 59999 || filesToLookFor < 0)
-			filesToLookFor = 59999;
+		if (filesToLookFor <= 0)        // possible read or parsing error
+			filesToLookFor = 16;
 			
 		node->SetMaxFilesCount(filesToLookFor);
 
 		file_reference = file_reference->NextSiblingElement();
 		while (file_reference)
 		{			
-			if (std::string(file_reference->Value()).compare("string") == 0)
+			if (std::string(file_reference->Value()) == "string")
 				node->PushSourceFilename(new AeFileNode::FilenameCouple(false, 0, file_reference, file_reference->GetText()));
 			file_reference = file_reference->NextSiblingElement();
 		}
@@ -199,3 +200,4 @@ bool SequenceMaskFileReference::RelinkFiles(AeFileNode* node)
 	}
 	return false;
 }
+} // namespace RenderBeamer

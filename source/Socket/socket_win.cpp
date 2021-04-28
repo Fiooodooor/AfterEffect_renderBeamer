@@ -6,6 +6,7 @@
 #include <WS2tcpip.h>
 #include "../GF_AEGP_Dumper.h"
 
+namespace RenderBeamer {
 platform_socket::platform_socket() : SocketClientInterface()
 {
 }
@@ -278,6 +279,6 @@ void platform_socket::print_error_string(const int error_id, const std::string &
 	}
 }
 
-
+} // namespace RenderBeamer
 
 #endif

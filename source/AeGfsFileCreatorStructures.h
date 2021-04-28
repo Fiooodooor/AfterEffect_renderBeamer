@@ -5,6 +5,8 @@
 #include "GF_GlobalTypes.h"
 #include <vector>
 
+namespace RenderBeamer {
+
 typedef struct gfsFontNode {
 	unsigned long long subFontNr;
 	std::string fontName;
@@ -50,6 +52,8 @@ typedef struct gfsRqItem {
 	A_char fps[AEGP_MAX_ITEM_NAME_SIZE];
 	std::vector<gfsRqItemOutput*> output_mods;
 } gfsRqItem;
+
+} // namespace RenderBeamer
 
 #endif
 /*

@@ -6,6 +6,8 @@
 #ifdef AE_OS_MAC
 #include "socket_interface.h"
 
+namespace RenderBeamer {
+
 class platform_socket final : public SocketClientInterface
 {
 public:
@@ -31,6 +33,7 @@ protected:
     void print_error_string(int error_id, const std::string &caller_name) const override;
 };
 
+} // namespace RenderBeamer
 #endif
 
 #endif

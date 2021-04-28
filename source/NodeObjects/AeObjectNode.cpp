@@ -1,6 +1,6 @@
 #include "AeObjectNode.h"
 
-
+namespace RenderBeamer {
 ObjectCount::ObjectCount() {
 	count++;
 }
@@ -102,3 +102,4 @@ void AeObjectNode::deleteItem()
 		suites.ItemSuite9()->AEGP_DeleteItem(itemH);
 	itemH = nullptr;
 }
+} // namespace RenderBeamer

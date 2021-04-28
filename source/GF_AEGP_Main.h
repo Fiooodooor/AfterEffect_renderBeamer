@@ -5,6 +5,7 @@
 #include "GF_AEGP_Strings.h"
 #include "GF_AEGP_Dumper.h"
 
+namespace RenderBeamer {
 typedef struct _AEGP_GlobalRefcon				*AEGP_GlobalRefcon1;
 
 class Renderbeamer
@@ -30,7 +31,7 @@ private:
 	void CostCalculator() const;
 	bool values_constructor_called = false;
 };
-
+} // namespace RenderBeamer
 extern "C" DllExport AEGP_PluginInitFuncPrototype EntryPointFunction;
 
 #endif

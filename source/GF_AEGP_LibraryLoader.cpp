@@ -1,6 +1,8 @@
 
 #include "GF_AEGP_LibraryLoader.h"
 
+namespace RenderBeamer {
+
 LibLoaderInterface::LibLoaderInterface()
 	: libraryLoaded(false), libraryInstance(nullptr), lastFunctionPointer(nullptr)
 {	
@@ -127,3 +129,4 @@ bool PlatformLibLoader::loadFunctionDefinition(void** functionPt, const char* fu
 }
 
 #endif
+} // namespace RenderBeamer

@@ -1,5 +1,5 @@
 #include "AeConteiner.h"
-
+namespace RenderBeamer {
 AeSceneContainer::AeSceneContainer()
 {
 	nrOfCollectedItems = 0;
@@ -11,8 +11,8 @@ AeSceneContainer::~AeSceneContainer()
 void AeSceneContainer::clear()
 {
 	ERROR_CATCH_START
-		for (; !renderCompositionSortedList.empty(); renderCompositionSortedList.pop_back())
-			delete renderCompositionSortedList.back();
+    for (; !renderCompositionSortedList.empty(); renderCompositionSortedList.pop_back())
+        delete renderCompositionSortedList.back();
 	for (; !renderFootageSortedList.empty(); renderFootageSortedList.pop_back())
 		delete renderFootageSortedList.back();
 	for (; !renderFootageMissingList.empty(); renderFootageMissingList.pop_back())
@@ -39,3 +39,4 @@ A_long AeSceneContainer::getCollectedNr() const
 {
 	return nrOfCollectedItems;
 }
+} // namespace RenderBeamer

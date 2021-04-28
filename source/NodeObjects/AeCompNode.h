@@ -1,7 +1,9 @@
 #pragma once
+#ifndef AECOMPNODE_HPP
+#define AECOMPNODE_HPP
 #include "AeObjectNode.h"
 #include "../GF_GlobalClasses.h"
-
+namespace RenderBeamer {
 class AeFontNode : public AePathNode
 {
 public:
@@ -86,3 +88,5 @@ protected:
 typedef std::list<AeCompNode*> aeCmpNodes;
 typedef aeCmpNodes::const_iterator aeCmpNodesIt;
 
+} // namespace RenderBeamer
+#endif

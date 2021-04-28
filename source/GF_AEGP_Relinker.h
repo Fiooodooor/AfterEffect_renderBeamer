@@ -10,6 +10,8 @@
 #include "GF_LIBS_C4D_Relinker.h"
 #include "GF_LIBS_FontConverter.h"
 
+namespace RenderBeamer {
+
 class GF_AEGP_Relinker
 {
 public:
@@ -48,4 +50,5 @@ private:
 	beamerParamsStruct *bps;
 };
 
+} // namespace RenderBeamer
 #endif

@@ -5,6 +5,8 @@
 #include "AeGfsFileCreatorStructures.h"
 #include "BatchRelinker/tinyXml2.h"
 
+namespace RenderBeamer {
+
 class AeGfsFileCreator
 {
 public:
@@ -51,6 +53,6 @@ private:
 	tinyxml2::XMLElement *rq_item, *font_item, *effect_item;
 };
 
-
+} // namespace RenderBeamer
 
 #endif

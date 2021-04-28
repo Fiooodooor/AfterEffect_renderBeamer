@@ -8,6 +8,7 @@
 #include "AeFooNode.h"
 #include "AeConteiner.h"
 
+namespace RenderBeamer {
 
 class AeSceneCollector
 {
@@ -44,5 +45,5 @@ protected:
 	AEGP_PersistentBlobH pbh;
 	A_long pbh_items_number, smart_collect, continue_on_missing;
 };
-
+} // namespace RenderBeamer
 #endif

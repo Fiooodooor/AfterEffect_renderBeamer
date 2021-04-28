@@ -1,6 +1,7 @@
 #include "AeFileNode.h"
 #include "../GF_GlobalClasses.h"
 
+namespace RenderBeamer {
 AeFileNode::AeFileNode(bool is_sequence, std::string node_uid, fs::path source_path, std::string mask_base)
 	: node_is_sequence(is_sequence)
 	, node_files_size(0)
@@ -238,3 +239,4 @@ void AeFileNode::ListNodeFullPathFiles()
 		++i;
 	}
 }
+} // namespace RenderBeamer

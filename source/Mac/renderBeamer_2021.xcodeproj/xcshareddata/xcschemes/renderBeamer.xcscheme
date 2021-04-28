@@ -17,7 +17,7 @@
                BlueprintIdentifier = "C4E618CB095A3CE80012CA3F"
                BuildableName = "renderBeamer.plugin"
                BlueprintName = "renderBeamer"
-               ReferencedContainer = "container:renderBeamer.xcodeproj">
+               ReferencedContainer = "container:renderBeamer_2021.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -34,6 +34,9 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      enableAddressSanitizer = "YES"
+      enableASanStackUseAfterReturn = "YES"
+      enableUBSanitizer = "YES"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
@@ -42,8 +45,16 @@
       allowLocationSimulation = "YES">
       <PathRunnable
          runnableDebuggingMode = "0"
+         BundleIdentifier = "com.adobe.AfterEffects"
          FilePath = "/Applications/Adobe After Effects 2021/Adobe After Effects 2021.app">
       </PathRunnable>
+      <AdditionalOptions>
+         <AdditionalOption
+            key = "NSZombieEnabled"
+            value = "YES"
+            isEnabled = "YES">
+         </AdditionalOption>
+      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Debug"
@@ -51,15 +62,6 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C4E618CB095A3CE80012CA3F"
-            BuildableName = "renderBeamer.plugin"
-            BlueprintName = "renderBeamer"
-            ReferencedContainer = "container:renderBeamer.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

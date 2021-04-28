@@ -8,6 +8,7 @@
 
 #ifdef AE_OS_WIN
 #include "socket_interface.h"
+namespace RenderBeamer {
 
 class platform_socket final : public SocketClientInterface
 {
@@ -33,6 +34,7 @@ protected:
 	void print_to_debug(const std::string &message, const std::string &caller_name, bool error=true) const override;
 	void print_error_string(int error_id, const std::string &caller_name) const override;
 };
+} // namespace RenderBeamer
 #endif
 
 #endif

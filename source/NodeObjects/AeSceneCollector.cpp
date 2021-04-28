@@ -1,7 +1,7 @@
 #include "AeSceneCollector.h"
 #include <clocale>
 
-#define SMART_COLLECT_ON 1
+namespace RenderBeamer {
 
 AeSceneCollector::AeSceneCollector(AEGP_PluginID PluginId, SPBasicSuite *Sp, AEGP_ProjectH ProjectH, AeSceneContainer &theCt)
 	: ct(&theCt)
@@ -51,7 +51,7 @@ ErrorCodesAE AeSceneCollector::AeSmartCollect(A_Boolean useUiExporter)
 				ERROR_AEER(suites.RQItemSuite3()->AEGP_GetRQItemByIndex(pt->rq_id - 1, &rq_item));
 				ERROR_AEER(suites.RQItemSuite3()->AEGP_GetCompFromRQItem(rq_item, &comp_item))
 				ERROR_AEER(suites.CompSuite11()->AEGP_GetItemFromComp(comp_item, &item))
-				ERROR_AEER(collectSceneRqItem(new AeObjectNode(pluginId, sp, item, 0)))
+				ERROR_AE(collectSceneRqItem(new AeObjectNode(pluginId, sp, item, 0)))
 			}
 			_ErrorCode = NoError;
 		}		
@@ -390,3 +390,5 @@ ErrorCodesAE AeSceneCollector::generateDebugItemsInfo()
 	}*/
 	return NoError;
 }
+
+} // namespace RenderBeamer

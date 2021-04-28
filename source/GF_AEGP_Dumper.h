@@ -9,6 +9,8 @@
 #include "AeGfsFileCreator.h"
 #include "BatchRelinker/AeBatchRelinker.h"
 
+namespace RenderBeamer {
+
 class GF_AEGP_Relinker;
 
 class GF_Dumper
@@ -53,4 +55,5 @@ private:
 	AeSceneContainer* sc;
 	A_Boolean smart_collect;
 };
+} // namespace RenderBeamer
 #endif 

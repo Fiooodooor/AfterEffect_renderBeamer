@@ -1,14 +1,14 @@
-#pragma once
 #ifndef AEBATCHRELINKER_HPP
 #define AEBATCHRELINKER_HPP
 
 #include "AeFileReferenceInterface.h"
 #include "../GF_AEGP_Relinker.h"
+namespace RenderBeamer {
 
 class AeBatchRelinker
 {
 public:
-	AeBatchRelinker(SPBasicSuite* pb, PlatformLibLoader* c4dLoader, rbProjectClass& rbLogger, PF_AppProgressDialogP& progressD, const fs::path& aepxPath, const fs::path& aepxRemote);
+    AeBatchRelinker(SPBasicSuite* pb, PlatformLibLoader* c4dLoader, rbProjectClass* rbLogger, PF_AppProgressDialogP* progressD, const fs::path& aepxPath);
 	~AeBatchRelinker();
 	
 	ErrorCodesAE ParseAepxXmlDocument();
@@ -33,7 +33,6 @@ protected:
 	
 	tinyxml2::XMLDocument aepxXmlDocument;
 	fs::path aepxXmlDocumentPath;
-	fs::path aepxXmlDocumentRemotePath;
 	std::vector<FileReferenceInterface*> fileItemNodes;
 
 	unsigned long long unique_files_total_size;
@@ -41,4 +40,5 @@ protected:
 	std::mutex m;
 };
 
+}
 #endif

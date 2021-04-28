@@ -1,18 +1,16 @@
 #include "socket_macos.h"
 
 #ifdef AE_OS_MAC
-//#include <time.h>
+
 #include <errno.h>
 #include <fcntl.h>
-//#include <net/if.h>
 #include <arpa/inet.h>
-//#include <ctype.h>
-//#include <netinet/in.h>
-//#include <iostream>
 #include "../GF_AEGP_Dumper.h"
 #include <sys/types.h>     
 #include <sys/socket.h>
 #include <sys/ioctl.h>
+
+namespace RenderBeamer {
 #define INVALID_SOCKET 0
 platform_socket::platform_socket() : SocketClientInterface()
 {
@@ -246,5 +244,5 @@ void platform_socket::print_error_string(const int error_id, const std::string &
 		default: print_to_debug("Socket error: UNKNOWN", caller_name); break;	  
 	}
 }
-
+} // namespace RenderBeamer
 #endif

@@ -1,5 +1,5 @@
 #include "AeNodesConteiner.h"
-
+namespace RenderBeamer {
 template<typename T>
 AeNodesConteiner<T>::AeNodesConteiner() 
 	: std::list<T>()
@@ -74,3 +74,4 @@ bool AeNodesConteiner<T>::removeDuplicate(T node)
 	}
 	return false;
 }
+} // namespace RenderBeamer

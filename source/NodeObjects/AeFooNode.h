@@ -2,6 +2,8 @@
 #include "AeObjectNode.h"
 #include "../GF_GlobalClasses.h"
 
+namespace RenderBeamer {
+
 class AeFootageNode : public AeObjectNode, public AePathNode
 {
 public:
@@ -31,3 +33,4 @@ protected:
 
 typedef std::list<AeFootageNode*> aeFooNodes;
 typedef aeFooNodes::const_iterator aeFooNodesIt;
+} // namespace RenderBeamer;

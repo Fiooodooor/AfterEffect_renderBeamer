@@ -2,6 +2,8 @@
 #include "GF_AEGP_Main.h"
 #include "NodeObjects/AeSceneCollector.h"
 
+namespace RenderBeamer {
+
 Renderbeamer::Renderbeamer(SPBasicSuite *pica_basicP, AEGP_PluginID pluginID) : p_basic_(pica_basicP) , pluginId(pluginID), suites(pica_basicP)
 {
 }
@@ -51,36 +53,31 @@ void Renderbeamer::DumpProject(A_Boolean useUiExporter)
 		GF_Dumper project_dumper(p_basic_, pluginId);
 		beamerParamsStruct paths_structure;
 		AeSceneContainer scene_items_container;
-		{
-			std::lock_guard<std::mutex> lock(main_mutex);
-		}
-		{			
-			std::scoped_lock<std::mutex, std::mutex> lock(paths_structure.m, scene_items_container.m);
-			auto *dlg_ptr = project_dumper.get_progress_dialog(true, true, 0);
-			MAIN_PROGRESS_THROW(*dlg_ptr, 2, 10)
-				
-			ERROR_RETURN_VOID(GF_Dumper::PreCheckProject(p_basic_, pluginId, paths_structure))
-			ERROR_THROW(project_dumper.setPathsStruct(paths_structure))
+					
+		auto *dlg_ptr = project_dumper.get_progress_dialog(true, true, 0);
+		MAIN_PROGRESS_THROW(*dlg_ptr, 2, 10)
+			
+		ERROR_RETURN_VOID(GF_Dumper::PreCheckProject(p_basic_, pluginId, paths_structure))
+		ERROR_THROW(project_dumper.setPathsStruct(paths_structure))
 
-			MAIN_PROGRESS_THROW(*dlg_ptr, 3, 10)
-			ERROR_RETURN_VOID(project_dumper.PrepareProject())
+		MAIN_PROGRESS_THROW(*dlg_ptr, 3, 10)
+		ERROR_RETURN_VOID(project_dumper.PrepareProject())
 
-			AeSceneCollector collector(pluginId, p_basic_, project_dumper.rootProjH, scene_items_container);
-			ERROR_THROW(collector.collectSceneRenderQueueItems())
-			MAIN_PROGRESS_THROW(*dlg_ptr, 9, 10)
-			ERROR_THROW(project_dumper.setConteiner(scene_items_container))
+		AeSceneCollector collector(pluginId, p_basic_, project_dumper.rootProjH, scene_items_container);
+		ERROR_THROW(collector.collectSceneRenderQueueItems())
+		MAIN_PROGRESS_THROW(*dlg_ptr, 9, 10)
+		ERROR_THROW(project_dumper.setConteiner(scene_items_container))
 
-			if (project_dumper.SetupUiQueueItems() == UserDialogCancel)
-				throw PluginError(UserDialogCancel);
-			ERROR_THROW(collector.AeSceneCollect(useUiExporter))
+		if (project_dumper.SetupUiQueueItems() == UserDialogCancel)
+			throw PluginError(GF_PLUGIN_LANGUAGE, UserDialogCancel);
+		ERROR_THROW(collector.AeSceneCollect(useUiExporter))
 
-			MAIN_PROGRESS_THROW(*dlg_ptr, 12, 20)
-			ERROR_RETURN_VOID(project_dumper.newBatchDumpProject())
-			ERROR_AEER(suites.UtilitySuite6()->AEGP_ReportInfo(pluginId, GetStringPtr(StrID_ProjectSent)))
-		}
+		MAIN_PROGRESS_THROW(*dlg_ptr, 12, 20)
+		ERROR_RETURN_VOID(project_dumper.newBatchDumpProject())
+		ERROR_AEER(suites.UtilitySuite6()->AEGP_ReportInfo(pluginId, GetStringPtr(StrID_ProjectSent)))
+		
 	ERROR_CATCH_END(suites)
 }
-
 
 void Renderbeamer::CostCalculator() const
 {
@@ -122,6 +119,7 @@ A_Err Renderbeamer::SNewRenderbeamer(AEGP_GlobalRefcon *global_refconP, SPBasicS
 		return A_Err_NONE;
 	return A_Err_ALLOC;
 }
+} // namespace RenderBeamer
 
 A_Err EntryPointFunction(
     struct SPBasicSuite      *pica_basicP,            /* >> */
@@ -134,6 +132,6 @@ A_Err EntryPointFunction(
 	AEGP_PluginID	pid = aegp_plugin_id;
 	SPBasicSuite	*pb = pica_basicP;
 	
-	ERR(Renderbeamer::SNewRenderbeamer(global_refconP, pb, pid));
+	ERR(RenderBeamer::Renderbeamer::SNewRenderbeamer(global_refconP, pb, pid));
 	return err;
 }

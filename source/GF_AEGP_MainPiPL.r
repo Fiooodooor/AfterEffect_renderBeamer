@@ -11,7 +11,7 @@ resource 'PiPL' (16000) {
 		},
 		/* [2] */
 		Name {
-			"renderBeamer for After Effects v.18"
+			"renderBeamer for After Effects v.19"
 		},
 		/* [3] */
 		Category {

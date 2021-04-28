@@ -1,6 +1,8 @@
 
 #include "AeGfsFileCreator.h"
 
+namespace RenderBeamer {
+
 AeGfsFileCreator::AeGfsFileCreator()
 	: document_declaration(nullptr), doc_root(nullptr), doc_settings(nullptr), doc_aftereffects(nullptr), rq_item(nullptr), font_item(nullptr), effect_item(nullptr)
 {
@@ -223,3 +225,5 @@ ErrorCodesAE AeGfsFileCreator::SetAeVersionString(A_char const *version)
 	versionString = version;
 	return NoError;
 }
+
+} //namespace RenderBeamer

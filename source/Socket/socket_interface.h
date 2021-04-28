@@ -1,7 +1,7 @@
 #ifndef SOCKETCLIENTINTERFACE_HPP
 #define SOCKETCLIENTINTERFACE_HPP
-#include <string>
 
+namespace RenderBeamer {
 #define Socket_Read_Timeout 500;
 enum SocketState {
 	Error=-1,
@@ -38,4 +38,5 @@ protected:
 	int socket_state_ = 0;
 };
 
+} // namespace RenderBeamer
 #endif

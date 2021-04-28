@@ -3,8 +3,12 @@
 
 #include <cstdarg>
 #include <ctime>
+#include <thread>
 #include "base64.h"
 #include "GF_AEGP_Dumper.h"
+
+namespace RenderBeamer
+{
 
 rbProjectClass::rbProjectClass()
 	: logFilePathRenderBeamer{ '\0'}
@@ -149,18 +153,18 @@ bool rbProjectClass::openLogger()
 
 	return logger.is_open();
 }
-A_Err rbUtilities::getFontFromLayer(SPBasicSuite *pb, AEGP_PluginID pluginId, A_long itemNr, A_long layerNr, A_char* font, A_char* family, A_char* location)
+ErrorCodesAE rbUtilities::getFontFromLayer(SPBasicSuite *pb, AEGP_PluginID pluginId, A_long itemNr, A_long layerNr, A_char* font, A_char* family, A_char* location)
 {
-    PT_XTE_START{
+    ERROR_CATCH_START
         AEGP_SuiteHandler suites(pb);
         A_char tmpScript[256] = { '\0' };
         suites.ANSICallbacksSuite1()->sprintf(tmpScript, GetBeamerMaskA(BeamerMask_GetFont), itemNr, layerNr);
-        PT_ETX(execScript(pb, pluginId, tmpScript, font, AEGP_MAX_PATH_SIZE))
+        ERROR_AE(execScript(pb, pluginId, tmpScript, font, AEGP_MAX_PATH_SIZE))
         suites.ANSICallbacksSuite1()->sprintf(tmpScript, GetBeamerMaskA(BeamerMask_GetFontFamily), itemNr, layerNr);
-        PT_ETX(execScript(pb, pluginId, tmpScript, family, AEGP_MAX_PATH_SIZE))
+        ERROR_AE(execScript(pb, pluginId, tmpScript, family, AEGP_MAX_PATH_SIZE))
         suites.ANSICallbacksSuite1()->sprintf(tmpScript, GetBeamerMaskA(BeamerMask_GetFontPath), itemNr, layerNr);
-        PT_ETX(execScript(pb, pluginId, tmpScript, location, AEGP_MAX_PATH_SIZE))
-    } PT_XTE_CATCH_RETURN_ERR
+        ERROR_AE(execScript(pb, pluginId, tmpScript, location, AEGP_MAX_PATH_SIZE))
+    ERROR_CATCH_END_NO_INFO_RETURN
 }
 
 ErrorCodesAE rbUtilities::execScript(SPBasicSuite *pb, AEGP_PluginID pluginId, const A_char *inScript, A_char *outAchar, A_long maxLength)
@@ -340,10 +344,11 @@ ErrorCodesAE rbUtilities::pathStringFixIllegal(fs::path &path, bool dissalowed, 
 	}
     
 	const auto length = TSTRLEN(tempPath.TSTRING().c_str()) + 1;
-    auto *tmp_str = new TCHAR[length];
+    auto *tmp_str = new TCHAR[length+1];
 
     if (tmp_str)
     {
+        tmp_str[length] = '\0';
         TSTRNCPY(tmp_str, tempPath.TSTRING().c_str(), length - 1)
 
         if(dissalowed) {
@@ -575,7 +580,7 @@ ErrorCodesAE rbUtilities::win_exec_cmd(fs::path const &app, std::string const &a
 //	cmd = L"\"" + app.filename().wstring() + L"\" " + std::wstring(args.cbegin(), args.cend());
 //	if (!CreateProcessW(app.wstring().c_str(), &cmd[0], nullptr, nullptr, TRUE, CREATE_NO_WINDOW, nullptr, nullptr, &si, &pi))
 	if (!CreateProcessW(nullptr, &cmd[0], nullptr, nullptr, TRUE, CREATE_NO_WINDOW, nullptr, nullptr, &si, &pi))
-		throw PluginError(ExecCommandFailedToExec);
+		throw PluginError(GF_PLUGIN_LANGUAGE, ExecCommandFailedToExec);
 
 	const DWORD fn_signaled_state = WaitForSingleObject(pi.hProcess, INFINITE);
 	if (!GetExitCodeProcess(pi.hProcess, &return_code))
@@ -584,7 +589,7 @@ ErrorCodesAE rbUtilities::win_exec_cmd(fs::path const &app, std::string const &a
 	CloseHandle(pi.hThread);
 
 	if (fn_signaled_state != WAIT_OBJECT_0)
-		throw PluginError(ExecCommandFailedObjWait);
+		throw PluginError(GF_PLUGIN_LANGUAGE, ExecCommandFailedObjWait);
 	if (return_code != 0 && return_code != STILL_ACTIVE) {
 		GF_Dumper::rbProj()->loggErr("ExecCommandFailed::HelperClass", "Win_exec_cmd::Returned non zero code", std::to_string(static_cast<long long>(return_code)).c_str());
 		//throw PluginError(ExecCommandFailed);
@@ -601,19 +606,29 @@ ErrorCodesAE rbUtilities::mac_exec_cmd(fs::path const &app, std::string const &a
 	if (app.empty() || args.empty())
 		return ErrorResult;
 
-	std::string cmd = app.string() + " " + args;
+	std::string cmd = app.string() + " ";
+    std::size_t substr_pos = args.find(" -f");
+    if (substr_pos != std::string::npos) {
+        cmd += std::string(args.begin(), args.begin()+substr_pos);
+    }
+    FILE *fp;
+    char abuffer[1024]{0};
+    int abuffer_size = static_cast<int>(buffer_size);
 
-	if (!std::system(nullptr))
-		throw PluginError(ExecCommandFailedToExec);
-
-	const int exit_status = std::system(cmd.c_str());
-	if (exit_status == -1)
-		throw PluginError(ExecCommandFailedToExec);
-	if (exit_status != 0)
-		throw PluginError(ExecCommandFailed);
-
-	_ErrorCode = read_file_buffer_w(out_file, buffer_w, buffer_size);
-	
+    fp = popen(cmd.c_str(), "r");
+    if (fp == NULL) {
+        throw PluginError(GF_PLUGIN_LANGUAGE, ExecCommandFailed);
+    } else {
+        while (fgets(abuffer, abuffer_size, fp) != NULL) {}
+        pclose(fp);
+    }
+    if (buffer_w && buffer_size > 0 && !out_file.empty())
+    {
+        std::string abuffer_str = abuffer;
+        std::wstring wbuffer_str(abuffer_str.begin(), abuffer_str.end());
+        wcsncpy(buffer_w, wbuffer_str.c_str(), abuffer_size-1);
+    }
+    
 #endif
 	ERROR_CATCH_END_LOGGER_RETURN("MacExecCmd")
 }
@@ -624,12 +639,12 @@ ErrorCodesAE rbUtilities::read_file_buffer_w(fs::path const &out_file, wchar_t *
 		{
             std::wfstream tmp_stream(out_file.c_str(), std::fstream::in);
 			if (!tmp_stream.is_open())
-				throw PluginError(ExecCommandFailedToRead);
+				throw PluginError(GF_PLUGIN_LANGUAGE, ExecCommandFailedToRead);
 
 			tmp_stream.getline(buffer_w, buffer_size);
 			buffer_w[buffer_size - 1] = '\0';
 			if (tmp_stream.gcount() < 1 || tmp_stream.rdstate() == std::ios_base::failbit || tmp_stream.rdstate() == std::ios_base::badbit)
-				throw PluginError(ExecCommandFailedToRead);
+				throw PluginError(GF_PLUGIN_LANGUAGE, ExecCommandFailedToRead);
 		}
 	ERROR_CATCH_END_LOGGER_RETURN("ReadFileBuffer")
 }
@@ -728,7 +743,7 @@ ErrorCodesAE rbUtilities::openCostCalculator(SPBasicSuite *pb)
 		wchar_t theTempCmd[1024];
 		RB_SWPRINTF(theTempCmd, 1024, L"%ls?cpu=%ls&frames=%d", theUrl, procEncoded,  frames);
 		if (32 >= reinterpret_cast<ULONG_PTR>(ShellExecuteW(nullptr, L"open", theTempCmd, nullptr, nullptr, SW_SHOWNORMAL))) {
-			throw PluginError(FailedToOpenWebPage);
+			throw PluginError(GF_PLUGIN_LANGUAGE, FailedToOpenWebPage);
 		}
 #else
 		char theTempCmd[1024];
@@ -767,3 +782,6 @@ std::string rbUtilities::toUtf8(const wchar_t* stringToConvert)
 	ERROR_CATCH_END_NO_INFO
 	return new_buffer;
 }
+    
+} // namespace RenderBeamer
+
