@@ -5,6 +5,7 @@
     #include "Socket/socket_macos.h"
 #endif
 #include "Socket/gfs_rq_node_wrapper.h"
+
 namespace RenderBeamer {
 
 GF_Dumper::GF_Dumper(SPBasicSuite *basic_suite, AEGP_PluginID plugin_aegp_id)

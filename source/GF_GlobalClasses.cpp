@@ -619,16 +619,15 @@ ErrorCodesAE rbUtilities::mac_exec_cmd(fs::path const &app, std::string const &a
     if (fp == NULL) {
         throw PluginError(GF_PLUGIN_LANGUAGE, ExecCommandFailed);
     } else {
-        while (fgets(abuffer, abuffer_size, fp) != NULL) {}
+        if (buffer_w && buffer_size > 0 && !out_file.empty())
+        {
+            while (fgets(abuffer, abuffer_size, fp) != NULL) {}
+            std::string abuffer_str = abuffer;
+            std::wstring wbuffer_str(abuffer_str.begin(), abuffer_str.end());
+            wcsncpy(buffer_w, wbuffer_str.c_str(), abuffer_size-1);
+        }
         pclose(fp);
     }
-    if (buffer_w && buffer_size > 0 && !out_file.empty())
-    {
-        std::string abuffer_str = abuffer;
-        std::wstring wbuffer_str(abuffer_str.begin(), abuffer_str.end());
-        wcsncpy(buffer_w, wbuffer_str.c_str(), abuffer_size-1);
-    }
-    
 #endif
 	ERROR_CATCH_END_LOGGER_RETURN("MacExecCmd")
 }

@@ -80,7 +80,6 @@ ErrorCodesAE AeBatchRelinker::ParseAepxXmlDocument()
 
 FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElement *fileReferencePt)
 {
-    const std::lock_guard<std::mutex> lock(m);
 	FileReferenceInterface *fileRef = nullptr;
 	AeFileNodeID node_id = 0;
 	std::string fileUid = "00000000";
