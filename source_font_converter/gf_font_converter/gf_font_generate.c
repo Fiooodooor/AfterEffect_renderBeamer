@@ -1,7 +1,9 @@
 //#include <stdio.h>
 #include <stdlib.h>
-#include "/Users/ccc/Desktop/fontforge-master/builds/inc/fontforge-config.h"
-#include <fontforge/fontforge.h>
+#include "/Users/ccc/Downloads/fontforge-master/build/inc/fontforge-config.h"
+//#include "/Users/ccc/Desktop/fontforge-master/builds/inc/fontforge-config.h"
+#include "/Users/ccc/Downloads/fontforge-master/fontforge/fontforge.h"
+//#include <fontforge/fontforge.h>
 #include "gf_font_generate.h"
 #define ALLOWED_CHARACTERSA "_-0123456789ABCDEFGHIJKLMNOPQRSTUWVXYZabcdefghijklmnopqrstuwvxyz"
 static EncMap *createMapCopy(EncMap *map);

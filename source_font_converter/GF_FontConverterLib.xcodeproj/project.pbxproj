@@ -7,9 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4A60075826408636001A0453 /* libfontforge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A6007562640801E001A0453 /* libfontforge.a */; };
+		4A60075A26415500001A0453 /* libtiff.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60075926415500001A0453 /* libtiff.a */; };
+		4A60075C26415507001A0453 /* libtiffxx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60075B26415507001A0453 /* libtiffxx.a */; };
+		4A60075E2641552C001A0453 /* libjpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60075D2641552C001A0453 /* libjpeg.a */; };
+		4A60076026415544001A0453 /* libgif.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60075F26415544001A0453 /* libgif.a */; };
+		4A60076226415787001A0453 /* libintl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60076126415787001A0453 /* libintl.a */; };
+		4A600764264158DD001A0453 /* libgio-2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A600763264158DD001A0453 /* libgio-2.0.a */; };
+		4A600766264158E4001A0453 /* libglib-2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A600765264158E4001A0453 /* libglib-2.0.a */; };
+		4A60076826415A2B001A0453 /* libgettextpo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60076726415A2B001A0453 /* libgettextpo.a */; };
+		4A60076A26415A42001A0453 /* libxml2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60076926415A42001A0453 /* libxml2.a */; };
+		4A60076C26415A5D001A0453 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60076B26415A5D001A0453 /* libz.a */; };
+		4A60076E26415A7E001A0453 /* libpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60076D26415A7E001A0453 /* libpng.a */; };
+		4A60077026415A83001A0453 /* libpng16.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60076F26415A83001A0453 /* libpng16.a */; };
+		4A60077226415AB8001A0453 /* libfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60077126415AB8001A0453 /* libfreetype.a */; };
+		4A60077426415AE9001A0453 /* libuninameslist.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60077326415AE9001A0453 /* libuninameslist.a */; };
+		4A60077626416CE8001A0453 /* libiconv.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60077526416CE7001A0453 /* libiconv.2.dylib */; };
 		4A6512A5244E154200C32C49 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A6DD6B12429E294001AB42D /* CoreServices.framework */; };
 		4A6512A8244E154400C32C49 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A6DD6CE242A0A6D001AB42D /* CoreFoundation.framework */; };
-		4A6DD6A82429DBD6001AB42D /* libfontforge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A6DD6A72429DBD6001AB42D /* libfontforge.a */; };
 		4A8787202409209C004D1DFC /* gf_font_converter.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 4A87871F2409209C004D1DFC /* gf_font_converter.hpp */; };
 		4A8787222409209C004D1DFC /* gf_font_converterPriv.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 4A8787212409209C004D1DFC /* gf_font_converterPriv.hpp */; };
 		4A8787242409209C004D1DFC /* gf_font_converter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A8787232409209C004D1DFC /* gf_font_converter.cpp */; };
@@ -18,7 +33,22 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		4A6DD6A72429DBD6001AB42D /* libfontforge.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfontforge.a; path = "../../../../Downloads/fontforge-master/builds/lib/libfontforge.a"; sourceTree = "<group>"; };
+		4A6007562640801E001A0453 /* libfontforge.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfontforge.a; path = "../../../fontforge-master/build/lib/libfontforge.a"; sourceTree = "<group>"; };
+		4A60075926415500001A0453 /* libtiff.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtiff.a; path = ../../../../../../usr/local/lib/libtiff.a; sourceTree = "<group>"; };
+		4A60075B26415507001A0453 /* libtiffxx.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtiffxx.a; path = ../../../../../../usr/local/lib/libtiffxx.a; sourceTree = "<group>"; };
+		4A60075D2641552C001A0453 /* libjpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjpeg.a; path = ../../../../../../usr/local/lib/libjpeg.a; sourceTree = "<group>"; };
+		4A60075F26415544001A0453 /* libgif.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgif.a; path = ../../../../../../usr/local/lib/libgif.a; sourceTree = "<group>"; };
+		4A60076126415787001A0453 /* libintl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libintl.a; path = ../../../../../../usr/local/lib/libintl.a; sourceTree = "<group>"; };
+		4A600763264158DD001A0453 /* libgio-2.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libgio-2.0.a"; path = "../../../../../../usr/local/lib/libgio-2.0.a"; sourceTree = "<group>"; };
+		4A600765264158E4001A0453 /* libglib-2.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libglib-2.0.a"; path = "../../../../../../usr/local/lib/libglib-2.0.a"; sourceTree = "<group>"; };
+		4A60076726415A2B001A0453 /* libgettextpo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgettextpo.a; path = ../../../../../../usr/local/Cellar/gettext/0.21/lib/libgettextpo.a; sourceTree = "<group>"; };
+		4A60076926415A42001A0453 /* libxml2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libxml2.a; path = ../../../../../../usr/local/Cellar/libxml2/2.9.10_2/lib/libxml2.a; sourceTree = "<group>"; };
+		4A60076B26415A5D001A0453 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = ../../../../../../usr/local/Cellar/zlib/1.2.11/lib/libz.a; sourceTree = "<group>"; };
+		4A60076D26415A7E001A0453 /* libpng.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng.a; path = ../../../../../../usr/local/Cellar/libpng/1.6.37/lib/libpng.a; sourceTree = "<group>"; };
+		4A60076F26415A83001A0453 /* libpng16.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng16.a; path = ../../../../../../usr/local/Cellar/libpng/1.6.37/lib/libpng16.a; sourceTree = "<group>"; };
+		4A60077126415AB8001A0453 /* libfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfreetype.a; path = ../../../../../../usr/local/Cellar/freetype/2.10.4/lib/libfreetype.a; sourceTree = "<group>"; };
+		4A60077326415AE9001A0453 /* libuninameslist.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libuninameslist.a; path = ../../../../../../usr/local/Cellar/libuninameslist/20200413/lib/libuninameslist.a; sourceTree = "<group>"; };
+		4A60077526416CE7001A0453 /* libiconv.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.dylib; path = ../../../../../../usr/lib/libiconv.2.dylib; sourceTree = "<group>"; };
 		4A6DD6B12429E294001AB42D /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		4A6DD6CE242A0A6D001AB42D /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		4A87871D2409209C004D1DFC /* libgf_font_converter.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libgf_font_converter.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -34,8 +64,23 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4A60077426415AE9001A0453 /* libuninameslist.a in Frameworks */,
+				4A60077026415A83001A0453 /* libpng16.a in Frameworks */,
+				4A60076E26415A7E001A0453 /* libpng.a in Frameworks */,
+				4A60076C26415A5D001A0453 /* libz.a in Frameworks */,
+				4A60077626416CE8001A0453 /* libiconv.2.dylib in Frameworks */,
+				4A60076A26415A42001A0453 /* libxml2.a in Frameworks */,
+				4A600766264158E4001A0453 /* libglib-2.0.a in Frameworks */,
+				4A600764264158DD001A0453 /* libgio-2.0.a in Frameworks */,
+				4A60076826415A2B001A0453 /* libgettextpo.a in Frameworks */,
+				4A60076226415787001A0453 /* libintl.a in Frameworks */,
+				4A60075A26415500001A0453 /* libtiff.a in Frameworks */,
+				4A60075C26415507001A0453 /* libtiffxx.a in Frameworks */,
+				4A60075E2641552C001A0453 /* libjpeg.a in Frameworks */,
+				4A60076026415544001A0453 /* libgif.a in Frameworks */,
+				4A60077226415AB8001A0453 /* libfreetype.a in Frameworks */,
+				4A60075826408636001A0453 /* libfontforge.a in Frameworks */,
 				4A6512A8244E154400C32C49 /* CoreFoundation.framework in Frameworks */,
-				4A6DD6A82429DBD6001AB42D /* libfontforge.a in Frameworks */,
 				4A6512A5244E154200C32C49 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -63,9 +108,24 @@
 		4A8786FB24080616004D1DFC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4A60077526416CE7001A0453 /* libiconv.2.dylib */,
+				4A60077326415AE9001A0453 /* libuninameslist.a */,
+				4A60077126415AB8001A0453 /* libfreetype.a */,
+				4A60076F26415A83001A0453 /* libpng16.a */,
+				4A60076D26415A7E001A0453 /* libpng.a */,
+				4A60076B26415A5D001A0453 /* libz.a */,
+				4A60076926415A42001A0453 /* libxml2.a */,
+				4A60076726415A2B001A0453 /* libgettextpo.a */,
+				4A600765264158E4001A0453 /* libglib-2.0.a */,
+				4A600763264158DD001A0453 /* libgio-2.0.a */,
+				4A60076126415787001A0453 /* libintl.a */,
+				4A60075F26415544001A0453 /* libgif.a */,
+				4A60075D2641552C001A0453 /* libjpeg.a */,
+				4A60075B26415507001A0453 /* libtiffxx.a */,
+				4A60075926415500001A0453 /* libtiff.a */,
+				4A6007562640801E001A0453 /* libfontforge.a */,
 				4A6DD6CE242A0A6D001AB42D /* CoreFoundation.framework */,
 				4A6DD6B12429E294001AB42D /* CoreServices.framework */,
-				4A6DD6A72429DBD6001AB42D /* libfontforge.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -170,7 +230,7 @@
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -217,12 +277,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				LIBRARY_SEARCH_PATHS = "/Users/ccc/Downloads/fontforge-master/builds/lib";
+				LIBRARY_SEARCH_PATHS = "/Users/ccc/Downloads/fontforge-master/build/lib";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRELINK_LIBS = libfontforge.a;
+				PRELINK_LIBS = "/Users/ccc/Downloads/fontforge-master/build/lib/libfontforge.a";
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
 				SDKROOT = macosx;
 				VALID_ARCHS = x86_64;
@@ -236,7 +296,7 @@
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -277,11 +337,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				LIBRARY_SEARCH_PATHS = "/Users/ccc/Downloads/fontforge-master/builds/lib";
+				LIBRARY_SEARCH_PATHS = "/Users/ccc/Downloads/fontforge-master/build/lib";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRELINK_LIBS = libfontforge.a;
+				ONLY_ACTIVE_ARCH = YES;
+				PRELINK_LIBS = "/Users/ccc/Downloads/fontforge-master/build/lib/libfontforge.a";
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
 				SDKROOT = macosx;
 				VALID_ARCHS = x86_64;
@@ -291,52 +352,50 @@
 		4A8787262409209C004D1DFC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_ENABLE_CPP_RTTI = YES;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				HEADER_SEARCH_PATHS = "/Users/ccc/Desktop/fontforge-master/**";
-				INFOPLIST_FILE = "/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/renderBeamer.plugin-Info.plist";
+				HEADER_SEARCH_PATHS = (
+					"/Users/ccc/Downloads/fontforge-master/fontforge/**",
+					"/Users/ccc/Downloads/fontforge-master/build/inc/",
+					"/Users/ccc/Downloads/fontforge-master/inc/",
+					/usr/local/Cellar/gettext/0.21/include/,
+				);
+				INFOPLIST_FILE = "";
 				INSTALL_PATH = "/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/renderBeamer.plugin/Contents/Resources/";
 				LIBRARY_SEARCH_PATHS = (
-					"/Users/ccc/Desktop/fontforge-master/builds/lib",
-					/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/Libs_groyp,
+					"/Users/ccc/Downloads/fontforge-master/build/lib",
+					/usr/local/lib,
+					/usr/local/Cellar/gettext/0.21/lib,
+					/usr/local/Cellar/libxml2/2.9.10_2/lib,
+					/usr/local/Cellar/zlib/1.2.11/lib,
+					/usr/local/Cellar/libpng/1.6.37/lib,
+					/usr/local/Cellar/freetype/2.10.4/lib,
+					/usr/local/Cellar/libuninameslist/20200413/lib,
 				);
-				MACH_O_TYPE = mh_dylib;
+				MACH_O_TYPE = staticlib;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MARKETING_VERSION = 0.9.0.4;
 				OTHER_LDFLAGS = (
 					"-Wl",
 					"-Bstatic",
-					"/Users/ccc/Desktop/fontforge-master/builds/lib/libfontforge.a",
-					/usr/local/Cellar/libxml2/2.9.10_1/lib/libxml2.a,
-					/usr/local/Cellar/freetype/2.10.1/lib/libfreetype.a,
-					/usr/local/Cellar/gettext/0.20.2_1/lib/libintl.a,
-					/usr/local/Cellar/zlib/1.2.11/lib/libz.a,
-					/usr/local/Cellar/bzip2/1.0.8/lib/libbz2.a,
-					/usr/local/Cellar/libpng/1.6.37/lib/libpng.a,
-					/usr/local/Cellar/libffi/3.3/lib/libffi.a,
-					/usr/local/Cellar/libpng/1.6.37/lib/libpng16.a,
 					"-framework",
 					CoreServices,
 					"-framework",
 					CoreFoundation,
-					"-Wl",
-					"-Bshared",
-					"/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/Libs_groyp/libgio-2.0.0.dylib",
-					"/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/Libs_groyp/libglib-2.0.0.dylib",
-					"/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/Libs_groyp/libgmodule-2.0.0.dylib",
-					"/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/Libs_groyp/libgobject-2.0.0.dylib",
-					/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/Libs_groyp/libiconv.2.dylib,
 				);
+				PRELINK_LIBS = "/Users/ccc/Downloads/fontforge-master/build/lib/libfontforge.a /usr/local/lib/libtiff.a /usr/local/lib/libtiffxx.a /usr/local/lib/libjpeg.a /usr/local/lib/libgif.a /usr/local/lib/libintl.a";
 				PRODUCT_BUNDLE_IDENTIFIER = com.adobe.AfterEffects.renderBeamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = NO;
+				SKIP_INSTALL = YES;
+				STRIP_INSTALLED_PRODUCT = YES;
 				SYMROOT = /Users/ccc/Documents/GF_Font_Converter;
 				VALID_ARCHS = x86_64;
 			};
@@ -345,53 +404,52 @@
 		4A8787272409209C004D1DFC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				HEADER_SEARCH_PATHS = "/Users/ccc/Desktop/fontforge-master/**";
-				INFOPLIST_FILE = "/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/renderBeamer.plugin-Info.plist";
+				HEADER_SEARCH_PATHS = (
+					"/Users/ccc/Downloads/fontforge-master/fontforge/**",
+					"/Users/ccc/Downloads/fontforge-master/build/inc/",
+					"/Users/ccc/Downloads/fontforge-master/inc/",
+					/usr/local/Cellar/gettext/0.21/include/,
+				);
+				INFOPLIST_FILE = "";
 				INSTALL_PATH = "/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/renderBeamer.plugin/Contents/Resources/";
 				LIBRARY_SEARCH_PATHS = (
-					"/Users/ccc/Desktop/fontforge-master/builds/lib",
-					/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/Libs_groyp,
+					"/Users/ccc/Downloads/fontforge-master/build/lib",
+					/usr/local/lib,
+					/usr/local/Cellar/gettext/0.21/lib,
+					/usr/local/Cellar/libxml2/2.9.10_2/lib,
+					/usr/local/Cellar/zlib/1.2.11/lib,
+					/usr/local/Cellar/libpng/1.6.37/lib,
+					/usr/local/Cellar/freetype/2.10.4/lib,
+					/usr/local/Cellar/libuninameslist/20200413/lib,
 				);
-				MACH_O_TYPE = mh_dylib;
+				MACH_O_TYPE = staticlib;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MARKETING_VERSION = 0.9.0.4;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-Wl",
 					"-Bstatic",
-					"/Users/ccc/Desktop/fontforge-master/builds/lib/libfontforge.a",
-					/usr/local/Cellar/libxml2/2.9.10_1/lib/libxml2.a,
-					/usr/local/Cellar/freetype/2.10.1/lib/libfreetype.a,
-					/usr/local/Cellar/gettext/0.20.2_1/lib/libintl.a,
-					/usr/local/Cellar/zlib/1.2.11/lib/libz.a,
-					/usr/local/Cellar/bzip2/1.0.8/lib/libbz2.a,
-					/usr/local/Cellar/libpng/1.6.37/lib/libpng.a,
-					/usr/local/Cellar/libffi/3.3/lib/libffi.a,
-					/usr/local/Cellar/libpng/1.6.37/lib/libpng16.a,
 					"-framework",
 					CoreServices,
 					"-framework",
 					CoreFoundation,
-					"-Wl",
-					"-Bshared",
-					"/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/Libs_groyp/libgio-2.0.0.dylib",
-					"/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/Libs_groyp/libglib-2.0.0.dylib",
-					"/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/Libs_groyp/libgmodule-2.0.0.dylib",
-					"/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/Libs_groyp/libgobject-2.0.0.dylib",
-					/Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/Mac/Libs_groyp/libiconv.2.dylib,
 				);
+				PRELINK_LIBS = "/Users/ccc/Downloads/fontforge-master/build/lib/libfontforge.a /usr/local/lib/libtiff.a /usr/local/lib/libtiffxx.a /usr/local/lib/libjpeg.a /usr/local/lib/libgif.a /usr/local/lib/libintl.a";
 				PRODUCT_BUNDLE_IDENTIFIER = com.adobe.AfterEffects.renderBeamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = NO;
+				SKIP_INSTALL = YES;
+				STRIP_INSTALLED_PRODUCT = NO;
 				SYMROOT = /Users/ccc/Documents/GF_Font_Converter;
 				VALID_ARCHS = x86_64;
 			};
