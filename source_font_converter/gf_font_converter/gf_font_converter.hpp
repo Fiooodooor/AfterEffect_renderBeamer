@@ -13,6 +13,7 @@
 /* The classes below are exported */
 #pragma GCC visibility push(default)
 #define LIB_MAXPATH_SIZE 1041 // 260x4 + 1 = 1040 (unicode on mac char is 4 bytes long)
+#define LIB_FONTPATH char fontPath[LIB_MAXPATH_SIZE];
 
 typedef struct FontsPathS {
     char fontPath[LIB_MAXPATH_SIZE];

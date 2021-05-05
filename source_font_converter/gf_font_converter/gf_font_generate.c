@@ -1,16 +1,19 @@
 //#include <stdio.h>
 #include <stdlib.h>
 #include "/Users/ccc/Downloads/fontforge-master/build/inc/fontforge-config.h"
-//#include "/Users/ccc/Desktop/fontforge-master/builds/inc/fontforge-config.h"
 #include "/Users/ccc/Downloads/fontforge-master/fontforge/fontforge.h"
-//#include <fontforge/fontforge.h>
 #include "gf_font_generate.h"
 #define ALLOWED_CHARACTERSA "_-0123456789ABCDEFGHIJKLMNOPQRSTUWVXYZabcdefghijklmnopqrstuwvxyz"
+
+// int GenerateScript(SplineFont *sf, char *filename, char *bitmaptype,
+    //int fmflags, int res, char *subfontdefinition, struct sflist *sfs,
+ //     EncMap *map, NameList *rename_to,int layer)
+
 static EncMap *createMapCopy(EncMap *map);
 static void leaveAllowedOnly(char *sourceStr);
 extern int			doinitFontForgeMain(void);
 extern SplineFont  *LoadSplineFont(const char *, enum openflags);
-extern int			GenerateScript(SplineFont *, char *, const char *, int, int, char *, struct sflist *, EncMap *, NameList *, int);
+extern int			GenerateScript(SplineFont *, char *filename, const char *bitmaptype, int fmflags, int res, char *subfont_definition, struct sflist *sfs, EncMap *map, NameList *rename_to, int layer);
 extern void			SFFlatten(SplineFont **cidmaster);
 extern char**		GetFontNames(const char*);
 
@@ -53,7 +56,7 @@ int convert_font(const char* src_file, const char* output_path, const char* outp
 {
     destFilePath[0]='\0';
     doinitFontForgeMain();
-    SplineFont* font = (SplineFont*)LoadSplineFont(src_file, 1);
+    SplineFont* font = (SplineFont*)LoadSplineFont(src_file, of_fstypepermitted);
        
     if (font != NULL)
     {
@@ -69,7 +72,8 @@ int convert_font(const char* src_file, const char* output_path, const char* outp
                 free(tmpMapCpy);
         }
         unsigned long len = 0;
-        if(font->fontname && (len = strlen(font->fontname)) > 5) {
+        if(font->fontname && (len = strlen(font->fontname)) > 5)
+        {
             char* tempFontName = malloc(sizeof(char)*(len+5));
             char fontExtension[5];
             strcpy(fontExtension, &output_file[strlen(output_file) - 4]);

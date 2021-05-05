@@ -7,24 +7,35 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4A60075826408636001A0453 /* libfontforge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A6007562640801E001A0453 /* libfontforge.a */; };
-		4A60075A26415500001A0453 /* libtiff.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60075926415500001A0453 /* libtiff.a */; };
-		4A60075C26415507001A0453 /* libtiffxx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60075B26415507001A0453 /* libtiffxx.a */; };
-		4A60075E2641552C001A0453 /* libjpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60075D2641552C001A0453 /* libjpeg.a */; };
-		4A60076026415544001A0453 /* libgif.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60075F26415544001A0453 /* libgif.a */; };
-		4A60076226415787001A0453 /* libintl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60076126415787001A0453 /* libintl.a */; };
-		4A600764264158DD001A0453 /* libgio-2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A600763264158DD001A0453 /* libgio-2.0.a */; };
-		4A600766264158E4001A0453 /* libglib-2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A600765264158E4001A0453 /* libglib-2.0.a */; };
-		4A60076826415A2B001A0453 /* libgettextpo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60076726415A2B001A0453 /* libgettextpo.a */; };
-		4A60076A26415A42001A0453 /* libxml2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60076926415A42001A0453 /* libxml2.a */; };
-		4A60076C26415A5D001A0453 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60076B26415A5D001A0453 /* libz.a */; };
-		4A60076E26415A7E001A0453 /* libpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60076D26415A7E001A0453 /* libpng.a */; };
-		4A60077026415A83001A0453 /* libpng16.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60076F26415A83001A0453 /* libpng16.a */; };
-		4A60077226415AB8001A0453 /* libfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60077126415AB8001A0453 /* libfreetype.a */; };
-		4A60077426415AE9001A0453 /* libuninameslist.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60077326415AE9001A0453 /* libuninameslist.a */; };
-		4A60077626416CE8001A0453 /* libiconv.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60077526416CE7001A0453 /* libiconv.2.dylib */; };
-		4A6512A5244E154200C32C49 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A6DD6B12429E294001AB42D /* CoreServices.framework */; };
-		4A6512A8244E154400C32C49 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A6DD6CE242A0A6D001AB42D /* CoreFoundation.framework */; };
+		4A7B4AF42642787400E28C15 /* libglib-2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4AE52642787300E28C15 /* libglib-2.0.a */; };
+		4A7B4AF52642787400E28C15 /* libfontforge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4AE62642787300E28C15 /* libfontforge.a */; };
+		4A7B4AF62642787400E28C15 /* libpng16.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4AE72642787300E28C15 /* libpng16.a */; };
+		4A7B4AF72642787400E28C15 /* libgio-2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4AE82642787300E28C15 /* libgio-2.0.a */; };
+		4A7B4AF82642787400E28C15 /* libtextstyle.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4AE92642787300E28C15 /* libtextstyle.a */; };
+		4A7B4AFA2642787400E28C15 /* libxml2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4AEB2642787300E28C15 /* libxml2.a */; };
+		4A7B4AFB2642787400E28C15 /* libgettextpo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4AEC2642787300E28C15 /* libgettextpo.a */; };
+		4A7B4AFC2642787400E28C15 /* libuninameslist.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4AED2642787300E28C15 /* libuninameslist.a */; };
+		4A7B4AFD2642787400E28C15 /* libjpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4AEE2642787400E28C15 /* libjpeg.a */; };
+		4A7B4AFE2642787400E28C15 /* libfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4AEF2642787400E28C15 /* libfreetype.a */; };
+		4A7B4AFF2642787400E28C15 /* libintl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4AF02642787400E28C15 /* libintl.a */; };
+		4A7B4B002642787400E28C15 /* libgif.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4AF12642787400E28C15 /* libgif.a */; };
+		4A7B4B012642787400E28C15 /* libiconv.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4AF22642787400E28C15 /* libiconv.2.dylib */; };
+		4A7B4B022642787400E28C15 /* libtiff.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4AF32642787400E28C15 /* libtiff.a */; };
+		4A7B4B0626427BAC00E28C15 /* libgobject-2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4B0326427BAC00E28C15 /* libgobject-2.0.a */; };
+		4A7B4B0726427BAC00E28C15 /* libgmodule-2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4B0426427BAC00E28C15 /* libgmodule-2.0.a */; };
+		4A7B4B0826427BAC00E28C15 /* libgthread-2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4B0526427BAC00E28C15 /* libgthread-2.0.a */; };
+		4A7B4B132642823800E28C15 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4B122642823800E28C15 /* libz.a */; };
+		4A7B4B1E2642833B00E28C15 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4B16264282FD00E28C15 /* AppKit.framework */; };
+		4A7B4B1F2642833B00E28C15 /* AppKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4B16264282FD00E28C15 /* AppKit.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4A7B4B212642833D00E28C15 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4B142642828500E28C15 /* Cocoa.framework */; };
+		4A7B4B222642833D00E28C15 /* Cocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4B142642828500E28C15 /* Cocoa.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4A7B4B232642833F00E28C15 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4B182642831100E28C15 /* CoreFoundation.framework */; };
+		4A7B4B242642833F00E28C15 /* CoreFoundation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4B182642831100E28C15 /* CoreFoundation.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4A7B4B252642834100E28C15 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4B1A2642832100E28C15 /* CoreServices.framework */; };
+		4A7B4B262642834100E28C15 /* CoreServices.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4B1A2642832100E28C15 /* CoreServices.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4A7B4B272642834300E28C15 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4B1C2642833100E28C15 /* Foundation.framework */; };
+		4A7B4B282642834300E28C15 /* Foundation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4B1C2642833100E28C15 /* Foundation.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4A7B4B292642834700E28C15 /* libiconv.2.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4AF22642787400E28C15 /* libiconv.2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		4A8787202409209C004D1DFC /* gf_font_converter.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 4A87871F2409209C004D1DFC /* gf_font_converter.hpp */; };
 		4A8787222409209C004D1DFC /* gf_font_converterPriv.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 4A8787212409209C004D1DFC /* gf_font_converterPriv.hpp */; };
 		4A8787242409209C004D1DFC /* gf_font_converter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A8787232409209C004D1DFC /* gf_font_converter.cpp */; };
@@ -32,25 +43,53 @@
 		4AC2E6C4241668AF00786233 /* gf_font_generate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4AC2E6C3241668AF00786233 /* gf_font_generate.h */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		4A7B4B202642833C00E28C15 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4A7B4B282642834300E28C15 /* Foundation.framework in Embed Frameworks */,
+				4A7B4B222642833D00E28C15 /* Cocoa.framework in Embed Frameworks */,
+				4A7B4B1F2642833B00E28C15 /* AppKit.framework in Embed Frameworks */,
+				4A7B4B242642833F00E28C15 /* CoreFoundation.framework in Embed Frameworks */,
+				4A7B4B292642834700E28C15 /* libiconv.2.dylib in Embed Frameworks */,
+				4A7B4B262642834100E28C15 /* CoreServices.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		4A6007562640801E001A0453 /* libfontforge.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfontforge.a; path = "../../../fontforge-master/build/lib/libfontforge.a"; sourceTree = "<group>"; };
-		4A60075926415500001A0453 /* libtiff.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtiff.a; path = ../../../../../../usr/local/lib/libtiff.a; sourceTree = "<group>"; };
-		4A60075B26415507001A0453 /* libtiffxx.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtiffxx.a; path = ../../../../../../usr/local/lib/libtiffxx.a; sourceTree = "<group>"; };
-		4A60075D2641552C001A0453 /* libjpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjpeg.a; path = ../../../../../../usr/local/lib/libjpeg.a; sourceTree = "<group>"; };
-		4A60075F26415544001A0453 /* libgif.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgif.a; path = ../../../../../../usr/local/lib/libgif.a; sourceTree = "<group>"; };
-		4A60076126415787001A0453 /* libintl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libintl.a; path = ../../../../../../usr/local/lib/libintl.a; sourceTree = "<group>"; };
-		4A600763264158DD001A0453 /* libgio-2.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libgio-2.0.a"; path = "../../../../../../usr/local/lib/libgio-2.0.a"; sourceTree = "<group>"; };
-		4A600765264158E4001A0453 /* libglib-2.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libglib-2.0.a"; path = "../../../../../../usr/local/lib/libglib-2.0.a"; sourceTree = "<group>"; };
-		4A60076726415A2B001A0453 /* libgettextpo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgettextpo.a; path = ../../../../../../usr/local/Cellar/gettext/0.21/lib/libgettextpo.a; sourceTree = "<group>"; };
-		4A60076926415A42001A0453 /* libxml2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libxml2.a; path = ../../../../../../usr/local/Cellar/libxml2/2.9.10_2/lib/libxml2.a; sourceTree = "<group>"; };
-		4A60076B26415A5D001A0453 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = ../../../../../../usr/local/Cellar/zlib/1.2.11/lib/libz.a; sourceTree = "<group>"; };
-		4A60076D26415A7E001A0453 /* libpng.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng.a; path = ../../../../../../usr/local/Cellar/libpng/1.6.37/lib/libpng.a; sourceTree = "<group>"; };
-		4A60076F26415A83001A0453 /* libpng16.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng16.a; path = ../../../../../../usr/local/Cellar/libpng/1.6.37/lib/libpng16.a; sourceTree = "<group>"; };
-		4A60077126415AB8001A0453 /* libfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfreetype.a; path = ../../../../../../usr/local/Cellar/freetype/2.10.4/lib/libfreetype.a; sourceTree = "<group>"; };
-		4A60077326415AE9001A0453 /* libuninameslist.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libuninameslist.a; path = ../../../../../../usr/local/Cellar/libuninameslist/20200413/lib/libuninameslist.a; sourceTree = "<group>"; };
-		4A60077526416CE7001A0453 /* libiconv.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.dylib; path = ../../../../../../usr/lib/libiconv.2.dylib; sourceTree = "<group>"; };
-		4A6DD6B12429E294001AB42D /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
-		4A6DD6CE242A0A6D001AB42D /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		4A600778264196CC001A0453 /* garagefarm_fontmodule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = garagefarm_fontmodule.h; sourceTree = "<group>"; };
+		4A600779264196CC001A0453 /* garagefarm_fontmodule.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = garagefarm_fontmodule.c; sourceTree = "<group>"; };
+		4A7B4AE52642787300E28C15 /* libglib-2.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libglib-2.0.a"; path = "libraries/libglib-2.0.a"; sourceTree = "<group>"; };
+		4A7B4AE62642787300E28C15 /* libfontforge.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfontforge.a; path = libraries/libfontforge.a; sourceTree = "<group>"; };
+		4A7B4AE72642787300E28C15 /* libpng16.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng16.a; path = libraries/libpng16.a; sourceTree = "<group>"; };
+		4A7B4AE82642787300E28C15 /* libgio-2.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libgio-2.0.a"; path = "libraries/libgio-2.0.a"; sourceTree = "<group>"; };
+		4A7B4AE92642787300E28C15 /* libtextstyle.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtextstyle.a; path = libraries/libtextstyle.a; sourceTree = "<group>"; };
+		4A7B4AEB2642787300E28C15 /* libxml2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libxml2.a; path = libraries/libxml2.a; sourceTree = "<group>"; };
+		4A7B4AEC2642787300E28C15 /* libgettextpo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgettextpo.a; path = libraries/libgettextpo.a; sourceTree = "<group>"; };
+		4A7B4AED2642787300E28C15 /* libuninameslist.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libuninameslist.a; path = libraries/libuninameslist.a; sourceTree = "<group>"; };
+		4A7B4AEE2642787400E28C15 /* libjpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjpeg.a; path = libraries/libjpeg.a; sourceTree = "<group>"; };
+		4A7B4AEF2642787400E28C15 /* libfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfreetype.a; path = libraries/libfreetype.a; sourceTree = "<group>"; };
+		4A7B4AF02642787400E28C15 /* libintl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libintl.a; path = libraries/libintl.a; sourceTree = "<group>"; };
+		4A7B4AF12642787400E28C15 /* libgif.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgif.a; path = libraries/libgif.a; sourceTree = "<group>"; };
+		4A7B4AF22642787400E28C15 /* libiconv.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.dylib; path = libraries/libiconv.2.dylib; sourceTree = "<group>"; };
+		4A7B4AF32642787400E28C15 /* libtiff.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtiff.a; path = libraries/libtiff.a; sourceTree = "<group>"; };
+		4A7B4B0326427BAC00E28C15 /* libgobject-2.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libgobject-2.0.a"; path = "libraries/libgobject-2.0.a"; sourceTree = "<group>"; };
+		4A7B4B0426427BAC00E28C15 /* libgmodule-2.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libgmodule-2.0.a"; path = "libraries/libgmodule-2.0.a"; sourceTree = "<group>"; };
+		4A7B4B0526427BAC00E28C15 /* libgthread-2.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libgthread-2.0.a"; path = "libraries/libgthread-2.0.a"; sourceTree = "<group>"; };
+		4A7B4B0926427D2A00E28C15 /* libresolv.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.9.tbd; path = usr/lib/libresolv.9.tbd; sourceTree = SDKROOT; };
+		4A7B4B0A26427D2A00E28C15 /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
+		4A7B4B122642823800E28C15 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = libraries/libz.a; sourceTree = "<group>"; };
+		4A7B4B142642828500E28C15 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		4A7B4B16264282FD00E28C15 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		4A7B4B182642831100E28C15 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		4A7B4B1A2642832100E28C15 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
+		4A7B4B1C2642833100E28C15 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4A87871D2409209C004D1DFC /* libgf_font_converter.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libgf_font_converter.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A87871F2409209C004D1DFC /* gf_font_converter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = gf_font_converter.hpp; sourceTree = "<group>"; };
 		4A8787212409209C004D1DFC /* gf_font_converterPriv.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = gf_font_converterPriv.hpp; sourceTree = "<group>"; };
@@ -64,24 +103,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4A60077426415AE9001A0453 /* libuninameslist.a in Frameworks */,
-				4A60077026415A83001A0453 /* libpng16.a in Frameworks */,
-				4A60076E26415A7E001A0453 /* libpng.a in Frameworks */,
-				4A60076C26415A5D001A0453 /* libz.a in Frameworks */,
-				4A60077626416CE8001A0453 /* libiconv.2.dylib in Frameworks */,
-				4A60076A26415A42001A0453 /* libxml2.a in Frameworks */,
-				4A600766264158E4001A0453 /* libglib-2.0.a in Frameworks */,
-				4A600764264158DD001A0453 /* libgio-2.0.a in Frameworks */,
-				4A60076826415A2B001A0453 /* libgettextpo.a in Frameworks */,
-				4A60076226415787001A0453 /* libintl.a in Frameworks */,
-				4A60075A26415500001A0453 /* libtiff.a in Frameworks */,
-				4A60075C26415507001A0453 /* libtiffxx.a in Frameworks */,
-				4A60075E2641552C001A0453 /* libjpeg.a in Frameworks */,
-				4A60076026415544001A0453 /* libgif.a in Frameworks */,
-				4A60077226415AB8001A0453 /* libfreetype.a in Frameworks */,
-				4A60075826408636001A0453 /* libfontforge.a in Frameworks */,
-				4A6512A8244E154400C32C49 /* CoreFoundation.framework in Frameworks */,
-				4A6512A5244E154200C32C49 /* CoreServices.framework in Frameworks */,
+				4A7B4B0626427BAC00E28C15 /* libgobject-2.0.a in Frameworks */,
+				4A7B4B0726427BAC00E28C15 /* libgmodule-2.0.a in Frameworks */,
+				4A7B4B0826427BAC00E28C15 /* libgthread-2.0.a in Frameworks */,
+				4A7B4B232642833F00E28C15 /* CoreFoundation.framework in Frameworks */,
+				4A7B4AF42642787400E28C15 /* libglib-2.0.a in Frameworks */,
+				4A7B4B252642834100E28C15 /* CoreServices.framework in Frameworks */,
+				4A7B4B272642834300E28C15 /* Foundation.framework in Frameworks */,
+				4A7B4AF52642787400E28C15 /* libfontforge.a in Frameworks */,
+				4A7B4B1E2642833B00E28C15 /* AppKit.framework in Frameworks */,
+				4A7B4AF62642787400E28C15 /* libpng16.a in Frameworks */,
+				4A7B4AF72642787400E28C15 /* libgio-2.0.a in Frameworks */,
+				4A7B4AF82642787400E28C15 /* libtextstyle.a in Frameworks */,
+				4A7B4B212642833D00E28C15 /* Cocoa.framework in Frameworks */,
+				4A7B4AFA2642787400E28C15 /* libxml2.a in Frameworks */,
+				4A7B4AFB2642787400E28C15 /* libgettextpo.a in Frameworks */,
+				4A7B4AFC2642787400E28C15 /* libuninameslist.a in Frameworks */,
+				4A7B4AFD2642787400E28C15 /* libjpeg.a in Frameworks */,
+				4A7B4AFE2642787400E28C15 /* libfreetype.a in Frameworks */,
+				4A7B4AFF2642787400E28C15 /* libintl.a in Frameworks */,
+				4A7B4B002642787400E28C15 /* libgif.a in Frameworks */,
+				4A7B4B012642787400E28C15 /* libiconv.2.dylib in Frameworks */,
+				4A7B4B132642823800E28C15 /* libz.a in Frameworks */,
+				4A7B4B022642787400E28C15 /* libtiff.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -103,29 +147,37 @@
 				4A87871D2409209C004D1DFC /* libgf_font_converter.dylib */,
 			);
 			name = Products;
+			path = mac_build;
 			sourceTree = "<group>";
 		};
 		4A8786FB24080616004D1DFC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4A60077526416CE7001A0453 /* libiconv.2.dylib */,
-				4A60077326415AE9001A0453 /* libuninameslist.a */,
-				4A60077126415AB8001A0453 /* libfreetype.a */,
-				4A60076F26415A83001A0453 /* libpng16.a */,
-				4A60076D26415A7E001A0453 /* libpng.a */,
-				4A60076B26415A5D001A0453 /* libz.a */,
-				4A60076926415A42001A0453 /* libxml2.a */,
-				4A60076726415A2B001A0453 /* libgettextpo.a */,
-				4A600765264158E4001A0453 /* libglib-2.0.a */,
-				4A600763264158DD001A0453 /* libgio-2.0.a */,
-				4A60076126415787001A0453 /* libintl.a */,
-				4A60075F26415544001A0453 /* libgif.a */,
-				4A60075D2641552C001A0453 /* libjpeg.a */,
-				4A60075B26415507001A0453 /* libtiffxx.a */,
-				4A60075926415500001A0453 /* libtiff.a */,
-				4A6007562640801E001A0453 /* libfontforge.a */,
-				4A6DD6CE242A0A6D001AB42D /* CoreFoundation.framework */,
-				4A6DD6B12429E294001AB42D /* CoreServices.framework */,
+				4A7B4B1C2642833100E28C15 /* Foundation.framework */,
+				4A7B4B1A2642832100E28C15 /* CoreServices.framework */,
+				4A7B4B182642831100E28C15 /* CoreFoundation.framework */,
+				4A7B4B16264282FD00E28C15 /* AppKit.framework */,
+				4A7B4B142642828500E28C15 /* Cocoa.framework */,
+				4A7B4B122642823800E28C15 /* libz.a */,
+				4A7B4B0926427D2A00E28C15 /* libresolv.9.tbd */,
+				4A7B4B0A26427D2A00E28C15 /* libresolv.tbd */,
+				4A7B4B0426427BAC00E28C15 /* libgmodule-2.0.a */,
+				4A7B4B0326427BAC00E28C15 /* libgobject-2.0.a */,
+				4A7B4B0526427BAC00E28C15 /* libgthread-2.0.a */,
+				4A7B4AE62642787300E28C15 /* libfontforge.a */,
+				4A7B4AEF2642787400E28C15 /* libfreetype.a */,
+				4A7B4AEC2642787300E28C15 /* libgettextpo.a */,
+				4A7B4AF12642787400E28C15 /* libgif.a */,
+				4A7B4AE82642787300E28C15 /* libgio-2.0.a */,
+				4A7B4AE52642787300E28C15 /* libglib-2.0.a */,
+				4A7B4AF22642787400E28C15 /* libiconv.2.dylib */,
+				4A7B4AF02642787400E28C15 /* libintl.a */,
+				4A7B4AEE2642787400E28C15 /* libjpeg.a */,
+				4A7B4AE72642787300E28C15 /* libpng16.a */,
+				4A7B4AE92642787300E28C15 /* libtextstyle.a */,
+				4A7B4AF32642787400E28C15 /* libtiff.a */,
+				4A7B4AED2642787300E28C15 /* libuninameslist.a */,
+				4A7B4AEB2642787300E28C15 /* libxml2.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -136,6 +188,8 @@
 				4AC2E6C3241668AF00786233 /* gf_font_generate.h */,
 				4AC2E6C12416689A00786233 /* gf_font_generate.c */,
 				4A87871F2409209C004D1DFC /* gf_font_converter.hpp */,
+				4A600778264196CC001A0453 /* garagefarm_fontmodule.h */,
+				4A600779264196CC001A0453 /* garagefarm_fontmodule.c */,
 				4A8787232409209C004D1DFC /* gf_font_converter.cpp */,
 				4A8787212409209C004D1DFC /* gf_font_converterPriv.hpp */,
 			);
@@ -165,6 +219,7 @@
 				4A8787192409209C004D1DFC /* Headers */,
 				4A87871A2409209C004D1DFC /* Sources */,
 				4A87871B2409209C004D1DFC /* Frameworks */,
+				4A7B4B202642833C00E28C15 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -181,10 +236,7 @@
 		4A8786E324017238004D1DFC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				KnownAssetTags = (
-					New,
-				);
-				LastUpgradeCheck = 1110;
+				LastUpgradeCheck = 1150;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					4A87871C2409209C004D1DFC = {
@@ -259,12 +311,13 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 87N4927WRD;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_CPP_RTTI = NO;
-				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_NO_COMMON_BLOCKS = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -282,7 +335,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRELINK_LIBS = "/Users/ccc/Downloads/fontforge-master/build/lib/libfontforge.a";
+				PRELINK_LIBS = "";
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
 				SDKROOT = macosx;
 				VALID_ARCHS = x86_64;
@@ -325,11 +378,13 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 87N4927WRD;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_ENABLE_CPP_RTTI = NO;
-				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_NO_COMMON_BLOCKS = NO;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -342,7 +397,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRELINK_LIBS = "/Users/ccc/Downloads/fontforge-master/build/lib/libfontforge.a";
+				PRELINK_LIBS = "";
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
 				SDKROOT = macosx;
 				VALID_ARCHS = x86_64;
@@ -352,12 +407,13 @@
 		4A8787262409209C004D1DFC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
-				DYLIB_COMPATIBILITY_VERSION = "";
-				DYLIB_CURRENT_VERSION = "";
+				CREATE_INFOPLIST_SECTION_IN_BINARY = NO;
+				DEVELOPMENT_TEAM = 87N4927WRD;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_ENABLE_CPP_RTTI = YES;
@@ -367,36 +423,36 @@
 					"/Users/ccc/Downloads/fontforge-master/build/inc/",
 					"/Users/ccc/Downloads/fontforge-master/inc/",
 					/usr/local/Cellar/gettext/0.21/include/,
+					"/usr/local/Cellar/python@3.9/3.9.4/Frameworks/Python.framework/Versions/3.9/Headers",
 				);
 				INFOPLIST_FILE = "";
-				INSTALL_PATH = "/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/renderBeamer.plugin/Contents/Resources/";
+				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = (
-					"/Users/ccc/Downloads/fontforge-master/build/lib",
+					"$(PROJECT_DIR)/libraries",
 					/usr/local/lib,
-					/usr/local/Cellar/gettext/0.21/lib,
-					/usr/local/Cellar/libxml2/2.9.10_2/lib,
-					/usr/local/Cellar/zlib/1.2.11/lib,
-					/usr/local/Cellar/libpng/1.6.37/lib,
-					/usr/local/Cellar/freetype/2.10.4/lib,
-					/usr/local/Cellar/libuninameslist/20200413/lib,
 				);
-				MACH_O_TYPE = staticlib;
+				MACH_O_TYPE = mh_dylib;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				MARKETING_VERSION = 0.9.0.4;
+				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
 					"-Wl",
 					"-Bstatic",
+					"-lbz2",
+					"-lpcre",
+					"-lffi",
+					"-lresolv",
+					"-lreadline",
+					"-lintl",
+					"-liconv.2",
 					"-framework",
-					CoreServices,
-					"-framework",
-					CoreFoundation,
+					Cocoa,
 				);
-				PRELINK_LIBS = "/Users/ccc/Downloads/fontforge-master/build/lib/libfontforge.a /usr/local/lib/libtiff.a /usr/local/lib/libtiffxx.a /usr/local/lib/libjpeg.a /usr/local/lib/libgif.a /usr/local/lib/libintl.a";
+				PRELINK_LIBS = "libfontforge.a libfreetype.a libgio-2.0.a libglib-2.0.a libtiff.a libjpeg.a libgif.a libintl.a libpng.a libgettextpo.a libxml2.a libz.a libuninameslist.a";
 				PRODUCT_BUNDLE_IDENTIFIER = com.adobe.AfterEffects.renderBeamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				STRIP_INSTALLED_PRODUCT = YES;
-				SYMROOT = /Users/ccc/Documents/GF_Font_Converter;
+				SYMROOT = /Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/source_font_converter/mac_build/build;
 				VALID_ARCHS = x86_64;
 			};
 			name = Debug;
@@ -404,53 +460,54 @@
 		4A8787272409209C004D1DFC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
-				DYLIB_COMPATIBILITY_VERSION = "";
-				DYLIB_CURRENT_VERSION = "";
+				CREATE_INFOPLIST_SECTION_IN_BINARY = NO;
+				DEVELOPMENT_TEAM = 87N4927WRD;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_ENABLE_CPP_RTTI = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				HEADER_SEARCH_PATHS = (
 					"/Users/ccc/Downloads/fontforge-master/fontforge/**",
 					"/Users/ccc/Downloads/fontforge-master/build/inc/",
 					"/Users/ccc/Downloads/fontforge-master/inc/",
 					/usr/local/Cellar/gettext/0.21/include/,
+					"/usr/local/Cellar/python@3.9/3.9.4/Frameworks/Python.framework/Versions/3.9/Headers",
 				);
 				INFOPLIST_FILE = "";
-				INSTALL_PATH = "/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/renderBeamer.plugin/Contents/Resources/";
+				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = (
-					"/Users/ccc/Downloads/fontforge-master/build/lib",
+					"$(PROJECT_DIR)/libraries",
 					/usr/local/lib,
-					/usr/local/Cellar/gettext/0.21/lib,
-					/usr/local/Cellar/libxml2/2.9.10_2/lib,
-					/usr/local/Cellar/zlib/1.2.11/lib,
-					/usr/local/Cellar/libpng/1.6.37/lib,
-					/usr/local/Cellar/freetype/2.10.4/lib,
-					/usr/local/Cellar/libuninameslist/20200413/lib,
 				);
-				MACH_O_TYPE = staticlib;
+				MACH_O_TYPE = mh_dylib;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				MARKETING_VERSION = 0.9.0.4;
+				MARKETING_VERSION = 1.0.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-Wl",
 					"-Bstatic",
+					"-lbz2",
+					"-lpcre",
+					"-lffi",
+					"-lresolv",
+					"-lreadline",
+					"-lintl",
+					"-liconv.2",
 					"-framework",
-					CoreServices,
-					"-framework",
-					CoreFoundation,
+					Cocoa,
 				);
-				PRELINK_LIBS = "/Users/ccc/Downloads/fontforge-master/build/lib/libfontforge.a /usr/local/lib/libtiff.a /usr/local/lib/libtiffxx.a /usr/local/lib/libjpeg.a /usr/local/lib/libgif.a /usr/local/lib/libintl.a";
+				PRELINK_LIBS = "libfontforge.a libfreetype.a libgio-2.0.a libglib-2.0.a libtiff.a libjpeg.a libgif.a libintl.a libpng.a libgettextpo.a libxml2.a libz.a libuninameslist.a";
 				PRODUCT_BUNDLE_IDENTIFIER = com.adobe.AfterEffects.renderBeamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				STRIP_INSTALLED_PRODUCT = NO;
-				SYMROOT = /Users/ccc/Documents/GF_Font_Converter;
+				SKIP_INSTALL = NO;
+				STRIP_INSTALLED_PRODUCT = YES;
+				SYMROOT = /Users/ccc/Downloads/AfterEffects/AfterEffect_renderBeamer/source_font_converter/mac_build/build;
 				VALID_ARCHS = x86_64;
 			};
 			name = Release;
