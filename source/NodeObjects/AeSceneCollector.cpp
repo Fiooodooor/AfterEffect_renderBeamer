@@ -112,7 +112,7 @@ ErrorCodesAE AeSceneCollector::collectSceneRenderQueueItems()
 				ERROR_AEER(suites.CompSuite11()->AEGP_GetItemFromComp(compH, &itemH))
 				ERROR_AEER(suites.ItemSuite9()->AEGP_GetItemID(itemH, &gfs_rq_node->composition_id))
 
-				suites.ANSICallbacksSuite1()->sprintf(frameScript, "var rqItem=app.project.renderQueue.item(%d);var rqFps=rqItem.getSettings(GetSettingsFormat.NUMBER)[rqItem.getSettings(GetSettingsFormat.STRING)[\"Frame Rate\"]];(Math.round(rqItem.timeSpanStart*rqFps)).toString()+\"to\"+(Math.round((rqItem.timeSpanStart+rqItem.timeSpanDuration)*rqFps)-1).toString()+\"s1\";", gfs_rq_node->rq_id);
+				suites.ANSICallbacksSuite1()->sprintf(frameScript, "var rqItem=app.project.renderQueue.item(%d);var rqFps=rqItem.getSettings(GetSettingsFormat.NUMBER)[rqItem.getSettings(GetSettingsFormat.STRING)[\"Frame Rate\"]];var rqItemStart=rqItem.comp.displayStartTime+rqItem.timeSpanStart;var rqItemEnd=rqItemStart+rqItem.timeSpanDuration;(Math.round(rqItemStart*rqFps)).toString()+\"to\"+(Math.round(rqItemEnd*rqFps)-1).toString()+\"s1\";", gfs_rq_node->rq_id);
 				ERROR_AE(rbUtilities::execScript(sp, pluginId, frameScript, gfs_rq_node->frame_range, 32))
 
 				suites.ANSICallbacksSuite1()->sprintf(frameScript, "var rqItem=app.project.renderQueue.item(%d);rqItem.getSettings(GetSettingsFormat.NUMBER)[rqItem.getSettings(GetSettingsFormat.STRING)[\"Frame Rate\"]];", gfs_rq_node->rq_id);
