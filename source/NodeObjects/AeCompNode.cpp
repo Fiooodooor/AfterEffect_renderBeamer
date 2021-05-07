@@ -127,6 +127,23 @@ bool AeLayerNode::doesLayerHaveSource() const
 		return true;
 	return false;
 }
+void AeLayerNode::setLayerNameExplicit(AEGP_PluginID plugId)
+{
+	AEGP_MemHandle layerName, layerSourceName;
+	std::wstring layerNameString, layerSourceNameString;
+	A_Err err = A_Err_NONE;
+	AEGP_SuiteHandler suites(sp);
+	ERR(suites.LayerSuite8()->AEGP_GetLayerName(plugId, layerH, &layerName, &layerSourceName));
+	ERR(rbUtilities::copyMemhUTF16ToString(sp, layerName, layerNameString));
+	ERR(rbUtilities::copyMemhUTF16ToString(sp, layerSourceName, layerSourceNameString));
+
+	if(layerNameString.empty() && !layerSourceNameString.empty())
+	{
+		A_UTF16Char new_name[AEGP_MAX_ITEM_NAME_SIZE] = { '\0' };
+		rbUtilities::toUTF16(layerSourceNameString.c_str(), new_name, AEGP_MAX_ITEM_NAME_SIZE-1);
+		ERR(suites.LayerSuite8()->AEGP_SetLayerName(layerH, new_name));
+	}	
+}
 
 AeCompNode::AeCompNode(AeObjectNode* objNode) : AeObjectNode(objNode)
 {
@@ -166,6 +183,7 @@ long AeCompNode::generateLayers()
 		suites.LayerSuite8()->AEGP_GetCompLayerByIndex(compH, i, &tmpLayerH);
 		tmpLayerNode = new AeLayerNode(sp, tmpLayerH, i);
 		if (tmpLayerNode) {
+			tmpLayerNode->setLayerNameExplicit(getPluginId());
 			layersList.push_back(tmpLayerNode);
 			if (tmpLayerNode->getLayerObjectType() == AEGP_ObjectType_TEXT) {
 				AeFontNode* fontNode = new AeFontNode(this->getItemNr(), i + 1);
@@ -181,6 +199,7 @@ long AeCompNode::generateLayers()
 			pushUniqueEffect(effectKey);
 			suites.EffectSuite4()->AEGP_DisposeEffect(effectH);
 		}
+		
 	}
 	return 0;
 }

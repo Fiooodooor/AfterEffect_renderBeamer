@@ -53,6 +53,7 @@ public:
 	AEGP_ItemH getLayerSource() const;
 	A_long getEffectsN() const;
 	bool doesLayerHaveSource() const;
+	void setLayerNameExplicit(AEGP_PluginID plugId);
 
 protected:
 	SPBasicSuite *sp;
