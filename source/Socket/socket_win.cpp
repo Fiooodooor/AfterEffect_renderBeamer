@@ -13,8 +13,12 @@ platform_socket::platform_socket() : SocketClientInterface()
 
 platform_socket::~platform_socket()
 {
-	close_socket();
-	WSACleanup();
+	try {
+		close_socket();
+		WSACleanup();
+	}
+	catch(...) {		
+	}
 }
 
 long platform_socket::start_session(long port, const std::string &scene_name)

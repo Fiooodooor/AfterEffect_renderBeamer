@@ -17,8 +17,11 @@ platform_socket::platform_socket() : SocketClientInterface()
 }
 platform_socket::~platform_socket()
 {
-    if (is_connected())
-        close_socket();
+	try {
+		close_socket();
+	}
+	catch(...) {
+	}
 }
 
 long platform_socket::start_session(long port, const std::string &scene_name)

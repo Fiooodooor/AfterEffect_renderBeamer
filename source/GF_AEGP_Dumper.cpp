@@ -244,7 +244,6 @@ ErrorCodesAE GF_Dumper::newBatchDumpProject()
 	MAIN_PROGRESS_THROW(dumper_progressbar_, ++bps->currentItem, bps->colectedItems)
 	ERROR_RETURN(newCollectEffectsInfo())
 	MAIN_PROGRESS_THROW(dumper_progressbar_, ++bps->currentItem, bps->colectedItems)
-
 	relinker.unloadFontLibrary();
 	gfs_creator->GenerateAndSaveDocument();
     MAIN_PROGRESS_THROW(dumper_progressbar_, ++bps->currentItem, bps->colectedItems)
@@ -329,8 +328,13 @@ ErrorCodesAE GF_Dumper::SetupUiQueueItems()
 		{
 			if (connector.read(read_buffer, 49150) > 0) {
 				std::string data_read(read_buffer);
-				gfs_rq_node_wrapper::deserialize(*sc, data_read);
-				rbProj()->logg("connector.read", "success", read_buffer);
+				rbProj()->logg("connector.read", "success", data_read.c_str());
+				if(data_read == std::string("QUIT"))
+				{
+					_ErrorCode = UserDialogCancel;
+					break;
+				}
+				gfs_rq_node_wrapper::deserialize(*sc, data_read);				
 				break;
 			}
 			MAIN_PROGRESS_THROW(dumper_progressbar_, 11, 20)
