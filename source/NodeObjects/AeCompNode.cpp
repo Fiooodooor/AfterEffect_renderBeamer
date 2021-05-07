@@ -95,6 +95,7 @@ AeLayerNode::AeLayerNode(SPBasicSuite *sp, AEGP_LayerH theLayerH, A_long theLaye
 	this->sp = sp;
 	AEGP_SuiteHandler suites(sp);
 	layerNr = theLayerNr;
+	layerH = theLayerH;
 	
 	suites.LayerSuite8()->AEGP_GetLayerObjectType(theLayerH, &layerObjectType);
 	if (layerObjectType == AEGP_ObjectType_AV) {
@@ -145,7 +146,7 @@ void AeLayerNode::setLayerNameExplicit(AEGP_PluginID plugId)
 	}	
 }
 
-AeCompNode::AeCompNode(AeObjectNode* objNode) : AeObjectNode(objNode)
+AeCompNode::AeCompNode(AeObjectNode* objNode) : AeObjectNode(objNode), compH(nullptr), layersN(0)
 {
 	AEGP_SuiteHandler suites(sp);
 	suites.CompSuite10()->AEGP_GetCompFromItem(itemH, &compH);
@@ -175,10 +176,10 @@ std::list<AeFontNode*> &AeCompNode::getFontsList()
 long AeCompNode::generateLayers()
 {
 	AEGP_SuiteHandler suites(sp);
-	AEGP_EffectRefH effectH = NULL;
+	AEGP_EffectRefH effectH = nullptr;
 	AEGP_InstalledEffectKey effectKey = NULL;
-	AEGP_LayerH tmpLayerH = NULL;
-	AeLayerNode* tmpLayerNode = NULL;
+	AEGP_LayerH tmpLayerH = nullptr;
+	AeLayerNode* tmpLayerNode = nullptr;
 	for (A_long i = 0; i < getLayersNumber(); ++i) {
 		suites.LayerSuite8()->AEGP_GetCompLayerByIndex(compH, i, &tmpLayerH);
 		tmpLayerNode = new AeLayerNode(sp, tmpLayerH, i);
@@ -186,10 +187,10 @@ long AeCompNode::generateLayers()
 			tmpLayerNode->setLayerNameExplicit(getPluginId());
 			layersList.push_back(tmpLayerNode);
 			if (tmpLayerNode->getLayerObjectType() == AEGP_ObjectType_TEXT) {
-				AeFontNode* fontNode = new AeFontNode(this->getItemNr(), i + 1);
-				if (fontNode) {
-					fontNode->fillFont(getSp(), getPluginId());
-					pushUniqueFont(fontNode);
+				auto* font_node = new AeFontNode(this->getItemNr(), i + 1);
+				if (font_node) {
+					font_node->fillFont(getSp(), getPluginId());
+					pushUniqueFont(font_node);
 				}
 			}
 		}
