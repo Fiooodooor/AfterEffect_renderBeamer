@@ -102,13 +102,13 @@ FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElemen
 		if (FileBasePathStatus.type() == FS_TYPE_NONE) {
 			rbProjLogger->loggErr("CreateFileReference", "FS_TYPE_NONE", "There was an error while resolving file status. File will probably not success copy.");
 		}
-		if (fs::is_symlink(FileBasePath)) {
+		if (fs::is_symlink(FileBasePathStatus)) {
 			rbProjLogger->logg("CreateFileReference", "FS_TYPE_SYMLINK", "Path exists and is a symlink. Resolving.");
 			FileBasePath = fs::read_symlink(FileBasePath);
 		}
 	}
 	catch(fs::filesystem_error &e) {
-		rbProjLogger->loggErr("BatchAepxParser", "FullPath", e.what());
+		rbProjLogger->loggErr("BatchAepxParser", ("FullPath_" + std::to_string(e.code().value())).c_str(), e.what());
 		
 		if (ascendcount_base > 0 && ascendcount_target > 0)
 		{
@@ -133,8 +133,7 @@ FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElemen
 				FileBasePath /= (it++)->string();
 			rbProjLogger->logg("BatchAepxParser", "ResolvedRelative", FileBasePath.string().c_str());
 		}
-		else
-			return nullptr;
+		rbProjLogger->logg("BatchAepxParser", "FullPath","Leaving unchanged.");
 	}
 	
 	if (fileReferencePt->Parent()->Parent()->Parent() && fileReferencePt->Parent()->Parent()->Parent()->FirstChildElement()) {

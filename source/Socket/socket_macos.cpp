@@ -26,7 +26,6 @@ long platform_socket::start_session(long port, const std::string &scene_name)
 	ERROR_CATCH_START
 		const auto welcome_header = "SETUP=AE\tNAME=" + scene_name + "\n";
 		{
-			const std::lock_guard<std::mutex> lock(m);
 			ERROR_BOOL_ERR(init_interface())
 			ERROR_BOOL_ERR(create_socket())
 			ERROR_BOOL_ERR(connect_socket(static_cast<unsigned short>(port)))
@@ -61,8 +60,10 @@ bool platform_socket::create_socket()
 long platform_socket::close_socket()
 {
 	print_to_debug("Closing socket.", "platform_socket::close_socket", false);
-	const std::string quit_msg = "QUIT\n";
-	write(quit_msg.c_str(), static_cast<unsigned long>(quit_msg.length()));
+	if (is_connected()) {
+		const std::string quit_msg = "QUIT\n";
+		write(quit_msg.c_str(), static_cast<unsigned long>(quit_msg.length()));
+	}
 	if(socket_descriptor_)
 		::close(static_cast<int>(socket_descriptor_));
 	
@@ -169,7 +170,11 @@ unsigned long platform_socket::write(const char *data, const unsigned long data_
 				data_sent = 0;
 				break;
 			case EPIPE:
+			case ECONNABORTED:
+			case ENOTCONN:
+			case ESHUTDOWN:
 			case ECONNRESET:
+				socket_state_ = Unconnected;
 				close_socket(); 
 			case EMSGSIZE:
 			default:
@@ -193,8 +198,11 @@ unsigned long platform_socket::read(char *data, const unsigned long max_length)
 	if (bytes_read < 0)
 	{
 		bytes_read = 0;
-		if(errno != ETIMEDOUT)
+		if (errno != ETIMEDOUT) {
 			print_error_string(errno, "read");
+			socket_state_ = Unconnected;
+			close_socket();
+		}
 	}
 	else
 	{

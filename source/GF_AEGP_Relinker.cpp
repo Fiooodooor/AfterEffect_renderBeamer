@@ -175,6 +175,8 @@ ErrorCodesAE GF_AEGP_Relinker::CopyFont(AeFontNode *node, A_long id, std::vector
 		node->pathRelinked /= node->path.filename();
         if (!fonts_interface || !fonts_interface->isLibraryLoaded())
         {
+			if (!node->pathRelinked.has_extension())
+				node->pathRelinked += ".ttf";
 			if (GFCopyFile(std::to_string(id), node->path, node->pathRelinked, false, true)) {
 				fontsList.push_back(FS_U8STRING(node->pathRelinked.filename()).c_str());
 				GF_Dumper::rbProj()->logg("CopyFont", FS_U8STRING(node->path).c_str(), FS_U8STRING(node->pathRelinked).c_str());
