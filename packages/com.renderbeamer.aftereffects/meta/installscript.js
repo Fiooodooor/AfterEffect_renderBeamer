@@ -52,7 +52,7 @@ Component.prototype.createOperationsForArchive = function(archive)
 		var keyName = "CommonPluginInstallPath";
 		var typeDat = "REG_SZ";
 		
-		for (i = 14; i < 18; i++) 
+		for (i = 14; i < 19; i++) 
 		{
 			var regPath = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Adobe\\After Effects\\" + i.toString() + ".0";
 			
