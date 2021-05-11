@@ -3,7 +3,9 @@
 #include <utility>
 
 #include "../GF_GlobalClasses.h"
-
+#ifndef MAX_PATH
+#define MAX_PATH 255
+#endif
 namespace RenderBeamer {
 
 //------------------------------------------------------------------------------------------------

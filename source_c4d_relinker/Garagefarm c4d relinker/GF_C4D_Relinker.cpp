@@ -45,7 +45,7 @@ namespace cinewareRelinker
 		filename.GetCString(c_filename, LIB_C4D_MAXPATH);
     	
 		auto *source_str_ptr = c_filename;
-		char *mask = ALLOWED_CHARACTERSA;
+		char mask[] = ALLOWED_CHARACTERSA;
 
 		while (source_str_ptr && *source_str_ptr)
 		{
