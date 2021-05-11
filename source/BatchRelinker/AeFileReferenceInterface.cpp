@@ -1,6 +1,9 @@
 #include "AeFileReferenceInterface.h"
 
 #include <utility>
+
+#include "../GF_GlobalClasses.h"
+
 namespace RenderBeamer {
 
 //------------------------------------------------------------------------------------------------
@@ -140,7 +143,7 @@ AeFileNode* SequenceMaskFileReference::AddFiles()
 {
 	if (!files_mask_base || !files_mask_extension)
 		return nullptr;
-
+	
 	const std::string  uStringMaskBase = files_mask_base->GetText();
 	const std::string  uStringMaskExtension = files_mask_extension->GetText();
 	FS_ERROR_CODE(fileRefError)
@@ -148,33 +151,28 @@ AeFileNode* SequenceMaskFileReference::AddFiles()
 	auto *node = new AeFileNode(true, filesUID, GetMainFilePath(), uStringMaskBase);
 
 	ERROR_CATCH_START
-	for (auto p : fs::directory_iterator(GetMainFilePath()))
+	for (auto const &p : fs::directory_iterator(GetMainFilePath()))
 	{
 		const fs::file_status entryStatus(p.status(fileRefError));
 		if (fileRefError.value() == 0 && fs::exists(entryStatus))
 		{
-			fs::path fileEntryPath(p.path());
-			if (fs::is_symlink(entryStatus)) {
-				fileEntryPath = fs::read_symlink(p, fileRefError);
-				if (fileRefError.value() != 0) {
-					fileEntryPath = p.path();
-					fileRefError.clear();
-				}
-			}
+			auto const &fileEntryPath(p.path());
 
-			if (fileEntryPath.has_extension() && fileEntryPath.extension().compare(uStringMaskExtension) == 0)
+			// add extension check with letter size to_upper
+			if(AeFileNode::FileExtensionCheck(fileEntryPath, uStringMaskExtension))
 			{
-				if (fileEntryPath.has_filename() && fileEntryPath.filename().string().size() > uStringMaskBase.size())
+				if (fileEntryPath.has_filename())
 				{
-					if (uStringMaskBase.compare(0, std::string::npos, fileEntryPath.filename().string(), 0, uStringMaskBase.size()) == 0)
-					{
-						auto file_size = fs::file_size(fileEntryPath, fileRefError);
-						if (fileRefError.value() != 0) {
-							file_size = 0;
-							fileRefError.clear();
-						}
-						node->PushSourceFilename(new AeFileNode::FilenameCouple(false, file_size, nullptr, fileEntryPath.filename().string()));
+					if(!uStringMaskBase.empty() && uStringMaskBase.compare(0, std::string::npos, fileEntryPath.filename().string(), 0, uStringMaskBase.size()) != 0)
+						continue;
+					
+					auto file_size = fs::file_size(fileEntryPath, fileRefError);
+					if (fileRefError.value() != 0) {
+						file_size = 0;
+						fileRefError.clear();
 					}
+					node->PushSourceFilename(new AeFileNode::FilenameCouple(false, file_size, nullptr, fileEntryPath.filename().string()));
+					
 				}
 			}
 		}
@@ -195,7 +193,12 @@ bool SequenceMaskFileReference::RelinkFiles(AeFileNode* node)
 		GetFilesReferencePointer()->SetAttribute("ascendcount_base", "1");
 		GetFilesReferencePointer()->SetAttribute("ascendcount_target", "2");
 
-		files_mask_base->FirstChild()->ToText()->SetValue(node->GetSequenceMaskRelinkedBase().c_str());
+		A_char tmp_base[MAX_PATH] = { '\0' };
+		size_t len = strlen(node->GetSequenceMaskRelinkedBase().c_str());
+		memcpy(tmp_base, node->GetSequenceMaskRelinkedBase().c_str(), len + 1);
+		rbUtilities::leaveAllowedOnly(tmp_base);
+		
+		files_mask_base->FirstChild()->ToText()->SetValue(tmp_base);
 		return true;
 	}
 	return false;

@@ -24,7 +24,6 @@ protected:
 	A_long GetUniqueFilesTotalSizeA() const;
 	void ListUniqueFiles() const;
 	long GetLongFilesUID(std::string uid) const;
-	bool FileExtensionCheck(const fs::path& path_to_check, const fs::path& extension) const;
 	
 	SPBasicSuite *picaBasic;	
 	PlatformLibLoader* libC4dPointer;

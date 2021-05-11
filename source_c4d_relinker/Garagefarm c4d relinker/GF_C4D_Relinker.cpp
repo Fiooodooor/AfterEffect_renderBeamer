@@ -2,9 +2,9 @@
 
 #include "GF_C4D_Relinker.hpp"
 #include "GF_C4D_RelinkerPriv.hpp"
-#include <stdexcept>
 
-#define WIN_LOWER(THESTR) ((OS_CASE == 0) ? THESTR.ToLower() : THESTR)
+#define WIN_LOWER(THESTR) ((OS_CASE == 0) ? (THESTR).ToLower() : (THESTR))
+#define ALLOWED_CHARACTERSA  "_-0123456789ABCDEFGHIJKLMNOPQRSTUWVXYZabcdefghijklmnopqrstuwvxyz!."
 
 using namespace cineware;
 
@@ -17,7 +17,7 @@ void GetWriterInfo(Int32 &id, String &appname)
 namespace cinewareRelinker
 {
 
-    c4dAssetsCollector::c4dAssetsCollector() : relink(false), using_tex(false), c4dDoc(NULL), mat(NULL), files()
+    c4dAssetsCollector::c4dAssetsCollector() : relink(false), using_tex(false), c4dDoc(nullptr), mat(nullptr)
     { }
     void c4dAssetsCollector::setRelink(bool value) {
         relink = value;
@@ -39,7 +39,23 @@ namespace cinewareRelinker
         files.push_back(node);
         return true;
     }
+	void c4dAssetsCollector::leaveAllowedOnly(cineware::String &filename)
+	{
+		char c_filename[LIB_C4D_MAXPATH] = { '\0' };
+		filename.GetCString(c_filename, LIB_C4D_MAXPATH);
+    	
+		auto *source_str_ptr = c_filename;
+		char *mask = ALLOWED_CHARACTERSA;
 
+		while (source_str_ptr && *source_str_ptr)
+		{
+			source_str_ptr += strspn(source_str_ptr, mask);
+			if (source_str_ptr[0] == '\0')
+				break;
+			source_str_ptr[0] = '_';
+		}
+		filename.SetCString(c_filename);
+	}
     void c4dAssetsCollector::collectAssets(cineware::BaseShader *shader)
     {
         cineware::BaseShader *sh = shader;
@@ -47,15 +63,15 @@ namespace cinewareRelinker
         {
             if (sh->GetType() == Xlayer)
             {
-                cineware::iBlendDataType* d = (cineware::iBlendDataType*)sh->GetDataInstance()->GetData(cineware::SLA_LAYER_BLEND).GetCustomDataType(CUSTOMDATA_BLEND_LIST);
+                auto* d = (cineware::iBlendDataType*)(sh->GetDataInstance()->GetData(cineware::SLA_LAYER_BLEND).GetCustomDataType(CUSTOMDATA_BLEND_LIST));
                 if (d)
                 {
-                    cineware::LayerShaderLayer *lsl = (cineware::LayerShaderLayer*)(d->m_BlendLayers.GetObject(0));
+                    auto *lsl = (cineware::LayerShaderLayer*)(d->m_BlendLayers.GetObject(0));
                     while (lsl)
                     {
                         if (lsl->GetType() == cineware::TypeFolder)
                         {
-                            cineware::LayerShaderLayer *subLsl = (cineware::LayerShaderLayer*)((cineware::BlendFolder*)lsl)->m_Children.GetObject(0);
+                            auto *subLsl = (cineware::LayerShaderLayer*)((cineware::BlendFolder*)lsl)->m_Children.GetObject(0);
                             while (subLsl)
                             {
                                 if (subLsl->GetType() == cineware::TypeShader)
@@ -70,7 +86,7 @@ namespace cinewareRelinker
                 }
             }
             else if (sh->GetType() == Xbitmap) {
-                FileNodeCineware *node = new FileNodeCineware();
+                auto *node = new FileNodeCineware();
 
                 if (!node)
                     continue;
@@ -80,7 +96,7 @@ namespace cinewareRelinker
                 }
                 node->file = WIN_LOWER(sh->GetFileName().GetString());
                 node->isUrl = sh->GetFileName().IsBrowserUrl();
-                bool unique = this->pushBack(node);
+                const auto unique = this->pushBack(node);
 
                 if (!node->isUrl)
                 {
@@ -88,7 +104,10 @@ namespace cinewareRelinker
                         cineware::Filename tmp;
                         if (!using_tex)
                             tmp.SetDirectory(newPathPrefixM);
-                        tmp.SetFile(cineware::String::IntToString(static_cast<cineware::Int32>(files.size())) += sh->GetFileName().GetFile().GetString());
+						
+						cineware::String newFilename = cineware::String::IntToString(static_cast<cineware::Int32>(files.size())) + cineware::String("_") + sh->GetFileName().GetFile().GetString();
+						leaveAllowedOnly(newFilename);
+                        tmp.SetFile(newFilename);
                         sh->SetFileName(tmp);
                         node->relinkedPath = WIN_LOWER(tmp.GetString());
                         node->relinkedFile = WIN_LOWER(tmp.GetFile().GetString());
@@ -103,10 +122,10 @@ namespace cinewareRelinker
             }
             else if (sh->GetType() == Xvariation)
             {
-                auto v_data = dynamic_cast<cineware::VariationShaderData*>(sh->GetNodeData());
+                auto *v_data = dynamic_cast<cineware::VariationShaderData*>(sh->GetNodeData());
                 if (v_data)
                 {
-                    for (cineware::Int32 t = 0; t < v_data->GetTextureCount(); t++)
+                    for (cineware::Int32 t = 0; t < v_data->GetTextureCount(); ++t)
                         collectAssets(v_data->GetTextureLayer(t)._shader);
                 }
                 else

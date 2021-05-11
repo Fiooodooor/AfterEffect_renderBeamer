@@ -174,6 +174,7 @@ ErrorCodesAE GF_Dumper::PrepareProject()
 		bps->bp.remote_renders_path /= bps->bp.projectRootCorrect.c_str();
 		bps->bp.remote_renders_path += "-Renders";
 		bps->bp.remoteFootagePath = "U:";
+		bps->bp.remoteFootagePath += SEP;
 		bps->bp.remoteFootagePath /= bps->rmtUser;
 		bps->bp.remoteFootagePath /= bps->bp.projectRootCorrect.c_str();
 		bps->bp.remoteFootagePath /= MAIN_PROJECT_DIR1;	

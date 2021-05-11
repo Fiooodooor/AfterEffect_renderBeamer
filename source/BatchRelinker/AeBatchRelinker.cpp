@@ -159,9 +159,18 @@ FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElemen
                     fileRef = new SequenceListFileReference(fileUid, fileReferencePt, fileReferenceSequence);
                 }
             }
-            else if (std::string(fileReferenceSequence->Value()) == "string" && fileReferenceSequence->NextSiblingElement() && std::string(fileReferenceSequence->NextSiblingElement()->Value()) == "string")
+            else if (std::string(fileReferenceSequence->Value()) == "string")
             {
-                fileRef = new SequenceMaskFileReference(fileUid, fileReferencePt, fileReferenceSequence, fileReferenceSequence->NextSiblingElement());
+				if (fileReferenceSequence->NextSiblingElement() && std::string(fileReferenceSequence->NextSiblingElement()->Value()) == "string") {
+					fileRef = new SequenceMaskFileReference(fileUid, fileReferencePt, fileReferenceSequence, fileReferenceSequence->NextSiblingElement());
+				}
+				else {
+					tinyxml2::XMLElement *new_base = aepxXmlDocument.NewElement("string");
+					tinyxml2::XMLText *new_base_text = aepxXmlDocument.NewText("");
+					new_base->InsertFirstChild(new_base_text);
+					fileReferencePt->Parent()->Parent()->InsertAfterChild(fileReferencePt->Parent(), new_base);
+					fileRef = new SequenceMaskFileReference(fileUid, fileReferencePt, new_base, fileReferenceSequence);
+				}
             }
         }
     }
@@ -223,9 +232,9 @@ ErrorCodesAE AeBatchRelinker::CopyUniqueFiles(const fs::path &localCopyPath, con
 			auto pt = fs::path(node->GetFilenameCouple(i)->sourceFileName);
 			MAIN_PROGRESS_RETURN(*progressDialog, static_cast<A_long>(relinkedFilesSize), static_cast<A_long>(totalFilesSize))
 			
-			if(FileExtensionCheck(pt, ".c4d"))
+			if(AeFileNode::FileExtensionCheck(pt, ".c4d"))
 			{
-				if (GF_AEGP_Relinker::GFCopy_C4D_File(libC4dPointer, node->GetFileFullSourcePath(i), node->GetFileFullCopyPath(i), node->GetFileFullRelinkPath(i), node->GetFileNodeUid()) == NoError)
+				if (GF_AEGP_Relinker::GFCopy_C4D_File(libC4dPointer, node->GetFileFullSourcePath(i), node->GetFileFullCopyPath(i), node->GetFileRelinkPath(), node->GetFileNodeUid()) == NoError)
 					rbProjLogger->logg("BatchRelink::c4d", node->GetFileFullSourcePath(i).string().c_str(), node->GetFileFullCopyPath(i).string().c_str());
 				else
 					rbProjLogger->loggErr("BatchRelink::c4d", node->GetFileFullSourcePath(i).string().c_str(), node->GetFileFullCopyPath(i).string().c_str());
@@ -251,20 +260,7 @@ ErrorCodesAE AeBatchRelinker::CopyUniqueFiles(const fs::path &localCopyPath, con
 	}
 	return NoError;
 }
-bool AeBatchRelinker::FileExtensionCheck(const fs::path& path_to_check, const fs::path& extension) const
-{
-	if (!path_to_check.has_extension())
-		return false;
-	if (path_to_check.extension().string().size() != extension.string().size())
-		return false;
-	for(unsigned long long i=0; i < extension.string().size(); ++i)
-	{
-		if (std::tolower(path_to_check.extension().string().c_str()[i]) != std::tolower(extension.string().c_str()[i]))
-			return false;
-	}
-	return true;
-}
-
+	
 AeFileNodeID AeBatchRelinker::PushUniqueFilePath(AeFileNode *node)
 {
 	unsigned long long i = 0;

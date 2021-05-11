@@ -62,7 +62,7 @@ public:
 	void ListNodeMainInfo();
 	void ListNodeFilenames();
 	void ListNodeFullPathFiles();
-
+	static bool FileExtensionCheck(const fs::path& path_to_check, const fs::path& extension);
 	std::mutex m;
 	
 protected:

@@ -260,7 +260,7 @@ ErrorCodesAE GF_AEGP_Relinker::GFCopy_C4D_File(PlatformLibLoader* libIt, const f
 	{		
 		if (libIt && libIt->isLibraryLoaded())
 		{
-			GF_Dumper::rbProj()->logg(L"C4D_Asset", L"Lib", L"Library file loaded. Function symbol importing.");
+			GF_Dumper::rbProj()->logg("C4D_Asset", "Lib", "Library file loaded. Function symbol importing.");
 			_f_getAssetsListAndRelink getAndRelinkFunction;
 			if(libIt->loadFunctionDefinition((void**)&getAndRelinkFunction, "getAssetsListAndRelink"))
 			{
@@ -272,26 +272,26 @@ ErrorCodesAE GF_AEGP_Relinker::GFCopy_C4D_File(PlatformLibLoader* libIt, const f
 
 				fs::create_directories(c4d_relinkdir, err);
 
-				RB_STRNCPTY(dataStruct->loadFile, FS_U8STRING(oldFootagePath.lexically_normal()).c_str(), LIB_C4D_MAXPATH);
-				RB_STRNCPTY(dataStruct->saveFile, FS_U8STRING(tmpNewFootagePath.lexically_normal()).c_str(), LIB_C4D_MAXPATH);
-				RB_STRNCPTY(dataStruct->relinkPath, FS_U8STRING(c4d_relinkRemotePath.lexically_normal()).c_str(), LIB_C4D_MAXPATH);
+				RB_STRNCPTY(dataStruct->loadFile, oldFootagePath.lexically_normal().string().c_str(), LIB_C4D_MAXPATH);
+				RB_STRNCPTY(dataStruct->saveFile, tmpNewFootagePath.lexically_normal().string().c_str(), LIB_C4D_MAXPATH);
+				RB_STRNCPTY(dataStruct->relinkPath, c4d_relinkRemotePath.lexically_normal().string().c_str(), LIB_C4D_MAXPATH);
 
-				GF_Dumper::rbProj()->logg(L"C4D_Asset", L"Lib", L"Function symbol imported success. Calling library for relink start.");
-				GF_Dumper::rbProj()->logg(L"C4D_Asset", L"FileLoad", oldFootagePath.lexically_normal().wstring().c_str());
-				GF_Dumper::rbProj()->logg(L"C4D_Asset", L"FileSave", tmpNewFootagePath.lexically_normal().wstring().c_str());
-				GF_Dumper::rbProj()->logg(L"C4D_Asset", L"LocalRelDir", c4d_relinkdir.lexically_normal().wstring().c_str());
-				GF_Dumper::rbProj()->logg(L"C4D_Asset", L"RemoteRelDir", c4d_relinkRemotePath.lexically_normal().wstring().c_str());
+				GF_Dumper::rbProj()->logg("C4D_Asset", "Lib", "Function symbol imported success. Calling library for relink start.");
+				GF_Dumper::rbProj()->logg("C4D_Asset", "FileLoad", dataStruct->loadFile);
+				GF_Dumper::rbProj()->logg("C4D_Asset", "FileSave", dataStruct->saveFile);
+				GF_Dumper::rbProj()->logg("C4D_Asset", "LocalRelDir", c4d_relinkdir.string().c_str());
+				GF_Dumper::rbProj()->logg("C4D_Asset", "RemoteRelDir", dataStruct->relinkPath);
 
 				int ret = getAndRelinkFunction(dataStruct, &dataStack);
                 if(ret != 0) {
-					GF_Dumper::rbProj()->loggErr(L"C4D_Asset", L"FileLoad", L"There were an error while relinking c4d file! Code: ");
+					GF_Dumper::rbProj()->loggErr("C4D_Asset", "FileLoad", ("There were an error while relinking c4d file! Code: " + std::to_string(ret)).c_str());
                 }
 				else if (dataStruct->errorCode == cinewareRelinker::err_NoError)
 				{                    
 					fs::path dataStackSourceFile;
                     
-					GF_Dumper::rbProj()->logg(L"C4D_Asset", L"FileLoad", L"C4D file relinked ok. Returned assets for copy: ",false);
-					GF_Dumper::rbProj()->logger << dataStruct->stackSize << std::endl;
+					GF_Dumper::rbProj()->logg("C4D_Asset", "FileLoad", ("C4D file relinked ok. Returned assets for copy: " + std::to_string(dataStruct->stackSize)).c_str());
+					
 					for (size_t i=0; i < dataStruct->stackSize; i++)
 					{
 						if (dataStack[i].isUrl == false) 
@@ -319,8 +319,7 @@ ErrorCodesAE GF_AEGP_Relinker::GFCopy_C4D_File(PlatformLibLoader* libIt, const f
 					success = true;
 				}
                 else {
-					GF_Dumper::rbProj()->loggErr(L"C4D_Asset", L"Relinker", L"Error code inside the return structure. Code: ", false);
-					GF_Dumper::rbProj() ->logger << dataStruct->errorCode << std::endl;
+					GF_Dumper::rbProj()->loggErr("C4D_Asset", "Relinker", ("Error code inside the return structure. Code: " + std::to_string(dataStruct->errorCode)).c_str());
                 }
 				delete dataStruct;
 			}
@@ -333,7 +332,7 @@ ErrorCodesAE GF_AEGP_Relinker::GFCopy_C4D_File(PlatformLibLoader* libIt, const f
 		}
 	}
 	else { // file does not exists
-		GF_Dumper::rbProj()->loggErr(L"C4D_Asset", L"FileNotFound", oldFootagePath.wstring().c_str());
+		GF_Dumper::rbProj()->loggErr("C4D_Asset", "FileNotFound", oldFootagePath.string().c_str());
 	}
 	if(success)
         _ErrorCode = NoError;

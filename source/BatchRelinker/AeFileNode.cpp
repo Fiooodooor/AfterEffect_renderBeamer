@@ -74,7 +74,7 @@ void AeFileNode::PushSourceFilename(FilenameCouple* filename_couple)
 		}
 
 		fs::path src_to_fix(filename_couple->sourceFileName);
-		rbUtilities::pathStringFixIllegal(src_to_fix, false, false);		
+		rbUtilities::pathStringFixIllegal(src_to_fix, false, false);
 		//filename_couple->relinkedFileName = GetFileRelinkPrefix() + filename_couple->sourceFileName;
 		
 		filename_couple->relinkedFileName = GetFileRelinkPrefix() + src_to_fix.string();
@@ -102,6 +102,19 @@ AeFileNode::FilenameCouple* AeFileNode::GetFilenameCouple(unsigned long long n) 
 unsigned long long AeFileNode::GetFilenamesNumber() const
 {
 	return file_names.size();
+}
+bool AeFileNode::FileExtensionCheck(const fs::path& path_to_check, const fs::path& extension)
+{
+	if (!path_to_check.has_extension())
+		return false;
+	if (path_to_check.extension().string().size() != extension.string().size())
+		return false;
+	for (unsigned long long i = 0; i < extension.string().size(); ++i)
+	{
+		if (std::tolower(path_to_check.extension().string().c_str()[i]) != std::tolower(extension.string().c_str()[i]))
+			return false;
+	}
+	return true;
 }
 //------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------
@@ -204,7 +217,7 @@ std::string AeFileNode::GetSequenceMaskRelinkedBase() const
 {
 	if (!GetSequenceMaskBase().empty())
 		return GetFileRelinkPrefix() + GetSequenceMaskBase();
-	return "";
+	return GetFileRelinkPrefix();
 }
 unsigned long long AeFileNode::GetMaxFilesCount() const
 {
