@@ -53,6 +53,7 @@ void Renderbeamer::DumpProject(A_Boolean useUiExporter)
 		GF_Dumper project_dumper(p_basic_, pluginId);
 		beamerParamsStruct paths_structure;
 		AeSceneContainer scene_items_container;
+		const auto undo = suites.UtilitySuite6()->AEGP_StartUndoGroup("Renderbeamer");
 					
 		auto *dlg_ptr = project_dumper.get_progress_dialog(true, true, 0);
 		MAIN_PROGRESS_THROW(*dlg_ptr, 2, 10)
@@ -74,6 +75,7 @@ void Renderbeamer::DumpProject(A_Boolean useUiExporter)
 
 		MAIN_PROGRESS_THROW(*dlg_ptr, 12, 20)
 		ERROR_RETURN_VOID(project_dumper.newBatchDumpProject())
+		if(undo == A_Err_NONE) suites.UtilitySuite6()->AEGP_EndUndoGroup();
 		ERROR_AEER(suites.UtilitySuite6()->AEGP_ReportInfo(pluginId, GetStringPtr(StrID_ProjectSent)))
 		
 	ERROR_CATCH_END(suites)

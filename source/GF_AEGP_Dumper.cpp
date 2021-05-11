@@ -32,10 +32,9 @@ GF_Dumper::~GF_Dumper()
 
     if (dumper_progressbar_)
         suites.AppSuite6()->PF_DisposeAppProgressDialog(dumper_progressbar_);
-	
-    if (smart_collect != 0) {       
-        ERR(suites.ProjSuite6()->AEGP_OpenProjectFromPath(bps->original_project, &rootProjH));
-    }
+        
+    ERR(suites.ProjSuite6()->AEGP_OpenProjectFromPath(bps->original_project, &rootProjH));
+    
 }
 
 ErrorCodesAE GF_Dumper::PreCheckProject(SPBasicSuite *pb, AEGP_PluginID pluginId, beamerParamsStruct &globals_and_paths)
@@ -129,7 +128,7 @@ ErrorCodesAE GF_Dumper::PrepareProject()
 		rbProj()->logg(L"PrepareProject", L"User", bps->rmtUser);
 	
 		if (rbUtilities::execBeamerCmd(bps, BeamerMask_GetLocalPort, bps->socketPort, 14) != NoError) {
-			throw PluginError(_ErrorCaller, ExecCommandFailed);
+			WSTRNCPY(bps->socketPort, L"32784", 6)
 		}
 		MAIN_PROGRESS(dumper_progressbar_, 6, 10)
 		bps->socketPort_long = wcstol(bps->socketPort, nullptr, 10);
@@ -342,7 +341,6 @@ ErrorCodesAE GF_Dumper::SetupUiQueueItems()
 		}
 	}
 	if(_ErrorCode == NoError) this->smart_collect = sc->smart_collect;
-    ERROR_LONG_ERR(connector.close_socket())	//vfnprintf();
 	ERROR_CATCH_END_LOGGER_RETURN("SetupUiQueueItems")
 }
 ErrorCodesAE GF_Dumper::DumpUiQueueItems(const fs::path& outputPath) const
