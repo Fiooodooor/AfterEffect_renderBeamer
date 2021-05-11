@@ -133,7 +133,9 @@ FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElemen
 				FileBasePath /= (it++)->string();
 			rbProjLogger->logg("BatchAepxParser", "ResolvedRelative", FileBasePath.string().c_str());
 		}
-		rbProjLogger->logg("BatchAepxParser", "FullPath","Leaving unchanged.");
+		else {
+			rbProjLogger->logg("BatchAepxParser", "FullPath", "Leaving unchanged.");
+		}
 	}
 	
 	if (fileReferencePt->Parent()->Parent()->Parent() && fileReferencePt->Parent()->Parent()->Parent()->FirstChildElement()) {

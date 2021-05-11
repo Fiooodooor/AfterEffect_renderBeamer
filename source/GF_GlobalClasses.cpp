@@ -54,7 +54,7 @@ void rbProjectClass::loggErr(const char* object, const char* type, const char* m
 	if (appendLogger() == false)
 		return;
 	getTimeStringA();
-	logger << timeStringA << ":" << std::this_thread::get_id() << "::ERROR::" << object << "::" << type << "::" << message;
+	logger << timeStringA << "::ERROR::" << object << "::" << type << "::" << message;
 	if (nLine)
 		logger << std::endl;
 
@@ -65,7 +65,7 @@ void rbProjectClass::loggErr(const wchar_t* object, const wchar_t* type, const w
 	if (appendLogger() == false)
 		return;
 	getTimeString();
-    logger << timeString << ":" << std::this_thread::get_id() << "::ERROR::" << rbUtilities::toUtf8(object).c_str() << "::" << rbUtilities::toUtf8(type).c_str() << "::" << rbUtilities::toUtf8(message).c_str();
+    logger << timeString << "::ERROR::" << rbUtilities::toUtf8(object).c_str() << "::" << rbUtilities::toUtf8(type).c_str() << "::" << rbUtilities::toUtf8(message).c_str();
 	if (nLine)
 		logger << std::endl;
 }
@@ -75,7 +75,7 @@ void rbProjectClass::logg(const char* object, const char* type, const char* mess
 	if (appendLogger() == false)
 		return;
 	getTimeStringA();
-	logger << timeStringA << ":" << std::this_thread::get_id() << "::INFO::" << object << "::" << type << "::" << message;
+	logger << timeStringA << "::INFO::" << object << "::" << type << "::" << message;
 	if (nLine)
 		logger << std::endl;
 }
@@ -86,7 +86,7 @@ void rbProjectClass::logg(const wchar_t* object, const wchar_t* type, const wcha
 		return;
 	getTimeStringA();
 
-    logger << timeStringA << ":" << std::this_thread::get_id() << "::INFO::" << rbUtilities::toUtf8(object).c_str() << "::" << rbUtilities::toUtf8(type).c_str() << "::" << rbUtilities::toUtf8(message).c_str();
+    logger << timeStringA << "::INFO::" << rbUtilities::toUtf8(object).c_str() << "::" << rbUtilities::toUtf8(type).c_str() << "::" << rbUtilities::toUtf8(message).c_str();
     if (nLine)
         logger << std::endl;
 }
@@ -96,7 +96,7 @@ void rbProjectClass::loggA(int objectN, ...)
     if (appendLogger() == false)
         return;
     getTimeStringA();
-    logger << timeStringA << ":" << std::this_thread::get_id() << "::INFO";
+    logger << timeStringA << "::INFO";
     va_list aMsg;
     va_start(aMsg, objectN);
     for(int it=0; it<objectN; it++) {
@@ -111,7 +111,7 @@ void rbProjectClass::loggW(int objectN, ...)
     if (appendLogger() == false)
         return;
     getTimeStringA();
-    logger << timeStringA << ":" << std::this_thread::get_id() << "::INFO";
+    logger << timeStringA << "::INFO";
     va_list wMsg;
     va_start(wMsg, objectN);
     for(int it=0; it<objectN; it++) {
