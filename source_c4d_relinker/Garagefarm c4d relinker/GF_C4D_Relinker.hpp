@@ -2,8 +2,8 @@
 //  Garagefarm_c4d_relinker.hpp
 //  Garagefarm c4d relinker
 //
-//  Created by CzornyCzfanyCzop on 3/23/20.
-//  Copyright © 2020 garageFarm.net. All rights reserved.
+//  Created by Milosz Linkiewicz on 12/05/2021r.
+//  Copyright © 2021 garageFarm.net. All rights reserved.
 //
 #ifndef Garagefarm_c4d_relinker_
 #define Garagefarm_c4d_relinker_
@@ -41,9 +41,25 @@ typedef struct {
 namespace cinewareRelinker
 {
     typedef enum errorCodes {
+		err_OPEN = -1,
+		err_CLOSE = -2,
+		err_READ = -3,
+		err_WRITE = -4,
+		err_SEEK = -5,
+		err_INVALID = -6,
+		err_OUTOFMEMORY = -7,
+		err_USERBREAK = -8,
+		err_WRONG_VALUE = -100,
+		err_CHUNK_NUMBER = -102,
+		err_VALUE_NO_CHUNK = -103,
+		err_FILE_END = -104,
+		err_UNKNOWN_VALUE = -105,
         err_NoError = 0,
         err_LoadPathEmpty,
+    	err_LoadFileDoNotExist,
+    	err_LoadFileIdentifyError,
         err_LoadFileError,
+    	err_LoadFileAllocation,
         err_SaveFileError,
         err_InputStackError,
         err_InputPointerError,
@@ -52,6 +68,7 @@ namespace cinewareRelinker
         err_UnknownLoadSceneException
     } errorCodes;
 }
+
 typedef int( *_f_getAssetsListAndRelink)(c4dStruct* in_data, FileNode** out_data);
 
 extern "C" {

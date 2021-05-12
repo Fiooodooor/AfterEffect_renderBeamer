@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+    <DisplayName>renderBeamer After Effects UI</DisplayName>
+    <Description>Copy and install After Effects UI for renderbeamer</Description>
+    <Version>1.0.0.0</Version>
+    <ReleaseDate>2021-05-12</ReleaseDate>
+    <Script>installscript.js</Script>
+	<Name>com.renderbeamer.aftereffectsui</Name>
+	<ForcedInstallation>true</ForcedInstallation>
+</Package>

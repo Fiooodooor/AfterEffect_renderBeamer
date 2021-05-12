@@ -56,6 +56,7 @@ namespace cinewareRelinker
 		static void leaveAllowedOnly(cineware::String &filename);
 
         bool pushBack(FileNodeCineware* node);
+		void collectFile(cineware::BaseShader *sh);
         void collectAssets(cineware::BaseShader *shader);
         errorCodes loadScene(const cineware::String &loadFile, const cineware::String &saveFile, const cineware::String &relinkPath);
 

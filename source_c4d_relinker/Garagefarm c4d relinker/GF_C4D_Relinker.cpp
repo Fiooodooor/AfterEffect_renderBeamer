@@ -44,93 +44,108 @@ namespace cinewareRelinker
 		char c_filename[LIB_C4D_MAXPATH] = { '\0' };
 		filename.GetCString(c_filename, LIB_C4D_MAXPATH);
     	
-		auto *source_str_ptr = c_filename;
+		auto *source_str_ptr = &c_filename[0];
 		char mask[] = ALLOWED_CHARACTERSA;
-
+    	
 		while (source_str_ptr && *source_str_ptr)
 		{
-			source_str_ptr += strspn(source_str_ptr, mask);
+			source_str_ptr += strspn(source_str_ptr, &mask[0]);
 			if (source_str_ptr[0] == '\0')
 				break;
 			source_str_ptr[0] = '_';
 		}
 		filename.SetCString(c_filename);
 	}
+
+	void c4dAssetsCollector::collectFile(cineware::BaseShader *sh)
+    {
+		if (!sh->GetFileName().IsPopulated()) {
+			return;
+		}
+		auto *node = new FileNodeCineware();
+
+		if (!node) {
+			return;
+		}
+
+		node->file = WIN_LOWER(sh->GetFileName().GetString());
+		node->isUrl = sh->GetFileName().IsBrowserUrl();
+		const auto unique = this->pushBack(node);
+
+		if (!node->isUrl)
+		{
+			if (relink && unique) 
+			{
+				cineware::Filename tmp;
+				if (!using_tex)
+					tmp.SetDirectory(newPathPrefixM);
+
+				cineware::String newFilename = cineware::String::IntToString(static_cast<cineware::Int32>(files.size())) + cineware::String("_") + sh->GetFileName().GetFile().GetString();
+				leaveAllowedOnly(newFilename);
+				tmp.SetFile(WIN_LOWER(newFilename));
+				sh->SetFileName(tmp);
+				node->relinkedPath = WIN_LOWER(tmp.GetString());
+				node->relinkedFile = WIN_LOWER(tmp.GetFile().GetString());
+			}
+			else if (relink && !unique) {
+				sh->SetFileName(node->relinkedPath);
+			}
+		}
+		/*
+			add support for online assets
+		*/
+    }
     void c4dAssetsCollector::collectAssets(cineware::BaseShader *shader)
     {
         cineware::BaseShader *sh = shader;
         while (sh)
         {
             if (sh->GetType() == Xlayer)
-            {
+            {				
                 auto* d = (cineware::iBlendDataType*)(sh->GetDataInstance()->GetData(cineware::SLA_LAYER_BLEND).GetCustomDataType(CUSTOMDATA_BLEND_LIST));
                 if (d)
                 {
-                    auto *lsl = (cineware::LayerShaderLayer*)(d->m_BlendLayers.GetObject(0));
+                    auto *lsl = dynamic_cast<cineware::LayerShaderLayer*>(d->m_BlendLayers.GetObject(0));
                     while (lsl)
                     {
                         if (lsl->GetType() == cineware::TypeFolder)
                         {
-                            auto *subLsl = (cineware::LayerShaderLayer*)((cineware::BlendFolder*)lsl)->m_Children.GetObject(0);
+                            auto *subLsl = dynamic_cast<cineware::LayerShaderLayer*>(dynamic_cast<cineware::BlendFolder*>(lsl)->m_Children.GetObject(0));
                             while (subLsl)
                             {
                                 if (subLsl->GetType() == cineware::TypeShader)
-                                    collectAssets((cineware::BaseShader*)((cineware::BlendShader*)subLsl)->m_pLink->GetLink());
+                                    collectAssets(static_cast<cineware::BaseShader*>(dynamic_cast<cineware::BlendShader*>(subLsl)->m_pLink->GetLink()));
                                 subLsl = subLsl->GetNext();
                             }
                         }
                         else if (lsl->GetType() == cineware::TypeShader)
-                            collectAssets((cineware::BaseShader*)((cineware::BlendShader*)lsl)->m_pLink->GetLink());
+                            collectAssets(static_cast<cineware::BaseShader*>(dynamic_cast<cineware::BlendShader*>(lsl)->m_pLink->GetLink()));
                         lsl = lsl->GetNext();
                     }
                 }
             }
-            else if (sh->GetType() == Xbitmap) {
-                auto *node = new FileNodeCineware();
-
-                if (!node)
-                    continue;
-                if (!sh->GetFileName().IsPopulated()) {
-                    delete node;
-                    continue;
-                }
-                node->file = WIN_LOWER(sh->GetFileName().GetString());
-                node->isUrl = sh->GetFileName().IsBrowserUrl();
-                const auto unique = this->pushBack(node);
-
-                if (!node->isUrl)
-                {
-                    if (relink && unique) {
-                        cineware::Filename tmp;
-                        if (!using_tex)
-                            tmp.SetDirectory(newPathPrefixM);
-						
-						cineware::String newFilename = cineware::String::IntToString(static_cast<cineware::Int32>(files.size())) + cineware::String("_") + sh->GetFileName().GetFile().GetString();
-						leaveAllowedOnly(newFilename);
-                        tmp.SetFile(newFilename);
-                        sh->SetFileName(tmp);
-                        node->relinkedPath = WIN_LOWER(tmp.GetString());
-                        node->relinkedFile = WIN_LOWER(tmp.GetFile().GetString());
-                    }
-                    else if (relink && !unique) {
-                        sh->SetFileName(node->relinkedPath);
-                    }
-                }
-                /*
-                add support for online assets
-                */
+            else if (sh->GetType() == Xbitmap) 
+			{
+				collectFile(sh);
             }
             else if (sh->GetType() == Xvariation)
             {
                 auto *v_data = dynamic_cast<cineware::VariationShaderData*>(sh->GetNodeData());
-                if (v_data)
-                {
+                if (v_data) 
+				{
                     for (cineware::Int32 t = 0; t < v_data->GetTextureCount(); ++t)
                         collectAssets(v_data->GetTextureLayer(t)._shader);
                 }
-                else
-                    collectAssets(sh->GetDown());
+				else 
+				{
+					collectAssets(sh->GetDown());
+				}
             }
+        	else
+			{
+				collectFile(sh);
+				collectAssets(sh->GetDown());
+			}
             sh = sh->GetNext();
         }
     }
@@ -138,6 +153,7 @@ namespace cinewareRelinker
     errorCodes c4dAssetsCollector::loadScene(const cineware::String &loadFile, const cineware::String &saveFile, const cineware::String &relinkPath)
     {
         try {
+			errorCodes code = err_NoError;
             projectPathM = loadFile;
 
             if (relink)
@@ -146,30 +162,67 @@ namespace cinewareRelinker
                 newPathPrefixM = newPathPrefix;
                 newProjectPathM = saveFile;
             }
-
+      	
             c4dDoc = LoadDocument(projectPathM, SCENEFILTER_OBJECTS | SCENEFILTER_MATERIALS);
+			bool c4dDocLoadFailed = false;
 
-            if (c4dDoc) {
-                mat = c4dDoc->GetFirstMaterial();
-                while (mat)
-                {
-                    mat->GetFirstShader();
-                    collectAssets(mat->GetFirstShader());
-                    mat = mat->GetNext();
-                }
+        	if (!c4dDoc) 
+			{
+				c4dDocLoadFailed = true;
+				if (!GeFExist(projectPathM)) {
+					return err_LoadFileDoNotExist;
+				}
+				if (GeIdentifyFile(projectPathM) != IDENTIFYFILE_SCENE) {
+					return err_LoadFileIdentifyError;
+				}
+				c4dDoc = new (cineware::MemAllocNC(sizeof(BaseDocument)))BaseDocument();
+				auto *c4dFile = new (cineware::MemAllocNC(sizeof(HyperFile)))HyperFile();
 
-                if (relink) {
-                    if (!SaveDocument(c4dDoc, newProjectPathM, cineware::SAVEDOCUMENTFLAGS_0)) {
-                        cineware::BaseDocument::Free(c4dDoc);
-                        return err_SaveFileError;
-                    }
-                }
+				if (!c4dDoc || !c4dFile)
+				{
+					DeleteObj(c4dDoc);
+					DeleteObj(c4dFile);
+					return err_LoadFileAllocation;
+				}
 
-                cineware::BaseDocument::Free(c4dDoc);
-                return err_NoError;
+				if (c4dFile->Open(DOC_IDENT, projectPathM, FILEOPEN_READ) )
+				{
+					if (!c4dDoc->ReadObject(c4dFile, true))
+					{
+						DeleteObj(c4dDoc);
+					}
+					c4dFile->Close();
+					DeleteObj(c4dFile);
+				}
+				else
+				{
+					code = static_cast<errorCodes>(c4dFile->GetError());
+					DeleteObj(c4dDoc);
+					DeleteObj(c4dFile);
+					return code;
+				}
+			}
+			if (!c4dDoc)
+				return err_LoadFileError;
+        	
+            mat = c4dDoc->GetFirstMaterial();
+            while (mat)
+            {
+                collectAssets(mat->GetFirstShader());
+                mat = mat->GetNext();
             }
-            return err_LoadFileError;
-            
+
+            if (relink) {
+                if (!SaveDocument(c4dDoc, newProjectPathM, cineware::SAVEDOCUMENTFLAGS_0)) 
+				{
+					code =  err_SaveFileError;
+                }
+            }
+			if(c4dDocLoadFailed)
+				DeleteObj(c4dDoc);
+			else
+        		cineware::BaseDocument::Free(c4dDoc);
+            return code;
         }
         catch (...) {
             return err_UnknownLoadSceneException;

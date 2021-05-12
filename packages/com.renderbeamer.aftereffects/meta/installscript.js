@@ -66,50 +66,12 @@ Component.prototype.createOperationsForArchive = function(archive)
 					component.addOperation("Copy", fromPath, afterPath+"//GF_AEGP_Renderbeamer.aex");
 					component.addOperation("Copy", fromPath2, afterPath+"//C4dRelinkerLibrary.dll");
 				}
-			}
-				
-		}
-		
-		UIpath = QDesktopServices.storageLocation(QDesktopServices.HomeLocation)+ "/renderbeamer/uninstall/AfterEffects/data/renderBeamerUI";
-		UIpathDir = QDesktopServices.storageLocation(QDesktopServices.HomeLocation) +"/AppData/Roaming/Adobe/CEP/extensions/renderBeamerUI";
-		UIpathDir_old = QDesktopServices.storageLocation(QDesktopServices.HomeLocation) +"/AppData/Roaming/Adobe/CEP/extensions/com.acc.renderBeamerUI";
-		if (installer.fileExists(UIpathDir_old))
-		{
-			var re_old = new RegExp("/", 'g');
-			path3_old = UIpathDir_old.replace(re_old, '\\');
-			component.addElevatedOperation("Execute", ["cmd", "/C", "del", "/Q", "/S", "/F", path3_old, "UNDOEXECUTE", "cmd", "/C"]);
-		}
-		if (installer.fileExists(UIpathDir))
-		{
-			var re = new RegExp("/", 'g');
-			path3 = UIpathDir.replace(re, '\\');
-			component.addElevatedOperation("Execute", ["cmd", "/C", "del", "/Q", "/S", "/F", path3, "UNDOEXECUTE", "cmd", "/C"]);
-		}
-		
-		//if (!installer.fileExists(UIpathDir))
-		//{
-			//component.addOperation("Mkdir", UIpathDir);
-		//}
-		
-		//component.addOperation("CopyDirectory", UIpath, UIpathDir);
-	
+			}		
+		}	
 	}
 	else if (systemInfo.kernelType === "darwin") 
 	{
 		component.addOperation("CopyDirectory", [QDesktopServices.storageLocation(QDesktopServices.HomeLocation)+ "/renderbeamer/uninstall/AfterEffects/data/renderBeamer.plugin", "/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/", "forceOverwrite"]);
-		if (installer.fileExists("/Library/Application Support/Adobe/CEP/extensions/renderBeamerUI"))
-		{
-			component.addElevatedOperation("Execute", ["rm", "-R", "/Library/Application Support/Adobe/CEP/extensions/renderBeamerUI/"])
-		}
-		if (installer.fileExists("/Library/Application Support/Adobe/CEP/extensions/com.acc.renderBeamerUI/"))
-		{
-			component.addElevatedOperation("Execute", ["rm", "-R", "/Library/Application Support/Adobe/CEP/extensions/com.acc.renderBeamerUI/"])
-		}
-		//if (!installer.fileExists("/Library/Application Support/Adobe/CEP/extensions/renderBeamerUI/"))
-		//{
-		//	component.addOperation("Mkdir", "/Library/Application Support/Adobe/CEP/extensions/renderBeamerUI/");
-		//}		
-		//component.addOperation("CopyDirectory", [QDesktopServices.storageLocation(QDesktopServices.HomeLocation)+ "/renderbeamer/uninstall/AfterEffects/data/renderBeamerUI", "/Library/Application Support/Adobe/CEP/extensions/", "forceOverwrite"]);
 	}
 		
 
