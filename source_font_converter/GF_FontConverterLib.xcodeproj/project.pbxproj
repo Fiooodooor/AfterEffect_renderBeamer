@@ -63,8 +63,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4A600778264196CC001A0453 /* garagefarm_fontmodule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = garagefarm_fontmodule.h; sourceTree = "<group>"; };
 		4A600779264196CC001A0453 /* garagefarm_fontmodule.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = garagefarm_fontmodule.c; sourceTree = "<group>"; };
+		4A6266CD264C29B10039CF77 /* garagefarm_fontmodule_v2_7.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = garagefarm_fontmodule_v2_7.c; sourceTree = "<group>"; };
+		4A6266CE264C29B10039CF77 /* garagefarm_fontmodule_v3_9.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = garagefarm_fontmodule_v3_9.c; sourceTree = "<group>"; };
 		4A7B4AE52642787300E28C15 /* libglib-2.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libglib-2.0.a"; path = "libraries/libglib-2.0.a"; sourceTree = "<group>"; };
 		4A7B4AE62642787300E28C15 /* libfontforge.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfontforge.a; path = libraries/libfontforge.a; sourceTree = "<group>"; };
 		4A7B4AE72642787300E28C15 /* libpng16.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng16.a; path = libraries/libpng16.a; sourceTree = "<group>"; };
@@ -185,10 +186,11 @@
 		4A87871E2409209C004D1DFC /* gf_font_converter */ = {
 			isa = PBXGroup;
 			children = (
+				4A6266CD264C29B10039CF77 /* garagefarm_fontmodule_v2_7.c */,
+				4A6266CE264C29B10039CF77 /* garagefarm_fontmodule_v3_9.c */,
 				4AC2E6C3241668AF00786233 /* gf_font_generate.h */,
 				4AC2E6C12416689A00786233 /* gf_font_generate.c */,
 				4A87871F2409209C004D1DFC /* gf_font_converter.hpp */,
-				4A600778264196CC001A0453 /* garagefarm_fontmodule.h */,
 				4A600779264196CC001A0453 /* garagefarm_fontmodule.c */,
 				4A8787232409209C004D1DFC /* gf_font_converter.cpp */,
 				4A8787212409209C004D1DFC /* gf_font_converterPriv.hpp */,
@@ -423,7 +425,7 @@
 					"/Users/ccc/Downloads/fontforge-master/build/inc/",
 					"/Users/ccc/Downloads/fontforge-master/inc/",
 					/usr/local/Cellar/gettext/0.21/include/,
-					"/usr/local/Cellar/python@3.9/3.9.4/Frameworks/Python.framework/Versions/3.9/Headers",
+					/System/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7,
 				);
 				INFOPLIST_FILE = "";
 				INSTALL_PATH = "";
@@ -477,7 +479,7 @@
 					"/Users/ccc/Downloads/fontforge-master/build/inc/",
 					"/Users/ccc/Downloads/fontforge-master/inc/",
 					/usr/local/Cellar/gettext/0.21/include/,
-					"/usr/local/Cellar/python@3.9/3.9.4/Frameworks/Python.framework/Versions/3.9/Headers",
+					/System/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7,
 				);
 				INFOPLIST_FILE = "";
 				INSTALL_PATH = "";
