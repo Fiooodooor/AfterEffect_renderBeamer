@@ -5,82 +5,66 @@
 //  Created by Milosz Linkiewicz 2021
 //  CzornyCzfanyCzop on 5/4/21.
 //
-
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
-struct module_state {
-    PyObject *error;
-};
-
-#if PY_MAJOR_VERSION >= 3
-#define GETSTATE(m) ((struct module_state*)PyModule_GetState(m))
-#else
-#define GETSTATE(m) (&_state)
-static struct module_state _state;
-#endif
-
 #include <dlfcn.h>
-//#include <string>
 
-//#include "garagefarm_fontmodule.h"
-//#include "gf_font_converter.hpp"
+#include "gf_font_converter.hpp"
 
-#define LIB_MAXPATH_SIZE 1041 // 260x4 + 1 = 1040 (unicode on mac char is 4 bytes long)
-#define LIB_FONTPATH char fontPath[LIB_MAXPATH_SIZE];
-
-typedef struct FontsPathS {
-    char fontPath[LIB_MAXPATH_SIZE];
-} FontsPathS;
-
-typedef struct FontsListS {
-    int32_t structureSize;
-    FontsPathS *pathsTable;
-} FontsListS;
-
-typedef int(__cdecl *copyConvertFont_creator)(const char* sourceFile, const char* sourcePath, const char* destinationPath, int index, FontsListS *fontsList);
-
-
-static char* StringFromEncoded(PyObject *encodedO)
-{
-    PyObject *s;
-    char *val = malloc(sizeof(char)*255);
-    PyObject *encodedU = PyUnicode_FromEncodedObject(encodedO, Py_FileSystemDefaultEncoding, NULL);
-    if(encodedU == NULL)
-        return val;
-    
-    if( PyUnicode_Check(encodedU) ) {  // python3 has unicode, but we convert to bytes
-        s = PyUnicode_AsUTF8String(encodedU);
-    } else if( PyBytes_Check(encodedU) ) {  // python2 has bytes already
-        s = PyObject_Bytes(encodedU);
-    } else {
-        return val;
-    }
-        
-    if(s) {
-        strcpy(val , PyBytes_AsString(s) );
-        Py_XDECREF(s);
-    }
-    return val;
-}
 static PyObject* garagefarm_font_copyconvert(PyObject *self, PyObject *args)
 {
 //    FontsListS *fontsList;
     int index = 0;
-    const char *libFullPath, *sourceFile, *sourcePath, *destinationPath;
-    //PyObject *libFullPathO, *sourceFileO, *sourcePathO, *destinationPathO;
+    const char *libFullPathC, *sourceFileC, *sourcePathC, *destinationPathC;
+    char *libFullPath, *sourceFile, *sourcePath, *destinationPath;
+    Py_ssize_t libFullPathSize, sourceFileSize, sourcePathSize, destinationPathSize;
+    PyObject *libFullPathO, *sourceFileO, *sourcePathO, *destinationPathO;
+    PyObject *libFullPathU, *sourceFileU, *sourcePathU, *destinationPathU;
     
 
-    if (!PyArg_ParseTuple(args, "s|s|s|s|l", &libFullPath, &sourceFile, &sourcePath, &destinationPath, &index))
+
+    if (!PyArg_ParseTuple(args, "O|O|O|O|l", &libFullPathO, &sourceFileO, &sourcePathO, &destinationPathO, &index))
         return NULL;
-   
-    //libFullPath = StringFromEncoded(libFullPathO);
-    //sourceFile = StringFromEncoded(sourceFileO);
-    //sourcePath = StringFromEncoded(sourcePathO);
-    //destinationPath = StringFromEncoded(destinationPathO);
+    if (!PyUnicode_FSDecoder(libFullPathO, &libFullPathU) ||
+        !PyUnicode_FSDecoder(sourceFileO, &sourceFileU) ||
+        !PyUnicode_FSDecoder(sourcePathO, &sourcePathU) ||
+        !PyUnicode_FSDecoder(destinationPathO, &destinationPathU))
+    {
+        return NULL;
+    }
+    
+    libFullPathC = PyUnicode_AsUTF8AndSize(libFullPathU, &libFullPathSize);
+    if(libFullPathC && libFullPathSize < LIB_MAXPATH_SIZE)
+        libFullPath = strdup(libFullPathC);
+    else
+        return NULL;
+    
+    sourceFileC = PyUnicode_AsUTF8AndSize(sourceFileU, &sourceFileSize);
+    if(sourceFileC && sourceFileSize < LIB_MAXPATH_SIZE)
+        sourceFile = strdup(sourceFileC);
+    else
+        return NULL;
+    
+    sourcePathC = PyUnicode_AsUTF8AndSize(sourcePathU, &sourcePathSize);
+    if(sourcePathC && sourcePathSize < LIB_MAXPATH_SIZE)
+        sourcePath = strdup(sourcePathC);
+    else
+        return NULL;
+    
+    destinationPathC = PyUnicode_AsUTF8AndSize(destinationPathU, &destinationPathSize);
+    if(destinationPathC && destinationPathSize < LIB_MAXPATH_SIZE)
+        destinationPath = strdup(destinationPathC);
+    else
+        return NULL;
     
     printf("Decoded sourcePath: %s  and sourceFile: %s \n", sourcePath, sourceFile);
     printf("Decoded destinationPath: %s \n", destinationPath);
     printf("Decoded library path: %s \n", libFullPath);
     
+    Py_XDECREF(libFullPathU);
+    Py_XDECREF(sourceFileU);
+    Py_XDECREF(sourcePathU);
+    Py_XDECREF(destinationPathU);
     
     PyObject* python_list = NULL;
     FontsListS *fntList = (FontsListS*)malloc(sizeof( FontsListS) );
@@ -88,7 +72,7 @@ static PyObject* garagefarm_font_copyconvert(PyObject *self, PyObject *args)
         printf("Malloc for fonts list failed! Returning.\n");
         return NULL;
     }
-    void* libraryInstance = dlopen(libFullPath, RTLD_LOCAL|RTLD_LAZY);
+    void* libraryInstance = dlopen(libFullPath ,RTLD_LOCAL|RTLD_LAZY);
     if(libraryInstance)
     {
         copyConvertFont_creator libraryConverterF;
@@ -111,7 +95,7 @@ static PyObject* garagefarm_font_copyconvert(PyObject *self, PyObject *args)
                     path_len = strlen(fntList->pathsTable[i].fontPath);
                     if(path_len > 0) {
                         printf("Starting string to python convertion, font path len: %ld \n", path_len);
-                        PyObject* fontPath_py = PyUnicode_DecodeUTF8(fntList->pathsTable[i].fontPath, path_len, NULL);
+                        PyObject* fontPath_py = PyUnicode_DecodeFSDefaultAndSize(fntList->pathsTable[i].fontPath, path_len);
                         PyList_SetItem(python_list, i, fontPath_py);
                     }
                     else {
@@ -149,32 +133,28 @@ static PyObject* garagefarm_font_copyconvert(PyObject *self, PyObject *args)
     return python_list;
 }
 
-static PyMethodDef garagefarm_font_methods[] = {
-    {"copyconvert", garagefarm_font_copyconvert, METH_VARARGS, "Exec copyconvert"},
+static PyMethodDef garagefarm_fontMethods[] = {
+    {"copyconvert",  garagefarm_font_copyconvert, METH_VARARGS,
+     "Function to convert font and save it to destination."},
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 
-/*static PyModuleDef garagefarm_fontmodule = {
-    //PyModuleDef_HEAD_INIT,
+static PyModuleDef garagefarm_fontmodule = {
+    PyModuleDef_HEAD_INIT,
     .m_name = "garagefarm_font",
     .m_doc = "GarageFarn.net module for fonts exporting under macOs.",
     .m_size = -1,
     .m_methods = garagefarm_fontMethods
-};*/
+};
 
-//PyMODINIT_FUNC PyInit_garagefarm_font(void)
-void initgaragefarm_font(void)
+PyMODINIT_FUNC PyInit_garagefarm_font(void)
 {
-    PyObject *module = Py_InitModule("garagefarm_font", garagefarm_font_methods);
-    char ext_error[] = "garagefarm_font.Error";
-    if(module == NULL)
-        return;
+    PyObject *module_pt;
     
-    struct module_state *st = GETSTATE(module);
-    st->error = PyErr_NewException(&ext_error[0], NULL, NULL);
-    if (st->error == NULL) {
-        Py_DECREF(module);
-        return;
-    }
+    module_pt = PyModule_Create(&garagefarm_fontmodule);
+    if (module_pt == NULL)
+        return NULL;
+
+
+    return module_pt;
 }
-//int __cdecl copyConvertFont(const char* sourceFile, const char* sourcePath, const char* destinationPath, int index, FontsListS *fontsList);
