@@ -65,105 +65,48 @@ A_Err GF_AEGP_Relinker::RelinkProject(AEGP_ProjectH projectH)
     } PT_XTE_CATCH_RETURN_ERR
 }
 
-ErrorCodesAE GF_AEGP_Relinker::newRelinkFootage(AeFootageNode *node)
-{
-	ERROR_CATCH_START
-	FS_ERROR_CODE(err)
-	AEGP_MemHandle memPathH;
-	AEGP_FootageInterp newInterpret;
-
-	if (!node->isFooFile())
-		return NoError;
-	
-	if (node->copyOf == -1)
-	{
-		node->pathRelinked = bps->bp.footageMainOutput.string() + std::to_string(node->getItemId()) + '_' + node->path.filename().string();
-
-		if (node->isFooSequence())
-		{			
-			A_long TmpSeqUID = node->getItemId();
-            std::string TmpSeqUIDString = std::to_string(TmpSeqUID);
-			
-			for (A_long it = node->getNrFiles() - 1; it >= 0; --it)
-			{
-				ERROR_THROW_AE(suites.FootageSuite5()->AEGP_GetFootagePath(node->getFooH(), it, AEGP_FOOTAGE_MAIN_FILE_INDEX, &memPathH))
-				ERROR_THROW_AE(rbUtilities::copyMemhUTF16ToPath(sP, memPathH, node->path))
-				FS_REPLACE_FILENAME(node, TmpSeqUID)
-				GFCopyFile(TmpSeqUIDString, node->path, node->pathRelinked, true);
-			}
-		}
-		else if (node->path.has_extension() && node->path.extension().compare(fs::path(".c4d")) == 0)
-		{
-			if (GFCopy_C4D_File(c4d_interface, node->path, node->pathRelinked, bps->bp.remoteFootagePath, std::to_string(node->getItemId())) != NoError) {
-				GFCopyFile(node->getItemIdString(), node->path, node->pathRelinked, true);
-			}
-		}
-		else
-			GFCopyFile(node->getItemIdString(),node->path, node->pathRelinked, true);
-	}
-	else {
-		node->pathRelinked = node->copyFootageNode->pathRelinked;
-	}
-
-	if (fs::exists(node->pathRelinked, err))
-	{
-		rbUtilities::copyConvertStringLiteralIntoUTF16(node->pathRelinked.wstring().c_str(), node->relinkedPath, AEGP_MAX_PATH_SIZE);                
-        ERROR_THROW_AE(suites.FootageSuite5()->AEGP_NewFootage(pluginId, node->relinkedPath, &node->layerKey, &node->seqImpOptions, AEGP_InterpretationStyle_NO_DIALOG_NO_GUESS, NULL, &node->newFooH))
-		ERROR_THROW_AE(suites.FootageSuite5()->AEGP_ReplaceItemMainFootage(node->newFooH, node->getItemH()))
-		ERROR_THROW_AE(suites.FootageSuite5()->AEGP_SetFootageInterpretation(node->getItemH(), FALSE, &node->interpret))
-		ERROR_THROW_AE(suites.FootageSuite5()->AEGP_GetFootageInterpretation(node->getItemH(), FALSE, &newInterpret))
-		newInterpret.native_fpsF = node->interpret.native_fpsF;
-		newInterpret.conform_fpsF = node->interpret.conform_fpsF;
-		newInterpret.pd = node->interpret.pd;
-		newInterpret.al = node->interpret.al;
-		ERROR_THROW_AE(suites.FootageSuite5()->AEGP_SetFootageInterpretation(node->getItemH(), FALSE, &newInterpret))
-	}
-	else
-		return ErrorResult;
-	ERROR_CATCH_END_NO_INFO_RETURN
-}
-
-
 bool GF_AEGP_Relinker::GFCopyFile(const std::string &UID, fs::path oldFootagePath, fs::path &tmpNewFootagePath, bool forceNoRename, bool forceNoSymlinks)
 {
     bool success = false;
-    FS_ERROR_CODE(err)
-    FS_ERROR_CODE(err1)
-		
-    if (fs::exists(oldFootagePath, err))
-    {
-        if (!forceNoRename)
-        {
-            fs::path tmpFilename = tmpNewFootagePath.parent_path().string() + SEP + UID + '_' + tmpNewFootagePath.filename().string();
+	FS_ERROR_CODE(err)
+	FS_ERROR_CODE(err1)
+
+	if (fs::exists(oldFootagePath, err))
+	{
+		if (!forceNoRename)
+		{
+			fs::path tmpFilename = tmpNewFootagePath.parent_path().string() + SEP + UID + '_' + tmpNewFootagePath.filename().string();
 			tmpNewFootagePath = tmpFilename;
-        }
-        if (!forceNoSymlinks)
-        {
-            if (fs::is_symlink(oldFootagePath)) {
-                fs::copy_symlink(oldFootagePath, tmpNewFootagePath, err);
-            }
-            else {
-                fs::create_symlink(oldFootagePath, tmpNewFootagePath, err);
-            }
-            if (err.value() == 0)
-                success = true;
-        }
-        if (success == false)
-        {
-            while (fs::is_symlink(oldFootagePath, err) && err.value() == 0) {
-                if (fs::exists(fs::read_symlink(oldFootagePath, err), err1) && err.value() == 0 && err1.value() == 0)
-                    oldFootagePath = fs::read_symlink(oldFootagePath, err1);
-                if (err1.value() != 0)
-                    break;
-            }
-            if (err1.value() == 0 && fs::exists(oldFootagePath, err) && err.value() == 0)
-                fs::copy_file(oldFootagePath, tmpNewFootagePath, FS_COPY_OPTIONS, err);
-        }
-    }
+		}
+		if (!forceNoSymlinks)
+		{
+			if (fs::is_symlink(oldFootagePath, err) && err.value() == 0) {
+				fs::copy_symlink(oldFootagePath, tmpNewFootagePath, err);
+			}
+			else {
+				fs::create_symlink(oldFootagePath, tmpNewFootagePath, err);
+			}
+			if (err.value() == 0)
+				success = true;
+		}
+		if (success == false)
+		{
+			while (fs::is_symlink(oldFootagePath, err) && err.value() == 0) {
+				if (fs::exists(fs::read_symlink(oldFootagePath, err), err1) && err.value() == 0 && err1.value() == 0)
+					oldFootagePath = fs::read_symlink(oldFootagePath, err1);
+				if (err1.value() != 0)
+					break;
+			}
+			if (fs::exists(oldFootagePath, err) && err.value() == 0)
+				fs::copy_file(oldFootagePath, tmpNewFootagePath, FS_COPY_OPTIONS, err);
+		}
+	}
+	else
+		return false;
     if (err.value() == 0)
         return true;
-    else
-        return false;
+
+	return false;
 }
 ErrorCodesAE GF_AEGP_Relinker::CopyFont(AeFontNode *node, A_long id, std::vector<std::string> &fontsList)
 {
@@ -299,7 +242,7 @@ ErrorCodesAE GF_AEGP_Relinker::GFCopy_C4D_File(PlatformLibLoader* libIt, const f
 							fs::path tmpDataStackSourceFile = fs::path(dataStack[i].file);
 							if (tmpDataStackSourceFile.is_relative())
 							{
-								if (fs::exists(oldFootagePath.parent_path().string() + SEP + tmpDataStackSourceFile.string()))
+								if (fs::exists(oldFootagePath.parent_path().string() + SEP + tmpDataStackSourceFile.string(), err))
 									dataStackSourceFile = oldFootagePath.parent_path().string() + SEP + tmpDataStackSourceFile.string();
 								else
 									dataStackSourceFile = oldFootagePath.parent_path().string() + SEP + "tex" + SEP + tmpDataStackSourceFile.string();
@@ -341,27 +284,10 @@ ErrorCodesAE GF_AEGP_Relinker::GFCopy_C4D_File(PlatformLibLoader* libIt, const f
     ERROR_CATCH_END_NO_INFO_RETURN
 }
 
-A_Err GF_AEGP_Relinker::RelinkQueueModuleItem(AEGP_RQItemRefH &rq_ItemRef, A_long moduleIndex)
-{
-    PT_XTE_START{
 
-    } PT_XTE_CATCH_RETURN_ERR
-}
 void GF_AEGP_Relinker::setPathsStruct(beamerParamsStruct *beamerParamsS)
 {
-    //    FS_ERROR_CODE(err)
-    bps = beamerParamsS;
-
-    //    fs::path tmpSymlink = bps->bp.relGfsFile.replace_extension("lnk");
-    //    fs::create_symlink(bps->bp.relGfsFile, tmpSymlink, err);
-
-    //    if (err.value() == 0)
-    //    {
-    //        useSymlinksFlag = true;
-    //        fs::remove(tmpSymlink, err);
-    //    }
-    //    else
-    
+    bps = beamerParamsS;    
 }
 PlatformLibLoader *GF_AEGP_Relinker::GetC4dLibloader()
 {

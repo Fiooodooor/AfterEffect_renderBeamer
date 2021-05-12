@@ -85,7 +85,7 @@ FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElemen
 	std::string fileUid = "00000000";
 	fs::path FileBasePath;
 	FS_ERROR_CODE(fileRefError)
-    FS_ERROR_ASSIGN(fileRefError,100)
+    FS_ERROR_ASSIGN(fileRefError, 2)
 
 	ERROR_CATCH_START
 	FileBasePath = fs::absolute(fs::path(fileReferencePt->Attribute("fullpath"))).lexically_normal();

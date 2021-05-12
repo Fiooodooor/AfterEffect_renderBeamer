@@ -21,9 +21,6 @@ public:
 	ErrorCodesAE RelinkerInitialize(beamerParamsStruct *tmpBps, A_Boolean batchRelink = FALSE);
 
 	A_Err RelinkProject(AEGP_ProjectH projectH);
-	ErrorCodesAE newRelinkFootage(AeFootageNode *node);
-
-	A_Err RelinkQueueModuleItem(AEGP_RQItemRefH &rq_ItemRef, A_long moduleIndex);
 
 	ErrorCodesAE CopyFont(AeFontNode *node, A_long id, std::vector<std::string> &fontsList);
 
