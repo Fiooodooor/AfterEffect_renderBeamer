@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ExtensionManifest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ExtensionBundleId="com.garageFarm.renderBeamer" ExtensionBundleVersion="1.0" Version="7.0">
+	<ExtensionList>
+		<Extension Id="com.garageFarm.renderBeamer.afterUI" Version="18.1.0" />
+	</ExtensionList>
+	<ExecutionEnvironment>
+		<HostList>      
+            <Host Name="AEFT" Version="[13.8,99.9]"/>
+		</HostList>
+		<LocaleList>
+			<Locale Code="All"/>
+		</LocaleList>
+		<RequiredRuntimeList>
+			<RequiredRuntime Name="CSXS" Version="7.0"/>
+		</RequiredRuntimeList>
+	</ExecutionEnvironment>
+	<DispatchInfoList>
+		<Extension Id="com.garageFarm.renderBeamer.afterUI">
+			<DispatchInfo>
+				<Resources>
+					<MainPath>./index.html</MainPath>
+					<ScriptPath>./jsx/hostscript.jsx</ScriptPath>
+				</Resources>
+				<Lifecycle>
+					<AutoVisible>true</AutoVisible>
+				</Lifecycle>
+				<UI>
+					<Type>ModalDialog</Type>
+					<Menu>renderBeamer</Menu>
+					<Geometry>
+						<Size>
+							<Height>946</Height>
+							<Width>728</Width>
+						</Size>
+						<MaxSize>
+                            <Height>946</Height>
+                            <Width>1280</Width>
+                        </MaxSize> 
+                        <MinSize>
+                            <Height>946</Height>
+                            <Width>728</Width>
+                        </MinSize>                       
+					</Geometry>
+					<Icons>
+						<Icon Type="Normal">./icons/iconNormal.png</Icon>
+						<Icon Type="RollOver">./icons/iconRollover.png</Icon>
+						<Icon Type="Disabled">./icons/iconDisabled.png</Icon>
+						<Icon Type="DarkNormal">./icons/iconDarkNormal.png</Icon>
+						<Icon Type="DarkRollOver">./icons/iconDarkRollover.png</Icon>
+					</Icons>					
+				</UI>
+			</DispatchInfo>
+		</Extension>
+	</DispatchInfoList>
+</ExtensionManifest>
