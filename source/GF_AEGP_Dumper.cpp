@@ -332,7 +332,7 @@ ErrorCodesAE GF_Dumper::SetupUiQueueItems()
 				if(data_read == std::string("QUIT") || data_read == std::string("DATA=QUIT"))
 				{
 					_ErrorCode = UserDialogCancel;
-					break;
+					return _ErrorCode;					
 				}
 				gfs_rq_node_wrapper::deserialize(*sc, data_read);				
 				break;
