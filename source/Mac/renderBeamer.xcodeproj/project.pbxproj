@@ -452,11 +452,12 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"/Users/ccc/Downloads/AfterEffectsSDK/Examples/Headers/**",
-					"/Users/ccc/Downloads/AfterEffectsSDK/Examples/Util/**",
-					"/Users/ccc/Downloads/AfterEffectsSDK/Examples/Headers/SP/**",
-					"/Users/ccc/Downloads/AfterEffectsSDK/Examples/Resources/**",
+					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/Headers,
+					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/Util,
+					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/Headers/SP,
+					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/Resources,
 					"/usr/local/boost-1.72.0/include",
+					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/GPUUtils,
 				);
 				LIBRARY_SEARCH_PATHS = "/usr/local/boost-1.72.0/lib";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
@@ -487,11 +488,12 @@
 				GCC_MODEL_TUNING = G5;
 				GENERATE_PKGINFO_FILE = YES;
 				HEADER_SEARCH_PATHS = (
-					/Users/ccc/Downloads/AfterEffectsSDK/Examples/Headers,
-					/Users/ccc/Downloads/AfterEffectsSDK/Examples/Util,
-					/Users/ccc/Downloads/AfterEffectsSDK/Examples/Headers/SP,
-					/Users/ccc/Downloads/AfterEffectsSDK/Examples/Resources,
+					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/Headers,
+					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/Util,
+					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/Headers/SP,
+					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/Resources,
 					/Users/ccc/Downloads/boost_1_72_0,
+					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/GPUUtils,
 				);
 				INFOPLIST_FILE = "renderBeamer.plugin-Info.plist";
 				INSTALL_PATH = "/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/";
@@ -575,11 +577,12 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"/Users/ccc/Downloads/AfterEffectsSDK/Examples/Headers/**",
-					"/Users/ccc/Downloads/AfterEffectsSDK/Examples/Util/**",
-					"/Users/ccc/Downloads/AfterEffectsSDK/Examples/Headers/SP/**",
-					"/Users/ccc/Downloads/AfterEffectsSDK/Examples/Resources/**",
+					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/Headers,
+					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/Util,
+					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/Headers/SP,
+					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/Resources,
 					"/usr/local/boost-1.72.0/include",
+					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/GPUUtils,
 				);
 				LIBRARY_SEARCH_PATHS = "/usr/local/boost-1.72.0/lib";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
@@ -610,11 +613,12 @@
 				GCC_MODEL_TUNING = G5;
 				GENERATE_PKGINFO_FILE = YES;
 				HEADER_SEARCH_PATHS = (
-					/Users/ccc/Downloads/AfterEffectsSDK/Examples/Headers,
-					/Users/ccc/Downloads/AfterEffectsSDK/Examples/Util,
-					/Users/ccc/Downloads/AfterEffectsSDK/Examples/Headers/SP,
-					/Users/ccc/Downloads/AfterEffectsSDK/Examples/Resources,
+					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/Headers,
+					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/Util,
+					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/Headers/SP,
+					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/Resources,
 					/Users/ccc/Downloads/boost_1_72_0,
+					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/GPUUtils,
 				);
 				INFOPLIST_FILE = "renderBeamer.plugin-Info.plist";
 				INSTALL_PATH = "/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/";
