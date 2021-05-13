@@ -221,19 +221,6 @@ size_t rbUtilities::utf16Length(A_UTF16Char* in)
 	return 0;
 }
 
-std::string rbUtilities::utf8_encode(const std::wstring &wstr)	//CP_OEMCP
-{
-#ifndef AE_OS_MAC
-    if(wstr.empty())
-		return std::string();
-    const int size_needed = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], static_cast<int>(wstr.size()), nullptr, 0, nullptr, nullptr);
-    std::string strTo(size_needed, 0);
-    WideCharToMultiByte(CP_UTF8, 0, &wstr[0], static_cast<int>(wstr.size()), &strTo[0], size_needed, nullptr, nullptr);
-    return strTo;
-#else
-	return std::string(wstr.begin(), wstr.end());
-#endif
-}
  
 A_Err rbUtilities::copyMemhUTF16ToPath(SPBasicSuite *pb, AEGP_MemHandle& inputString, fs::path &resPath)
 {
@@ -265,7 +252,7 @@ A_Err rbUtilities::copyMemhUTF16ToString(SPBasicSuite *pb, AEGP_MemHandle& input
 		if (resStringW.empty())
 			resString = "";
 		else
-			resString = utf8_encode(resStringW);
+			resString = toUtf8(resStringW);
     }
     return err;
 }
@@ -332,7 +319,7 @@ void rbUtilities::copyConvertStringLiteralIntoUTF16(const wchar_t* inputString, 
     wcsncpy_s(reinterpret_cast<wchar_t*>(destination), maxLength, inputString, maxLength - 1);
 #endif
 }
-
+//std::string encoded_result(size_needed, 0);
 ErrorCodesAE rbUtilities::pathStringFixIllegal(fs::path &path, bool dissalowed, bool cut_extension)
 {
 	ERROR_CATCH_START
@@ -411,10 +398,12 @@ void rbUtilities::leaveAllowedOnly(wchar_t *sourceStr)
 		source_str_ptr[0] = '_';
     }
 }
-void rbUtilities::leaveAllowedOnly(A_char *sourceStr)
+	
+void rbUtilities::leaveAllowedOnly(A_char *sourceStr, const std::string &append_allowed_mask)
 {
     auto *source_str_ptr = sourceStr;
-    A_char *mask = ALLOWED_CHARACTERSA;
+	std::string allowed_mask = std::string(ALLOWED_CHARACTERSA).append(append_allowed_mask);
+	A_char *mask = &allowed_mask[0];
 
     while (source_str_ptr && *source_str_ptr)
     {
@@ -423,6 +412,11 @@ void rbUtilities::leaveAllowedOnly(A_char *sourceStr)
             break;
 		source_str_ptr[0] = '_';
     }
+}
+void rbUtilities::gfsGetLeaveAllowedOnly(const A_char *source_str, A_char *destination_str, const std::string &append_allowed_mask)
+{
+	memcpy(destination_str, source_str, strlen(source_str) + 1);
+	leaveAllowedOnly(destination_str, append_allowed_mask);	
 }
 
 void rbUtilities::getTimeString(char *buff, A_long buffSize, bool path)
@@ -751,6 +745,7 @@ ErrorCodesAE rbUtilities::openCostCalculator(SPBasicSuite *pb)
 #endif
 	ERROR_CATCH_END_NO_INFO_RETURN
 }
+	
 // in windows change to WideCharToMultiByte with
 // CP_UTF8 - for output to files, beamer etc.
 // CP_OEMCP - for string literals for AE.
@@ -758,29 +753,77 @@ ErrorCodesAE rbUtilities::openCostCalculator(SPBasicSuite *pb)
 // in macOs change to use locale with
 // .UTF-8 for output files, beamer etc.
 // GetApplicationTextEncoding()  - for string literals for AE
+	
 std::string rbUtilities::toUtf8(const wchar_t* stringToConvert)
 {
-	std::string new_buffer;
+	if (!stringToConvert)
+		return std::string();
+
+	return toUtf8(std::wstring(stringToConvert));
+}
+	
+std::string rbUtilities::toUtf8(const std::wstring &source_string, int enocde_source_as) //if (enocde_source_as == rb_UTF16) return std::string(source_string.begin(), source_string.end());
+{
+	std::string encoded_result;
+	ERROR_CATCH_START	
+	
+	if (source_string.empty())
+		return encoded_result;
+
+	int size_needed = 0;
+	size_t source_length = source_string.size();
+
+#ifndef AE_OS_MAC
+	UINT code_page = CP_UTF8;
+	if (enocde_source_as == rb_STRING_LITERAL) code_page = CP_OEMCP;
+
+	size_needed = WideCharToMultiByte(code_page, 0, &source_string[0], static_cast<int>(source_length), nullptr, 0, nullptr, nullptr);
+	if (size_needed > 0) {
+		encoded_result.resize(size_needed, 0);
+		WideCharToMultiByte(code_page, 0, &source_string[0], static_cast<int>(source_length), &encoded_result[0], size_needed, nullptr, nullptr);
+	}
+#else
+	CFStringEncoding code_page = kCFStringEncodingUTF8;
+	if (enocde_source_as == rb_STRING_LITERAL) code_page = GetApplicationTextEncoding();
+	
+	CFRange range = CFRangeMake(0, source_length);
+	CFStringRef inputStringCFSR = CFStringCreateWithBytes(kCFAllocatorDefault, reinterpret_cast<const UInt8 *>(&source_string[0]), source_length*sizeof(wchar_t), kCFStringEncodingUTF32LE, FALSE);
+	CFStringGetBytes(inputStringCFSR, range, code_page, 0, FALSE, NULL, 0, &size_needed);
+	if (size_needed > 0) {
+		encoded_result.resize(size_needed, 0);
+		CFStringGetBytes(inputStringCFSR, range, code_page, 0, FALSE, reinterpret_cast<UInt8 *>(&encoded_result[0]), size_needed, &size_needed);
+		CFRelease(inputStringCFSR);
+	}	
+#endif
+	ERROR_CATCH_END_NO_INFO
+	return encoded_result;
+}
+
+
+} // namespace RenderBeamer
+
+
+
+
+/*
+ old fashon encode:
+ std::string rbUtilities::toUtf8(const wchar_t* stringToConvert)
+{
 	ERROR_CATCH_START
 	size_t retval = 0;
 	rsize_t dstsz;
-    RB_DEFINELOCALE(utf_locale)
-    RB_NEWLOCALE(utf_locale,RB_LOCALESTRING)
+	RB_DEFINELOCALE(utf_locale)
+	RB_NEWLOCALE(utf_locale, RB_LOCALESTRING)
 
-	// RB_WCSTOMBS_L(bts_converted,dst,dst_bytes,src,max_bytes,locale) bts_converted=wcstombs_l(dst,src,max_bytes,locale)
-	// 
-	// RB_WCSTOMBS_L(bts_converted,dst,dst_bytes,src,max_bytes,locale) if(_wcstombs_s_l(&bts_converted,dst,dst_bytes,src,max_bytes,locale)==0) bts_converted-=1;
 	RB_WCSTOMBS_L(retval, nullptr, 0, stringToConvert, 0, utf_locale)
-		if (retval != 0 && retval != static_cast<std::size_t>(-1))
-		{
-			dstsz = retval;
-			new_buffer.resize(dstsz);
-			RB_WCSTOMBS_L(retval, const_cast<char*>(new_buffer.c_str()), dstsz + 1, stringToConvert, dstsz, utf_locale)
-		}
+	if (retval != 0 && retval != static_cast<std::size_t>(-1))
+	{
+		dstsz = retval;
+
+		std::string new_buffer(dstsz, 0);
+		RB_WCSTOMBS_L(retval, const_cast<char*>(new_buffer.c_str()), dstsz + 1, stringToConvert, dstsz, utf_locale)
+	}
 	RB_FREELOCALE(utf_locale)
 	ERROR_CATCH_END_NO_INFO
-	return new_buffer;
 }
-    
-} // namespace RenderBeamer
-
+ */

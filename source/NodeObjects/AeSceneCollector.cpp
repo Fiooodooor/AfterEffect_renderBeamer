@@ -92,10 +92,12 @@ ErrorCodesAE AeSceneCollector::collectSceneRenderQueueItems()
 	A_long totalQueued = 0, i = 0, rqOutputs = 0, rqAdded = 0;
 	
 	ERROR_AEER(suites.RQItemSuite3()->AEGP_GetNumRQItems(&totalQueued))
-	while (i < totalQueued && _ErrorCode == NoError) {
+	while (i < totalQueued && _ErrorCode == NoError) 
+	{
 		ERROR_AEER(suites.RQItemSuite3()->AEGP_GetRQItemByIndex(i++, &rqItemH))
 		ERROR_AEER(suites.RQItemSuite3()->AEGP_GetRenderState(rqItemH, &renderState))
-		if (renderState == AEGP_RenderItemStatus_QUEUED && _ErrorCode == NoError) {
+		if (renderState == AEGP_RenderItemStatus_QUEUED && _ErrorCode == NoError) 
+		{
 			ERROR_AEER(suites.RQItemSuite3()->AEGP_GetNumOutputModulesForRQItem(rqItemH, &rqOutputs))
 			if (rqOutputs > 0 && _ErrorCode == NoError)
 			{

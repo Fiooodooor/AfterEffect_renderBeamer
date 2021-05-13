@@ -303,7 +303,7 @@ ErrorCodesAE GF_Dumper::newCollectEffectsInfo() const
 	
 	for (auto *node : sc->effectsList)
 	{
-		auto *gfsEffect = new gfsEffectNode({ node->getKey(), node->getEffectName(), node->getEffectMatchN(), node->getEffectCategory() });
+		auto *gfsEffect = new gfsEffectNode({ node->getKey(), node->getEffectNameSafe(), node->getEffectMatchNSafe(), node->getEffectCategorySafe() });
 		if(gfs_creator->PushEffectNode(gfsEffect) == NoError)
         {
 			rbProj()->loggA(9, "EffectCollector", "Name:", node->getEffectName(), "MatchName:", node->getEffectMatchN(), "Category:", node->getEffectCategory(), "InstallKey:", std::to_string(static_cast<int>(node->getKey())).c_str());
@@ -329,7 +329,7 @@ ErrorCodesAE GF_Dumper::SetupUiQueueItems()
 			if (connector.read(read_buffer, 49150) > 0) {
 				std::string data_read(read_buffer);
 				rbProj()->logg("connector.read", "success", data_read.c_str());
-				if(data_read == std::string("QUIT"))
+				if(data_read == std::string("QUIT") || data_read == std::string("DATA=QUIT"))
 				{
 					_ErrorCode = UserDialogCancel;
 					break;

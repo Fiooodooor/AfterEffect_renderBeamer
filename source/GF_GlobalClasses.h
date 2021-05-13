@@ -14,8 +14,7 @@ namespace RenderBeamer
         static ErrorCodesAE execScript(SPBasicSuite *pb, AEGP_PluginID pluginId, const A_char *inScript, A_char *outAchar, A_long maxLength);
         static A_Err copyMemhandleToAChar(SPBasicSuite *pb, AEGP_MemHandle& inputString, A_char* destination, A_long maxLength);
         
-        static size_t utf16Length(A_UTF16Char* in);
-        static std::string utf8_encode(const std::wstring &wstr);
+        static size_t utf16Length(A_UTF16Char* in);        
         static A_Err copyMemhUTF16ToPath(SPBasicSuite *pb, AEGP_MemHandle& inputString, fs::path &resPath);
         static A_Err copyMemhUTF16ToString(SPBasicSuite *pb, AEGP_MemHandle& inputString, std::string &resString);
         static A_Err copyMemhUTF16ToString(SPBasicSuite *pb, AEGP_MemHandle& inputString, std::wstring &resString);
@@ -28,8 +27,10 @@ namespace RenderBeamer
         static ErrorCodesAE pathStringFixIllegal(fs::path &path, bool dissalowed=true, bool cut_extension=false);
         static void replaceDisallowedOnly(wchar_t *sourceStr);
         static void replaceDisallowedOnly(A_char *sourceStr);
-        static void leaveAllowedOnly(A_char *sourceStr);
-        static void leaveAllowedOnly(wchar_t *sourceStr);
+
+    	static void leaveAllowedOnly(A_char *sourceStr, const std::string &append_allowed_mask = "");
+		static void gfsGetLeaveAllowedOnly(const A_char *source_str, A_char *destination_str, const std::string &append_allowed_mask = " ");		
+    	static void leaveAllowedOnly(wchar_t *sourceStr);
         
         static void getTimeString(char *buff, A_long buffSize, bool path =false);
         static void getTimeString(wchar_t *buff, A_long buffSize, bool path=false);
@@ -44,6 +45,7 @@ namespace RenderBeamer
         static ErrorCodesAE encodeUrlString(const wchar_t *url, wchar_t *buffer, long buffer_size);
         static ErrorCodesAE openCostCalculator(SPBasicSuite *pb);
         static std::string toUtf8(const wchar_t* stringToConvert);
+		static std::string toUtf8(const std::wstring &source_string, int enocde_source_as= rb_UTF8);
         
     protected:
         static ErrorCodesAE win_exec_cmd(fs::path const &app, std::string const &args, fs::path const &out_file, wchar_t *buffer_w, unsigned long buffer_size);

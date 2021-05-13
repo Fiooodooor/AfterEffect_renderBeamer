@@ -33,15 +33,20 @@ public:
 	bool operator==(const std::list<AeEffectNode*>::const_iterator &right) const;
 
 	const A_char* getEffectName() const;
-	const A_char* getEffectNameSafe() const;
 	const A_char* getEffectMatchN() const;
 	const A_char* getEffectCategory() const;
+	const A_char* getEffectNameSafe() const;
+	const A_char* getEffectMatchNSafe() const;
+	const A_char* getEffectCategorySafe() const;
+	
 private:
 	AEGP_InstalledEffectKey installedKey;
-	A_char effectName[AEGP_MAX_EFFECT_NAME_SIZE];
-	A_char effectNameSafe[AEGP_MAX_EFFECT_NAME_SIZE];
-	A_char effectMatchN[AEGP_MAX_EFFECT_MATCH_NAME_SIZE];
-	A_char effectCategory[AEGP_MAX_EFFECT_CATEGORY_NAME_SIZE];
+	A_char effectName[AEGP_MAX_EFFECT_NAME_SIZE] {0};
+	A_char effectName_safe[AEGP_MAX_EFFECT_NAME_SIZE] {0};
+	A_char effectMatchN[AEGP_MAX_EFFECT_MATCH_NAME_SIZE] {0};
+	A_char effectMatchN_safe[AEGP_MAX_EFFECT_MATCH_NAME_SIZE] {0};
+	A_char effectCategory[AEGP_MAX_EFFECT_CATEGORY_NAME_SIZE] {0};
+	A_char effectCategory_safe[AEGP_MAX_EFFECT_CATEGORY_NAME_SIZE] {0};
 };
 
 class AeLayerNode

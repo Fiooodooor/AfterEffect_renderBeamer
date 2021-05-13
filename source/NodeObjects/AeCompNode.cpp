@@ -43,10 +43,6 @@ long AeFontNode::fillFont(SPBasicSuite *sp, AEGP_PluginID plugId)
 AeEffectNode::AeEffectNode(AEGP_InstalledEffectKey theInstalledKey)
 	: installedKey(theInstalledKey)
 {
-	effectName[0] = '\0';
-	effectNameSafe[0] = '\0';
-	effectMatchN[0] = '\0';
-	effectCategory[0] = '\0';
 }
 AEGP_InstalledEffectKey AeEffectNode::getKey() const
 {
@@ -58,10 +54,10 @@ long AeEffectNode::loadEffectInfo(SPBasicSuite *sp)
 	suites.EffectSuite4()->AEGP_GetEffectName(installedKey, effectName);
 	suites.EffectSuite4()->AEGP_GetEffectMatchName(installedKey, effectMatchN);
 	suites.EffectSuite4()->AEGP_GetEffectCategory(installedKey, effectCategory);
-	suites.EffectSuite4()->AEGP_GetEffectName(installedKey, effectNameSafe);
-	rbUtilities::leaveAllowedOnly(effectNameSafe);
-	//rbUtilities::leaveAllowedOnly(effectMatchN);
-	//rbUtilities::leaveAllowedOnly(effectCategory);
+	
+	rbUtilities::gfsGetLeaveAllowedOnly(effectName, effectName_safe);
+	rbUtilities::gfsGetLeaveAllowedOnly(effectMatchN, effectMatchN_safe);
+	rbUtilities::gfsGetLeaveAllowedOnly(effectCategory, effectCategory_safe);
 	return 0;
 }
 
@@ -75,7 +71,15 @@ bool AeEffectNode::operator==(const std::list<AeEffectNode*>::const_iterator &ri
 }
 const A_char* AeEffectNode::getEffectNameSafe() const
 {
-	return effectNameSafe;
+	return &effectName_safe[0];
+}
+const A_char* AeEffectNode::getEffectMatchNSafe() const
+{
+	return &effectMatchN_safe[0];
+}
+const A_char* AeEffectNode::getEffectCategorySafe() const
+{
+	return &effectCategory_safe[0];
 }
 const A_char* AeEffectNode::getEffectName() const
 {
@@ -91,6 +95,7 @@ const A_char* AeEffectNode::getEffectCategory() const
 }
 
 AeLayerNode::AeLayerNode(SPBasicSuite *sp, AEGP_LayerH theLayerH, A_long theLayerNr)
+	: layerObjectType(AEGP_ObjectType_NONE), effectsN(0)
 {
 	this->sp = sp;
 	AEGP_SuiteHandler suites(sp);
@@ -102,7 +107,7 @@ AeLayerNode::AeLayerNode(SPBasicSuite *sp, AEGP_LayerH theLayerH, A_long theLaye
 		suites.LayerSuite8()->AEGP_GetLayerSourceItem(theLayerH, &itemH);
 	}
 	else {
-		itemH = NULL;
+		itemH = nullptr;
 	}
 	suites.EffectSuite4()->AEGP_GetLayerNumEffects(theLayerH, &effectsN);
 }

@@ -1,6 +1,8 @@
 
 #include "AeGfsFileCreator.h"
 
+#include "GF_GlobalClasses.h"
+
 namespace RenderBeamer {
 
 AeGfsFileCreator::AeGfsFileCreator()
