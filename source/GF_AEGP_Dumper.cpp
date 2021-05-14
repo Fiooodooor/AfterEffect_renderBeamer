@@ -329,12 +329,15 @@ ErrorCodesAE GF_Dumper::SetupUiQueueItems()
 			if (connector.read(read_buffer, 49150) > 0) {
 				std::string data_read(read_buffer);
 				rbProj()->logg("connector.read", "success", data_read.c_str());
-				if(data_read == std::string("QUIT") || data_read == std::string("DATA=QUIT"))
+				if(data_read == std::string("QUIT\n") || data_read == std::string("DATA=QUIT\n"))
 				{
 					_ErrorCode = UserDialogCancel;
-					return _ErrorCode;					
+                    break;
 				}
-				gfs_rq_node_wrapper::deserialize(*sc, data_read);				
+				if(gfs_rq_node_wrapper::deserialize(*sc, data_read) != NoError)
+                {
+                    rbProj()->logg("SetupUiQueueItems", "Failed", "There was an error with data serialization. Continuing with defaults.");
+                }
 				break;
 			}
 			MAIN_PROGRESS_THROW(dumper_progressbar_, 11, 20)

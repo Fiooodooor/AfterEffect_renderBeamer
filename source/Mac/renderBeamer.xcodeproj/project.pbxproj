@@ -46,6 +46,7 @@
 		4AB389AE264F395D0047DD47 /* base64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AB389A9264F395D0047DD47 /* base64.cpp */; };
 		4AB389AF264F395D0047DD47 /* AEGP_SuiteHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AB389AA264F395D0047DD47 /* AEGP_SuiteHandler.cpp */; };
 		4AB389B0264F395D0047DD47 /* MissingSuiteError.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AB389AB264F395D0047DD47 /* MissingSuiteError.cpp */; };
+		4AB389B3264F3D850047DD47 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AB389B2264F3D850047DD47 /* Carbon.framework */; };
 		4AFCCBAB25E3779F009B9124 /* AeGfsFileCreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AFCCBAA25E3779F009B9124 /* AeGfsFileCreator.cpp */; };
 		7EF36FB716F29701002A3CB3 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EF36FB616F29701002A3CB3 /* Cocoa.framework */; };
 		D0FE575F0993C4E900139A60 /* GF_AEGP_Strings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0FE575A0993C4E900139A60 /* GF_AEGP_Strings.cpp */; };
@@ -130,6 +131,7 @@
 		4AB389AB264F395D0047DD47 /* MissingSuiteError.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MissingSuiteError.cpp; path = ../Utilities/MissingSuiteError.cpp; sourceTree = "<group>"; };
 		4AB389AC264F395D0047DD47 /* AEGP_SuiteHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AEGP_SuiteHandler.h; path = ../Utilities/AEGP_SuiteHandler.h; sourceTree = "<group>"; };
 		4AB389AD264F395D0047DD47 /* AE_PluginData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AE_PluginData.h; path = ../Utilities/AE_PluginData.h; sourceTree = "<group>"; };
+		4AB389B2264F3D850047DD47 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		4AD4FA2B23F4049B009C7189 /* GF_GlobalTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GF_GlobalTypes.h; path = ../GF_GlobalTypes.h; sourceTree = "<group>"; };
 		4AFCCBA825E3779E009B9124 /* AeGfsFileCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeGfsFileCreator.h; path = ../AeGfsFileCreator.h; sourceTree = "<group>"; };
 		4AFCCBA925E3779E009B9124 /* AeGfsFileCreatorStructures.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeGfsFileCreatorStructures.h; path = ../AeGfsFileCreatorStructures.h; sourceTree = "<group>"; };
@@ -149,6 +151,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7EF36FB716F29701002A3CB3 /* Cocoa.framework in Frameworks */,
+				4AB389B3264F3D850047DD47 /* Carbon.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -219,6 +222,14 @@
 			name = NodeObjects;
 			sourceTree = "<group>";
 		};
+		4AB389B1264F3D850047DD47 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4AB389B2264F3D850047DD47 /* Carbon.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		4AC2E6D924168B7F00786233 /* Libs_groyp */ = {
 			isa = PBXGroup;
 			children = (
@@ -266,6 +277,7 @@
 				D0FE57630993C4FD00139A60 /* Supporting Code */,
 				7EF36FB616F29701002A3CB3 /* Cocoa.framework */,
 				C4E6188C095A3C800012CA3F /* Products */,
+				4AB389B1264F3D850047DD47 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};

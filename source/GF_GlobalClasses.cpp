@@ -279,9 +279,7 @@ A_Err rbUtilities::copyMemhUTF16ToString(SPBasicSuite *pb, AEGP_MemHandle& input
 				CFRelease(inputStringCFSR);
 
 				destination[length] = 0;
-				std::wstring ws(destination);
-
-				resString = std::wstring(ws.begin(), ws.end());
+				resString = std::wstring(destination);
 				delete[] destination;
 #else
 				std::wstring ws(reinterpret_cast<wchar_t*>(res16B));
