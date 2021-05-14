@@ -20,7 +20,7 @@
 #define MAIN_LOGS_DIR1 L"logs"
 
 #include <cstdio>
-#include <cwchar>
+//#include <cwchar>
 #include <fstream>
 #include <mutex>
 #include <string>
@@ -107,10 +107,9 @@ namespace fs = boost::filesystem;
 #include "AE_GeneralPlug.h"
 #include "AE_Macros.h"
 
-#include "AE_GeneralPlugPanels.h"
+//#include "AE_GeneralPlugPanels.h"
 #include "AEGP_SuiteHandler.h"
 #include "GF_AEGP_ErrorsHandling.h"
-#include "AE_GeneralPlugPanels.h"
 #include "SuiteHelper.h"
 namespace RenderBeamer {
 typedef enum StrIDType {
@@ -147,7 +146,7 @@ typedef struct {
     A_char        str[256];
 } TableString;
 
-typedef struct {
+typedef struct BEAMERPATHS {
     fs::path originalProject;
     fs::path relinkedSavePath;
     fs::path relProjPath;
@@ -190,8 +189,7 @@ typedef struct {
     } beamerParamsStruct;
 #else
  */
-    typedef struct {
-		std::mutex			m;
+    typedef struct BEAMERPARAMSSTRUCT {
         A_char              versionStr[32];       
         fs::path            beamerTmpFile;
         std::wstring        projectPath;

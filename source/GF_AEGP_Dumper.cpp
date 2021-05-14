@@ -64,7 +64,7 @@ ErrorCodesAE GF_Dumper::PreCheckProject(SPBasicSuite *pb, AEGP_PluginID pluginId
 		rbUtilities::toUTF16(globals_and_paths.projectPath.c_str(), globals_and_paths.original_project, AEGP_MAX_PATH_SIZE);
 		globals_and_paths.bp.projectFilenameCorrect = fs::path(globals_and_paths.bp.originalProject.filename()).replace_extension(".aepx");
 		rbUtilities::pathStringFixIllegal(globals_and_paths.bp.projectFilenameCorrect, false, false);
-        rbUtilities::getTimeString(globals_and_paths.timeString, 20, true);	       
+        rbUtilities::getTimeString(globals_and_paths.timeString, 20, true);
 		rbUtilities::getEnvVariable(std::string(ENV_HOME_DIR), globals_and_paths.beamerScript);
 		globals_and_paths.bp.tempLogPath = fs::path(globals_and_paths.beamerScript) / fs::path(".renderbeamer") / fs::path("log") / fs::path("aftereffects");
 		globals_and_paths.beamerScript /= BEAMER_SCRIPT;

@@ -4,7 +4,7 @@
 #include <cstdarg>
 #include <ctime>
 #include <thread>
-#include "base64.h"
+#include "Utilities/base64.h"
 #include "GF_AEGP_Dumper.h"
 
 namespace RenderBeamer
@@ -263,7 +263,7 @@ A_Err rbUtilities::copyMemhUTF16ToString(SPBasicSuite *pb, AEGP_MemHandle& input
     AEGP_SuiteHandler suites(pb);
 	try {
 		A_UTF16Char* res16B = NULL;
-		resString = L"";
+
 		ERR(suites.MemorySuite1()->AEGP_LockMemHandle(inputString, reinterpret_cast<void**>(&res16B)));
 		if (err == A_Err_NONE) {
 			size_t length = utf16Length(res16B) - 1;
@@ -770,7 +770,7 @@ std::string rbUtilities::toUtf8(const std::wstring &source_string, int enocde_so
 	if (source_string.empty())
 		return encoded_result;
 
-	int size_needed = 0;
+	long size_needed = 0;
 	size_t source_length = source_string.size();
 
 #ifndef AE_OS_MAC

@@ -26,15 +26,10 @@
 		4A7B4B0826427BAC00E28C15 /* libgthread-2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4B0526427BAC00E28C15 /* libgthread-2.0.a */; };
 		4A7B4B132642823800E28C15 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4B122642823800E28C15 /* libz.a */; };
 		4A7B4B1E2642833B00E28C15 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4B16264282FD00E28C15 /* AppKit.framework */; };
-		4A7B4B1F2642833B00E28C15 /* AppKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4B16264282FD00E28C15 /* AppKit.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4A7B4B212642833D00E28C15 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4B142642828500E28C15 /* Cocoa.framework */; };
-		4A7B4B222642833D00E28C15 /* Cocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4B142642828500E28C15 /* Cocoa.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4A7B4B232642833F00E28C15 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4B182642831100E28C15 /* CoreFoundation.framework */; };
-		4A7B4B242642833F00E28C15 /* CoreFoundation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4B182642831100E28C15 /* CoreFoundation.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4A7B4B252642834100E28C15 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4B1A2642832100E28C15 /* CoreServices.framework */; };
-		4A7B4B262642834100E28C15 /* CoreServices.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4B1A2642832100E28C15 /* CoreServices.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4A7B4B272642834300E28C15 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4B1C2642833100E28C15 /* Foundation.framework */; };
-		4A7B4B282642834300E28C15 /* Foundation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4B1C2642833100E28C15 /* Foundation.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4A7B4B292642834700E28C15 /* libiconv.2.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4AF22642787400E28C15 /* libiconv.2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		4A8787202409209C004D1DFC /* gf_font_converter.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 4A87871F2409209C004D1DFC /* gf_font_converter.hpp */; };
 		4A8787222409209C004D1DFC /* gf_font_converterPriv.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 4A8787212409209C004D1DFC /* gf_font_converterPriv.hpp */; };
@@ -50,12 +45,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				4A7B4B282642834300E28C15 /* Foundation.framework in Embed Frameworks */,
-				4A7B4B222642833D00E28C15 /* Cocoa.framework in Embed Frameworks */,
-				4A7B4B1F2642833B00E28C15 /* AppKit.framework in Embed Frameworks */,
-				4A7B4B242642833F00E28C15 /* CoreFoundation.framework in Embed Frameworks */,
 				4A7B4B292642834700E28C15 /* libiconv.2.dylib in Embed Frameworks */,
-				4A7B4B262642834100E28C15 /* CoreServices.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;

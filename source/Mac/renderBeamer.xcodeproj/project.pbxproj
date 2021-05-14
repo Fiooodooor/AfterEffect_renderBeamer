@@ -11,13 +11,10 @@
 		4A3D131C23F4B49E00517E24 /* GF_AEGP_Relinker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A3D131723F4B49D00517E24 /* GF_AEGP_Relinker.cpp */; };
 		4A3D131D23F4B49E00517E24 /* GF_AEGP_Dumper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A3D131923F4B49D00517E24 /* GF_AEGP_Dumper.cpp */; };
 		4A53E137245331DB00339C9D /* AeObjectNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A651297243F331100C32C49 /* AeObjectNode.cpp */; };
-		4A56C61024B5152400961F0D /* base64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A56C60F24B5152400961F0D /* base64.cpp */; };
 		4A61F283263608B900EF519F /* AeNodesConteiner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A61F281263608B900EF519F /* AeNodesConteiner.cpp */; };
 		4A61F28D263608F400EF519F /* socket_macos.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A61F285263608F300EF519F /* socket_macos.cpp */; };
 		4A61F28E263608F400EF519F /* gfs_rq_node_wrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A61F289263608F400EF519F /* gfs_rq_node_wrapper.cpp */; };
 		4A61F28F263608F400EF519F /* socket_win.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A61F28A263608F400EF519F /* socket_win.cpp */; };
-		4A62B51E25FD8696006D7923 /* AEGP_SuiteHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A62B51C25FD8695006D7923 /* AEGP_SuiteHandler.cpp */; };
-		4A62B52025FD86D1006D7923 /* MissingSuiteError.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A62B51F25FD86D1006D7923 /* MissingSuiteError.cpp */; };
 		4A6512A1243F331800C32C49 /* AeCompNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A65129C243F331500C32C49 /* AeCompNode.cpp */; };
 		4A6512A2243F331800C32C49 /* AeFooNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A65129D243F331500C32C49 /* AeFooNode.cpp */; };
 		4A6512A3243F331800C32C49 /* AeSceneCollector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A65129E243F331600C32C49 /* AeSceneCollector.cpp */; };
@@ -45,6 +42,10 @@
 		4A7F21A025D2C834003CD8DD /* AeFileReferenceInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A7F219925D2C833003CD8DD /* AeFileReferenceInterface.cpp */; };
 		4A7F21A225D2C834003CD8DD /* AeBatchRelinker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A7F219C25D2C833003CD8DD /* AeBatchRelinker.cpp */; };
 		4A7F21A325D2C834003CD8DD /* tinyXml2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A7F219D25D2C833003CD8DD /* tinyXml2.cpp */; };
+		4AB38999264EFB180047DD47 /* renderBeamer.plugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = C4E618CC095A3CE80012CA3F /* renderBeamer.plugin */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4AB389AE264F395D0047DD47 /* base64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AB389A9264F395D0047DD47 /* base64.cpp */; };
+		4AB389AF264F395D0047DD47 /* AEGP_SuiteHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AB389AA264F395D0047DD47 /* AEGP_SuiteHandler.cpp */; };
+		4AB389B0264F395D0047DD47 /* MissingSuiteError.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AB389AB264F395D0047DD47 /* MissingSuiteError.cpp */; };
 		4AFCCBAB25E3779F009B9124 /* AeGfsFileCreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AFCCBAA25E3779F009B9124 /* AeGfsFileCreator.cpp */; };
 		7EF36FB716F29701002A3CB3 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EF36FB616F29701002A3CB3 /* Cocoa.framework */; };
 		D0FE575F0993C4E900139A60 /* GF_AEGP_Strings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0FE575A0993C4E900139A60 /* GF_AEGP_Strings.cpp */; };
@@ -52,14 +53,25 @@
 		D0FE57610993C4E900139A60 /* GF_AEGP_MainPiPL.r in Rez */ = {isa = PBXBuildFile; fileRef = D0FE575E0993C4E900139A60 /* GF_AEGP_MainPiPL.r */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		4AB38998264EFB000047DD47 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore";
+			dstSubfolderSpec = 0;
+			files = (
+				4AB38999264EFB180047DD47 /* renderBeamer.plugin in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		4A3D131523F4B49D00517E24 /* GF_AEGP_Relinker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GF_AEGP_Relinker.h; path = ../GF_AEGP_Relinker.h; sourceTree = "<group>"; };
 		4A3D131623F4B49D00517E24 /* GF_GlobalClasses.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GF_GlobalClasses.cpp; path = ../GF_GlobalClasses.cpp; sourceTree = "<group>"; };
 		4A3D131723F4B49D00517E24 /* GF_AEGP_Relinker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GF_AEGP_Relinker.cpp; path = ../GF_AEGP_Relinker.cpp; sourceTree = "<group>"; };
 		4A3D131923F4B49D00517E24 /* GF_AEGP_Dumper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GF_AEGP_Dumper.cpp; path = ../GF_AEGP_Dumper.cpp; sourceTree = "<group>"; };
 		4A3D131A23F4B49E00517E24 /* GF_GlobalClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GF_GlobalClasses.h; path = ../GF_GlobalClasses.h; sourceTree = "<group>"; };
-		4A56C60F24B5152400961F0D /* base64.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = base64.cpp; path = ../base64.cpp; sourceTree = "<group>"; };
-		4A56C61124B5153000961F0D /* base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = base64.h; path = ../base64.h; sourceTree = "<group>"; };
 		4A61F281263608B900EF519F /* AeNodesConteiner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AeNodesConteiner.cpp; path = ../NodeObjects/AeNodesConteiner.cpp; sourceTree = "<group>"; };
 		4A61F282263608B900EF519F /* AeNodesConteiner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeNodesConteiner.h; path = ../NodeObjects/AeNodesConteiner.h; sourceTree = "<group>"; };
 		4A61F285263608F300EF519F /* socket_macos.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = socket_macos.cpp; path = ../Socket/socket_macos.cpp; sourceTree = "<group>"; };
@@ -70,10 +82,6 @@
 		4A61F28A263608F400EF519F /* socket_win.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = socket_win.cpp; path = ../Socket/socket_win.cpp; sourceTree = "<group>"; };
 		4A61F28B263608F400EF519F /* socket_macos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = socket_macos.h; path = ../Socket/socket_macos.h; sourceTree = "<group>"; };
 		4A61F28C263608F400EF519F /* gfs_rq_node_wrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gfs_rq_node_wrapper.h; path = ../Socket/gfs_rq_node_wrapper.h; sourceTree = "<group>"; };
-		4A62B51C25FD8695006D7923 /* AEGP_SuiteHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AEGP_SuiteHandler.cpp; path = ../../../../AfterEffectsSDK/Examples/Util/AEGP_SuiteHandler.cpp; sourceTree = "<group>"; };
-		4A62B51D25FD8695006D7923 /* AEGP_SuiteHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AEGP_SuiteHandler.h; path = ../../../../AfterEffectsSDK/Examples/Util/AEGP_SuiteHandler.h; sourceTree = "<group>"; };
-		4A62B51F25FD86D1006D7923 /* MissingSuiteError.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MissingSuiteError.cpp; path = ../../../../AfterEffectsSDK/Examples/Util/MissingSuiteError.cpp; sourceTree = "<group>"; };
-		4A62B52125FD86FB006D7923 /* AE_PluginData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AE_PluginData.h; path = ../../../../AfterEffectsSDK/Examples/Headers/AE_PluginData.h; sourceTree = "<group>"; };
 		4A651296243F331000C32C49 /* AeFooNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeFooNode.h; path = ../NodeObjects/AeFooNode.h; sourceTree = "<group>"; };
 		4A651297243F331100C32C49 /* AeObjectNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AeObjectNode.cpp; path = ../NodeObjects/AeObjectNode.cpp; sourceTree = "<group>"; };
 		4A651298243F331200C32C49 /* AeConteiner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeConteiner.h; path = ../NodeObjects/AeConteiner.h; sourceTree = "<group>"; };
@@ -116,6 +124,12 @@
 		4A7F219D25D2C833003CD8DD /* tinyXml2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyXml2.cpp; path = ../BatchRelinker/tinyXml2.cpp; sourceTree = "<group>"; };
 		4A7F219E25D2C834003CD8DD /* AeBatchRelinker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeBatchRelinker.h; path = ../BatchRelinker/AeBatchRelinker.h; sourceTree = "<group>"; };
 		4A7F219F25D2C834003CD8DD /* AeFileReferenceInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeFileReferenceInterface.h; path = ../BatchRelinker/AeFileReferenceInterface.h; sourceTree = "<group>"; };
+		4AB389A8264F395D0047DD47 /* base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = base64.h; path = ../Utilities/base64.h; sourceTree = "<group>"; };
+		4AB389A9264F395D0047DD47 /* base64.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = base64.cpp; path = ../Utilities/base64.cpp; sourceTree = "<group>"; };
+		4AB389AA264F395D0047DD47 /* AEGP_SuiteHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AEGP_SuiteHandler.cpp; path = ../Utilities/AEGP_SuiteHandler.cpp; sourceTree = "<group>"; };
+		4AB389AB264F395D0047DD47 /* MissingSuiteError.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MissingSuiteError.cpp; path = ../Utilities/MissingSuiteError.cpp; sourceTree = "<group>"; };
+		4AB389AC264F395D0047DD47 /* AEGP_SuiteHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AEGP_SuiteHandler.h; path = ../Utilities/AEGP_SuiteHandler.h; sourceTree = "<group>"; };
+		4AB389AD264F395D0047DD47 /* AE_PluginData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AE_PluginData.h; path = ../Utilities/AE_PluginData.h; sourceTree = "<group>"; };
 		4AD4FA2B23F4049B009C7189 /* GF_GlobalTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GF_GlobalTypes.h; path = ../GF_GlobalTypes.h; sourceTree = "<group>"; };
 		4AFCCBA825E3779E009B9124 /* AeGfsFileCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeGfsFileCreator.h; path = ../AeGfsFileCreator.h; sourceTree = "<group>"; };
 		4AFCCBA925E3779E009B9124 /* AeGfsFileCreatorStructures.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AeGfsFileCreatorStructures.h; path = ../AeGfsFileCreatorStructures.h; sourceTree = "<group>"; };
@@ -235,8 +249,6 @@
 				4A61F284263608CF00EF519F /* Socket */,
 				4A7F21A425D2D182003CD8DD /* NodeObjects */,
 				4A7F218B25D2C637003CD8DD /* BatchRelinker */,
-				4A56C61124B5153000961F0D /* base64.h */,
-				4A56C60F24B5152400961F0D /* base64.cpp */,
 				4AC2E6D924168B7F00786233 /* Libs_groyp */,
 				4A6DD6212425B4CB001AB42D /* Headers */,
 				4A3D131723F4B49D00517E24 /* GF_AEGP_Relinker.cpp */,
@@ -268,10 +280,12 @@
 		D0FE57630993C4FD00139A60 /* Supporting Code */ = {
 			isa = PBXGroup;
 			children = (
-				4A62B52125FD86FB006D7923 /* AE_PluginData.h */,
-				4A62B51F25FD86D1006D7923 /* MissingSuiteError.cpp */,
-				4A62B51C25FD8695006D7923 /* AEGP_SuiteHandler.cpp */,
-				4A62B51D25FD8695006D7923 /* AEGP_SuiteHandler.h */,
+				4AB389AD264F395D0047DD47 /* AE_PluginData.h */,
+				4AB389AA264F395D0047DD47 /* AEGP_SuiteHandler.cpp */,
+				4AB389AC264F395D0047DD47 /* AEGP_SuiteHandler.h */,
+				4AB389A9264F395D0047DD47 /* base64.cpp */,
+				4AB389A8264F395D0047DD47 /* base64.h */,
+				4AB389AB264F395D0047DD47 /* MissingSuiteError.cpp */,
 				D0FE575E0993C4E900139A60 /* GF_AEGP_MainPiPL.r */,
 			);
 			name = "Supporting Code";
@@ -288,6 +302,7 @@
 				C4E618C9095A3CE80012CA3F /* Sources */,
 				C4E618CA095A3CE80012CA3F /* Frameworks */,
 				C4E618EA095A3E040012CA3F /* Rez */,
+				4AB38998264EFB000047DD47 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -373,7 +388,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4A56C61024B5152400961F0D /* base64.cpp in Sources */,
 				D0FE575F0993C4E900139A60 /* GF_AEGP_Strings.cpp in Sources */,
 				4A61F283263608B900EF519F /* AeNodesConteiner.cpp in Sources */,
 				D0FE57600993C4E900139A60 /* GF_AEGP_Main.cpp in Sources */,
@@ -382,19 +396,20 @@
 				4A7F21A225D2C834003CD8DD /* AeBatchRelinker.cpp in Sources */,
 				4A6512A2243F331800C32C49 /* AeFooNode.cpp in Sources */,
 				4A3D131D23F4B49E00517E24 /* GF_AEGP_Dumper.cpp in Sources */,
+				4AB389AE264F395D0047DD47 /* base64.cpp in Sources */,
 				4AFCCBAB25E3779F009B9124 /* AeGfsFileCreator.cpp in Sources */,
 				4A61F28E263608F400EF519F /* gfs_rq_node_wrapper.cpp in Sources */,
 				4A69B21325DBABAA002D94B9 /* AeFileNode.cpp in Sources */,
 				4A6512A3243F331800C32C49 /* AeSceneCollector.cpp in Sources */,
-				4A62B51E25FD8696006D7923 /* AEGP_SuiteHandler.cpp in Sources */,
+				4AB389AF264F395D0047DD47 /* AEGP_SuiteHandler.cpp in Sources */,
 				4A6512A1243F331800C32C49 /* AeCompNode.cpp in Sources */,
 				4A3D131C23F4B49E00517E24 /* GF_AEGP_Relinker.cpp in Sources */,
 				4A61F28D263608F400EF519F /* socket_macos.cpp in Sources */,
+				4AB389B0264F395D0047DD47 /* MissingSuiteError.cpp in Sources */,
 				4A6DD6232425B587001AB42D /* GF_AEGP_ErrorsHandling.cpp in Sources */,
 				4A7F21A025D2C834003CD8DD /* AeFileReferenceInterface.cpp in Sources */,
 				4A6DD6292428E024001AB42D /* GF_AEGP_LibraryLoader.cpp in Sources */,
 				4A3D131B23F4B49E00517E24 /* GF_GlobalClasses.cpp in Sources */,
-				4A62B52025FD86D1006D7923 /* MissingSuiteError.cpp in Sources */,
 				4A6512A4243F331800C32C49 /* AeConteiner.cpp in Sources */,
 				4A7F21A325D2C834003CD8DD /* tinyXml2.cpp in Sources */,
 			);
@@ -466,6 +481,7 @@
 				REZ_PREPROCESSOR_DEFINITIONS = __MACH__;
 				SDKROOT = macosx;
 				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_STYLE = all;
 				VALID_ARCHS = x86_64;
 				WRAPPER_EXTENSION = plugin;
 			};
@@ -493,7 +509,6 @@
 					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/Headers/SP,
 					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/Resources,
 					/Users/ccc/Downloads/boost_1_72_0,
-					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/GPUUtils,
 				);
 				INFOPLIST_FILE = "renderBeamer.plugin-Info.plist";
 				INSTALL_PATH = "/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/";
@@ -591,6 +606,7 @@
 				REZ_PREPROCESSOR_DEFINITIONS = __MACH__;
 				SDKROOT = macosx;
 				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_STYLE = all;
 				VALID_ARCHS = x86_64;
 				WRAPPER_EXTENSION = plugin;
 			};
@@ -618,7 +634,6 @@
 					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/Headers/SP,
 					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/Resources,
 					/Users/ccc/Downloads/boost_1_72_0,
-					/Users/ccc/Downloads/AfterEffectsSDK_2021/Examples/GPUUtils,
 				);
 				INFOPLIST_FILE = "renderBeamer.plugin-Info.plist";
 				INSTALL_PATH = "/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/";

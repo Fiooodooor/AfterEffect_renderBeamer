@@ -23,7 +23,6 @@ public:
 	static A_Err SUpdateMenuHook(AEGP_GlobalRefcon plugin_refconP, AEGP_UpdateMenuRefcon refconP, AEGP_WindowType active_window);
 	static SPAPI A_Err SCommandHook(AEGP_GlobalRefcon plugin_refconP, AEGP_CommandRefcon refcon_pt, AEGP_Command command, AEGP_HookPriority hook_priority, A_Boolean already_handledB, A_Boolean *handledPB);
 
-	std::mutex main_mutex;
 private:	
     void UpdateMenuHook(AEGP_WindowType active_window) const;
     void CommandHook(AEGP_Command command, AEGP_HookPriority hook_priority, A_Boolean already_handledB, A_Boolean *handledPB);

@@ -51,10 +51,10 @@ void Renderbeamer::DumpProject(A_Boolean useUiExporter)
 {
 	ERROR_CATCH_START
 		GF_Dumper project_dumper(p_basic_, pluginId);
-		beamerParamsStruct paths_structure;
+        beamerParamsStruct paths_structure = {};
 		AeSceneContainer scene_items_container;
 		const auto undo = suites.UtilitySuite6()->AEGP_StartUndoGroup("Renderbeamer");
-					
+
 		auto *dlg_ptr = project_dumper.get_progress_dialog(true, true, 0);
 		MAIN_PROGRESS_THROW(*dlg_ptr, 2, 10)
 			

@@ -11,7 +11,7 @@ resource 'PiPL' (16000) {
 		},
 		/* [2] */
 		Name {
-			"renderBeamer for After Effects v.19"
+			"renderBeamer for AE CC v.19"
 		},
 		/* [3] */
 		Category {
@@ -29,8 +29,8 @@ resource 'PiPL' (16000) {
 	#endif
 #else
 	#ifdef AE_OS_MAC
-		CodeMachOPowerPC {"EntryPointFunction"},
-		CodeMacIntel32 {"EntryPointFunction"},
+		/* CodeMachOPowerPC {"EntryPointFunction"},*/
+		/*CodeMacIntel32 {"EntryPointFunction"},*/
 		CodeMacIntel64 {"EntryPointFunction"},
 	#endif
 #endif
