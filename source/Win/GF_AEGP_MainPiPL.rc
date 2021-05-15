@@ -16,8 +16,8 @@ BEGIN
 	"MIB8",
 	"eman",
 	0, 0x0,
-	36, 0x0,
-	"\x23renderBeamer for After Effects v.19", 
+	28, 0x0,
+	"\x1BrenderBeamer for AE CC v.19", 
 
 	"MIB8",
 	"gtac", 

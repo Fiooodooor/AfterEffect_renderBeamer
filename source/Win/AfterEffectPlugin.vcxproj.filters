@@ -6,12 +6,6 @@
     <ClCompile Include="..\GF_AEGP_Strings.cpp" />
     <ClCompile Include="..\GF_AEGP_Dumper.cpp" />
     <ClCompile Include="..\GF_GlobalClasses.cpp" />
-    <ClCompile Include="$(AdobeAE_SDK)\Util\AEGP_SuiteHandler.cpp">
-      <Filter>AE_Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="$(AdobeAE_SDK)\Util\MissingSuiteError.cpp">
-      <Filter>AE_Helpers</Filter>
-    </ClCompile>
     <ClCompile Include="..\GF_AEGP_ErrorsHandling.cpp" />
     <ClCompile Include="..\GF_AEGP_LibraryLoader.cpp" />
     <ClCompile Include="..\NodeObjects\AeCompNode.cpp">
@@ -27,9 +21,6 @@
       <Filter>NodeObjects</Filter>
     </ClCompile>
     <ClCompile Include="..\NodeObjects\AeSceneCollector.cpp" />
-    <ClCompile Include="..\base64.cpp">
-      <Filter>AE_Helpers</Filter>
-    </ClCompile>
     <ClCompile Include="..\BatchRelinker\AeBatchRelinker.cpp">
       <Filter>BatchRelinker</Filter>
     </ClCompile>
@@ -54,6 +45,15 @@
     </ClCompile>
     <ClCompile Include="..\NodeObjects\AeNodesConteiner.cpp">
       <Filter>NodeObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Utilities\AEGP_SuiteHandler.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Utilities\base64.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Utilities\MissingSuiteError.cpp">
+      <Filter>Utilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -82,12 +82,6 @@
       <Filter>AE_Helpers</Filter>
     </ClInclude>
     <ClInclude Include="$(AdobeAE_SDK)\Headers\AE_Macros.h">
-      <Filter>AE_Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="$(AdobeAE_SDK)\Headers\AE_PluginData.h">
-      <Filter>AE_Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="$(AdobeAE_SDK)\Util\AEGP_SuiteHandler.h">
       <Filter>AE_Helpers</Filter>
     </ClInclude>
     <ClInclude Include="$(AdobeAE_SDK)\Util\AEFX_ChannelDepthTpl.h">
@@ -156,9 +150,6 @@
     <ClInclude Include="..\NodeObjects\AeSceneCollector.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\base64.h">
-      <Filter>AE_Helpers</Filter>
-    </ClInclude>
     <ClInclude Include="..\BatchRelinker\AeBatchRelinker.h">
       <Filter>BatchRelinker</Filter>
     </ClInclude>
@@ -195,6 +186,15 @@
     <ClInclude Include="..\Socket\pico_json.h">
       <Filter>Socket</Filter>
     </ClInclude>
+    <ClInclude Include="..\Utilities\AE_PluginData.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Utilities\AEGP_SuiteHandler.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Utilities\base64.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
@@ -211,6 +211,9 @@
     </Filter>
     <Filter Include="Socket">
       <UniqueIdentifier>{1d4b3cde-dd43-488e-bc1d-9ef71774b8b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{4c9de90e-c522-46c5-ad31-881b2b4a041b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -22,7 +22,8 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>NotSet</CharacterSet>
+    <CharacterSet>
+    </CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -195,10 +196,8 @@ cl /D "MSWindows" /EP $(IntDir)%(Filename).rrc &gt;               "$(ProjectDir)
     <ResourceCompile Include="GF_AEGP_MainPiPL.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(AdobeAE_SDK)\Headers\AE_PluginData.h" />
     <ClInclude Include="..\AeGfsFileCreator.h" />
     <ClInclude Include="..\AeGfsFileCreatorStructures.h" />
-    <ClInclude Include="..\base64.h" />
     <ClInclude Include="..\BatchRelinker\AeBatchRelinker.h" />
     <ClInclude Include="..\BatchRelinker\AeFileNode.h" />
     <ClInclude Include="..\BatchRelinker\AeFileReferenceInterface.h" />
@@ -221,7 +220,6 @@ cl /D "MSWindows" /EP $(IntDir)%(Filename).rrc &gt;               "$(ProjectDir)
     <ClInclude Include="$(AdobeAE_SDK)\Headers\AE_IO.h" />
     <ClInclude Include="$(AdobeAE_SDK)\Headers\AE_Macros.h" />
     <ClInclude Include="$(AdobeAE_SDK)\Util\AEFX_ChannelDepthTpl.h" />
-    <ClInclude Include="$(AdobeAE_SDK)\Util\AEGP_SuiteHandler.h" />
     <ClInclude Include="$(AdobeAE_SDK)\Util\entry.h" />
     <ClInclude Include="$(AdobeAE_SDK)\Headers\FIEL_Public.h" />
     <ClInclude Include="$(AdobeAE_SDK)\Util\Param_Utils.h" />
@@ -241,12 +239,12 @@ cl /D "MSWindows" /EP $(IntDir)%(Filename).rrc &gt;               "$(ProjectDir)
     <ClInclude Include="..\Socket\socket_interface.h" />
     <ClInclude Include="..\Socket\socket_macos.h" />
     <ClInclude Include="..\Socket\socket_win.h" />
+    <ClInclude Include="..\Utilities\AEGP_SuiteHandler.h" />
+    <ClInclude Include="..\Utilities\AE_PluginData.h" />
+    <ClInclude Include="..\Utilities\base64.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(AdobeAE_SDK)\Util\AEGP_SuiteHandler.cpp" />
-    <ClCompile Include="$(AdobeAE_SDK)\Util\MissingSuiteError.cpp" />
     <ClCompile Include="..\AeGfsFileCreator.cpp" />
-    <ClCompile Include="..\base64.cpp" />
     <ClCompile Include="..\BatchRelinker\AeBatchRelinker.cpp" />
     <ClCompile Include="..\BatchRelinker\AeFileNode.cpp" />
     <ClCompile Include="..\BatchRelinker\AeFileReferenceInterface.cpp" />
@@ -267,6 +265,9 @@ cl /D "MSWindows" /EP $(IntDir)%(Filename).rrc &gt;               "$(ProjectDir)
     <ClCompile Include="..\Socket\gfs_rq_node_wrapper.cpp" />
     <ClCompile Include="..\Socket\socket_macos.cpp" />
     <ClCompile Include="..\Socket\socket_win.cpp" />
+    <ClCompile Include="..\Utilities\AEGP_SuiteHandler.cpp" />
+    <ClCompile Include="..\Utilities\base64.cpp" />
+    <ClCompile Include="..\Utilities\MissingSuiteError.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
