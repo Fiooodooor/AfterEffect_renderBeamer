@@ -307,11 +307,13 @@ void rbUtilities::copyConvertStringLiteralIntoUTF16(const wchar_t* inputString, 
 {
 #ifdef AE_OS_MAC
     size_t length = wcslen(inputString);
-    CFRange    range = { 0, AEGP_MAX_PATH_SIZE };
-    range.length = length;
+    CFIndex used = 0;
+    CFRange range = CFRangeMake(0, length);
+
     CFStringRef inputStringCFSR = CFStringCreateWithBytes(kCFAllocatorDefault, reinterpret_cast<const UInt8 *>(inputString), length * sizeof(wchar_t), kCFStringEncodingUTF32LE, FALSE);
-    CFStringGetBytes(inputStringCFSR, range, kCFStringEncodingUTF16, 0, FALSE, reinterpret_cast<UInt8 *>(destination), length * (sizeof(A_UTF16Char)), NULL);
-    destination[length] = 0; // Set NULL-terminator, since CFString calls don't set it
+    CFStringGetBytes(inputStringCFSR, range, kCFStringEncodingUTF16, 0, FALSE, reinterpret_cast<UInt8 *>(destination), (maxLength-1) * (sizeof(A_UTF16Char)), &used);
+    used /= sizeof(A_UTF16Char);
+    destination[used] = 0; // Set NULL-terminator, since CFString calls don't set it
     CFRelease(inputStringCFSR);
 #elif defined AE_OS_WIN
     wcsncpy_s(reinterpret_cast<wchar_t*>(destination), maxLength, inputString, maxLength - 1);
@@ -782,7 +784,7 @@ std::string rbUtilities::toUtf8(const std::wstring &source_string, int enocde_so
 	}
 #else
 	CFStringEncoding code_page = kCFStringEncodingUTF8;
-	if (enocde_source_as == rb_STRING_LITERAL) code_page = GetApplicationTextEncoding();
+	//if (enocde_source_as == rb_STRING_LITERAL) code_page = GetApplicationTextEncoding();
 	
 	CFRange range = CFRangeMake(0, source_length);
 	CFStringRef inputStringCFSR = CFStringCreateWithBytes(kCFAllocatorDefault, reinterpret_cast<const UInt8 *>(&source_string[0]), source_length*sizeof(wchar_t), kCFStringEncodingUTF32LE, FALSE);

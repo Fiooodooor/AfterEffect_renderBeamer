@@ -30,12 +30,18 @@
 
 #define ERROR_CATCH_START ErrorCodesAE _ErrorCode = NoError; { try {
 #define ERROR_CATCH_START_MOD(MOD) CallerModuleName _ErrorCaller = MOD; ERROR_CATCH_START
-#define ERROR_CATCH_KNOWN1(SH)  catch (const PluginError & theErr) { std::string catch_buffer_; _ErrorCode=theErr.theCode(); SH }
-#define ERROR_CATCH_KNOWN2(SH,VAR_ERR)  catch (const std::runtime_error (VAR_ERR)) { std::string catch_buffer_; _ErrorCode=RuntimeError; SH }
-#define ERROR_CATCH_KNOWN3(SH,VAR_ERR)  catch (const std::exception (VAR_ERR)) { std::string catch_buffer_; _ErrorCode=StdException; SH }
-#define ERROR_CATCH_KNOWN4(SH,VAR_ERR)  catch (const A_Err (VAR_ERR)) { std::string catch_buffer_; _ErrorCode=AeTypeError; SH }
+#define ERROR_CATCH_KNOWN1(SH)  catch (PluginError & theErr) { std::string catch_buffer_; _ErrorCode=theErr.theCode(); SH }
+#define ERROR_CATCH_KNOWN2(SH,VAR_ERR)  catch (std::runtime_error (VAR_ERR)) { std::string catch_buffer_; _ErrorCode=RuntimeError; SH }
+#define ERROR_CATCH_KNOWN3(SH,VAR_ERR)  catch (std::exception (VAR_ERR)) { std::string catch_buffer_; _ErrorCode=StdException; SH }
+#define ERROR_CATCH_KNOWN4(SH,VAR_ERR)  catch (A_Err (VAR_ERR)) { std::string catch_buffer_; _ErrorCode=AeTypeError; SH }
 #define ERROR_CATCH_UNKNOWN(SH) catch (...) { std::string catch_buffer_; _ErrorCode=UnknownError; SH }
-#define ERROR_CATCH_END_CONSTRUCT(SH,UN,AE,VR) } ERROR_CATCH_KNOWN1(SH) ERROR_CATCH_KNOWN2(SH,VR) ERROR_CATCH_KNOWN3(SH,VR) ERROR_CATCH_KNOWN4(AE,VR) ERROR_CATCH_UNKNOWN(UN) }
+#define ERROR_CATCH_END_CONSTRUCT(SH,UN,AE,VR) \
+        } \
+            catch (const PluginError & theErr) { std::string catch_buffer_; _ErrorCode=theErr.theCode(); SH } \
+            ERROR_CATCH_KNOWN2(SH,VR) \
+            ERROR_CATCH_KNOWN3(SH,VR) \
+            ERROR_CATCH_KNOWN4(AE,VR) \
+            ERROR_CATCH_UNKNOWN(UN) }
 
 #define ERROR_CATCH_END(SH) ERROR_CATCH_END_CONSTRUCT(REP(SH),REP_UN(SH),REP_AE(SH),&theErr)
 #define ERROR_CATCH_END_RETURN(SH) ERROR_CATCH_END(SH) return _ErrorCode;
@@ -73,13 +79,12 @@ namespace RenderBeamer
         const char    str[256];
     } ErrorString;
 
-    enum {
+    typedef enum {
         UserEnglish = 0,
         UserGerman,
         UserPolish,
         LangsCount
-    };
-    typedef long UserLanguage;
+    } UserLanguage;
 
     enum {
         UnknownModule = 0,
@@ -172,6 +177,13 @@ namespace RenderBeamer
         }
         
         explicit PluginError(UserLanguage use_language, ErrorCodesAE _err_msg_id, CallerModuleName _Caller=UnknownModule) noexcept
+            : _Mybase()
+            , errCallerModuleModule(std::move(_Caller)), errCode(std::move(_err_msg_id)), errCodesLanguage(std::move(use_language))
+        {
+            SetErrorString();
+        }
+        
+        explicit PluginError(CallerModuleName _Caller, ErrorCodesAE _err_msg_id, UserLanguage use_language=UserEnglish) noexcept
             : _Mybase()
             , errCallerModuleModule(std::move(_Caller)), errCode(std::move(_err_msg_id)), errCodesLanguage(std::move(use_language))
         {

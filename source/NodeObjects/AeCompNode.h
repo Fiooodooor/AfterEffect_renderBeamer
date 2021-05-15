@@ -52,7 +52,7 @@ private:
 class AeLayerNode
 {
 public:
-	AeLayerNode(SPBasicSuite *sp, AEGP_LayerH theLayerH, A_long theLayerNr);
+	AeLayerNode(SPBasicSuite *sp, AEGP_LayerH &theLayerH, A_long theLayerNr);
 	AEGP_LayerH getLayerH() const;
 	AEGP_ObjectType getLayerObjectType() const;
 	AEGP_ItemH getLayerSource() const;
@@ -67,6 +67,8 @@ protected:
 	A_long layerNr;
 	AEGP_ObjectType layerObjectType;
 	A_long effectsN;
+    AEGP_LayerFlags flags;
+    
 };
 
 class AeCompNode : public AeObjectNode

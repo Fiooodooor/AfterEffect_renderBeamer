@@ -94,8 +94,8 @@ const A_char* AeEffectNode::getEffectCategory() const
 	return effectCategory;
 }
 
-AeLayerNode::AeLayerNode(SPBasicSuite *sp, AEGP_LayerH theLayerH, A_long theLayerNr)
-	: layerObjectType(AEGP_ObjectType_NONE), effectsN(0)
+AeLayerNode::AeLayerNode(SPBasicSuite *sp, AEGP_LayerH &theLayerH, A_long theLayerNr)
+	: layerObjectType(AEGP_ObjectType_NONE), effectsN(0), flags(0)
 {
 	this->sp = sp;
 	AEGP_SuiteHandler suites(sp);
@@ -110,6 +110,7 @@ AeLayerNode::AeLayerNode(SPBasicSuite *sp, AEGP_LayerH theLayerH, A_long theLaye
 		itemH = nullptr;
 	}
 	suites.EffectSuite4()->AEGP_GetLayerNumEffects(theLayerH, &effectsN);
+    suites.LayerSuite8()->AEGP_GetLayerFlags(theLayerH, &flags);
 }
 AEGP_LayerH AeLayerNode::getLayerH() const
 {
@@ -146,7 +147,7 @@ void AeLayerNode::setLayerNameExplicit(AEGP_PluginID plugId)
 	if(layerNameString.empty() && !layerSourceNameString.empty())
 	{
 		A_UTF16Char new_name[AEGP_MAX_ITEM_NAME_SIZE] = { '\0' };
-		rbUtilities::toUTF16(layerSourceNameString.c_str(), new_name, AEGP_MAX_ITEM_NAME_SIZE-1);
+		rbUtilities::toUTF16(layerSourceNameString.c_str(), new_name, AEGP_MAX_ITEM_NAME_SIZE);
 		ERR(suites.LayerSuite8()->AEGP_SetLayerName(layerH, new_name));
 	}	
 }

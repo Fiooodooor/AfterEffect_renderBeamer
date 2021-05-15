@@ -32,8 +32,9 @@ GF_Dumper::~GF_Dumper()
 
     if (dumper_progressbar_)
         suites.AppSuite6()->PF_DisposeAppProgressDialog(dumper_progressbar_);
-        
-    ERR(suites.ProjSuite6()->AEGP_OpenProjectFromPath(bps->original_project, &rootProjH));
+    
+    if (bps && bps->original_project[0])
+        ERR(suites.ProjSuite6()->AEGP_OpenProjectFromPath(bps->original_project, &rootProjH));
     
 }
 

@@ -46,7 +46,6 @@
 		4AB389AE264F395D0047DD47 /* base64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AB389A9264F395D0047DD47 /* base64.cpp */; };
 		4AB389AF264F395D0047DD47 /* AEGP_SuiteHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AB389AA264F395D0047DD47 /* AEGP_SuiteHandler.cpp */; };
 		4AB389B0264F395D0047DD47 /* MissingSuiteError.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AB389AB264F395D0047DD47 /* MissingSuiteError.cpp */; };
-		4AB389B3264F3D850047DD47 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AB389B2264F3D850047DD47 /* Carbon.framework */; };
 		4AFCCBAB25E3779F009B9124 /* AeGfsFileCreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AFCCBAA25E3779F009B9124 /* AeGfsFileCreator.cpp */; };
 		7EF36FB716F29701002A3CB3 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EF36FB616F29701002A3CB3 /* Cocoa.framework */; };
 		D0FE575F0993C4E900139A60 /* GF_AEGP_Strings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0FE575A0993C4E900139A60 /* GF_AEGP_Strings.cpp */; };
@@ -151,7 +150,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7EF36FB716F29701002A3CB3 /* Cocoa.framework in Frameworks */,
-				4AB389B3264F3D850047DD47 /* Carbon.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
