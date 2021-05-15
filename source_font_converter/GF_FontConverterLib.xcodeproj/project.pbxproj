@@ -7,6 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4A74179F264D655400917306 /* libpcre16.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A74179A264D655300917306 /* libpcre16.a */; };
+		4A7417A0264D655400917306 /* libpcreposix.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A74179B264D655300917306 /* libpcreposix.a */; };
+		4A7417A1264D655400917306 /* libpcre32.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A74179C264D655300917306 /* libpcre32.a */; };
+		4A7417A2264D655400917306 /* libpcrecpp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A74179D264D655300917306 /* libpcrecpp.a */; };
+		4A7417A3264D655400917306 /* libpcre.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A74179E264D655400917306 /* libpcre.a */; };
+		4A7417A5264D65A300917306 /* libffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7417A4264D65A300917306 /* libffi.a */; };
+		4A7417A7264D6FA900917306 /* libbz2.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7417A6264D6FA900917306 /* libbz2.1.0.dylib */; };
+		4A7417A9264D6FDA00917306 /* libedit.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7417A8264D6FD900917306 /* libedit.3.dylib */; };
+		4A7417AB264D701100917306 /* libresolv.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7417AA264D701100917306 /* libresolv.9.dylib */; };
+		4A7417AC264D739E00917306 /* libresolv.9.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7417AA264D701100917306 /* libresolv.9.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		4A7417AD264D739E00917306 /* libedit.3.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7417A8264D6FD900917306 /* libedit.3.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		4A7417AE264D739E00917306 /* libbz2.1.0.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7417A6264D6FA900917306 /* libbz2.1.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		4A7B4AF42642787400E28C15 /* libglib-2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4AE52642787300E28C15 /* libglib-2.0.a */; };
 		4A7B4AF52642787400E28C15 /* libfontforge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4AE62642787300E28C15 /* libfontforge.a */; };
 		4A7B4AF62642787400E28C15 /* libpng16.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B4AE72642787300E28C15 /* libpng16.a */; };
@@ -45,6 +57,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				4A7417AC264D739E00917306 /* libresolv.9.dylib in Embed Frameworks */,
+				4A7417AD264D739E00917306 /* libedit.3.dylib in Embed Frameworks */,
+				4A7417AE264D739E00917306 /* libbz2.1.0.dylib in Embed Frameworks */,
 				4A7B4B292642834700E28C15 /* libiconv.2.dylib in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -56,6 +71,15 @@
 		4A600779264196CC001A0453 /* garagefarm_fontmodule.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = garagefarm_fontmodule.c; sourceTree = "<group>"; };
 		4A6266CD264C29B10039CF77 /* garagefarm_fontmodule_v2_7.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = garagefarm_fontmodule_v2_7.c; sourceTree = "<group>"; };
 		4A6266CE264C29B10039CF77 /* garagefarm_fontmodule_v3_9.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = garagefarm_fontmodule_v3_9.c; sourceTree = "<group>"; };
+		4A74179A264D655300917306 /* libpcre16.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpcre16.a; path = libraries/libpcre16.a; sourceTree = "<group>"; };
+		4A74179B264D655300917306 /* libpcreposix.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpcreposix.a; path = libraries/libpcreposix.a; sourceTree = "<group>"; };
+		4A74179C264D655300917306 /* libpcre32.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpcre32.a; path = libraries/libpcre32.a; sourceTree = "<group>"; };
+		4A74179D264D655300917306 /* libpcrecpp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpcrecpp.a; path = libraries/libpcrecpp.a; sourceTree = "<group>"; };
+		4A74179E264D655400917306 /* libpcre.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpcre.a; path = libraries/libpcre.a; sourceTree = "<group>"; };
+		4A7417A4264D65A300917306 /* libffi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libffi.a; path = libraries/libffi.a; sourceTree = "<group>"; };
+		4A7417A6264D6FA900917306 /* libbz2.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.1.0.dylib; path = ../../../../../../usr/lib/libbz2.1.0.dylib; sourceTree = "<group>"; };
+		4A7417A8264D6FD900917306 /* libedit.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libedit.3.dylib; path = ../../../../../../usr/lib/libedit.3.dylib; sourceTree = "<group>"; };
+		4A7417AA264D701100917306 /* libresolv.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.9.dylib; path = ../../../../../../usr/lib/libresolv.9.dylib; sourceTree = "<group>"; };
 		4A7B4AE52642787300E28C15 /* libglib-2.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libglib-2.0.a"; path = "libraries/libglib-2.0.a"; sourceTree = "<group>"; };
 		4A7B4AE62642787300E28C15 /* libfontforge.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfontforge.a; path = libraries/libfontforge.a; sourceTree = "<group>"; };
 		4A7B4AE72642787300E28C15 /* libpng16.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng16.a; path = libraries/libpng16.a; sourceTree = "<group>"; };
@@ -94,6 +118,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4A7417AB264D701100917306 /* libresolv.9.dylib in Frameworks */,
+				4A7417A9264D6FDA00917306 /* libedit.3.dylib in Frameworks */,
+				4A7417A7264D6FA900917306 /* libbz2.1.0.dylib in Frameworks */,
+				4A7417A5264D65A300917306 /* libffi.a in Frameworks */,
+				4A74179F264D655400917306 /* libpcre16.a in Frameworks */,
+				4A7417A0264D655400917306 /* libpcreposix.a in Frameworks */,
+				4A7417A1264D655400917306 /* libpcre32.a in Frameworks */,
+				4A7417A2264D655400917306 /* libpcrecpp.a in Frameworks */,
+				4A7417A3264D655400917306 /* libpcre.a in Frameworks */,
 				4A7B4B0626427BAC00E28C15 /* libgobject-2.0.a in Frameworks */,
 				4A7B4B0726427BAC00E28C15 /* libgmodule-2.0.a in Frameworks */,
 				4A7B4B0826427BAC00E28C15 /* libgthread-2.0.a in Frameworks */,
@@ -144,6 +177,15 @@
 		4A8786FB24080616004D1DFC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4A7417AA264D701100917306 /* libresolv.9.dylib */,
+				4A7417A8264D6FD900917306 /* libedit.3.dylib */,
+				4A7417A6264D6FA900917306 /* libbz2.1.0.dylib */,
+				4A7417A4264D65A300917306 /* libffi.a */,
+				4A74179E264D655400917306 /* libpcre.a */,
+				4A74179A264D655300917306 /* libpcre16.a */,
+				4A74179C264D655300917306 /* libpcre32.a */,
+				4A74179D264D655300917306 /* libpcrecpp.a */,
+				4A74179B264D655300917306 /* libpcreposix.a */,
 				4A7B4B1C2642833100E28C15 /* Foundation.framework */,
 				4A7B4B1A2642832100E28C15 /* CoreServices.framework */,
 				4A7B4B182642831100E28C15 /* CoreFoundation.framework */,
@@ -418,7 +460,8 @@
 					/System/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7,
 				);
 				INFOPLIST_FILE = "";
-				INSTALL_PATH = "";
+				INSTALL_PATH = "~/renderbeamer/dylibsinstallpath";
+				LD_RUNPATH_SEARCH_PATHS = "";
 				LIBRARY_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/libraries",
 					/usr/local/lib,
@@ -472,7 +515,8 @@
 					/System/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7,
 				);
 				INFOPLIST_FILE = "";
-				INSTALL_PATH = "";
+				INSTALL_PATH = "~/renderbeamer/dylibsinstallpath";
+				LD_RUNPATH_SEARCH_PATHS = "";
 				LIBRARY_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/libraries",
 					/usr/local/lib,
