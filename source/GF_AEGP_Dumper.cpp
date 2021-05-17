@@ -219,9 +219,9 @@ ErrorCodesAE GF_Dumper::PrepareProject()
 		MAIN_PROGRESS(dumper_progressbar_, 9, 10)
 			
 		rbProj()->logg("PrepareProject", "ProjectName", projectName);
-		rbProj()->logg(L"PrepareProject", L"SourcePath", bps->bp.originalProject.lexically_normal().wstring().c_str());
-		rbProj()->logg(L"PrepareProject", L"RelinkedPath", bps->bp.relProjPath.lexically_normal().wstring().c_str());
-		rbProj()->logg(L"PrepareProject", L"RelinkedSavePath", bps->bp.relinkedSavePath.lexically_normal().wstring().c_str());
+		rbProj()->logg("PrepareProject", "SourcePath", bps->bp.originalProject.lexically_normal().string().c_str());
+		rbProj()->logg("PrepareProject", "RelinkedPath", bps->bp.relProjPath.lexically_normal().string().c_str());
+		rbProj()->logg("PrepareProject", "RelinkedSavePath", bps->bp.relinkedSavePath.lexically_normal().string().c_str());
 		rbProj()->logg(L"PrepareProject", L"TmpPath", bps->beamerTmpPath);
 	ERROR_CATCH_END_RETURN(suites)
 }
@@ -232,7 +232,7 @@ ErrorCodesAE GF_Dumper::newBatchDumpProject()
 	PF_AppProgressDialogP *dlg_ptr = get_progress_dialog(true, false, 1);
 	MAIN_PROGRESS_THROW(*dlg_ptr, 0, 5)
 
-	relinker.RelinkerInitialize(bps, TRUE);
+	ERROR_THROW_2(relinker.RelinkerInitialize(bps, TRUE));
 	gfs_creator = new AeGfsFileCreator();
 	gfs_creator->InitGfsFileBuilder(bps);
 	bps->currentItem = 0;
@@ -246,16 +246,16 @@ ErrorCodesAE GF_Dumper::newBatchDumpProject()
 	ERROR_RETURN(newCollectEffectsInfo())
 	MAIN_PROGRESS_THROW(dumper_progressbar_, ++bps->currentItem, bps->colectedItems)
 	relinker.unloadFontLibrary();
-	gfs_creator->GenerateAndSaveDocument();
+	ERROR_THROW_2(gfs_creator->GenerateAndSaveDocument());
     MAIN_PROGRESS_THROW(dumper_progressbar_, ++bps->currentItem, bps->colectedItems)
-	relinker.RelinkProject(rootProjH);
+	ERROR_THROW_2(relinker.RelinkProject(rootProjH));
 
 	MAIN_PROGRESS_THROW(dumper_progressbar_, ++bps->currentItem, bps->colectedItems)
 	dlg_ptr = get_progress_dialog(true, false, 2);
 	
 	AeBatchRelinker batchRelinker(sP, relinker.GetC4dLibloader(), rbProj(), dlg_ptr, bps->bp.relinkedSavePath);
-	ERROR_RETURN(batchRelinker.ParseAepxXmlDocument())
-	ERROR_RETURN(batchRelinker.CopyAndRelinkFiles(bps->bp.footageMainOutput, bps->bp.remoteFootagePath))
+	ERROR_THROW_2(batchRelinker.ParseAepxXmlDocument())
+	ERROR_THROW_2(batchRelinker.CopyAndRelinkFiles(bps->bp.footageMainOutput, bps->bp.remoteFootagePath))
 		
 	if (rbUtilities::execBeamerCmd(bps, BeamerMask_SendTaskEncoded) != NoError) {
 		throw  PluginError(_ErrorCaller, BeamerSendTaskFailed);

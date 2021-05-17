@@ -2,9 +2,6 @@
 namespace RenderBeamer {
 AeFontNode::AeFontNode(A_long theItemNr, A_long theLayerNr)
 {
-	font[0] = '\0';
-	family[0] = '\0';
-	location[0] = '\0';
 	itemNr = theItemNr;
 	layerNr = theLayerNr;
 }
@@ -23,11 +20,9 @@ const A_char* AeFontNode::getLocation() const
 
 bool AeFontNode::operator==(const AeFontNode &right) const
 {
-	if (strcmp(getFont(), right.getFont()) == 0) {
-		if (strcmp(getLocation(), right.getLocation()) == 0) {
-			return true;
-		}
-	}
+	if (strcmp(getLocation(), right.getLocation()) == 0) {
+		return true;
+	}	
 	return false;
 }
 bool AeFontNode::operator==(const std::list<AeFontNode*>::const_iterator &right) const
@@ -94,10 +89,9 @@ const A_char* AeEffectNode::getEffectCategory() const
 	return effectCategory;
 }
 
-AeLayerNode::AeLayerNode(SPBasicSuite *sp, AEGP_LayerH &theLayerH, A_long theLayerNr)
-	: layerObjectType(AEGP_ObjectType_NONE), effectsN(0), flags(0)
+AeLayerNode::AeLayerNode(SPBasicSuite *the_sp, AEGP_LayerH &theLayerH, A_long theLayerNr)
+	: sp(the_sp), layerObjectType(AEGP_ObjectType_NONE), effectsN(0), flags(0), source_type(AEGP_ItemType_NONE)
 {
-	this->sp = sp;
 	AEGP_SuiteHandler suites(sp);
 	layerNr = theLayerNr;
 	layerH = theLayerH;
@@ -105,6 +99,7 @@ AeLayerNode::AeLayerNode(SPBasicSuite *sp, AEGP_LayerH &theLayerH, A_long theLay
 	suites.LayerSuite8()->AEGP_GetLayerObjectType(theLayerH, &layerObjectType);
 	if (layerObjectType == AEGP_ObjectType_AV) {
 		suites.LayerSuite8()->AEGP_GetLayerSourceItem(theLayerH, &itemH);
+		suites.ItemSuite9()->AEGP_GetItemType(itemH, &source_type);
 	}
 	else {
 		itemH = nullptr;
@@ -134,6 +129,12 @@ bool AeLayerNode::doesLayerHaveSource() const
 		return true;
 	return false;
 }
+bool AeLayerNode::doesLayerHaveFootageSource() const
+{
+	if (layerObjectType == AEGP_ObjectType_AV && source_type == AEGP_ItemType_FOOTAGE)
+		return true;
+	return false;
+}
 void AeLayerNode::setLayerNameExplicit(AEGP_PluginID plugId)
 {
 	AEGP_MemHandle layerName, layerSourceName;
@@ -143,7 +144,7 @@ void AeLayerNode::setLayerNameExplicit(AEGP_PluginID plugId)
 	ERR(suites.LayerSuite8()->AEGP_GetLayerName(plugId, layerH, &layerName, &layerSourceName));
 	ERR(rbUtilities::copyMemhUTF16ToString(sp, layerName, layerNameString));
 	ERR(rbUtilities::copyMemhUTF16ToString(sp, layerSourceName, layerSourceNameString));
-
+	
 	if(layerNameString.empty() && !layerSourceNameString.empty())
 	{
 		A_UTF16Char new_name[AEGP_MAX_ITEM_NAME_SIZE] = { '\0' };
@@ -190,7 +191,9 @@ long AeCompNode::generateLayers()
 		suites.LayerSuite8()->AEGP_GetCompLayerByIndex(compH, i, &tmpLayerH);
 		tmpLayerNode = new AeLayerNode(sp, tmpLayerH, i);
 		if (tmpLayerNode) {
-			tmpLayerNode->setLayerNameExplicit(getPluginId());
+			if (tmpLayerNode->doesLayerHaveFootageSource())
+				tmpLayerNode->setLayerNameExplicit(getPluginId());
+
 			layersList.push_back(tmpLayerNode);
 			if (tmpLayerNode->getLayerObjectType() == AEGP_ObjectType_TEXT) {
 				auto* font_node = new AeFontNode(this->getItemNr(), i + 1);
@@ -198,15 +201,14 @@ long AeCompNode::generateLayers()
 					font_node->fillFont(getSp(), getPluginId());
 					pushUniqueFont(font_node);
 				}
+			}		
+			for (A_long j = 0; j < tmpLayerNode->getEffectsN(); ++j) {
+				suites.EffectSuite4()->AEGP_GetLayerEffectByIndex(pId, tmpLayerH, j, &effectH);
+				suites.EffectSuite4()->AEGP_GetInstalledKeyFromLayerEffect(effectH, &effectKey);
+				pushUniqueEffect(effectKey);
+				suites.EffectSuite4()->AEGP_DisposeEffect(effectH);
 			}
-		}
-		for (A_long j = 0; j < tmpLayerNode->getEffectsN(); ++j) {
-			suites.EffectSuite4()->AEGP_GetLayerEffectByIndex(pId, tmpLayerH, j, &effectH);
-			suites.EffectSuite4()->AEGP_GetInstalledKeyFromLayerEffect(effectH, &effectKey);
-			pushUniqueEffect(effectKey);
-			suites.EffectSuite4()->AEGP_DisposeEffect(effectH);
-		}
-		
+		}		
 	}
 	return 0;
 }

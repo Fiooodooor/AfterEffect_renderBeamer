@@ -16,10 +16,10 @@ public:
 	bool operator==(const std::list<AeFontNode*>::const_iterator &right) const;
 
 private:
-	A_char font[AEGP_MAX_PATH_SIZE];
-	A_char family[AEGP_MAX_PATH_SIZE];
-	A_char location[AEGP_MAX_PATH_SIZE];
-	A_long itemNr, layerNr;
+	A_char font[AEGP_MAX_PATH_SIZE]{ 0 };
+	A_char family[AEGP_MAX_PATH_SIZE]{ 0 };
+	A_char location[AEGP_MAX_PATH_SIZE]{ 0 };
+	A_long itemNr=0, layerNr=0;
 };
 
 class AeEffectNode
@@ -52,12 +52,13 @@ private:
 class AeLayerNode
 {
 public:
-	AeLayerNode(SPBasicSuite *sp, AEGP_LayerH &theLayerH, A_long theLayerNr);
+	AeLayerNode(SPBasicSuite *the_sp, AEGP_LayerH &theLayerH, A_long theLayerNr);
 	AEGP_LayerH getLayerH() const;
 	AEGP_ObjectType getLayerObjectType() const;
 	AEGP_ItemH getLayerSource() const;
 	A_long getEffectsN() const;
 	bool doesLayerHaveSource() const;
+	bool doesLayerHaveFootageSource() const;
 	void setLayerNameExplicit(AEGP_PluginID plugId);
 
 protected:
@@ -68,6 +69,7 @@ protected:
 	AEGP_ObjectType layerObjectType;
 	A_long effectsN;
     AEGP_LayerFlags flags;
+	AEGP_ItemType source_type;
     
 };
 

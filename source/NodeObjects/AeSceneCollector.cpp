@@ -180,6 +180,7 @@ ErrorCodesAE AeSceneCollector::collectSceneItem(AeObjectNode *node)
 		case AEGP_ItemType_COMP:
 			compositionsSortedList.push_back(node);
 			break;
+		case AEGP_ItemType_SOLID_defunct:
 		case AEGP_ItemType_FOOTAGE:
 			if(node->isItemFooSolid())
 				ct->renderOtherSortedList.push_back(node);

@@ -27,13 +27,13 @@
 **/
 
 
-#include <AEGP_SuiteHandler.h>
+#include "AEGP_SuiteHandler.h"
 #include <AE_Macros.h>
 
 AEGP_SuiteHandler::AEGP_SuiteHandler(const SPBasicSuite *pica_basicP) :
-	i_pica_basicP(pica_basicP)
+	i_pica_basicP(pica_basicP), i_suites()
 {
-	AEFX_CLR_STRUCT(i_suites);
+	AEFX_CLR_STRUCT(i_suites)
 
 	if (!i_pica_basicP) {						//can't construct w/out basic suite, everything else is demand loaded
 		MissingSuiteError();
@@ -64,3 +64,10 @@ void AEGP_SuiteHandler::ReleaseSuite(const A_char *nameZ, A_long versionL)
 	i_pica_basicP->ReleaseSuite(nameZ, versionL);
 }
 
+void AEGP_SuiteHandler::MissingSuiteError() const
+{
+
+	PF_Err poop = PF_Err_BAD_CALLBACK_PARAM;
+
+	throw poop;
+}

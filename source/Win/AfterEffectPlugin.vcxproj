@@ -267,7 +267,6 @@ cl /D "MSWindows" /EP $(IntDir)%(Filename).rrc &gt;               "$(ProjectDir)
     <ClCompile Include="..\Socket\socket_win.cpp" />
     <ClCompile Include="..\Utilities\AEGP_SuiteHandler.cpp" />
     <ClCompile Include="..\Utilities\base64.cpp" />
-    <ClCompile Include="..\Utilities\MissingSuiteError.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

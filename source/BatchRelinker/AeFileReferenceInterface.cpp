@@ -93,13 +93,12 @@ AeFileNode* SequenceListFileReference::AddFiles()
 			filesToLookFor = 16;
 			
 		node->SetMaxFilesCount(filesToLookFor);
-
-		file_reference = file_reference->NextSiblingElement();
-		while (file_reference)
-		{			
+		
+		while (file_reference->NextSiblingElement())
+		{
+			file_reference = file_reference->NextSiblingElement();
 			if (std::string(file_reference->Value()) == "string")
 				node->PushSourceFilename(new AeFileNode::FilenameCouple(false, 0, file_reference, file_reference->GetText()));
-			file_reference = file_reference->NextSiblingElement();
 		}
 		return node;
 	}
@@ -145,14 +144,18 @@ AeFileNode* SequenceMaskFileReference::AddFiles()
 {
 	if (!files_mask_base || !files_mask_extension)
 		return nullptr;
+
+	AeFileNode *node = nullptr;
+	ERROR_CATCH_START
+	if (!exists(GetMainFilePath()) || !is_directory(GetMainFilePath()))
+		return nullptr;
 	
 	const std::string  uStringMaskBase = files_mask_base->GetText();
 	const std::string  uStringMaskExtension = files_mask_extension->GetText();
 	FS_ERROR_CODE(fileRefError)
 
-	auto *node = new AeFileNode(true, filesUID, GetMainFilePath(), uStringMaskBase);
+	node = new AeFileNode(true, filesUID, GetMainFilePath(), uStringMaskBase);
 
-	ERROR_CATCH_START
 	for (auto const &p : fs::directory_iterator(GetMainFilePath()))
 	{
 		const fs::file_status entryStatus(p.status(fileRefError));

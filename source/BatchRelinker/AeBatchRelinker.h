@@ -23,7 +23,11 @@ protected:
 	unsigned long long GetUniqueFilesTotalSize() const;
 	A_long GetUniqueFilesTotalSizeA() const;
 	void ListUniqueFiles() const;
-	long GetLongFilesUID(std::string uid) const;
+	static int HexTo32Int(const char* start, unsigned int char_index);	
+
+	static bool DoesFileExist(const fs::path &file_path);
+	fs::path CreateFilePath(const tinyxml2::XMLElement *fileReferencePt) const;
+	
 	
 	SPBasicSuite *picaBasic;	
 	PlatformLibLoader* libC4dPointer;

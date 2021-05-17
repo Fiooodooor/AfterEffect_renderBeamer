@@ -43,6 +43,17 @@
             ERROR_CATCH_KNOWN4(AE,VR) \
             ERROR_CATCH_UNKNOWN(UN) }
 
+#define ERROR_CATCH_START2 std::string catch_buffer_(256, 0); ErrorCodesAE _ErrorCode = NoError; { try {
+#define ERROR_CATCH_END_CONSTRUCT2 \
+        }   catch (PluginError & theErr)		{ _ErrorCode=theErr.theCode(); catch_buffer_ = theErr.what(); }	\
+            catch (std::runtime_error & theErr) { _ErrorCode=RuntimeError; catch_buffer_ = theErr.what(); }		\
+            catch (std::bad_alloc & theErr)		{ _ErrorCode=AE_ErrAlloc; catch_buffer_ = theErr.what(); }		\
+            catch (std::exception &theErr)		{ _ErrorCode=StdException; catch_buffer_ = theErr.what(); }		\
+            catch (A_Err &theErr)				{ _ErrorCode=AeTypeError; catch_buffer_ = AeGetErrorString(catch_buffer_, theErr, GF_PLUGIN_LANGUAGE); }			\
+            catch (PF_Err &theErr)				{ _ErrorCode=AeTypeError; catch_buffer_ = AeGetErrorString(catch_buffer_, theErr, GF_PLUGIN_LANGUAGE); }			\
+            catch (...)							{ _ErrorCode=UnknownError; catch_buffer_ = AeGetErrorString(catch_buffer_, UnknownError, GF_PLUGIN_LANGUAGE); }		\
+		}
+
 #define ERROR_CATCH_END(SH) ERROR_CATCH_END_CONSTRUCT(REP(SH),REP_UN(SH),REP_AE(SH),&theErr)
 #define ERROR_CATCH_END_RETURN(SH) ERROR_CATCH_END(SH) return _ErrorCode;
 #define ERROR_CATCH_END_NO_INFO ERROR_CATCH_END_CONSTRUCT(;,;,;,&)
@@ -59,6 +70,7 @@
 #define ERROR_LONG_ERR(EXPR) ERROR_AE(static_cast<ErrorCodesAE>(EXPR))
 #define ERROR_BOOL_ERR(EXPR) { if(_ErrorCode == NoError) _ErrorCode=(( EXPR ) == true ? NoError : ErrorResult); }
 #define ERROR_RETURN(EXPR) { _ErrorCode = EXPR; if(_ErrorCode != NoError) { return _ErrorCode; } }
+#define ERROR_THROW_2(EXPR) { if(_ErrorCode == NoError) _ErrorCode = (EXPR); if(_ErrorCode != NoError) { throw PluginError(GF_PLUGIN_LANGUAGE, _ErrorCode); } }
 #define ERROR_RETURN_VOID(EXPR) { if(_ErrorCode == NoError) _ErrorCode = ( EXPR ); if(_ErrorCode != NoError) { return; } }
 #define ERROR_THROW(EXPR) { ErrorCodesAE tmp = (EXPR); if(tmp != NoError) throw PluginError(GF_PLUGIN_LANGUAGE, tmp); }
 #define ERROR_THROW_MOD(EXPR) { ErrorCodesAE tmp = (EXPR); if(tmp != NoError) throw PluginError(GF_PLUGIN_LANGUAGE, tmp, _ErrorCaller); }
@@ -178,29 +190,29 @@ namespace RenderBeamer
         
         explicit PluginError(UserLanguage use_language, ErrorCodesAE _err_msg_id, CallerModuleName _Caller=UnknownModule) noexcept
             : _Mybase()
-            , errCallerModuleModule(std::move(_Caller)), errCode(std::move(_err_msg_id)), errCodesLanguage(std::move(use_language))
+            , errCallerModuleModule(_Caller), errCode(_err_msg_id), errCodesLanguage(use_language)
         {
             SetErrorString();
         }
         
         explicit PluginError(CallerModuleName _Caller, ErrorCodesAE _err_msg_id, UserLanguage use_language=UserEnglish) noexcept
             : _Mybase()
-            , errCallerModuleModule(std::move(_Caller)), errCode(std::move(_err_msg_id)), errCodesLanguage(std::move(use_language))
+            , errCallerModuleModule(_Caller), errCode(_err_msg_id), errCodesLanguage(use_language)
         {
             SetErrorString();
         }
         
-        ~PluginError() = default;
+        ~PluginError() override = default;
         
         const char *what() const noexcept override { return error_string_combined.c_str(); }
-        ErrorCodesAE theCode() const { return errCode; }
+        [[nodiscard]] ErrorCodesAE theCode() const { return errCode; }
         
     private:
         typedef std::exception _Mybase;
         void SetErrorString() noexcept;
-        
-        ErrorCodesAE errCode=0;
+                
         CallerModuleName errCallerModuleModule=0;
+		ErrorCodesAE errCode = 0;
         UserLanguage errCodesLanguage=( GF_PLUGIN_LANGUAGE );
         std::string error_string_combined{};
     };

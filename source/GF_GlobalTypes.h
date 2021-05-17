@@ -20,7 +20,6 @@
 #define MAIN_LOGS_DIR1 L"logs"
 
 #include <cstdio>
-//#include <cwchar>
 #include <fstream>
 #include <mutex>
 #include <string>
@@ -107,10 +106,11 @@ namespace fs = boost::filesystem;
 #include "AE_GeneralPlug.h"
 #include "AE_Macros.h"
 
-//#include "AE_GeneralPlugPanels.h"
-#include "AEGP_SuiteHandler.h"
+
+#include "Utilities/AEGP_SuiteHandler.h"
 #include "GF_AEGP_ErrorsHandling.h"
 #include "SuiteHelper.h"
+
 namespace RenderBeamer {
 typedef enum StrIDType {
     StrID_NONE=0,

@@ -47,7 +47,7 @@ ErrorCodesAE AeBatchRelinker::ParseAepxXmlDocument()
 			{
 				MAIN_PROGRESS_THROW(*progressDialog, 0, 10)
 	
-				rbProjLogger->logg("BatchAepxParser", "Path", AepxXmlElement->Attribute("fullpath"));
+				rbProjLogger->loggA(6, "AssetPath::SN::", AepxXmlElement->Attribute("server_name"), "::VN::", AepxXmlElement->Attribute("server_volume_name"), "::PTH::", AepxXmlElement->Attribute("fullpath"));
 				fileReference = CreateFileReference(AepxXmlElement);
     
 				if (fileReference != nullptr)
@@ -82,66 +82,22 @@ FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElemen
 {
 	FileReferenceInterface *fileRef = nullptr;
 	AeFileNodeID node_id = 0;
-	std::string fileUid = "00000000";
-	fs::path FileBasePath;
+	std::string fileUid = "0";
+	
 	FS_ERROR_CODE(fileRefError)
-    FS_ERROR_ASSIGN(fileRefError, 2)
 
 	ERROR_CATCH_START
-	FileBasePath = fs::absolute(fs::path(fileReferencePt->Attribute("fullpath"))).lexically_normal();
-	int ascendcount_base = fileReferencePt->IntAttribute("ascendcount_base");
-	int ascendcount_target = fileReferencePt->IntAttribute("ascendcount_target");
 	
-	try {			
-		const fs::file_status FileBasePathStatus = status(FileBasePath);
-		if (fs::status_known(FileBasePathStatus) ? !fs::exists(FileBasePathStatus) : !fs::exists(FileBasePath))
-			throw fs::filesystem_error("File does not exist! Trying to AE style path resolve ", fileRefError);
-		if (FileBasePathStatus.type() == FS_TYPE_UNKNOWN) {
-			rbProjLogger->loggErr("CreateFileReference", "FS_TYPE_UNKNOWN", "Path exists but is inaccessible. File will probably not success copy. Try running AE with admin rights.");
-		}
-		if (FileBasePathStatus.type() == FS_TYPE_NONE) {
-			rbProjLogger->loggErr("CreateFileReference", "FS_TYPE_NONE", "There was an error while resolving file status. File will probably not success copy.");
-		}
-		if (fs::is_symlink(FileBasePathStatus)) {
-			rbProjLogger->logg("CreateFileReference", "FS_TYPE_SYMLINK", "Path exists and is a symlink. Resolving.");
-			FileBasePath = fs::read_symlink(FileBasePath);
-		}
+	auto FileBasePath = CreateFilePath(fileReferencePt);
+	if (FileBasePath.empty()) {
+		rbProjLogger->loggErr("CreateFileReference", "ResolvedPath", "Resolved to empty path error!");
+		return nullptr;
 	}
-	catch(fs::filesystem_error &e) {
-		rbProjLogger->loggErr("BatchAepxParser", ("FullPath_" + std::to_string(e.code().value())).c_str(), e.what());
-		
-		if (ascendcount_base > 0 && ascendcount_target > 0)
-		{
-			FileBasePath = aepxXmlDocumentPath;
-			std::string stringBaseRelative = fileReferencePt->Attribute("fullpath");
-			#ifdef AE_OS_WIN
-				std::replace(stringBaseRelative.begin(), stringBaseRelative.end(), '/', '\\');
-			#else
-				std::replace(stringBaseRelative.begin(), stringBaseRelative.end(), '\\', '/');
-			#endif
-		
-			const fs::path FileBaseRelative = fs::absolute(fs::path(stringBaseRelative)).lexically_normal();
-
-			auto it = FileBaseRelative.end();
-
-			while (ascendcount_base-- && FileBasePath.has_parent_path())
-				FileBasePath = FileBasePath.parent_path();
-			while (it != FileBaseRelative.begin() && ascendcount_target--)
-				--it;
-
-			while (it != FileBaseRelative.end())
-				FileBasePath /= (it++)->string();
-			rbProjLogger->logg("BatchAepxParser", "ResolvedRelative", FileBasePath.string().c_str());
-		}
-		else {
-			rbProjLogger->logg("BatchAepxParser", "FullPath", "Leaving unchanged.");
-		}
-	}
+	rbProjLogger->logg("CreateFileReference", "ResolvedPath", FileBasePath.string().c_str());
 	
-	if (fileReferencePt->Parent()->Parent()->Parent() && fileReferencePt->Parent()->Parent()->Parent()->FirstChildElement()) {
-		if (strcmp(fileReferencePt->Parent()->Parent()->Parent()->FirstChildElement()->Name(), "iide") == 0) {			
-			fileUid = std::to_string(GetLongFilesUID(std::string(fileReferencePt->Parent()->Parent()->Parent()->FirstChildElement()->Attribute("bdata"))));	
-		}	
+	const tinyxml2::XMLNode *item_reference = fileReferencePt->Parent()->Parent()->Parent();
+	if (item_reference && item_reference->FirstChildElement("idta")) {
+		fileUid = std::to_string(HexTo32Int(item_reference->FirstChildElement("idta")->Attribute("bdata"), 32));
 	}
 
     if (fileReferencePt->Attribute("target_is_folder", "0")) {
@@ -183,8 +139,7 @@ FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElemen
 		if (node_pt != nullptr) {
 			node_id = PushUniqueFilePath(node_pt);
 			fileRef->SetNodeId(node_id);
-		}
-        else {
+		} else {
             throw PluginError(GF_PLUGIN_LANGUAGE, NullPointerResult);
         }
 	}
@@ -196,7 +151,93 @@ FileReferenceInterface *AeBatchRelinker::CreateFileReference(tinyxml2::XMLElemen
 	}
 	return fileRef;
 }
+bool AeBatchRelinker::DoesFileExist(const fs::path &file_path)
+{
+	FS_ERROR_CODE(fs_error_code_)
+	try {
+		auto file_status = fs::status(file_path, fs_error_code_);
+		if (fs_error_code_.value() != 0 || !fs::status_known(file_status))
+		{
+			if (fs::exists(file_path, fs_error_code_) && fs_error_code_.value() == 0)
+				return true;
+		}
+		else if (fs::status_known(file_status))
+		{
+			if (fs::exists(file_status))
+				return true;
+		}
+	}
+	catch (fs::filesystem_error &e) {
+		fs_error_code_ = e.code();
+	}
+	return false;
+}
+fs::path AeBatchRelinker::CreateFilePath(const tinyxml2::XMLElement *fileReferencePt) const
+{
+	fs::path base_path;
+	ERROR_CATCH_START2
+	if (!fileReferencePt)
+		return "";
+	
+	rbProjLogger->loggA(8, "PathString", fileReferencePt->Attribute("platform"), fileReferencePt->Attribute("target_is_folder"), fileReferencePt->Attribute("server_name"), "VN", fileReferencePt->Attribute("server_volume_name"), "PTH", fileReferencePt->Attribute("fullpath"));
 
+	FS_ERROR_CODE(fs_error_code_)
+	int base = fileReferencePt->IntAttribute("ascendcount_base");
+	int target = fileReferencePt->IntAttribute("ascendcount_target");
+	
+	bool is_windows_platform_ = (fileReferencePt->Attribute("platform", "Win") ? true : false);
+	bool is_target_folder_ = (fileReferencePt->Attribute("target_is_folder", "0") ? true : false);
+	
+	std::string server_name(fileReferencePt->Attribute("server_name"));
+	std::string server_volume_name(fileReferencePt->Attribute("server_volume_name"));
+	
+	fs::path base_path = fs::path(fileReferencePt->Attribute("fullpath")).lexically_normal();
+	fs::path temp_path_ = fs::canonical(base_path, fs_error_code_);
+	
+	if (fs_error_code_.value() == 0 && DoesFileExist(temp_path_))
+		return temp_path_;
+
+	temp_path_.clear();
+	temp_path_ = fs::absolute(base_path, fs_error_code_);
+	if (fs_error_code_.value() == 0 && DoesFileExist(temp_path_))
+		return temp_path_;
+	
+	if (DoesFileExist(base_path))
+		return base_path;
+
+	temp_path_.clear();	
+	if (is_windows_platform_)
+	{
+		temp_path_ = "\\\\" + server_name + "\\" + server_volume_name;
+		if (fileReferencePt->Attribute("target_is_folder", "0") && base_path.has_filename())
+			temp_path_ /= base_path.filename().string().c_str();
+		if (DoesFileExist(temp_path_))
+			return temp_path_;
+	}
+	temp_path_.clear();
+
+	if (base > 0 && target > 0)
+	{
+		fs::path temp_path_ = aepxXmlDocumentPath;
+		fs::path file_relative_base = base_path;
+
+		auto it = file_relative_base.end();
+
+		while (base-- && temp_path_.has_parent_path())
+			temp_path_ = temp_path_.parent_path();
+		while (it != file_relative_base.begin() && target--)
+			--it;
+
+		while (it != file_relative_base.end())
+			temp_path_ /= (it++)->string();
+
+		if (DoesFileExist(temp_path_))
+			return temp_path_;
+	}	
+	ERROR_CATCH_END_CONSTRUCT2
+	return base_path;
+}
+	
 ErrorCodesAE AeBatchRelinker::CopyAndRelinkFiles(const fs::path &localAssetsPath, const fs::path &remoteAssetsPath)
 {
 	ErrorCodesAE _error = CopyUniqueFiles(localAssetsPath.lexically_normal(), remoteAssetsPath.lexically_normal());
@@ -310,16 +351,12 @@ void AeBatchRelinker::ListUniqueFiles() const
 		pt->ListNodeMainInfo();
 	}
 }
-long AeBatchRelinker::GetLongFilesUID(std::string uid) const
+int AeBatchRelinker::HexTo32Int(const char* start, unsigned int char_index)
 {
-	if (uid.size() != 8)
-		return 0;
-	std::string tmp_uid;
-	for (auto it = uid.rbegin(); it != uid.rend(); ++it)
-	{
-		tmp_uid.push_back(*(it + 1));
-		tmp_uid.push_back(*(it++));
+	if (start) {
+		return std::stoi(std::string(start + char_index, 8), nullptr, 16);
 	}
-	return strtol(tmp_uid.c_str(), nullptr, 16);
+	return 0;
 }
+
 } // namespace RenderBeamer
