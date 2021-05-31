@@ -256,15 +256,15 @@ ErrorCodesAE GF_Dumper::newBatchDumpProject()
 	AeBatchRelinker batchRelinker(sP, relinker.GetC4dLibloader(), rbProj(), dlg_ptr, bps->bp.relinkedSavePath);
 	ERROR_THROW_2(batchRelinker.ParseAepxXmlDocument())
 	ERROR_THROW_2(batchRelinker.CopyAndRelinkFiles(bps->bp.footageMainOutput, bps->bp.remoteFootagePath))
-		
+	rbProj()->logger.flush();
+	FS_ERROR_CODE(LogCoppyError)
+	fs::copy(bps->bp.tempLogPath, bps->bp.logsMainOutput, LogCoppyError);
+
 	if (rbUtilities::execBeamerCmd(bps, BeamerMask_SendTaskEncoded) != NoError) {
 		throw  PluginError(_ErrorCaller, BeamerSendTaskFailed);
 	}
 	rbProj()->logger.flush();
 	rbProj()->logger.close();
-
-	FS_ERROR_CODE(LogCoppyError)
-	fs::copy(bps->bp.tempLogPath, bps->bp.logsMainOutput, LogCoppyError);
 	ERROR_CATCH_END_RETURN(suites)
 }
 
@@ -322,6 +322,7 @@ ErrorCodesAE GF_Dumper::SetupUiQueueItems()
 		std::string send_buffer;
 		char read_buffer[49151];
 		ERROR_AE(gfs_rq_node_wrapper::serialize(*sc, send_buffer))
+		//rbProj()->logg("connector.write", "buffer", send_buffer.c_str());
 		ERROR_AE(connector.write(send_buffer.c_str(), static_cast<unsigned long>(send_buffer.length())) > 0 ? NoError : ErrorResult)
 
 		MAIN_PROGRESS_THROW(dumper_progressbar_, 10, 20)

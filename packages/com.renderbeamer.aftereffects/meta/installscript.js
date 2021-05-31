@@ -28,12 +28,33 @@
 
 var targetDirectoryPage = null;
 
+function majorVersion(str)
+{
+    return parseInt(str.split(".", 1));
+}
+
 function Component() 
 {
+	if (systemInfo.kernelType === "darwin")
+	{
+		 if (majorVersion(systemInfo.kernelVersion) < 13)
+		 {
+            QMessageBox["warning"]("os.warning", "Installer", "MacOS minimum supported version is High Sierra [10.13]. Contact support for old version info. Installer will exit now.", QMessageBox.Ok);
+			installer.setDefaultPageVisible(QInstaller.Introduction, false);
+			installer.setDefaultPageVisible(QInstaller.TargetDirectory, false);
+			installer.setDefaultPageVisible(QInstaller.ComponentSelection, false);
+			installer.setDefaultPageVisible(QInstaller.ReadyForInstallation, false);
+			installer.setDefaultPageVisible(QInstaller.StartMenuSelection, false);
+			installer.setDefaultPageVisible(QInstaller.PerformInstallation, false);
+			installer.setDefaultPageVisible(QInstaller.LicenseCheck, false);
+			installer.setCanceled();
+			installer.interrupt();
+			return;
+		 }
+	}
 	component.addStopProcessForUpdateRequest("AfterFX.exe");	
     installer.gainAdminRights();
     component.loaded.connect(this, this.installerLoaded);
-	
 }
 
 

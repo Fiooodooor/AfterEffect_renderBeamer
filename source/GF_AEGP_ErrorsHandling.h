@@ -50,7 +50,6 @@
             catch (std::bad_alloc & theErr)		{ _ErrorCode=AE_ErrAlloc; catch_buffer_ = theErr.what(); }		\
             catch (std::exception &theErr)		{ _ErrorCode=StdException; catch_buffer_ = theErr.what(); }		\
             catch (A_Err &theErr)				{ _ErrorCode=AeTypeError; catch_buffer_ = AeGetErrorString(catch_buffer_, theErr, GF_PLUGIN_LANGUAGE); }			\
-            catch (PF_Err &theErr)				{ _ErrorCode=AeTypeError; catch_buffer_ = AeGetErrorString(catch_buffer_, theErr, GF_PLUGIN_LANGUAGE); }			\
             catch (...)							{ _ErrorCode=UnknownError; catch_buffer_ = AeGetErrorString(catch_buffer_, UnknownError, GF_PLUGIN_LANGUAGE); }		\
 		}
 

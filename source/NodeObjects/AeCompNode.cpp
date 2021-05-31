@@ -145,7 +145,7 @@ void AeLayerNode::setLayerNameExplicit(AEGP_PluginID plugId)
 	ERR(rbUtilities::copyMemhUTF16ToString(sp, layerName, layerNameString));
 	ERR(rbUtilities::copyMemhUTF16ToString(sp, layerSourceName, layerSourceNameString));
 	
-	if(layerNameString.empty() && !layerSourceNameString.empty())
+	if(err == A_Err_NONE && layerNameString.empty() && !layerSourceNameString.empty())
 	{
 		A_UTF16Char new_name[AEGP_MAX_ITEM_NAME_SIZE] = { '\0' };
 		rbUtilities::toUTF16(layerSourceNameString.c_str(), new_name, AEGP_MAX_ITEM_NAME_SIZE);
@@ -156,8 +156,8 @@ void AeLayerNode::setLayerNameExplicit(AEGP_PluginID plugId)
 AeCompNode::AeCompNode(AeObjectNode* objNode) : AeObjectNode(objNode), compH(nullptr), layersN(0)
 {
 	AEGP_SuiteHandler suites(sp);
-	suites.CompSuite10()->AEGP_GetCompFromItem(itemH, &compH);
-	suites.LayerSuite8()->AEGP_GetCompNumLayers(compH, &layersN);
+	if(suites.CompSuite10()->AEGP_GetCompFromItem(itemH, &compH)==A_Err_NONE)
+		suites.LayerSuite8()->AEGP_GetCompNumLayers(compH, &layersN);
 }
 AEGP_CompH AeCompNode::getCompHandle() const
 {
